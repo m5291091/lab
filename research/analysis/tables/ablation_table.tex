@@ -1,0 +1,15 @@
+\begin{table}[t]
+\centering
+\caption{Ablation study: GTEPS (relative performance vs. GPU)}
+\label{tab:ablation}
+\begin{tabular}{lrrrr}
+\hline
+Graph & GPU (device mem) & GPU + Unified Mem & GPU + ReadMostly (Method 1) & GPU + Optimized UM (Method 1+2) \\
+\hline
+7K (benchmark_7000_41459) & 0.95 & 1.12 & 1.36 & 1.34 \\
+11K (benchmark_11023_62184) & 2.35 & 1.67 & 2.30 & 2.30 \\
+56K (56438_300801) & 9.85 & 1.93 & 9.86 & 11.16 \\
+325K (325557_3216152) & 8.31 & 1.64 & 8.31 & 8.83 \\
+\hline
+\end{tabular}
+\end{table}

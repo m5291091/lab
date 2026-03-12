@@ -1,0 +1,20 @@
+\begin{table}[h]
+\centering
+\caption{Speedup over OpenMP}
+\label{tab:speedup_vs_OpenMP}
+\begin{tabular}{lrrrrrr}
+\hline
+Graph & Sequential & OpenMP & GPU (device mem) & GPU + Unified Mem & GPU + ReadMostly (Method 1) & GPU + Optimized UM (Method 1+2) \\
+\hline
+56438_300801 (56K) & -- & 1.00$\times$ & 6.81$\times$ & 1.37$\times$ & 7.02$\times$ & 8.03$\times$ \\
+amazon0302 (262K) & -- & 1.00$\times$ & 6.20$\times$ & 1.66$\times$ & 6.20$\times$ & 6.58$\times$ \\
+amazon0505 (410K) & -- & 1.00$\times$ & 6.39$\times$ & 1.51$\times$ & 6.39$\times$ & 6.73$\times$ \\
+benchmark_11023_62184 (11K) & 0.01$\times$ & 1.00$\times$ & 0.35$\times$ & 0.31$\times$ & 0.43$\times$ & 0.42$\times$ \\
+benchmark_7000_41459 (7K) & 0.02$\times$ & 1.00$\times$ & 0.27$\times$ & 0.32$\times$ & 0.39$\times$ & 0.40$\times$ \\
+benchmark_85830.data (85K) & -- & 1.00$\times$ & 5.10$\times$ & 1.88$\times$ & 5.17$\times$ & 5.83$\times$ \\
+email-EuAll (265K) & -- & 1.00$\times$ & 2.59$\times$ & 1.10$\times$ & 2.59$\times$ & 3.49$\times$ \\
+web-NotreDame (325K) & -- & 1.00$\times$ & 1.99$\times$ & 0.41$\times$ & 1.99$\times$ & 2.98$\times$ \\
+web-Stanford (281K) & -- & 1.00$\times$ & 2.97$\times$ & 0.69$\times$ & 2.96$\times$ & 3.16$\times$ \\
+\hline
+\end{tabular}
+\end{table}

@@ -1,0 +1,26 @@
+\begin{table}[h]
+\centering
+\caption{Throughput (GTEPS) by Implementation and Graph Size}
+\label{tab:gteps}
+\begin{tabular}{lrrrrrr}
+\hline
+Graph & Sequential & OpenMP & GPU (device mem) & GPU + Unified Mem & GPU + ReadMostly (Method 1) & GPU + Optimized UM (Method 1+2) \\
+\hline
+325557_3216152 (325K) & -- & -- & 8.3141 & 1.6414 & 8.3098 & 8.8242 \\
+56438_300801 (56K) & -- & 1.4044 & 9.5597 & 1.9247 & 9.8529 & 11.2832 \\
+amazon0302 (262K) & -- & 0.5620 & 3.4829 & 0.9341 & 3.4839 & 3.6993 \\
+amazon0505 (410K) & -- & 0.7386 & 4.7198 & 1.1158 & 4.7212 & 4.9674 \\
+benchmark_11023_62184 (11K) & 0.0810 & 5.4177 & 1.8998 & 1.6878 & 2.3176 & 2.2616 \\
+benchmark_7000_41459 (7K) & 0.0689 & 3.3868 & 0.9210 & 1.0928 & 1.3333 & 1.3551 \\
+benchmark_85830.data (85K) & -- & 0.9688 & 4.9378 & 1.8241 & 5.0133 & 5.6491 \\
+email-EuAll (265K) & -- & 2.5074 & 6.5002 & 2.7532 & 6.5021 & 8.7411 \\
+random (32K) & -- & -- & 4.3459 & 1.1557 & -- & 4.8473 \\
+roadNet-CA (1.97M) & -- & -- & 0.4326 & -- & 0.4324 & 0.4611 \\
+roadNet-PA (1.09M) & -- & -- & 0.4762 & -- & 0.4762 & 0.5034 \\
+roadNet-TX (1.38M) & -- & -- & 0.4131 & -- & 0.4131 & 0.4350 \\
+web-Google (875K) & -- & -- & 5.7113 & -- & 5.7109 & 6.1593 \\
+web-NotreDame (325K) & -- & 14.7278 & 29.2913 & 5.9987 & 29.3016 & 43.8786 \\
+web-Stanford (281K) & -- & 3.3203 & 9.8524 & 2.2999 & 9.8363 & 10.4863 \\
+\hline
+\end{tabular}
+\end{table}

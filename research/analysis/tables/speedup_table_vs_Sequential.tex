@@ -1,0 +1,13 @@
+\begin{table}[h]
+\centering
+\caption{Speedup over Sequential}
+\label{tab:speedup_vs_Sequential}
+\begin{tabular}{lrrrrrr}
+\hline
+Graph & Sequential & OpenMP & GPU (device mem) & GPU + Unified Mem & GPU + ReadMostly (Method 1) & GPU + Optimized UM (Method 1+2) \\
+\hline
+benchmark_11023_62184 (11K) & 1.00$\times$ & 66.92$\times$ & 23.47$\times$ & 20.85$\times$ & 28.63$\times$ & 27.94$\times$ \\
+benchmark_7000_41459 (7K) & 1.00$\times$ & 49.12$\times$ & 13.36$\times$ & 15.85$\times$ & 19.34$\times$ & 19.65$\times$ \\
+\hline
+\end{tabular}
+\end{table}

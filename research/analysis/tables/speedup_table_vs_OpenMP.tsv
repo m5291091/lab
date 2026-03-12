@@ -1,0 +1,10 @@
+	Sequential	OpenMP	GPU	GPU_Managed	GPU_ReadMostly	GPU_Opt
+56438_300801 (56K)		1.00	6.81	1.37	7.02	8.03
+amazon0302 (262K)		1.00	6.20	1.66	6.20	6.58
+amazon0505 (410K)		1.00	6.39	1.51	6.39	6.73
+benchmark_11023_62184 (11K)	0.01	1.00	0.35	0.31	0.43	0.42
+benchmark_7000_41459 (7K)	0.02	1.00	0.27	0.32	0.39	0.40
+benchmark_85830.data (85K)		1.00	5.10	1.88	5.17	5.83
+email-EuAll (265K)		1.00	2.59	1.10	2.59	3.49
+web-NotreDame (325K)		1.00	1.99	0.41	1.99	2.98
+web-Stanford (281K)		1.00	2.97	0.69	2.96	3.16
