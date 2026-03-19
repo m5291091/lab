@@ -54,11 +54,12 @@
 9. [STEP 7: バッチサイズ感度分析](#9-step-7-バッチサイズ感度分析)
 10. [結果の分析・可視化](#10-結果の分析可視化)
 11. [ジョブ管理コマンド一覧](#11-ジョブ管理コマンド)
-12. [トラブルシューティング](#12-トラブルシューティング)
-13. [グラフデータセット構成と取得方法](#13-グラフデータセット構成と取得方法)
-14. [5段階アブレーション設計と各実装の対応](#14-5段階アブレーション設計)
-15. [--topo-threshold オプション](#15---topo-threshold-オプション)
-16. [run_all_experiments.sh の使い方](#16-run_all_experimentssh-の使い方)
+12. [submit_all.sh — PBS ジョブ一括投入](#12-submit_allsh--pbs-ジョブ一括投入)
+13. [トラブルシューティング](#13-トラブルシューティング)
+14. [グラフデータセット構成と取得方法](#14-グラフデータセット構成と取得方法)
+15. [5段階アブレーション設計と各実装の対応](#15-5段階アブレーション設計)
+16. [--topo-threshold オプション](#16---topo-threshold-オプション)
+17. [run_all_experiments.sh の使い方](#17-run_all_experimentssh-の使い方)
 
 ---
 
@@ -88,6 +89,7 @@
 |---------|------|
 | `scripts/verify_correctness.sh` | 全実装の BC 値が sequential と一致するかを検証 (5 実装) |
 | `scripts/compare_bc.py` | 2 つの BC 出力ファイルの数値一致検証ツール |
+| `scripts/submit_all.sh` | **PBS ジョブ一括投入スクリプト** (依存関係付きで全ジョブを一度に投入) |
 | `scripts/run_all_experiments.sh` | **全実験一括実行スクリプト** (帯域計測〜可視化まで) |
 | `scripts/run_baseline.sh` | PBS バッチジョブ: 全グラフ・全実装のベースライン計測 |
 | `scripts/run_ablation.sh` | PBS バッチジョブ: アブレーションスタディ (4 実装 × 4 グラフ) |
@@ -420,7 +422,46 @@ qdel <JobID>
 
 ---
 
-## 12. トラブルシューティング
+## 12. `submit_all.sh` — PBS ジョブ一括投入
+
+`scripts/submit_all.sh` は全 PBS バッチジョブを依存関係付きで一度に投入するラッパースクリプトである。
+
+```bash
+cd /work/gj17/j17000/m5291091/lab/research
+bash scripts/submit_all.sh
+```
+
+投入されるジョブと実行順:
+
+| ジョブ番号 | スクリプト | walltime | 依存 |
+|-----------|-----------|---------|------|
+| JOB1 | `run_baseline.sh` | 24h | なし (即時投入) |
+| JOB2 | `run_ablation.sh` | 2h | JOB1 完了後 (`afterok`) |
+| JOB3 | `run_profile.sh` | 2h | JOB2 完了後 (`afterok`) |
+| JOB4 | `measure_bandwidth.sh` | 30min | 独立 (JOB1 と並列) |
+
+実行イメージ:
+
+```
+JOB1 ──────────────────────> JOB2 ──> JOB3
+JOB4 (独立・並列)
+```
+
+投入後のモニタリング:
+
+```bash
+qstat -u $USER      # 自分のジョブ一覧
+qstat -f <job_id>   # 特定ジョブの詳細 (待ち理由・開始時刻)
+qdel <job_id>       # 特定ジョブのキャンセル
+```
+
+> **注意**: `submit_all.sh` は `research/` ディレクトリから実行すること。  
+> 各ジョブスクリプトが `PBS_O_WORKDIR` を使ってパスを解決するため、  
+> 投入ディレクトリが `research/` であることが前提となっている。
+
+---
+
+## 13. トラブルシューティング
 
 ### cmake に失敗する / CUDA コンパイラが見つからない
 - インタラクティブジョブ (`interact-g`) または `regular-g` キュー上で実行すること
@@ -447,7 +488,7 @@ graph.getEdgeCount()              // 有向辺数 (edge_size = 2 × getEdgeCount
 
 ---
 
-## 13. グラフデータセット構成と取得方法
+## 14. グラフデータセット構成と取得方法
 
 ### 同梱グラフ
 
@@ -494,7 +535,7 @@ python3 research/tools/gen_graph.py --model er --nodes 50000 --p 0.0001 -o data/
 
 ---
 
-## 14. 5段階アブレーション設計
+## 15. 5段階アブレーション設計
 
 本研究の提案手法を段階的に検証するため、5段階の実装を用意している。
 
@@ -542,7 +583,7 @@ Stage 4  brandes_gpu_opt.cu      UVM + 手法1 + 手法2
 
 ---
 
-## 15. `--topo-threshold` オプション
+## 16. `--topo-threshold` オプション
 
 `brandes_gpu_readmostly` と `brandes_gpu_opt` は、トポロジデータの配置先を
 グラフサイズに応じて切り替える。切り替え閾値はコマンドライン引数で変更できる。
@@ -584,7 +625,7 @@ done
 
 ---
 
-## 16. `run_all_experiments.sh` の使い方
+## 17. `run_all_experiments.sh` の使い方
 
 全実験 (帯域計測〜可視化) を1回のコマンドで実行するスクリプト。
 Miyabi-G のインタラクティブジョブ内で実行する。
