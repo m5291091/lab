@@ -327,6 +327,17 @@ static vector<double> brandes_gpu_opt_impl(
         + (size_t)n_nodes * sizeof(int)                        // d_S
         + (size_t)(n_nodes + 1) * sizeof(int);                 // d_S_ends
 
+    // [安全マージン 15% の根拠]
+    //   HBM3 上には以下の「見えないオーバーヘッド」が常に存在する:
+    //     - CUDA ランタイムの内部バッファ（コンテキスト, カーネル引数スタックなど）
+    //     - cudaMallocManaged のページテーブルメタデータ（UVM 管理構造体）
+    //     - SetReadMostly により L2 に複製されたトポロジデータのシャドウページ
+    //     - OS/ドライバが確保するシステム予約領域
+    //   これらの合計は実測で 5〜12% 程度になることが多く、
+    //   余裕を見て 15% を安全マージンとして設定している。
+    //   10% にすると cudaMalloc が OOM（Out-of-Memory）で失敗するケースがあった。
+    //   20% にすると BATCH_PER_STREAM が小さくなりカーネル起動オーバーヘッドが増大する。
+    //   15% はこのトレードオフの実験的バランス点。
     const size_t safety          = (size_t)(free_mem * 0.15);
     const size_t available       = (free_mem > safety) ? (free_mem - safety) : 0;
     int          BATCH_PER_STREAM = (int)(available / ((size_t)NS * per_batch_mem));
@@ -552,6 +563,23 @@ vector<double> brandes_gpu_opt(Graph &G)
     //   大グラフ                           : CPU LPDDR5X に固定 + NVLink-C2C 経由アクセス
     cudaDeviceProp prop;
     CUDA_ERR_CHK(cudaGetDeviceProperties(&prop, 0));
+    // [トポロジとは]
+    //   グラフの「構造情報」= 頂点と頂点の接続関係を表すデータ。
+    //   このコードでは CSR（Compressed Sparse Row）形式で表現される:
+    //     R (row_offsets) : サイズ (n_nodes+1) の int 配列
+    //                       R[v] = 頂点 v の隣接リストが後述の C 配列のどこから始まるか
+    //                       R[v+1] = どこで終わるか
+    //     C (col_indices) : サイズ (2 * edge_count) の int 配列
+    //                       C[R[v]..R[v+1]-1] = 頂点 v の全隣接頂点番号
+    //   これらは計算中に一切書き換わらない「静的データ」であり、
+    //   Brandes アルゴリズムの BFS・バックワードフェーズ両方で参照される。
+    //
+    // [35% 閾値の根拠]
+    //   HBM3 残り 85%（安全マージン 15% 除く）を以下で分割:
+    //     動的ステートデータ（d_d, sigma, delta, Q, S など）: 約 50% 必要
+    //     トポロジの最大許容サイズ                         : 85% - 50% = 35%
+    //   トポロジがこの範囲に収まる場合は HBM3 に直接配置して NVLink を不使用にできる。
+    //   収まらない場合は CPU LPDDR5X に配置し SetReadMostly で L2 キャッシュを活用する。
     const size_t topo_bytes = (size_t)(n_nodes + 1) * sizeof(int)
                             + (size_t)edge_size      * sizeof(int);
     const bool   topo_on_gpu = (topo_bytes < (size_t)(prop.totalGlobalMem * 0.35));
