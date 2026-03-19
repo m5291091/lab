@@ -6,6 +6,9 @@
 
 > 初めてこのリポジトリを触る場合は、先に **[README.md](../README.md)** で研究背景・GH200 アーキテクチャ・提案手法を把握してから本手順書を読んでください。
 
+> **本番実験を一括実行したい場合は [EXPERIMENTS.md](./EXPERIMENTS.md) を参照してください。**  
+> ビルドから Nsight プロファイルまで、全証拠取得の手順を1か所にまとめています。
+
 ---
 
 ## 実験パイプライン全体像
@@ -216,10 +219,11 @@ GPU_Opt    325557_3216152    2.341    8.822
 |------|------|
 | `sequential` | 逐次版 (CPU シングルスレッド) |
 | `omp` | OpenMP 並列版 (CPU 全コア) |
-| `gpu` | CUDA GPU 版 (cudaMalloc) |
-| `gpu_managed` | Unified Memory 版 |
-| `gpu_readmostly` | **提案手法 1** (SetReadMostly + 適応型 Prefetch) |
-| `gpu_opt` | **提案手法 1+2** (ReadMostly + 2-stream 非同期) |
+| `gpu` | Stage 0: CUDA GPU 版 (cudaMalloc, シングルストリーム) |
+| `gpu_stream` | **Stage 1**: HBM3専用 + cudaMemsetAsync + 2ストリームダブルバッファ |
+| `gpu_managed` | Stage 2: Unified Memory 版 |
+| `gpu_readmostly` | Stage 3: **提案手法 1** (SetReadMostly + 適応型 Prefetch) |
+| `gpu_opt` | Stage 4: **提案手法 1+2** (ReadMostly + 2-stream 非同期) |
 | `all` | 全実装を一括実行 |
 
 ---
@@ -235,15 +239,16 @@ bash scripts/verify_correctness.sh                          # デフォルト: b
 bash scripts/verify_correctness.sh ../../data/56438_300801  # グラフ指定も可
 ```
 
-**期待される出力** (全 5 実装が PASS):
+**期待される出力** (全 6 実装が PASS):
 ```
 PASS: All BC values match within tolerance.   # OpenMP
 PASS: All BC values match within tolerance.   # GPU
+PASS: All BC values match within tolerance.   # GPU_Stream
 PASS: All BC values match within tolerance.   # GPU_Managed
 PASS: All BC values match within tolerance.   # GPU_ReadMostly  <- 提案手法 1
 PASS: All BC values match within tolerance.   # GPU_Opt
 ========================================
-  PASS: 5  FAIL: 0
+  PASS: 6  FAIL: 0
 ========================================
 ```
 
@@ -264,9 +269,9 @@ qsub scripts/run_baseline.sh
 
 | グラフ規模 | 対象グラフ | 計測対象実装 |
 |-----------|---------|-----------|
-| small (7K, 11K) | benchmark_7000_41459, benchmark_11023_62184 | sequential, omp, gpu, gpu_managed, gpu_readmostly, gpu_opt |
-| medium (56K〜410K) | snap 実世界グラフ 7 本 | omp, gpu, gpu_managed, gpu_readmostly, gpu_opt |
-| large (800K〜2M) | roadNet-*, web-Google | gpu, gpu_readmostly, gpu_opt |
+| small (7K, 11K) | benchmark_7000_41459, benchmark_11023_62184 | sequential, omp, gpu, gpu_stream, gpu_managed, gpu_readmostly, gpu_opt |
+| medium (56K〜410K) | snap 実世界グラフ 7 本 | omp, gpu, gpu_stream, gpu_managed, gpu_readmostly, gpu_opt |
+| large (800K〜2M) | roadNet-*, web-Google | gpu, gpu_stream, gpu_readmostly, gpu_opt |
 
 ---
 

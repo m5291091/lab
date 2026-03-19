@@ -81,13 +81,14 @@ Unified Memory の利便性を維持する 2 つの最適化手法を提案し�
 |--------|-------------|------|---------|
 | `Sequential` | `brandes_sequential.cpp` | CPU シングルスレッド版 | 最遅の参照実装 |
 | `OpenMP` | `brandes_omp.cpp` | CPU 全コア (最大 72 スレッド) 並列化 | CPU ベースライン |
-| `GPU` | `brandes_gpu.cu` | CUDA + `cudaMalloc` でデータを HBM3 に明示確保 | GPU ベースライン |
-| `GPU_Managed` | `brandes_gpu_managed.cu` | `cudaMallocManaged` で Unified Memory を使用 | ナイーブ UM 実装 (意図的に遅い) |
-| `GPU_ReadMostly` | `brandes_gpu_readmostly.cu` | **手法 1**: ReadMostly + 適応型 Prefetch | アブレーション用 中間実装 |
-| `GPU_Opt` | `brandes_gpu_opt.cu` | **手法 1 + 2**: ReadMostly + 2-stream 非同期 | **最終提案実装** |
+| `GPU` | `brandes_gpu.cu` | Stage 0: CUDA + `cudaMalloc` でデータを HBM3 に明示確保 | GPU ベースライン |
+| `GPU_Stream` | `brandes_gpu_stream.cu` | **Stage 1**: HBM3専用 + `cudaMemsetAsync` + 2ストリームダブルバッファ | アブレーション用（手法2単体の効果検証） |
+| `GPU_Managed` | `brandes_gpu_managed.cu` | Stage 2: `cudaMallocManaged` で Unified Memory を使用 | ナイーブ UM 実装 (意図的に遅い) |
+| `GPU_ReadMostly` | `brandes_gpu_readmostly.cu` | Stage 3: **手法 1**: ReadMostly + 適応型 Prefetch | アブレーション用 中間実装 |
+| `GPU_Opt` | `brandes_gpu_opt.cu` | Stage 4: **手法 1 + 2**: ReadMostly + 2-stream 非同期 | **最終提案実装** |
 
-> **アブレーションの流れ**:  
-> `GPU_Managed` (5倍遅) → `GPU_ReadMostly` (GPU と同等: 手法1の効果) → `GPU_Opt` (さらに高速化: 手法2の効果)
+> **5段階アブレーションの流れ**:  
+> Stage 0 `GPU` → Stage 1 `GPU_Stream`（手法2単体）→ Stage 2 `GPU_Managed`（UVM導入コスト）→ Stage 3 `GPU_ReadMostly`（手法1の効果）→ Stage 4 `GPU_Opt`（手法1+2）
 
 ---
 
@@ -99,11 +100,18 @@ lab/
 ├── RESULT.md               ← 実験結果まとめ (論文執筆用)
 │
 ├── research/               ← ソースコード・スクリプト・実験環境
-│   ├── brandes_*.cpp/.cu   ← 各実装のソースコード
+│   ├── brandes_gpu.cu          ← Stage 0: HBM3専用・シングルストリーム
+│   ├── brandes_gpu_stream.cu   ← Stage 1: HBM3専用・ダブルバッファ (新規)
+│   ├── brandes_gpu_managed.cu  ← Stage 2: UVM・シングルストリーム
+│   ├── brandes_gpu_readmostly.cu ← Stage 3: UVM + ReadMostly
+│   ├── brandes_gpu_opt.cu      ← Stage 4: UVM + ReadMostly + ダブルバッファ
+│   ├── brandes_*.cpp           ← Sequential / OpenMP 実装
 │   ├── CMakeLists.txt      ← CMake ビルド設定
 │   ├── HOWTO.md            ← 詳細な実験手順書
+│   ├── EXPERIMENTS.md      ← ビルドから本番実験まで網羅した実行手順書
 │   │
 │   ├── scripts/            ← PBS バッチジョブスクリプト
+│   │   └── run_all_experiments.sh ← 全実験一括実行 (新規)
 │   ├── tools/              ← グラフ取得・変換・生成ユーティリティ
 │   │
 │   ├── build_miyabi/       ← ビルド成果物・実験結果 (git 管理外)
@@ -157,15 +165,21 @@ cd /work/gj17/j17000/m5291091/lab/research/build_miyabi
 
 出力形式 (タブ区切り): `実装名  グラフ名  実行時間(秒)  GTEPS`
 
-### 3. 本番実験 (PBS バッチジョブ)
+### 3. 本番実験 (全証拠を一括取得)
 
 ```bash
 cd /work/gj17/j17000/m5291091/lab/research
 
+# 1コマンドで帯域計測〜全グラフ計測〜閾値感度〜Nsight プロファイル〜可視化まで実行
+bash scripts/run_all_experiments.sh
+
+# または個別スクリプトを投入する場合
 qsub scripts/run_baseline.sh    # ベースライン全計測 (walltime: 24h)
 qsub scripts/run_ablation.sh    # アブレーションスタディ (walltime: 2h)
 qsub scripts/measure_bandwidth.sh  # 帯域計測
 ```
+
+詳細は **[research/EXPERIMENTS.md](./research/EXPERIMENTS.md)** を参照。
 
 ### 4. 結果の可視化
 
@@ -188,6 +202,8 @@ python3 analyze_all.py
 | GPU_Managed vs GPU_ReadMostly | 平均 **4.9 倍** 改善 | 手法 1 の効果 (NVLink-C2C ボトルネック解消) |
 | GPU_ReadMostly vs GPU_Opt | 最大 **1.3 倍** 改善 | 手法 2 の効果 (2-stream 非同期) |
 | GPU vs GPU_Opt | 最大 **1.16 倍** 改善 | 提案手法全体の GPU 超越 |
+
+> GPU_Stream (Stage 1) を含む5段階アブレーションの詳細結果は **[RESULT.md](./RESULT.md)** で随時更新する。
 
 最高スループット: **43.9 GTEPS** (web-NotreDame, GPU_Opt, 325K nodes / 1.5M edges)
 
@@ -215,5 +231,6 @@ bash research/tools/download_snap_graphs.sh
 | ドキュメント | 内容 |
 |-----------|------|
 | [RESULT.md](./RESULT.md) | 実験結果の詳細・図の解説・考察 |
+| [research/EXPERIMENTS.md](./research/EXPERIMENTS.md) | ビルドから本番実験まで網羅した実行手順書 |
 | [research/HOWTO.md](./research/HOWTO.md) | 実験手順の詳細 (ビルド〜実行〜分析) |
 | [data/README.md](./data/README.md) | グラフデータセットの仕様・取得方法 |
