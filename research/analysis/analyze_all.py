@@ -29,64 +29,82 @@ import matplotlib.ticker as ticker
 # Constants / Configuration
 # ============================================================
 
+# Canonical display label for each internal implementation key.
+# All 7 implementations are listed with verbose, paper-ready English labels.
 IMPL_LABELS = {
-    'Sequential':      'Sequential',
-    'OpenMP':          'OpenMP',
-    'GPU':             'GPU (device mem)',
-    'GPU_Managed':     'GPU + Unified Mem',
-    'GPU_ReadMostly':  'GPU + ReadMostly (Method 1)',
-    'GPU_Opt':         'GPU + Optimized UM (Method 1+2)',
-    # Legacy lowercase aliases
-    'sequential':      'Sequential',
-    'omp':             'OpenMP',
-    'gpu':             'GPU (device mem)',
-    'gpu_managed':     'GPU + Unified Mem',
-    'gpu_readmostly':  'GPU + ReadMostly (Method 1)',
-    'gpu_opt':         'GPU + Optimized UM (Method 1+2)',
+    # Uppercase variants (from TSV column names)
+    'Sequential':      'Sequential (Single-thread CPU)',
+    'OpenMP':          'OpenMP (72-core CPU Parallel)',
+    'GPU':             'GPU-HBM3 (Single-stream)',
+    'GPU_Stream':      'GPU-HBM3+Stream (Double-buffer)',
+    'GPU_Managed':     'GPU-UVM (Naive)',
+    'GPU_ReadMostly':  'GPU-UVM+ReadMostly (Method 1)',
+    'GPU_Opt':         'GPU-UVM+Opt (Method 1+2)',
+    # Lowercase aliases (from file-name based TSV keys)
+    'sequential':      'Sequential (Single-thread CPU)',
+    'openmp':          'OpenMP (72-core CPU Parallel)',
+    'omp':             'OpenMP (72-core CPU Parallel)',
+    'gpu':             'GPU-HBM3 (Single-stream)',
+    'gpu_stream':      'GPU-HBM3+Stream (Double-buffer)',
+    'gpu_managed':     'GPU-UVM (Naive)',
+    'gpu_readmostly':  'GPU-UVM+ReadMostly (Method 1)',
+    'gpu_opt':         'GPU-UVM+Opt (Method 1+2)',
 }
 
-IMPL_ORDER     = ['Sequential', 'OpenMP', 'GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
-IMPL_ORDER_ALT = ['sequential', 'omp',   'gpu', 'gpu_managed', 'gpu_readmostly', 'gpu_opt']
+# Ordered list of implementations (display preference: uppercase first).
+IMPL_ORDER     = ['Sequential', 'OpenMP', 'GPU', 'GPU_Stream',
+                  'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
+IMPL_ORDER_ALT = ['sequential', 'openmp', 'omp', 'gpu', 'gpu_stream',
+                  'gpu_managed', 'gpu_readmostly', 'gpu_opt']
 
-IMPL_COLORS = {
-    'Sequential':     '#555555',
-    'OpenMP':         '#2196F3',
-    'GPU':            '#4CAF50',
-    'GPU_Managed':    '#FF9800',
-    'GPU_ReadMostly': '#9C27B0',
-    'GPU_Opt':        '#F44336',
-    # Legacy lowercase
-    'sequential':     '#555555',
-    'omp':            '#2196F3',
-    'gpu':            '#4CAF50',
-    'gpu_managed':    '#FF9800',
-    'gpu_readmostly': '#9C27B0',
-    'gpu_opt':        '#F44336',
+# Colorblind-friendly palette (Wong, 2011).
+_DISPLAY_COLORS = {
+    'Sequential (Single-thread CPU)':  '#999999',
+    'OpenMP (72-core CPU Parallel)':   '#E69F00',
+    'GPU-HBM3 (Single-stream)':        '#0072B2',
+    'GPU-HBM3+Stream (Double-buffer)': '#56B4E9',
+    'GPU-UVM (Naive)':                 '#D55E00',
+    'GPU-UVM+ReadMostly (Method 1)':   '#009E73',
+    'GPU-UVM+Opt (Method 1+2)':        '#CC79A7',
 }
 
-IMPL_MARKERS = {
-    'Sequential':     'o',
-    'OpenMP':         's',
-    'GPU':            '^',
-    'GPU_Managed':    'D',
-    'GPU_ReadMostly': 'P',
-    'GPU_Opt':        '*',
-    # Legacy lowercase
-    'sequential':     'o',
-    'omp':            's',
-    'gpu':            '^',
-    'gpu_managed':    'D',
-    'gpu_readmostly': 'P',
-    'gpu_opt':        '*',
+def _color(key: str) -> str:
+    """Return color for an implementation key or its display label."""
+    label = IMPL_LABELS.get(key, key)
+    return _DISPLAY_COLORS.get(label, _DISPLAY_COLORS.get(key, '#888888'))
+
+# Keep a flat IMPL_COLORS dict for backward-compatible direct access.
+IMPL_COLORS = {k: _color(k) for k in list(IMPL_LABELS.keys()) + list(_DISPLAY_COLORS.keys())}
+
+_DISPLAY_MARKERS = {
+    'Sequential (Single-thread CPU)':  'o',
+    'OpenMP (72-core CPU Parallel)':   's',
+    'GPU-HBM3 (Single-stream)':        '^',
+    'GPU-HBM3+Stream (Double-buffer)': 'v',
+    'GPU-UVM (Naive)':                 'D',
+    'GPU-UVM+ReadMostly (Method 1)':   'P',
+    'GPU-UVM+Opt (Method 1+2)':        '*',
 }
+
+def _marker(key: str) -> str:
+    label = IMPL_LABELS.get(key, key)
+    return _DISPLAY_MARKERS.get(label, _DISPLAY_MARKERS.get(key, 'o'))
+
+IMPL_MARKERS = {k: _marker(k) for k in list(IMPL_LABELS.keys()) + list(_DISPLAY_MARKERS.keys())}
 
 # Graph name -> node count (fallback when not extractable from TSV Graph column)
 GRAPH_NODES = {
+    'benchmark_7000':          7_000,
     'benchmark_7000_41459':    7_000,
+    'benchmark_11023':        11_023,
     'benchmark_11023_62184':  11_023,
+    'benchmark_85830':        85_830,
     'benchmark_85830.data':   85_830,
     'random':                 32_768,   # gen_graph default
+    'random_32K':             32_768,
+    '56438':                  56_438,
     '56438_300801':           56_438,
+    '325557':                325_557,
     '325557_3216152':        325_557,
     'email-EuAll':           265_214,
     'amazon0302':            262_111,
@@ -98,6 +116,36 @@ GRAPH_NODES = {
     'roadNet-TX':          1_379_917,
     'roadNet-CA':          1_971_281,
 }
+
+# Human-readable display names for each graph dataset (paper-ready labels).
+GRAPH_DISPLAY_NAMES = {
+    'benchmark_7000':          'Synth-7K',
+    'benchmark_7000_41459':    'Synth-7K',
+    'benchmark_11023':         'Synth-11K',
+    'benchmark_11023_62184':   'Synth-11K',
+    'benchmark_85830':         'Synth-85K',
+    'benchmark_85830.data':    'Synth-85K',
+    'random':                  'Random-32K',
+    'random_32K':              'Random-32K',
+    '56438':                   'RealWorld-56K',
+    '56438_300801':            'RealWorld-56K',
+    '325557':                  'RealWorld-325K',
+    '325557_3216152':          'RealWorld-325K',
+    'email-EuAll':             'Email-EuAll-265K',
+    'amazon0302':              'Amazon-262K',
+    'web-Stanford':            'Web-Stanford-281K',
+    'web-NotreDame':           'Web-NotreDame-325K',
+    'amazon0505':              'Amazon-410K',
+    'web-Google':              'Web-Google-875K',
+    'roadNet-PA':              'Road-PA-1.09M',
+    'roadNet-TX':              'Road-TX-1.38M',
+    'roadNet-CA':              'Road-CA-1.97M',
+}
+
+
+def graph_display_name(graph_base: str) -> str:
+    """Return paper-ready display name for a graph base name."""
+    return GRAPH_DISPLAY_NAMES.get(graph_base, graph_base)
 
 # Graph name -> edge count
 GRAPH_EDGES = {
@@ -133,18 +181,19 @@ BW_LABELS = {
 }
 
 FIGURE_DPI = 300
-FIGURE_SIZE_WIDE = (10, 5)
-FIGURE_SIZE_SQUARE = (6, 5)
+FIGURE_SIZE_WIDE = (14, 6)
+FIGURE_SIZE_SQUARE = (7, 5)
 
 plt.rcParams.update({
-    'font.size': 11,
-    'axes.titlesize': 12,
-    'axes.labelsize': 11,
-    'legend.fontsize': 9,
-    'xtick.labelsize': 9,
-    'ytick.labelsize': 9,
-    'figure.dpi': FIGURE_DPI,
-    'savefig.bbox': 'tight',
+    'font.family':     'DejaVu Sans',
+    'font.size':        11,
+    'axes.titlesize':   12,
+    'axes.labelsize':   11,
+    'legend.fontsize':   9,
+    'xtick.labelsize':   9,
+    'ytick.labelsize':   9,
+    'figure.dpi':       FIGURE_DPI,
+    'savefig.bbox':    'tight',
 })
 
 
@@ -167,13 +216,17 @@ def format_nodes(n: int) -> str:
     return str(n)
 
 
-KNOWN_IMPLS = {'Sequential', 'OpenMP', 'GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt',
-               'sequential', 'omp', 'gpu', 'gpu_managed', 'gpu_readmostly', 'gpu_opt',
-               'mpi_gpu', 'brandes_mpi_runner'}
+KNOWN_IMPLS = {'Sequential', 'OpenMP', 'GPU', 'GPU_Stream', 'GPU_Managed', 'GPU_ReadMostly',
+               'GPU_Opt', 'sequential', 'openmp', 'omp', 'gpu', 'gpu_stream', 'gpu_managed',
+               'gpu_readmostly', 'gpu_opt', 'mpi_gpu', 'brandes_mpi_runner'}
 
 
 def load_tsv_skip_duplicate_headers(path: Path) -> pd.DataFrame:
-    """Load a TSV that may contain duplicate header rows, stdout noise, or error messages."""
+    """Load a TSV that may contain duplicate header rows, stdout noise, or error messages.
+
+    Missing-value tokens ('—', '-', '') are treated as NaN so that numeric
+    conversion does not crash on them.
+    """
     if not path.exists():
         return pd.DataFrame()
     rows = []
@@ -205,6 +258,13 @@ def load_tsv_skip_duplicate_headers(path: Path) -> pd.DataFrame:
     if not rows:
         return pd.DataFrame()
     df = pd.DataFrame(rows, columns=header)
+    df.columns = df.columns.str.strip()
+    # Treat em-dash and standalone dash as missing values, but only in
+    # string-type columns to avoid corrupting numeric text like '-5'.
+    _missing = {'—', '-', ''}
+    for col in df.columns:
+        if df[col].dtype == object:
+            df[col] = df[col].apply(lambda v: np.nan if v in _missing else v)
     # Convert to numeric types
     for col in ['Time_sec', 'GTEPS', 'BatchSize',
                 'BFS_sec', 'Back_sec', 'Size_GB',
@@ -217,22 +277,21 @@ def load_tsv_skip_duplicate_headers(path: Path) -> pd.DataFrame:
 
 
 def add_graph_metadata(df: pd.DataFrame) -> pd.DataFrame:
-    """Add node count column derived from the Graph column."""
+    """Add node count and display-name columns derived from the Graph column."""
     if df.empty or 'Graph' not in df.columns:
         return df
     df = df.copy()
     df['graph_base'] = df['Graph'].apply(lambda x: Path(x).name)
-    df['nodes'] = df['graph_base'].map(
-        lambda x: GRAPH_NODES.get(x, 0)
-    )
+    df['nodes'] = df['graph_base'].map(lambda x: GRAPH_NODES.get(x, 0))
+    df['graph_label'] = df['graph_base'].map(graph_display_name)
     return df.sort_values('nodes')
 
 
 def get_impl_order(df: pd.DataFrame) -> list:
-    """Return the correct ordering of implementation names present in the data."""
+    """Return the canonical ordering of implementation names present in the data."""
     present = set(df['Implementation'].unique()) if not df.empty else set()
     order = []
-    # Prefer uppercase variant
+    # Prefer uppercase variant first
     for impl in IMPL_ORDER:
         if impl in present:
             order.append(impl)
@@ -248,60 +307,84 @@ def get_impl_order(df: pd.DataFrame) -> list:
     return order
 
 
+def _legend_outside(ax, n_series: int):
+    """Place legend outside the plot area when there are 4 or more series."""
+    if n_series >= 4:
+        ax.legend(bbox_to_anchor=(1.01, 1), loc='upper left', borderaxespad=0)
+    else:
+        ax.legend(loc='best')
+
+
+def _annotate_bars(ax, bars, fmt='{:.2f}'):
+    """Add value annotations on top of each bar."""
+    for bar in bars:
+        height = bar.get_height()
+        if np.isfinite(height) and height > 0:
+            ax.text(bar.get_x() + bar.get_width() / 2.0, height,
+                    fmt.format(height), ha='center', va='bottom',
+                    fontsize=7, clip_on=True)
+
+
+def _savefig(fig, out_path: Path):
+    """Save figure as both PDF and PNG with tight bounding box."""
+    fig.savefig(out_path, bbox_inches='tight')
+    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI, bbox_inches='tight')
+    print(f"[OK] {out_path}")
+
+
 # ============================================================
 # Plot functions
 # ============================================================
 
 def plot_execution_time(df: pd.DataFrame, out_dir: Path):
+    """Execution Time Comparison Across All Datasets (line chart, log-scale Y)."""
     if df.empty:
         print("[SKIP] Execution time graph: no data")
         return
 
     df = add_graph_metadata(df)
-    graphs_sorted = df['graph_base'].unique()
-    graphs_sorted = sorted(graphs_sorted, key=lambda g: GRAPH_NODES.get(g, 0))
+
+    # Exclude non-positive values before log scale
+    df = df[df['Time_sec'] > 0].copy()
+    if df.empty:
+        print("[SKIP] Execution time graph: all values <= 0")
+        return
+
+    graphs_sorted = sorted(df['graph_base'].unique(), key=lambda g: GRAPH_NODES.get(g, 0))
+    impls = get_impl_order(df)
 
     fig, ax = plt.subplots(figsize=FIGURE_SIZE_WIDE)
 
-    for impl in get_impl_order(df):
-        sub = df[df['Implementation'] == impl]
+    for impl in impls:
+        sub = df[df['Implementation'] == impl].sort_values('nodes')
         if sub.empty:
             continue
-        sub = sub.sort_values('nodes')
-        xs = [format_nodes(n) for n in sub['nodes']]
+        xs = list(range(len(sub)))
         ys = sub['Time_sec'].values
-
-        ax.plot(range(len(xs)), ys,
+        ax.plot(xs, ys,
                 label=IMPL_LABELS.get(impl, impl),
-                color=IMPL_COLORS.get(impl, 'black'),
+                color=IMPL_COLORS.get(impl, '#888888'),
                 marker=IMPL_MARKERS.get(impl, 'o'),
                 linewidth=1.8, markersize=6)
 
-    all_nodes = sorted(set(
-        n for g in graphs_sorted
-        for n in [GRAPH_NODES.get(g, 0)] if n > 0
-    ))
-    labels = [format_nodes(n) for n in all_nodes]
-    ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(labels, rotation=30, ha='right')
+    x_labels = [graph_display_name(g) for g in graphs_sorted]
+    ax.set_xticks(range(len(x_labels)))
+    ax.set_xticklabels(x_labels, rotation=40, ha='right')
     ax.set_yscale('log')
-    ax.set_xlabel('Graph Size (nodes)')
-    ax.set_ylabel('Execution Time (sec) [log scale]')
-    ax.set_title('Execution Time Comparison: All Implementations')
-    ax.legend(loc='upper left')
+    ax.set_xlabel('Number of Vertices')
+    ax.set_ylabel('Execution Time (seconds) [log scale]')
+    ax.set_title('Execution Time Comparison Across All Datasets')
+    _legend_outside(ax, len(impls))
     ax.grid(True, which='both', alpha=0.3)
     ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
 
     fig.tight_layout()
-    out_path = out_dir / 'exec_time_vs_graphsize.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'execution_time_comparison.pdf')
     plt.close(fig)
 
 
 def plot_speedup(df: pd.DataFrame, out_dir: Path, baseline_impl: str = 'sequential'):
-    """Speedup vs. graph size (relative to baseline_impl)."""
+    """Speedup over a baseline implementation vs. graph size."""
     if df.empty:
         print("[SKIP] Speedup graph: no data")
         return
@@ -315,15 +398,33 @@ def plot_speedup(df: pd.DataFrame, out_dir: Path, baseline_impl: str = 'sequenti
         return
 
     merged = df.merge(base_df, on='graph_base')
+    # Guard against division-by-zero
+    merged['base_time'] = merged['base_time'].replace(0, np.nan)
     merged['speedup'] = merged['base_time'] / merged['Time_sec']
     merged = merged.sort_values('nodes')
 
-    graphs_sorted = sorted(merged['graph_base'].unique(),
-                           key=lambda g: GRAPH_NODES.get(g, 0))
+    graphs_sorted = sorted(merged['graph_base'].unique(), key=lambda g: GRAPH_NODES.get(g, 0))
+    impls = get_impl_order(df)
+
+    baseline_label = IMPL_LABELS.get(baseline_impl, baseline_impl)
+    # Choose file-name suffix based on the display label of the baseline
+    if 'Sequential' in baseline_label:
+        suffix = 'Sequential'
+        title = 'Speedup over Sequential (Single-thread CPU)'
+        ylabel = 'Speedup (x)'
+    elif 'OpenMP' in baseline_label:
+        suffix = 'OpenMP'
+        title = 'Speedup over OpenMP (72-core Parallel)'
+        ylabel = 'Speedup (x)'
+    else:
+        suffix = baseline_impl
+        title = f'Speedup over {baseline_label}'
+        ylabel = 'Speedup (x)'
 
     fig, ax = plt.subplots(figsize=FIGURE_SIZE_WIDE)
 
-    for impl in get_impl_order(df):
+    plotted = 0
+    for impl in impls:
         if impl == baseline_impl:
             continue
         sub = merged[merged['Implementation'] == impl].sort_values('nodes')
@@ -334,44 +435,46 @@ def plot_speedup(df: pd.DataFrame, out_dir: Path, baseline_impl: str = 'sequenti
 
         ax.plot(xs, ys,
                 label=IMPL_LABELS.get(impl, impl),
-                color=IMPL_COLORS.get(impl, 'black'),
+                color=IMPL_COLORS.get(impl, '#888888'),
                 marker=IMPL_MARKERS.get(impl, 'o'),
                 linewidth=1.8, markersize=6)
+        plotted += 1
 
-    all_nodes = sorted(set(
-        GRAPH_NODES.get(g, 0) for g in graphs_sorted if GRAPH_NODES.get(g, 0) > 0
-    ))
-    labels = [format_nodes(n) for n in all_nodes]
-    ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(labels, rotation=30, ha='right')
-    ax.axhline(1.0, color='gray', linestyle='--', linewidth=1, label=f'{baseline_impl} (baseline)')
-    ax.set_xlabel('Graph Size (nodes)')
-    ax.set_ylabel(f'Speedup over {IMPL_LABELS.get(baseline_impl, baseline_impl)}')
-    ax.set_title(f'Speedup vs. {IMPL_LABELS.get(baseline_impl, baseline_impl)}')
-    ax.legend(loc='upper left')
+    x_labels = [graph_display_name(g) for g in graphs_sorted]
+    ax.set_xticks(range(len(x_labels)))
+    ax.set_xticklabels(x_labels, rotation=40, ha='right')
+    ax.axhline(1.0, color='gray', linestyle='--', linewidth=1,
+               label=f'{baseline_label} (baseline = 1×)')
+    ax.set_xlabel('Number of Vertices')
+    ax.set_ylabel(ylabel)
+    ax.set_title(title)
+    _legend_outside(ax, plotted + 1)
     ax.grid(True, alpha=0.3)
 
     fig.tight_layout()
-    out_path = out_dir / f'speedup_vs_{baseline_impl}.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / f'speedup_vs_{suffix}.pdf')
     plt.close(fig)
 
 
 def plot_gteps(df: pd.DataFrame, out_dir: Path):
-    """GTEPS comparison (line graph)."""
+    """Throughput Comparison (GTEPS) Across All Datasets (line chart)."""
     if df.empty:
         print("[SKIP] GTEPS graph: no data")
         return
 
     df = add_graph_metadata(df)
-    graphs_sorted = sorted(df['graph_base'].unique(),
-                           key=lambda g: GRAPH_NODES.get(g, 0))
+    # Exclude non-positive values before plotting
+    df = df[df['GTEPS'] > 0].copy()
+    if df.empty:
+        print("[SKIP] GTEPS graph: all values <= 0")
+        return
+
+    graphs_sorted = sorted(df['graph_base'].unique(), key=lambda g: GRAPH_NODES.get(g, 0))
+    impls = get_impl_order(df)
 
     fig, ax = plt.subplots(figsize=FIGURE_SIZE_WIDE)
 
-    for impl in get_impl_order(df):
+    for impl in impls:
         sub = df[df['Implementation'] == impl].sort_values('nodes')
         if sub.empty:
             continue
@@ -380,82 +483,76 @@ def plot_gteps(df: pd.DataFrame, out_dir: Path):
 
         ax.plot(xs, ys,
                 label=IMPL_LABELS.get(impl, impl),
-                color=IMPL_COLORS.get(impl, 'black'),
+                color=IMPL_COLORS.get(impl, '#888888'),
                 marker=IMPL_MARKERS.get(impl, 'o'),
                 linewidth=1.8, markersize=6)
 
-    all_nodes = sorted(set(
-        GRAPH_NODES.get(g, 0) for g in graphs_sorted if GRAPH_NODES.get(g, 0) > 0
-    ))
-    labels = [format_nodes(n) for n in all_nodes]
-    ax.set_xticks(range(len(labels)))
-    ax.set_xticklabels(labels, rotation=30, ha='right')
-    ax.set_xlabel('Graph Size (nodes)')
+    x_labels = [graph_display_name(g) for g in graphs_sorted]
+    ax.set_xticks(range(len(x_labels)))
+    ax.set_xticklabels(x_labels, rotation=40, ha='right')
+    ax.set_xlabel('Number of Vertices')
     ax.set_ylabel('Throughput (GTEPS)')
-    ax.set_title('Throughput Comparison: All Implementations')
-    ax.legend(loc='upper left')
+    ax.set_title('Throughput Comparison (GTEPS) Across All Datasets')
+    _legend_outside(ax, len(impls))
     ax.grid(True, alpha=0.3)
 
     fig.tight_layout()
-    out_path = out_dir / 'gteps_comparison.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'gteps_comparison.pdf')
     plt.close(fig)
 
 
 def plot_phase2_comparison(df: pd.DataFrame, out_dir: Path):
-    """Phase2: execution time comparison for gpu / gpu_managed / gpu_opt (grouped bar chart)."""
+    """Execution time bar-chart comparison for GPU-family implementations."""
     if df.empty:
         print("[SKIP] Phase2 graph: no data")
         return
 
     df = add_graph_metadata(df)
-    impls = ['GPU', 'GPU_Managed', 'GPU_Opt', 'gpu', 'gpu_managed', 'gpu_opt']
-    impls_present = [i for i in impls if i in df['Implementation'].values]
+    # All 7 implementation keys (both case variants)
+    all_impls = ['GPU', 'GPU_Stream', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt',
+                 'gpu', 'gpu_stream', 'gpu_managed', 'gpu_readmostly', 'gpu_opt']
+    impls_present = [i for i in all_impls if i in df['Implementation'].values]
     if not impls_present:
         print("[SKIP] Phase2 graph: no GPU implementation data")
         return
 
-    graphs_sorted = sorted(df['graph_base'].unique(),
-                           key=lambda g: GRAPH_NODES.get(g, 0))
+    graphs_sorted = sorted(df['graph_base'].unique(), key=lambda g: GRAPH_NODES.get(g, 0))
     n_graphs = len(graphs_sorted)
-    n_impls = len(impls_present)
+    n_impls  = len(impls_present)
     x = np.arange(n_graphs)
-    width = 0.25
+    width = 0.8 / max(n_impls, 1)
 
     fig, ax = plt.subplots(figsize=FIGURE_SIZE_WIDE)
 
     for i, impl in enumerate(impls_present):
         sub = df[df['Implementation'] == impl]
-        times = [sub[sub['graph_base'] == g]['Time_sec'].values[0]
-                 if g in sub['graph_base'].values else 0
-                 for g in graphs_sorted]
+        times = []
+        for g in graphs_sorted:
+            vals = sub[sub['graph_base'] == g]['Time_sec'].values
+            times.append(vals[0] if len(vals) > 0 and vals[0] > 0 else np.nan)
         offset = (i - n_impls / 2 + 0.5) * width
-        bars = ax.bar(x + offset, times,
-                      width, label=IMPL_LABELS.get(impl, impl),
-                      color=IMPL_COLORS.get(impl, 'gray'), alpha=0.85)
+        bars = ax.bar(x + offset, times, width,
+                      label=IMPL_LABELS.get(impl, impl),
+                      color=IMPL_COLORS.get(impl, '#888888'), alpha=0.85)
+        _annotate_bars(ax, bars, fmt='{:.2f}')
 
-    labels = [format_nodes(GRAPH_NODES.get(g, 0)) for g in graphs_sorted]
+    x_labels = [graph_display_name(g) for g in graphs_sorted]
     ax.set_xticks(x)
-    ax.set_xticklabels(labels, rotation=30, ha='right')
+    ax.set_xticklabels(x_labels, rotation=40, ha='right')
     ax.set_yscale('log')
-    ax.set_xlabel('Graph Size (nodes)')
-    ax.set_ylabel('Execution Time (sec) [log scale]')
-    ax.set_title('GPU Memory Strategy Comparison\n(gpu vs. gpu_managed vs. gpu_opt)')
-    ax.legend()
+    ax.set_xlabel('Number of Vertices')
+    ax.set_ylabel('Execution Time (seconds) [log scale]')
+    ax.set_title('Execution Time Comparison Across All Datasets')
+    _legend_outside(ax, n_impls)
     ax.grid(True, axis='y', alpha=0.3)
 
     fig.tight_layout()
-    out_path = out_dir / 'phase2_memory_comparison.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'phase2_memory_comparison.pdf')
     plt.close(fig)
 
 
 def plot_bandwidth(df: pd.DataFrame, out_dir: Path):
-    """Bandwidth measurement results: effective vs. theoretical peak (bar chart)."""
+    """GH200 Memory Bandwidth: HBM3 vs. NVLink-C2C (bar chart)."""
     if df.empty:
         print("[SKIP] Bandwidth graph: no data")
         return
@@ -470,41 +567,40 @@ def plot_bandwidth(df: pd.DataFrame, out_dir: Path):
         print("[SKIP] Bandwidth graph: no transfer type data")
         return
 
-    measured = [df_max[df_max['Transfer_Type'] == t]['Bandwidth_GBs'].values[0] for t in types]
+    measured    = [df_max[df_max['Transfer_Type'] == t]['Bandwidth_GBs'].values[0] for t in types]
     theoretical = [BW_THEORY.get(t, 0) for t in types]
-    labels = [BW_LABELS.get(t, t) for t in types]
+    labels      = [BW_LABELS.get(t, t) for t in types]
 
     x = np.arange(len(types))
     width = 0.35
 
     fig, ax = plt.subplots(figsize=FIGURE_SIZE_SQUARE)
-    bars1 = ax.bar(x - width/2, measured, width, label='Measured', color='#1976D2', alpha=0.9)
+    bars1 = ax.bar(x - width/2, measured,    width, label='Measured',
+                   color='#1976D2', alpha=0.9)
     bars2 = ax.bar(x + width/2, theoretical, width, label='Theoretical Peak',
                    color='#90CAF9', alpha=0.7, hatch='///')
 
-    # Display utilization percentage above each bar
+    # Utilization percentage above measured bars
     for rect, meas, theo in zip(bars1, measured, theoretical):
-        ratio = meas / theo * 100
-        ax.text(rect.get_x() + rect.get_width()/2., rect.get_height() + 10,
-                f'{ratio:.1f}%', ha='center', va='bottom', fontsize=8)
+        if theo > 0:
+            ratio = meas / theo * 100
+            ax.text(rect.get_x() + rect.get_width()/2., rect.get_height() + 10,
+                    f'{ratio:.1f}%', ha='center', va='bottom', fontsize=8)
 
     ax.set_xticks(x)
     ax.set_xticklabels(labels, rotation=15, ha='right')
-    ax.set_ylabel('Bandwidth (GB/s)')
-    ax.set_title(f'Memory Bandwidth: GH200 (buffer={max_size:.1f} GB)')
+    ax.set_ylabel('Memory Bandwidth (GB/s)')
+    ax.set_title(f'GH200 Memory Bandwidth: HBM3 vs. NVLink-C2C\n(buffer = {max_size:.1f} GB)')
     ax.legend()
     ax.grid(True, axis='y', alpha=0.3)
 
     fig.tight_layout()
-    out_path = out_dir / 'bandwidth_comparison.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'bandwidth_comparison.pdf')
     plt.close(fig)
 
 
 def plot_bandwidth_by_size(df: pd.DataFrame, out_dir: Path):
-    """Bandwidth vs. buffer size (line graph)."""
+    """Bandwidth vs. buffer size (line chart)."""
     if df.empty:
         print("[SKIP] Bandwidth-size graph: no data")
         return
@@ -521,61 +617,60 @@ def plot_bandwidth_by_size(df: pd.DataFrame, out_dir: Path):
 
     for t in types:
         sub = df[df['Transfer_Type'] == t].sort_values('Size_GB')
+        sub = sub[sub['Bandwidth_GBs'] > 0]
         ax.plot(sub['Size_GB'], sub['Bandwidth_GBs'],
                 label=BW_LABELS.get(t, t),
-                color=colors.get(t, 'black'),
+                color=colors.get(t, '#888888'),
                 marker='o', linewidth=1.8, markersize=6)
-        # Theoretical peak (dotted line)
         theo = BW_THEORY.get(t, 0)
         if theo > 0:
-            ax.axhline(theo, color=colors.get(t, 'black'), linestyle=':', alpha=0.4, linewidth=1)
+            ax.axhline(theo, color=colors.get(t, '#888888'),
+                       linestyle=':', alpha=0.4, linewidth=1)
 
     ax.set_xscale('log')
     ax.set_xlabel('Buffer Size (GB) [log scale]')
-    ax.set_ylabel('Bandwidth (GB/s)')
-    ax.set_title('Memory Bandwidth vs. Buffer Size (dotted = theoretical peak)')
+    ax.set_ylabel('Memory Bandwidth (GB/s)')
+    ax.set_title('Memory Bandwidth vs. Buffer Size\n(dotted lines = theoretical peak)')
     ax.legend()
     ax.grid(True, which='both', alpha=0.3)
 
     fig.tight_layout()
-    out_path = out_dir / 'bandwidth_vs_bufsize.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'bandwidth_vs_bufsize.pdf')
     plt.close(fig)
 
 
 def plot_batchsize_sweep(df: pd.DataFrame, out_dir: Path):
-    """Batch size sensitivity analysis graph."""
+    """Batch Size Sensitivity (line chart for each graph)."""
     if df.empty:
         print("[SKIP] Batch size graph: no data")
         return
 
     graphs = df['Graph'].apply(lambda x: Path(x).name).unique() if 'Graph' in df.columns else []
 
-    fig, axes = plt.subplots(1, 2, figsize=(12, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
     for ax, metric, ylabel in zip(
-        axes, ['Time_sec', 'GTEPS'], ['Execution Time (sec)', 'Throughput (GTEPS)']
+        axes,
+        ['Time_sec', 'GTEPS'],
+        ['Execution Time (seconds)', 'Throughput (GTEPS)']
     ):
         for g in graphs:
             sub = df[df['Graph'].apply(lambda x: Path(x).name) == g]
             if sub.empty or 'BatchSize' not in sub.columns:
                 continue
             sub = sub.sort_values('BatchSize')
-            ax.plot(sub['BatchSize'], sub[metric],
-                    marker='o', label=format_nodes(GRAPH_NODES.get(g, 0)) + ' nodes')
+            sub = sub[sub[metric] > 0] if metric == 'Time_sec' else sub
+            label = graph_display_name(g)
+            ax.plot(sub['BatchSize'], sub[metric], marker='o', label=label)
         ax.set_xlabel('Batch Size')
         ax.set_ylabel(ylabel)
-        ax.set_title(f'{ylabel} vs. Batch Size (gpu_opt)')
-        ax.legend()
+        ax.set_title(f'{ylabel} vs. Batch Size')
+        ax.legend(fontsize=8)
         ax.grid(True, alpha=0.3)
 
+    fig.suptitle('Batch Size Sensitivity', fontsize=13)
     fig.tight_layout()
-    out_path = out_dir / 'batchsize_sensitivity.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'batchsize_sensitivity.pdf')
     plt.close(fig)
 
 
@@ -640,6 +735,8 @@ def make_speedup_table(df: pd.DataFrame, tables_dir: Path,
         return
 
     merged = df.merge(base_df, on='graph_base')
+    # Guard against division-by-zero
+    merged['base_time'] = merged['base_time'].replace(0, np.nan)
     merged['speedup'] = merged['base_time'] / merged['Time_sec']
     pivot = merged.pivot_table(index='graph_base', columns='Implementation',
                                values='speedup', aggfunc='mean')
@@ -1140,9 +1237,11 @@ def make_scaling_table(strong_df: pd.DataFrame, tables_dir: Path):
 # ============================================================
 
 def plot_ablation(df: pd.DataFrame, out_dir: Path):
-    """Ablation study: GTEPS comparison for GPU -> GPU_Managed -> GPU_ReadMostly -> GPU_Opt.
+    """Ablation Study: Relative Performance vs. GPU-HBM3 Baseline.
 
-    Visualizes the independent contribution of Method 1 (ReadMostly) and Method 2 (2-stream).
+    Shows all 7 implementations normalized to GPU-HBM3 (Single-stream).
+    gpu_stream (Stage 1) is fully included to demonstrate the effect of
+    double-buffering independently of Unified Memory.
     """
     if df.empty:
         print("[SKIP] Ablation graph: no data")
@@ -1152,7 +1251,11 @@ def plot_ablation(df: pd.DataFrame, out_dir: Path):
 
     # Normalize implementation names (unify lowercase/mixed case)
     name_map = {
+        'sequential':     'Sequential',
+        'openmp':         'OpenMP',
+        'omp':            'OpenMP',
         'gpu':            'GPU',
+        'gpu_stream':     'GPU_Stream',
         'gpu_managed':    'GPU_Managed',
         'gpu_readmostly': 'GPU_ReadMostly',
         'gpu_opt':        'GPU_Opt',
@@ -1160,43 +1263,45 @@ def plot_ablation(df: pd.DataFrame, out_dir: Path):
     df = df.copy()
     df['Implementation'] = df['Implementation'].replace(name_map)
 
-    ablation_order = ['GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
+    ablation_order = ['Sequential', 'OpenMP', 'GPU', 'GPU_Stream',
+                      'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
     impls_present  = [i for i in ablation_order if i in df['Implementation'].values]
     if len(impls_present) < 2:
         print(f"[SKIP] Ablation graph: insufficient implementations ({impls_present})")
         return
 
-    graphs_sorted = sorted(df['graph_base'].unique(),
-                           key=lambda g: GRAPH_NODES.get(g, 0))
+    graphs_sorted = sorted(df['graph_base'].unique(), key=lambda g: GRAPH_NODES.get(g, 0))
     n_graphs = len(graphs_sorted)
     n_impls  = len(impls_present)
     x = np.arange(n_graphs)
-    width = 0.2
+    width = 0.8 / max(n_impls, 1)
 
-    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+    fig, axes = plt.subplots(1, 2, figsize=(16, 6))
 
-    # ---- Left: GTEPS bar chart ----
+    # ---- Left: absolute GTEPS bar chart ----
     ax = axes[0]
     for i, impl in enumerate(impls_present):
         sub = df[df['Implementation'] == impl]
-        gteps = [sub[sub['graph_base'] == g]['GTEPS'].values[0]
-                 if g in sub['graph_base'].values else 0
-                 for g in graphs_sorted]
+        gteps = []
+        for g in graphs_sorted:
+            vals = sub[sub['graph_base'] == g]['GTEPS'].values
+            gteps.append(vals[0] if len(vals) > 0 and vals[0] > 0 else np.nan)
         offset = (i - n_impls / 2 + 0.5) * width
-        ax.bar(x + offset, gteps, width,
-               label=IMPL_LABELS.get(impl, impl),
-               color=IMPL_COLORS.get(impl, 'gray'), alpha=0.85)
+        bars = ax.bar(x + offset, gteps, width,
+                      label=IMPL_LABELS.get(impl, impl),
+                      color=IMPL_COLORS.get(impl, '#888888'), alpha=0.85)
+        _annotate_bars(ax, bars, fmt='{:.2f}')
 
-    labels = [format_nodes(GRAPH_NODES.get(g, 0)) for g in graphs_sorted]
+    x_labels = [graph_display_name(g) for g in graphs_sorted]
     ax.set_xticks(x)
-    ax.set_xticklabels(labels, rotation=30, ha='right')
-    ax.set_xlabel('Graph Size (nodes)')
-    ax.set_ylabel('GTEPS')
-    ax.set_title('Ablation Study: GTEPS\n(Method 1=ReadMostly, Method 2=2-stream)')
-    ax.legend(fontsize=8)
+    ax.set_xticklabels(x_labels, rotation=40, ha='right')
+    ax.set_xlabel('Number of Vertices')
+    ax.set_ylabel('Throughput (GTEPS)')
+    ax.set_title('Throughput (GTEPS) by Implementation')
+    _legend_outside(ax, n_impls)
     ax.grid(True, axis='y', alpha=0.3)
 
-    # ---- Right: relative GTEPS vs. GPU baseline ----
+    # ---- Right: relative performance vs. GPU-HBM3 baseline ----
     ax2 = axes[1]
     ref_impl = 'GPU'
     if ref_impl in impls_present:
@@ -1207,44 +1312,48 @@ def plot_ablation(df: pd.DataFrame, out_dir: Path):
             sub = df[df['Implementation'] == impl]
             ratios = []
             for g in graphs_sorted:
-                ref_val = ref_sub[ref_sub['graph_base'] == g]['GTEPS'].values
-                tgt_val = sub[sub['graph_base'] == g]['GTEPS'].values
-                if len(ref_val) > 0 and len(tgt_val) > 0 and ref_val[0] > 0:
-                    ratios.append(tgt_val[0] / ref_val[0])
+                ref_vals = ref_sub[ref_sub['graph_base'] == g]['GTEPS'].values
+                tgt_vals = sub[sub['graph_base'] == g]['GTEPS'].values
+                if (len(ref_vals) > 0 and len(tgt_vals) > 0
+                        and ref_vals[0] > 0 and tgt_vals[0] > 0):
+                    ratios.append(tgt_vals[0] / ref_vals[0])
                 else:
-                    ratios.append(0)
+                    ratios.append(np.nan)
             j = impls_present.index(impl)
             offset = (j - n_impls / 2 + 0.5) * width
-            ax2.bar(x + offset, ratios, width,
-                    label=IMPL_LABELS.get(impl, impl),
-                    color=IMPL_COLORS.get(impl, 'gray'), alpha=0.85)
+            bars2 = ax2.bar(x + offset, ratios, width,
+                            label=IMPL_LABELS.get(impl, impl),
+                            color=IMPL_COLORS.get(impl, '#888888'), alpha=0.85)
+            _annotate_bars(ax2, bars2, fmt='{:.2f}')
 
-        ax2.axhline(1.0, color='black', linestyle='--', linewidth=0.8, label='GPU baseline')
+        ax2.axhline(1.0, color='black', linestyle='--', linewidth=0.8,
+                    label='GPU-HBM3 (Single-stream) baseline = 1.0')
         ax2.set_xticks(x)
-        ax2.set_xticklabels(labels, rotation=30, ha='right')
-        ax2.set_xlabel('Graph Size (nodes)')
-        ax2.set_ylabel('Relative GTEPS (vs. GPU)')
-        ax2.set_title('Ablation Study: Relative Performance (vs. GPU)\n(>1 = improved, <1 = degraded)')
-        ax2.legend(fontsize=8)
+        ax2.set_xticklabels(x_labels, rotation=40, ha='right')
+        ax2.set_xlabel('Number of Vertices')
+        ax2.set_ylabel('Relative Performance (GPU-HBM3 = 1.0)')
+        ax2.set_title('Ablation Study: Relative Performance vs. GPU-HBM3 Baseline')
+        _legend_outside(ax2, n_impls)
         ax2.grid(True, axis='y', alpha=0.3)
 
     fig.tight_layout()
-    out_path = out_dir / 'ablation_study.pdf'
-    fig.savefig(out_path)
-    fig.savefig(out_path.with_suffix('.png'), dpi=FIGURE_DPI)
-    print(f"[OK] {out_path}")
+    _savefig(fig, out_dir / 'ablation_study.pdf')
     plt.close(fig)
 
 
 def make_ablation_table(df: pd.DataFrame, tables_dir: Path):
-    """Generate TSV/LaTeX tables for ablation study results."""
+    """Generate TSV/LaTeX tables for ablation study results (all 7 implementations)."""
     if df.empty:
         print("[SKIP] Ablation table: no data")
         return
 
     df = add_graph_metadata(df)
     name_map = {
+        'sequential':     'Sequential',
+        'openmp':         'OpenMP',
+        'omp':            'OpenMP',
         'gpu':            'GPU',
+        'gpu_stream':     'GPU_Stream',
         'gpu_managed':    'GPU_Managed',
         'gpu_readmostly': 'GPU_ReadMostly',
         'gpu_opt':        'GPU_Opt',
@@ -1252,7 +1361,8 @@ def make_ablation_table(df: pd.DataFrame, tables_dir: Path):
     df = df.copy()
     df['Implementation'] = df['Implementation'].replace(name_map)
 
-    ablation_order = ['GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
+    ablation_order = ['Sequential', 'OpenMP', 'GPU', 'GPU_Stream',
+                      'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
     impls_present  = [i for i in ablation_order if i in df['Implementation'].values]
 
     # GTEPS pivot
@@ -1302,6 +1412,130 @@ def make_ablation_table(df: pd.DataFrame, tables_dir: Path):
     print(f"  -> {tex_path}")
 
 
+
+# ============================================================
+# Additional single-GPU analysis figures
+# ============================================================
+
+def plot_scaling_analysis(df: pd.DataFrame, out_dir: Path):
+    """Execution Time Scaling with Graph Size (line chart, all implementations).
+
+    Identical to plot_execution_time but saved with the canonical name
+    'scaling_analysis' and focused on scaling behavior.
+    """
+    if df.empty:
+        print("[SKIP] Scaling analysis graph: no data")
+        return
+
+    df = add_graph_metadata(df)
+    df = df[df['Time_sec'] > 0].copy()
+    if df.empty:
+        print("[SKIP] Scaling analysis graph: all values <= 0")
+        return
+
+    graphs_sorted = sorted(df['graph_base'].unique(), key=lambda g: GRAPH_NODES.get(g, 0))
+    impls = get_impl_order(df)
+
+    fig, ax = plt.subplots(figsize=FIGURE_SIZE_WIDE)
+
+    for impl in impls:
+        sub = df[df['Implementation'] == impl].sort_values('nodes')
+        if sub.empty:
+            continue
+        xs = list(range(len(sub)))
+        ys = sub['Time_sec'].values
+        ax.plot(xs, ys,
+                label=IMPL_LABELS.get(impl, impl),
+                color=IMPL_COLORS.get(impl, '#888888'),
+                marker=IMPL_MARKERS.get(impl, 'o'),
+                linewidth=1.8, markersize=6)
+
+    x_labels = [graph_display_name(g) for g in graphs_sorted]
+    ax.set_xticks(range(len(x_labels)))
+    ax.set_xticklabels(x_labels, rotation=40, ha='right')
+    ax.set_yscale('log')
+    ax.set_xlabel('Number of Vertices')
+    ax.set_ylabel('Execution Time (seconds) [log scale]')
+    ax.set_title('Execution Time Scaling with Graph Size')
+    _legend_outside(ax, len(impls))
+    ax.grid(True, which='both', alpha=0.3)
+    ax.yaxis.set_major_formatter(ticker.ScalarFormatter())
+
+    fig.tight_layout()
+    _savefig(fig, out_dir / 'scaling_analysis.pdf')
+    plt.close(fig)
+
+
+def plot_threshold_sensitivity(tsv_path: Path, out_dir: Path):
+    """Topology Placement Threshold Sensitivity (line chart).
+
+    X-axis: threshold values (0.001, 0.01, 0.1, 0.35)
+    Y-axis: execution time (seconds)
+    One line per graph dataset tested.
+    Data source: data/threshold_sensitivity.tsv (skipped gracefully if missing).
+    """
+    if not tsv_path.exists():
+        print(f"[SKIP] Threshold sensitivity: {tsv_path} not found")
+        return
+
+    try:
+        df = pd.read_csv(tsv_path, sep='\t', comment='#',
+                         na_values=['—', '-', ''])
+    except Exception as e:
+        print(f"[SKIP] Threshold sensitivity: failed to load {tsv_path}: {e}")
+        return
+
+    df.columns = df.columns.str.strip()
+
+    # Expected columns: Threshold  Graph  Time_sec  (optional: GTEPS)
+    required = {'Threshold', 'Graph', 'Time_sec'}
+    if not required.issubset(df.columns):
+        print(f"[SKIP] Threshold sensitivity: missing columns in {tsv_path} "
+              f"(need {required}, got {set(df.columns)})")
+        return
+
+    df['Threshold'] = pd.to_numeric(df['Threshold'], errors='coerce')
+    df['Time_sec']  = pd.to_numeric(df['Time_sec'],  errors='coerce')
+    df = df.dropna(subset=['Threshold', 'Time_sec'])
+    df = df[df['Time_sec'] > 0]
+
+    if df.empty:
+        print("[SKIP] Threshold sensitivity: no valid data rows")
+        return
+
+    df['graph_base'] = df['Graph'].apply(lambda x: Path(x).name)
+    graphs = sorted(df['graph_base'].unique(),
+                    key=lambda g: GRAPH_NODES.get(g, 0))
+
+    fig, ax = plt.subplots(figsize=FIGURE_SIZE_WIDE)
+
+    for g in graphs:
+        sub = df[df['graph_base'] == g].sort_values('Threshold')
+        if sub.empty:
+            continue
+        label = graph_display_name(g)
+        ax.plot(sub['Threshold'], sub['Time_sec'],
+                marker='o', linewidth=1.8, markersize=6, label=label)
+
+    # Vertical dashed line at the default threshold (0.35)
+    ax.axvline(x=0.35, color='black', linestyle='--', linewidth=1.2,
+               label='Default (0.35)')
+    ax.text(0.35, 0.98, '  Default\n  (0.35)',
+            transform=ax.get_xaxis_transform(),
+            va='top', fontsize=9, color='black')
+
+    ax.set_xscale('log')
+    ax.set_xlabel('Topology Placement Threshold (log scale)')
+    ax.set_ylabel('Execution Time (seconds)')
+    ax.set_title('Topology Placement Threshold Sensitivity')
+    _legend_outside(ax, len(graphs))
+    ax.grid(True, which='both', alpha=0.3)
+
+    fig.tight_layout()
+    _savefig(fig, out_dir / 'threshold_sensitivity.pdf')
+    plt.close(fig)
+
+
 # ============================================================
 # Main
 # ============================================================
@@ -1330,8 +1564,8 @@ def main():
     result_dir = Path(args.result_dir)
     out_dir = Path(args.output_dir)
     tables_dir = Path(args.tables_dir)
-    out_dir.mkdir(parents=True, exist_ok=True)
-    tables_dir.mkdir(parents=True, exist_ok=True)
+    os.makedirs(out_dir, exist_ok=True)
+    os.makedirs(tables_dir, exist_ok=True)
 
     print("=" * 60)
     print("  Miyabi BC Experiment -- Analysis & Visualization")
@@ -1380,9 +1614,16 @@ def main():
     ablation_path = result_dir / 'result_ablation' / 'ablation_summary.tsv'
     ablation_df = load_tsv_skip_duplicate_headers(ablation_path)
 
+    # Threshold sensitivity: data/threshold_sensitivity.tsv
+    threshold_path = result_dir.parent / 'data' / 'threshold_sensitivity.tsv'
+    if not threshold_path.exists():
+        # Also try relative to the script
+        threshold_path = Path(__file__).parent.parent / 'data' / 'threshold_sensitivity.tsv'
+
     print(f"strong scaling: {len(strong_df)} rows ({'valid' if not strong_df.empty else 'empty/missing'})")
     print(f"weak scaling:   {len(weak_df)} rows ({'valid' if not weak_df.empty else 'empty/missing'})")
     print(f"ablation:       {len(ablation_df)} rows ({'valid' if not ablation_df.empty else 'empty/missing'})")
+    print(f"threshold sens: {'found' if threshold_path.exists() else 'not found'} ({threshold_path})")
 
     # ----- Figure generation -----
     print("\n--- Generating figures ---")
@@ -1399,7 +1640,12 @@ def main():
     if not combined.empty:
         impls_in_data = set(combined['Implementation'].unique())
         seq_impl = 'Sequential' if 'Sequential' in impls_in_data else 'sequential'
-        omp_impl = 'OpenMP' if 'OpenMP' in impls_in_data else 'omp'
+        if 'OpenMP' in impls_in_data:
+            omp_impl = 'OpenMP'
+        elif 'openmp' in impls_in_data:
+            omp_impl = 'openmp'
+        else:
+            omp_impl = 'omp'
     else:
         seq_impl, omp_impl = 'Sequential', 'OpenMP'
 
@@ -1407,12 +1653,18 @@ def main():
     plot_speedup(combined, out_dir, baseline_impl=omp_impl)
     plot_gteps(combined, out_dir)
     plot_phase2_comparison(phase2_df if not phase2_df.empty else combined, out_dir)
+    plot_scaling_analysis(combined, out_dir)
     plot_bandwidth(bw_df, out_dir)
     plot_bandwidth_by_size(bw_df, out_dir)
     plot_batchsize_sweep(batchsize_df, out_dir)
 
-    # Ablation graph
-    plot_ablation(ablation_df, out_dir)
+    # Ablation graph (all 7 implementations including gpu_stream).
+    # Fall back to combined data if dedicated ablation TSV is absent.
+    ablation_data = ablation_df if not ablation_df.empty else combined
+    plot_ablation(ablation_data, out_dir)
+
+    # Threshold sensitivity (skips gracefully if TSV is missing)
+    plot_threshold_sensitivity(threshold_path, out_dir)
 
     # MPI scaling graphs
     if not strong_df.empty:
@@ -1429,7 +1681,7 @@ def main():
     make_gteps_table(combined, tables_dir)
     make_bandwidth_table(bw_df, tables_dir)
     make_scaling_table(strong_df, tables_dir)
-    make_ablation_table(ablation_df, tables_dir)
+    make_ablation_table(ablation_data, tables_dir)
 
     # ----- Thesis adequacy assessment -----
     assess_thesis_adequacy(baseline_df, phase2_df, bw_df)
