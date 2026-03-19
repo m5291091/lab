@@ -15,6 +15,7 @@
 #
 #  実行対象実装:
 #   GPU          : ベースライン (cudaMalloc, HBM3 直接配置)
+#   GPU_Stream   : Stage 1: HBM3専用 + ダブルバッファ 2ストリーム
 #   GPU_Managed  : Unified Memory (ReadMostly なし, LPDDR5X 配置)
 #   GPU_ReadMostly: [手法1] ReadMostly + 適応型 Prefetch のみ
 #   GPU_Opt      : [手法1 + 手法2] ReadMostly + 2-stream 非同期
@@ -72,7 +73,7 @@ GRAPHS=(
     "325557_3216152"
 )
 
-IMPLS=("gpu" "gpu_managed" "gpu_readmostly" "gpu_opt")
+IMPLS=("gpu" "gpu_stream" "gpu_managed" "gpu_readmostly" "gpu_opt")
 
 for GNAME in "${GRAPHS[@]}"; do
     GPATH="${DATA_DIR}/${GNAME}"

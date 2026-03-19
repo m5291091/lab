@@ -6,7 +6,7 @@ set -euo pipefail
 #
 # 実行手順:
 #   1. メモリ帯域計測                                               (~30 min)
-#   2. 全5実装 × 全グラフ の実行時間計測                            (~24 h)
+#   2. 全7実装 × 全グラフ の実行時間計測                            (~24 h)
 #   3. 閾値感度実験 (--topo-threshold 0.001, 0.01, 0.1, 0.35)       (~1 h)
 #   4. Nsight プロファイル (代表グラフ 3つ)                         (~2 h)
 #   5. 全結果を data/ 以下に TSV 形式で保存
@@ -162,7 +162,7 @@ for G in "${SMALL_GRAPHS[@]}"; do
 done
 
 echo ""
-echo "--- medium: omp + GPU 5実装 ---"
+echo "--- medium: omp + GPU 6実装 ---"
 for G in "${MEDIUM_GRAPHS[@]}"; do
     check_file "$G" || continue
     echo "--- $(basename $G) ---"

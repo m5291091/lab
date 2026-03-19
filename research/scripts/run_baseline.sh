@@ -23,7 +23,7 @@ mkdir -p result_baseline
 # ============================================================
 # グラフ規模ごとの実装選択ポリシー:
 #
-#   [small]  頂点 ≤ 11K  → 全5実装 (sequential / omp / gpu / gpu_managed / gpu_opt)
+#   [small]  頂点 ≤ 11K  → 全6実装 (sequential / omp / gpu / gpu_stream / gpu_managed / gpu_opt)
 #   [medium] 頂点 11K~500K → omp + 3GPU (sequential は数時間かかるため除外)
 #   [large]  頂点 500K~2M  → 3GPU のみ (omp も実用外)
 #   [xlarge] 頂点 2M+      → gpu_opt のみ (最適化実装で長時間実験)
@@ -88,7 +88,7 @@ echo "=== [small] 小規模グラフ: 全実装計測 ==="
 for GRAPH in "${SMALL_GRAPHS[@]}"; do
     [ -f "$GRAPH" ] || continue
     echo "--- $(basename $GRAPH) ---"
-    for IMPL in sequential omp gpu gpu_managed gpu_readmostly gpu_opt; do
+    for IMPL in sequential omp gpu gpu_stream gpu_managed gpu_readmostly gpu_opt; do
         run_impl "$IMPL" "$GRAPH"
     done
 done
@@ -99,7 +99,7 @@ echo "=== [medium] 中規模グラフ (11K~500K): omp + GPU 実装 ==="
 for GRAPH in "${MEDIUM_GRAPHS[@]}"; do
     [ -f "$GRAPH" ] || { echo "  スキップ (未取得): $(basename $GRAPH)"; continue; }
     echo "--- $(basename $GRAPH) ---"
-    for IMPL in omp gpu gpu_managed gpu_readmostly gpu_opt; do
+    for IMPL in omp gpu gpu_stream gpu_managed gpu_readmostly gpu_opt; do
         run_impl "$IMPL" "$GRAPH"
     done
 done
@@ -110,7 +110,7 @@ echo "=== [large] 大規模グラフ (500K~2M): GPU + GPU_ReadMostly + GPU_Opt =
 for GRAPH in "${LARGE_GRAPHS[@]}"; do
     [ -f "$GRAPH" ] || { echo "  スキップ (未取得): $(basename $GRAPH)"; continue; }
     echo "--- $(basename $GRAPH) ---"
-    for IMPL in gpu gpu_readmostly gpu_opt; do
+    for IMPL in gpu gpu_stream gpu_readmostly gpu_opt; do
         run_impl "$IMPL" "$GRAPH"
     done
 done

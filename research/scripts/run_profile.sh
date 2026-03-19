@@ -38,7 +38,16 @@ ${NSYS} profile \
     ${BUILD_DIR}/brandes_runner gpu ${GRAPH_SMALL} \
     > ${BUILD_DIR}/result_profile/nsys_gpu_11023.log 2>&1
 
-echo "=== [2/4] Nsight Systems: gpu_opt (11K graph) ==="
+echo "=== [2/5] Nsight Systems: gpu_stream (11K graph) ==="
+${NSYS} profile \
+    --output="${BUILD_DIR}/result_profile/nsys_gpu_stream_11023" \
+    --stats=true \
+    --force-overwrite=true \
+    --trace=cuda,nvtx,osrt \
+    ${BUILD_DIR}/brandes_runner gpu_stream ${GRAPH_SMALL} \
+    > ${BUILD_DIR}/result_profile/nsys_gpu_stream_11023.log 2>&1
+
+echo "=== [3/5] Nsight Systems: gpu_opt (11K graph) ==="
 ${NSYS} profile \
     --output="${BUILD_DIR}/result_profile/nsys_gpu_opt_11023" \
     --stats=true \
@@ -47,7 +56,7 @@ ${NSYS} profile \
     ${BUILD_DIR}/brandes_runner gpu_opt ${GRAPH_SMALL} \
     > ${BUILD_DIR}/result_profile/nsys_gpu_opt_11023.log 2>&1
 
-echo "=== [3/4] Nsight Systems: gpu_opt (325K graph) ==="
+echo "=== [4/5] Nsight Systems: gpu_opt (325K graph) ==="
 ${NSYS} profile \
     --output="${BUILD_DIR}/result_profile/nsys_gpu_opt_325K" \
     --stats=true \
@@ -65,9 +74,9 @@ ${NSYS} profile \
 #    dram__bytes.sum.per_second                         : DRAM 帯域 (HBM3)
 #    nvlrx__bytes.sum.per_second                        : NVLink 受信帯域 (C2C)
 # ================================================================
-echo "=== [4/4] Nsight Compute: gpu vs gpu_managed vs gpu_opt (11K graph) ==="
+echo "=== [5/5] Nsight Compute: gpu vs gpu_stream vs gpu_managed vs gpu_opt (11K graph) ==="
 
-for IMPL in gpu gpu_managed gpu_readmostly gpu_opt; do
+for IMPL in gpu gpu_stream gpu_managed gpu_readmostly gpu_opt; do
     echo "  ncu: ${IMPL}"
     ${NCU} \
         --target-processes all \

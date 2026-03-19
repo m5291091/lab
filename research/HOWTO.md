@@ -16,14 +16,14 @@
      |--- qsub -I (インタラクティブ) ----->|
      |                              [ビルド] → brandes_runner
      |                              [動作確認] → 全実装でテスト
-     |                              [正確性検証] → PASS: 5 FAIL: 0
+     |                              [正確性検証] → PASS: 6 FAIL: 0
      |
      |--- qsub run_baseline.sh ---------->| (24h バッチ)
      |                              [全グラフ × 全実装 計測]
      |                              → result_baseline/summary.tsv
      |
      |--- qsub run_ablation.sh ---------->| (2h バッチ)
-     |                              [アブレーション 4グラフ × 4実装]
+     |                              [アブレーション 4グラフ × 5実装]
      |                              → result_ablation/ablation_summary.tsv
      |
      |--- qsub measure_bandwidth.sh ----->| (30min バッチ)
@@ -86,11 +86,11 @@
 
 | ファイル | 役割 |
 |---------|------|
-| `scripts/verify_correctness.sh` | 全実装の BC 値が sequential と一致するかを検証 (5 実装) |
+| `scripts/verify_correctness.sh` | 全実装の BC 値が sequential と一致するかを検証 (6 実装) |
 | `scripts/compare_bc.py` | 2 つの BC 出力ファイルの数値一致検証ツール |
 | `scripts/run_all_experiments.sh` | **全実験一括実行スクリプト** (帯域計測〜可視化まで) |
 | `scripts/run_baseline.sh` | PBS バッチジョブ: 全グラフ・全実装のベースライン計測 |
-| `scripts/run_ablation.sh` | PBS バッチジョブ: アブレーションスタディ (4 実装 × 4 グラフ) |
+| `scripts/run_ablation.sh` | PBS バッチジョブ: アブレーションスタディ (5 実装 × 4 グラフ) |
 | `scripts/run_profile.sh` | PBS バッチジョブ: Nsight Systems プロファイリング |
 | `scripts/run_batchsize_sweep.sh` | バッチサイズ感度分析 (インタラクティブジョブ内) |
 | `scripts/measure_bandwidth.sh` | PBS バッチジョブ: HBM3 / NVLink-C2C 実効帯域計測 |
@@ -217,6 +217,7 @@ GPU_Opt    325557_3216152    2.341    8.822
 | `sequential` | 逐次版 (CPU シングルスレッド) |
 | `omp` | OpenMP 並列版 (CPU 全コア) |
 | `gpu` | CUDA GPU 版 (cudaMalloc) |
+| `gpu_stream` | **Stage 1**: HBM3専用 + ダブルバッファ 2ストリーム |
 | `gpu_managed` | Unified Memory 版 |
 | `gpu_readmostly` | **提案手法 1** (SetReadMostly + 適応型 Prefetch) |
 | `gpu_opt` | **提案手法 1+2** (ReadMostly + 2-stream 非同期) |
@@ -235,15 +236,16 @@ bash scripts/verify_correctness.sh                          # デフォルト: b
 bash scripts/verify_correctness.sh ../../data/56438_300801  # グラフ指定も可
 ```
 
-**期待される出力** (全 5 実装が PASS):
+**期待される出力** (全 6 実装が PASS):
 ```
 PASS: All BC values match within tolerance.   # OpenMP
 PASS: All BC values match within tolerance.   # GPU
+PASS: All BC values match within tolerance.   # GPU_Stream      <- Stage 1
 PASS: All BC values match within tolerance.   # GPU_Managed
 PASS: All BC values match within tolerance.   # GPU_ReadMostly  <- 提案手法 1
 PASS: All BC values match within tolerance.   # GPU_Opt
 ========================================
-  PASS: 5  FAIL: 0
+  PASS: 6  FAIL: 0
 ========================================
 ```
 
@@ -264,9 +266,9 @@ qsub scripts/run_baseline.sh
 
 | グラフ規模 | 対象グラフ | 計測対象実装 |
 |-----------|---------|-----------|
-| small (7K, 11K) | benchmark_7000_41459, benchmark_11023_62184 | sequential, omp, gpu, gpu_managed, gpu_readmostly, gpu_opt |
-| medium (56K〜410K) | snap 実世界グラフ 7 本 | omp, gpu, gpu_managed, gpu_readmostly, gpu_opt |
-| large (800K〜2M) | roadNet-*, web-Google | gpu, gpu_readmostly, gpu_opt |
+| small (7K, 11K) | benchmark_7000_41459, benchmark_11023_62184 | sequential, omp, gpu, gpu_stream, gpu_managed, gpu_readmostly, gpu_opt |
+| medium (56K〜410K) | snap 実世界グラフ 7 本 | omp, gpu, gpu_stream, gpu_managed, gpu_readmostly, gpu_opt |
+| large (800K〜2M) | roadNet-*, web-Google | gpu, gpu_stream, gpu_readmostly, gpu_opt |
 
 ---
 
