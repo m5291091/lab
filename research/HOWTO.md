@@ -56,6 +56,9 @@
 11. [ジョブ管理コマンド一覧](#11-ジョブ管理コマンド)
 12. [トラブルシューティング](#12-トラブルシューティング)
 13. [グラフデータセット構成と取得方法](#13-グラフデータセット構成と取得方法)
+14. [5段階アブレーション設計と各実装の対応](#14-5段階アブレーション設計)
+15. [--topo-threshold オプション](#15---topo-threshold-オプション)
+16. [run_all_experiments.sh の使い方](#16-run_all_experimentssh-の使い方)
 
 ---
 
@@ -67,15 +70,16 @@
 |---------|------|
 | `brandes_sequential.cpp` | 逐次版 Brandes アルゴリズム (CPU シングルスレッド, 参照実装) |
 | `brandes_omp.cpp` | OpenMP スレッド並列版 (CPU 全コア利用) |
-| `brandes_gpu.cu` | CUDA GPU 版 — `cudaMalloc` + バッチ処理 (GPU ベースライン) |
-| `brandes_gpu_managed.cu` | Unified Memory 版 — CPU LPDDR5X 配置、NVLink-C2C 経由アクセス |
-| `brandes_gpu_readmostly.cu` | **提案手法 1** — SetReadMostly + 適応型 Prefetch によるメモリ配置最適化 |
-| `brandes_gpu_opt.cu` | **提案手法 1 + 2** — ReadMostly + 2-stream 非同期パイプライン |
+| `brandes_gpu.cu` | Stage 0: HBM3専用 — `cudaMalloc` + バッチ処理 (GPU ベースライン) |
+| `brandes_gpu_stream.cu` | **Stage 1**: HBM3専用 + `cudaMemsetAsync` + 2ストリームダブルバッファ |
+| `brandes_gpu_managed.cu` | Stage 2: Unified Memory 版 — CPU LPDDR5X 配置、NVLink-C2C 経由アクセス |
+| `brandes_gpu_readmostly.cu` | Stage 3: **提案手法 1** — SetReadMostly + 適応型 Prefetch によるメモリ配置最適化 |
+| `brandes_gpu_opt.cu` | Stage 4: **提案手法 1 + 2** — ReadMostly + 2-stream 非同期パイプライン |
 | `GraphManaged.h` / `GraphManaged.cpp` | `cudaMallocManaged` 対応グラフクラス |
 | `brandes.h` | 全実装の関数プロトタイプ宣言 |
 | `common.h` | 共通ヘッダ (CUDA エラーチェック等) |
 | `Graph.cpp` / `Graph.h` | CSR 形式グラフ読み込みクラス |
-| `main.cpp` | 単体実行エントリポイント (`sequential` / `omp` / `gpu` / `gpu_managed` / `gpu_readmostly` / `gpu_opt` / `all` 対応) |
+| `main.cpp` | 単体実行エントリポイント (`sequential` / `omp` / `gpu` / `gpu_stream` / `gpu_managed` / `gpu_readmostly` / `gpu_opt` / `all` 対応) |
 | `CMakeLists.txt` | CMake ビルド設定 |
 
 ### 1.2 スクリプト・ツールファイル
@@ -84,6 +88,7 @@
 |---------|------|
 | `scripts/verify_correctness.sh` | 全実装の BC 値が sequential と一致するかを検証 (5 実装) |
 | `scripts/compare_bc.py` | 2 つの BC 出力ファイルの数値一致検証ツール |
+| `scripts/run_all_experiments.sh` | **全実験一括実行スクリプト** (帯域計測〜可視化まで) |
 | `scripts/run_baseline.sh` | PBS バッチジョブ: 全グラフ・全実装のベースライン計測 |
 | `scripts/run_ablation.sh` | PBS バッチジョブ: アブレーションスタディ (4 実装 × 4 グラフ) |
 | `scripts/run_profile.sh` | PBS バッチジョブ: Nsight Systems プロファイリング |
@@ -117,6 +122,7 @@ lab/
 │   ├── brandes_sequential.cpp
 │   ├── brandes_omp.cpp
 │   ├── brandes_gpu.cu
+│   ├── brandes_gpu_stream.cu            <- Stage 1: HBM3専用 + ダブルバッファ
 │   ├── brandes_gpu_managed.cu           <- Unified Memory 版
 │   ├── brandes_gpu_readmostly.cu        <- 提案手法 1: ReadMostly + Prefetch
 │   ├── brandes_gpu_opt.cu               <- 提案手法 1+2: + 2-stream 非同期
@@ -129,6 +135,7 @@ lab/
 │   ├── .gitignore
 │   │
 │   ├── scripts/
+│   │   ├── run_all_experiments.sh   <- 全実験一括実行
 │   │   ├── verify_correctness.sh
 │   │   ├── compare_bc.py
 │   │   ├── run_baseline.sh
@@ -484,4 +491,140 @@ python3 research/tools/gen_graph.py --model ba --nodes 50000 --m 3 -o data/ba_50
 # Erdos-Renyi モデル (ランダムグラフ)
 python3 research/tools/gen_graph.py --model er --nodes 50000 --p 0.0001 -o data/er_50k
 ```
+
+---
+
+## 14. 5段階アブレーション設計
+
+本研究の提案手法を段階的に検証するため、5段階の実装を用意している。
+
+```
+Stage 0  brandes_gpu.cu          HBM3専用、tid==0 逐次初期化ループあり
+           |
+           | [変更] tid==0 逐次初期化ループを削除
+           | [追加] cudaMemsetAsync + 2ストリームダブルバッファ
+           ↓
+Stage 1  brandes_gpu_stream.cu   HBM3専用 + ダブルバッファ         ← 新規
+           |
+           | [変更] cudaMalloc → cudaMallocManaged (UVM 導入)
+           | [削除] 2ストリーム/memsetAsync
+           ↓
+Stage 2  brandes_gpu_managed.cu  UVM、初期化ループあり
+           |
+           | [追加] SetReadMostly + 適応型 Prefetch (手法1)
+           ↓
+Stage 3  brandes_gpu_readmostly.cu  UVM + 手法1
+           |
+           | [追加] cudaMemsetAsync + 2ストリームダブルバッファ (手法2)
+           ↓
+Stage 4  brandes_gpu_opt.cu      UVM + 手法1 + 手法2
+```
+
+各比較が測定する効果:
+
+| 比較 | 測定対象 |
+|------|---------|
+| Stage 0 → Stage 1 | ダブルバッファ単体の効果 (HBM3 環境) |
+| Stage 0 → Stage 2 | UVM 導入コスト (NVLink-C2C ボトルネック) |
+| Stage 2 → Stage 3 | 手法1 (SetReadMostly) の効果 |
+| Stage 3 → Stage 4 | 手法2 (2ストリーム) の効果 |
+| Stage 1 → Stage 4 | UVM + 手法1+2 のオーバーヘッド/メリット |
+
+### Stage 1 の使い方
+
+```bash
+# gpu_stream として実行
+./brandes_runner gpu_stream ../../data/benchmark_11023_62184
+
+# all モードでは全 Stage を連続実行
+./brandes_runner all ../../data/benchmark_7000_41459
+```
+
+---
+
+## 15. `--topo-threshold` オプション
+
+`brandes_gpu_readmostly` と `brandes_gpu_opt` は、トポロジデータの配置先を
+グラフサイズに応じて切り替える。切り替え閾値はコマンドライン引数で変更できる。
+
+```
+--topo-threshold <float>  または  -t <float>
+デフォルト: 0.35  (HBM3 総容量の 35%)
+```
+
+- `topo_bytes < HBM3_total * threshold` なら HBM3 直接配置 (PrefetchAsync)
+- それ以上なら CPU LPDDR5X に固定 + SetReadMostly
+
+### 使用例
+
+```bash
+# デフォルト (35%)
+./brandes_runner gpu_readmostly ../../data/snap/web-Google
+
+# 閾値を 10% に下げる (大きめのグラフでも CPU 配置に切り替えたい場合)
+./brandes_runner gpu_readmostly ../../data/snap/web-Google --topo-threshold 0.1
+
+# -t 短縮形
+./brandes_runner gpu_opt ../../data/snap/web-Google -t 0.01
+
+# --dump-bc と組み合わせ
+./brandes_runner gpu_readmostly ../../data/benchmark_7000_41459 --dump-bc -t 0.5
+```
+
+### 閾値感度実験
+
+異なる閾値での性能変化を調べる場合:
+
+```bash
+for T in 0.001 0.01 0.1 0.35; do
+    echo "threshold=${T}"
+    ./brandes_runner gpu_readmostly ../../data/snap/web-Google -t ${T}
+done
+```
+
+---
+
+## 16. `run_all_experiments.sh` の使い方
+
+全実験 (帯域計測〜可視化) を1回のコマンドで実行するスクリプト。
+Miyabi-G のインタラクティブジョブ内で実行する。
+
+```bash
+# ビルド済みの build_miyabi が存在する場合 (デフォルト)
+bash scripts/run_all_experiments.sh
+
+# ビルドディレクトリを指定する場合
+bash scripts/run_all_experiments.sh /path/to/build_dir
+```
+
+### 実行順序と所要時間の目安
+
+| Step | 内容 | 時間 |
+|------|------|------|
+| 0 | ビルド | ~2 min |
+| 1 | メモリ帯域計測 | ~30 min |
+| 2 | 全実装 × 全グラフ 計測 | ~24 h |
+| 3 | 閾値感度実験 | ~1 h |
+| 4 | Nsight プロファイル (3グラフ) | ~2 h |
+| 5 | analyze_all.py で可視化 | ~5 min |
+
+### 出力先
+
+```
+research/
+├── logs/
+│   └── run_all_YYYYMMDD_HHMMSS.log   実行ログ (タイムスタンプ付き)
+└── data/
+    ├── bandwidth/bandwidth_*.tsv      帯域計測結果
+    ├── timing/timing_*.tsv            実行時間 (全実装×全グラフ)
+    ├── threshold/threshold_*.tsv      閾値感度実験結果
+    └── profile/                       Nsight プロファイルデータ
+```
+
+### 注意事項
+
+- 各ステップが失敗しても次のステップを続行する (`run_or_warn` による制御)
+- 存在しないグラフファイルは自動スキップ
+- `set -euo pipefail` により、予期しない変数未定義等はスクリプト全体を停止
+
 

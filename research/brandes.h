@@ -8,6 +8,8 @@
 std::vector<double> brandes_sequential(Graph &graph);
 std::vector<double> brandes_omp(Graph &graph);
 std::vector<double> brandes_gpu(Graph &graph);
+// HBM3専用 + 2ストリームダブルバッファ — アブレーション Stage 1
+std::vector<double> brandes_gpu_stream(Graph &graph);
 // GH200 Unified Memory 最適化版 (フェーズ2)
 std::vector<double> brandes_gpu_managed(Graph &graph);
 // GH200 中間版: ReadMostly + 適応型配置のみ (2-stream なし) — アブレーション手法1

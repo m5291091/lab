@@ -44,6 +44,7 @@ add_executable(brandes_runner
     brandes_sequential.cpp
     brandes_omp.cpp
     brandes_gpu.cu
+    brandes_gpu_stream.cu
     brandes_gpu_managed.cu
     brandes_gpu_readmostly.cu
     brandes_gpu_opt.cu

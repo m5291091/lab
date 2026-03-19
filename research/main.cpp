@@ -11,6 +11,10 @@ using namespace std;
 // --dump-bc フラグが渡された場合に使用
 static bool g_dump_bc = false;
 
+// トポロジ配置の閾値: topo_bytes < totalGlobalMem * g_topo_threshold なら HBM3 直接配置
+// --topo-threshold <float> または -t <float> で変更可 (デフォルト 0.35)
+double g_topo_threshold = 0.35;
+
 // Helper function to run and time a brandes implementation
 void run_brandes(const string& impl_name, const string& graph_path, function<vector<double>(Graph&)> brandes_func, Graph& graph) {
     string graph_name = filesystem::path(graph_path).filename().string();
@@ -61,9 +65,10 @@ void run_brandes(const string& impl_name, const string& graph_path, function<vec
 
 int main(int argc, char *argv[]) {
     if (argc < 3) {
-        cerr << "Usage: " << argv[0] << " <implementation> <graph_file> [--dump-bc]" << endl;
-        cerr << "Available implementations: sequential, omp, gpu, gpu_managed, gpu_opt, all" << endl;
+        cerr << "Usage: " << argv[0] << " <implementation> <graph_file> [--dump-bc] [--topo-threshold <float>]" << endl;
+        cerr << "Available implementations: sequential, omp, gpu, gpu_stream, gpu_managed, gpu_opt, all" << endl;
         cerr << "  --dump-bc : 全 BC 値を stdout に出力 (正確性検証用)" << endl;
+        cerr << "  --topo-threshold <float>, -t <float> : HBM3 直接配置の閾値 (デフォルト 0.35)" << endl;
         return 1;
     }
 
@@ -72,7 +77,16 @@ int main(int argc, char *argv[]) {
 
     // オプション引数の解析
     for (int i = 3; i < argc; ++i) {
-        if (string(argv[i]) == "--dump-bc") g_dump_bc = true;
+        if (string(argv[i]) == "--dump-bc") {
+            g_dump_bc = true;
+        } else if ((string(argv[i]) == "--topo-threshold" || string(argv[i]) == "-t") && i + 1 < argc) {
+            double v = atof(argv[++i]);
+            if (v <= 0.0 || v > 1.0) {
+                cerr << "Error: --topo-threshold must be in (0.0, 1.0], got " << argv[i] << endl;
+                return 1;
+            }
+            g_topo_threshold = v;
+        }
     }
 
     // freopen is used because the existing Graph::readGraph uses stdin
@@ -98,6 +112,9 @@ int main(int argc, char *argv[]) {
     if (run_all || impl_choice == "gpu") {
         run_brandes("GPU", graph_file_path, brandes_gpu, graph);
     }
+    if (run_all || impl_choice == "gpu_stream") {
+        run_brandes("GPU_Stream", graph_file_path, brandes_gpu_stream, graph);
+    }
     if (run_all || impl_choice == "gpu_managed") {
         run_brandes("GPU_Managed", graph_file_path, brandes_gpu_managed, graph);
     }
@@ -109,11 +126,12 @@ int main(int argc, char *argv[]) {
     }
 
     if (!run_all && impl_choice != "sequential" && impl_choice != "omp"
-        && impl_choice != "gpu" && impl_choice != "gpu_managed"
+        && impl_choice != "gpu" && impl_choice != "gpu_stream"
+        && impl_choice != "gpu_managed"
         && impl_choice != "gpu_readmostly"
         && impl_choice != "gpu_opt") {
         cerr << "Error: Unknown implementation '" << impl_choice << "'" << endl;
-        cerr << "Available implementations: sequential, omp, gpu, gpu_managed, gpu_readmostly, gpu_opt, all" << endl;
+        cerr << "Available implementations: sequential, omp, gpu, gpu_stream, gpu_managed, gpu_readmostly, gpu_opt, all" << endl;
         return 1;
     }
 

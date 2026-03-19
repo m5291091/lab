@@ -34,6 +34,9 @@ extern std::vector<double> brandes_gpu_managed_impl(
         int *R, int *C, double *CB_managed,
         int n_nodes, int edge_size, int gpu_id);
 
+// main.cpp で設定されるトポロジ配置閾値 (--topo-threshold で変更可)
+extern double g_topo_threshold;
+
 std::vector<double> brandes_gpu_readmostly(Graph &graph) {
     int *R        = graph.getAdjacencyListPointers();
     int *C        = graph.getAdjacencyList();
@@ -68,7 +71,7 @@ std::vector<double> brandes_gpu_readmostly(Graph &graph) {
     CUDA_ERR_CHK(cudaGetDeviceProperties(&prop, 0));
     const size_t topo_bytes = (size_t)(n_nodes + 1) * sizeof(int)
                             + (size_t)edge_size      * sizeof(int);
-    const bool topo_on_gpu  = (topo_bytes < (size_t)(prop.totalGlobalMem * 0.35));
+    const bool topo_on_gpu  = (topo_bytes < (size_t)(prop.totalGlobalMem * g_topo_threshold));
 
     if (topo_on_gpu) {
         // 小グラフ: HBM3 に直接配置
@@ -78,8 +81,8 @@ std::vector<double> brandes_gpu_readmostly(Graph &graph) {
                                    cudaMemAdviseSetAccessedBy, 0));
         CUDA_ERR_CHK(cudaMemPrefetchAsync(R_m, (size_t)(n_nodes + 1) * sizeof(int), 0, 0));
         CUDA_ERR_CHK(cudaMemPrefetchAsync(C_m, (size_t)edge_size     * sizeof(int), 0, 0));
-        fprintf(stderr, "  > [ReadMostly] topology placement: HBM3 (%.2f GB < 35%% of %.0f GB)\n",
-                topo_bytes / 1e9, prop.totalGlobalMem / 1e9);
+        fprintf(stderr, "  > [ReadMostly] topology placement: HBM3 (%.2f GB < %.0f%% of %.0f GB)\n",
+                topo_bytes / 1e9, g_topo_threshold * 100.0, prop.totalGlobalMem / 1e9);
     } else {
         // 大グラフ: CPU LPDDR5X + SetReadMostly
         CUDA_ERR_CHK(cudaMemAdvise(R_m, (size_t)(n_nodes + 1) * sizeof(int),

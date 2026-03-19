@@ -518,6 +518,10 @@ static vector<double> brandes_gpu_opt_impl(
 // ============================================================
 //  公開エントリポイント (brandes.h の共通インターフェース)
 // ============================================================
+
+// main.cpp で設定されるトポロジ配置閾値 (--topo-threshold で変更可)
+extern double g_topo_threshold;
+
 vector<double> brandes_gpu_opt(Graph &G)
 {
     int *R        = G.getAdjacencyListPointers();
@@ -554,7 +558,7 @@ vector<double> brandes_gpu_opt(Graph &G)
     CUDA_ERR_CHK(cudaGetDeviceProperties(&prop, 0));
     const size_t topo_bytes = (size_t)(n_nodes + 1) * sizeof(int)
                             + (size_t)edge_size      * sizeof(int);
-    const bool   topo_on_gpu = (topo_bytes < (size_t)(prop.totalGlobalMem * 0.35));
+    const bool   topo_on_gpu = (topo_bytes < (size_t)(prop.totalGlobalMem * g_topo_threshold));
 
     if (topo_on_gpu) {
         // 小グラフ: SetAccessedBy + PrefetchAsync で HBM3 に直接配置
