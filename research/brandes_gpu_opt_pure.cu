@@ -269,9 +269,9 @@ static vector<double> brandes_gpu_opt_pure_impl(
     // 使用予定メモリを報告
     size_t topology_bytes = ((size_t)(n_nodes + 1) + (size_t)edge_size) * sizeof(int);
     size_t dynamic_bytes  = (size_t)NS * BATCH_PER_STREAM * per_batch_mem;
-    fprintf(stderr, "  > [Mem] GPU HBM3: total=%.1f GB, free_before=%.1f GB\n",
+    fprintf(stderr, "  > [Mem] GPU: total=%.1f GB, free_before=%.1f GB\n",
             total_mem / 1e9, free_mem / 1e9);
-    fprintf(stderr, "  > [Mem] topology(HBM3)=%.2f GB, dynamic(HBM3)=%.2f GB, batch_per_stream=%d\n",
+    fprintf(stderr, "  > [Mem] topology(GPU)=%.2f GB, dynamic(GPU)=%.2f GB, batch_per_stream=%d\n",
             topology_bytes / 1e9, dynamic_bytes / 1e9, BATCH_PER_STREAM);
 
     // NS 組の動的ステートバッファを cudaMalloc で確保 (UM 不使用)
