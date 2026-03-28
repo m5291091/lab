@@ -1,0 +1,64 @@
+========================================
+  PBS ジョブ一括投入 (統合版)
+  投入ディレクトリ: /work/gj17/j17000/m5291091/lab/research
+========================================
+WARN: run_baseline.sh が small-g に割り当てられました (job=1465768.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB1  (run_baseline.sh)             → 1465768.opbs
+WARN: run_ablation.sh が small-g に割り当てられました (job=1465769.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB2  (run_ablation.sh)             → 1465769.opbs  [depends: 1465768.opbs]
+WARN: run_profile.sh が small-g に割り当てられました (job=1465771.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB3  (run_profile.sh)              → 1465771.opbs  [depends: 1465769.opbs]
+WARN: measure_bandwidth.sh が small-g に割り当てられました (job=1465772.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB4  (measure_bandwidth.sh)        → 1465772.opbs  [depends: 1465768.opbs]
+WARN: run_batchsize_sweep.sh が small-g に割り当てられました (job=1465773.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB5  (run_batchsize_sweep.sh)      → 1465773.opbs  [depends: 1465768.opbs]
+WARN: run_threshold_falsepath.sh が small-g に割り当てられました (job=1465774.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB6  (run_threshold_falsepath.sh)  → 1465774.opbs  [depends: 1465768.opbs]
+WARN: run_threshold_sweep.sh が small-g に割り当てられました (job=1465775.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB7  (run_threshold_sweep.sh)      → 1465775.opbs  [depends: 1465774.opbs]
+WARN: run_ncu_cache_analysis.sh が small-g に割り当てられました (job=1465776.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB8  (run_ncu_cache_analysis.sh)   → 1465776.opbs  [depends: 1465768.opbs]
+WARN: run_nsys_timeline.sh が small-g に割り当てられました (job=1465778.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB9  (run_nsys_timeline.sh)        → 1465778.opbs  [depends: 1465768.opbs]
+WARN: run_analyze.sh が small-g に割り当てられました (job=1465779.opbs)
+      本環境では regular-g 配下の subqueue は権限で固定指定できません。
+      可能なら管理者設定で medium/large への配分を調整してください。
+JOB10 (run_analyze.sh)              → 1465779.opbs  [depends: all experiments]
+
+========================================
+  投入完了 — 10 ジョブ
+
+  依存関係ツリー:
+    1465768.opbs  (baseline)
+      ├── 1465769.opbs  (ablation) → 1465771.opbs  (profile)
+      ├── 1465772.opbs  (bandwidth)
+      ├── 1465773.opbs  (batchsize)
+      ├── 1465774.opbs  (threshold_falsepath) → 1465775.opbs  (threshold_sweep)
+      ├── 1465776.opbs  (ncu_cache)
+      ├── 1465778.opbs  (nsys_timeline)
+    ↓ 全実験完了後:
+    1465779.opbs (analyze) → analysis/figures/, analysis/tables/
+
+  モニタリング:
+    qstat
+    # 全ジョブキャンセル:
+    qdel 1465768.opbs 1465769.opbs 1465771.opbs 1465772.opbs 1465773.opbs 1465774.opbs 1465775.opbs 1465776.opbs 1465778.opbs 1465779.opbs
+========================================
