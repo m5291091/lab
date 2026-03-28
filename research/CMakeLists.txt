@@ -47,6 +47,7 @@ add_executable(brandes_runner
     brandes_gpu_managed.cu
     brandes_gpu_readmostly.cu
     brandes_gpu_opt.cu
+    brandes_gpu_opt_pure.cu
 )
 
 # OpenMP をリンク (NVTX v3 はヘッダーオンリーのためリンク不要)

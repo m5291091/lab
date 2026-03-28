@@ -62,7 +62,7 @@ void run_brandes(const string& impl_name, const string& graph_path, function<vec
 int main(int argc, char *argv[]) {
     if (argc < 3) {
         cerr << "Usage: " << argv[0] << " <implementation> <graph_file> [--dump-bc]" << endl;
-        cerr << "Available implementations: sequential, omp, gpu, gpu_managed, gpu_opt, all" << endl;
+        cerr << "Available implementations: sequential, omp, gpu, gpu_managed, gpu_opt, gpu_opt_pure, all" << endl;
         cerr << "  --dump-bc : 全 BC 値を stdout に出力 (正確性検証用)" << endl;
         return 1;
     }
@@ -107,13 +107,17 @@ int main(int argc, char *argv[]) {
     if (run_all || impl_choice == "gpu_opt") {
         run_brandes("GPU_Opt", graph_file_path, brandes_gpu_opt, graph);
     }
+    if (run_all || impl_choice == "gpu_opt_pure") {
+        run_brandes("GPU_Opt_Pure", graph_file_path, brandes_gpu_opt_pure, graph);
+    }
 
     if (!run_all && impl_choice != "sequential" && impl_choice != "omp"
         && impl_choice != "gpu" && impl_choice != "gpu_managed"
         && impl_choice != "gpu_readmostly"
-        && impl_choice != "gpu_opt") {
+        && impl_choice != "gpu_opt"
+        && impl_choice != "gpu_opt_pure") {
         cerr << "Error: Unknown implementation '" << impl_choice << "'" << endl;
-        cerr << "Available implementations: sequential, omp, gpu, gpu_managed, gpu_readmostly, gpu_opt, all" << endl;
+        cerr << "Available implementations: sequential, omp, gpu, gpu_managed, gpu_readmostly, gpu_opt, gpu_opt_pure, all" << endl;
         return 1;
     }
 
