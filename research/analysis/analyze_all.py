@@ -33,12 +33,12 @@ IMPL_LABELS = {
     'Sequential':      'Sequential',
     'OpenMP':          'OpenMP',
     'GPU':             'GPU (device mem)',
-    'GPU_Opt':         'GPU + Optimized UM (Method 1+2)',
+    'GPU_Opt':         'GPU + Optimized (ReadMostly + 2-stream)',
     # Legacy lowercase aliases
     'sequential':      'Sequential',
     'omp':             'OpenMP',
     'gpu':             'GPU (device mem)',
-    'gpu_opt':         'GPU + Optimized UM (Method 1+2)',
+    'gpu_opt':         'GPU + Optimized (ReadMostly + 2-stream)',
 }
 
 IMPL_ORDER     = ['Sequential', 'OpenMP', 'GPU', 'GPU_Opt']
