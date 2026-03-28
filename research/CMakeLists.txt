@@ -40,12 +40,9 @@ endif()
 add_executable(brandes_runner
     main.cpp
     Graph.cpp
-    GraphManaged.cpp
     brandes_sequential.cpp
     brandes_omp.cpp
     brandes_gpu.cu
-    brandes_gpu_managed.cu
-    brandes_gpu_readmostly.cu
     brandes_gpu_opt.cu
     brandes_gpu_opt_pure.cu
 )

@@ -9,15 +9,11 @@
 # ============================================================
 #  アブレーションスタディ実験スクリプト
 #
-#  目的: 修士論文の「新手法2つ」の寄与を定量化
-#   手法1: ReadMostly + Prefetch (GPU_Managed → GPU_ReadMostly)
-#   手法2: 2-stream 非同期パイプライン (GPU_ReadMostly → GPU_Opt)
+#  目的: 修士論文の「新手法」の寄与を定量化
 #
 #  実行対象実装:
 #   GPU          : ベースライン (cudaMalloc, HBM3 直接配置)
-#   GPU_Managed  : Unified Memory (ReadMostly なし, LPDDR5X 配置)
-#   GPU_ReadMostly: [手法1] ReadMostly + 適応型 Prefetch のみ
-#   GPU_Opt      : [手法1 + 手法2] ReadMostly + 2-stream 非同期
+#   GPU_Opt      : ReadMostly + 2-stream 非同期
 #
 #  グラフ: 7K / 11K / 56K / 325K ノード × 4 実装
 #
@@ -42,8 +38,7 @@ mkdir -p "${RESULT_DIR}"
 
 echo "========================================"
 echo "  アブレーションスタディ実験"
-echo "  手法1: GPU_Managed → GPU_ReadMostly (ReadMostly + Prefetch)"
-echo "  手法2: GPU_ReadMostly → GPU_Opt (2-stream 非同期)"
+echo "  GPU → GPU_Opt (ReadMostly + 2-stream 非同期)"
 echo "  結果: ${SUMMARY}"
 echo "========================================"
 
@@ -72,7 +67,7 @@ GRAPHS=(
     "325557_3216152"
 )
 
-IMPLS=("gpu" "gpu_managed" "gpu_readmostly" "gpu_opt")
+IMPLS=("gpu" "gpu_opt")
 
 for GNAME in "${GRAPHS[@]}"; do
     GPATH="${DATA_DIR}/${GNAME}"

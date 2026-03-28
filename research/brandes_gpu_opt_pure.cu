@@ -13,7 +13,7 @@ using namespace std;
 //  純 GPU メモリ版 BC 最適化実装 (Unified Memory 不使用)
 //
 //  brandes_gpu_opt.cu からの変更点:
-//    - cudaMallocManaged → cudaMalloc に全面置換
+//    - cudaMalloc で GPU メモリを直接確保
 //    - cudaMemAdvise / cudaMemPrefetchAsync を全て除去
 //    - CSR トポロジ (R, C) は cudaMemcpy(HostToDevice) で転送
 //    - 結果バッファ (CB) は cudaMemcpy(DeviceToHost) で回収

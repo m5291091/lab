@@ -12,7 +12,7 @@ using namespace std;
 //  brandes_gpu_opt.cu
 //  GH200 Grace Hopper Superchip 特化 BC 最適化実装
 //
-//  brandes_gpu_managed.cu (v1) からの改善点:
+//  改善点:
 //
 //  [最適化1] cudaMemAdviseSetReadMostly
 //    - 静的 CSR トポロジデータ (R, C) を読み取り専用としてマーク
@@ -51,7 +51,6 @@ static __device__ bool isUndirected_opt = true;
 
 // ============================================================
 //  デバイス関数: BFS 前向き探索 (トップダウン/ボトムアップ ハイブリッド)
-//  ロジックは brandes_gpu_managed.cu と同一。NVLink-C2C 経由の R/C アクセスに対し
 //  SetReadMostly + SetAccessedBy により HBM3 L2 がキャッシュラインを保持する。
 // ============================================================
 __device__ void find_shortest_paths_opt(

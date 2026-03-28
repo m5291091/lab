@@ -68,24 +68,21 @@
 | `brandes_sequential.cpp` | 逐次版 Brandes アルゴリズム (CPU シングルスレッド, 参照実装) |
 | `brandes_omp.cpp` | OpenMP スレッド並列版 (CPU 全コア利用) |
 | `brandes_gpu.cu` | CUDA GPU 版 — `cudaMalloc` + バッチ処理 (GPU ベースライン) |
-| `brandes_gpu_managed.cu` | Unified Memory 版 — CPU LPDDR5X 配置、NVLink-C2C 経由アクセス |
-| `brandes_gpu_readmostly.cu` | **提案手法 1** — SetReadMostly + 適応型 Prefetch によるメモリ配置最適化 |
-| `brandes_gpu_opt.cu` | **提案手法 1 + 2** — ReadMostly + 2-stream 非同期パイプライン |
-| `GraphManaged.h` / `GraphManaged.cpp` | `cudaMallocManaged` 対応グラフクラス |
+| `brandes_gpu_opt.cu` | **提案手法** — ReadMostly + 2-stream 非同期パイプライン |
 | `brandes.h` | 全実装の関数プロトタイプ宣言 |
 | `common.h` | 共通ヘッダ (CUDA エラーチェック等) |
 | `Graph.cpp` / `Graph.h` | CSR 形式グラフ読み込みクラス |
-| `main.cpp` | 単体実行エントリポイント (`sequential` / `omp` / `gpu` / `gpu_managed` / `gpu_readmostly` / `gpu_opt` / `all` 対応) |
+| `main.cpp` | 単体実行エントリポイント (`sequential` / `omp` / `gpu` / `gpu_opt` / `all` 対応) |
 | `CMakeLists.txt` | CMake ビルド設定 |
 
 ### 1.2 スクリプト・ツールファイル
 
 | ファイル | 役割 |
 |---------|------|
-| `scripts/verify_correctness.sh` | 全実装の BC 値が sequential と一致するかを検証 (5 実装) |
+| `scripts/verify_correctness.sh` | 全実装の BC 値が sequential と一致するかを検証 (3 実装) |
 | `scripts/compare_bc.py` | 2 つの BC 出力ファイルの数値一致検証ツール |
 | `scripts/run_baseline.sh` | PBS バッチジョブ: 全グラフ・全実装のベースライン計測 |
-| `scripts/run_ablation.sh` | PBS バッチジョブ: アブレーションスタディ (4 実装 × 4 グラフ) |
+| `scripts/run_ablation.sh` | PBS バッチジョブ: アブレーションスタディ (2 実装 × 4 グラフ) |
 | `scripts/run_profile.sh` | PBS バッチジョブ: Nsight Systems プロファイリング |
 | `scripts/run_batchsize_sweep.sh` | バッチサイズ感度分析 (インタラクティブジョブ内) |
 | `scripts/measure_bandwidth.sh` | PBS バッチジョブ: HBM3 / NVLink-C2C 実効帯域計測 |
@@ -117,10 +114,7 @@ lab/
 │   ├── brandes_sequential.cpp
 │   ├── brandes_omp.cpp
 │   ├── brandes_gpu.cu
-│   ├── brandes_gpu_managed.cu           <- Unified Memory 版
-│   ├── brandes_gpu_readmostly.cu        <- 提案手法 1: ReadMostly + Prefetch
-│   ├── brandes_gpu_opt.cu               <- 提案手法 1+2: + 2-stream 非同期
-│   ├── GraphManaged.cpp / GraphManaged.h
+│   ├── brandes_gpu_opt.cu               <- 提案手法: ReadMostly + 2-stream 非同期
 │   ├── brandes.h / common.h
 │   ├── Graph.cpp / Graph.h
 │   ├── main.cpp
@@ -193,7 +187,7 @@ cd /work/gj17/j17000/m5291091/lab/research/build_miyabi
 ./brandes_runner all ../../data/benchmark_7000_41459
 
 # 個別実装テスト
-./brandes_runner gpu_readmostly  ../../data/benchmark_7000_41459
+./brandes_runner gpu_opt         ../../data/benchmark_7000_41459
 ./brandes_runner gpu_opt         ../../data/325557_3216152
 ```
 
@@ -210,9 +204,7 @@ GPU_Opt    325557_3216152    2.341    8.822
 | `sequential` | 逐次版 (CPU シングルスレッド) |
 | `omp` | OpenMP 並列版 (CPU 全コア) |
 | `gpu` | CUDA GPU 版 (cudaMalloc) |
-| `gpu_managed` | Unified Memory 版 |
-| `gpu_readmostly` | **提案手法 1** (SetReadMostly + 適応型 Prefetch) |
-| `gpu_opt` | **提案手法 1+2** (ReadMostly + 2-stream 非同期) |
+| `gpu_opt` | **提案手法** (ReadMostly + 2-stream 非同期) |
 | `all` | 全実装を一括実行 |
 
 ---
@@ -228,15 +220,13 @@ bash scripts/verify_correctness.sh                          # デフォルト: b
 bash scripts/verify_correctness.sh ../../data/56438_300801  # グラフ指定も可
 ```
 
-**期待される出力** (全 5 実装が PASS):
+**期待される出力** (全 3 実装が PASS):
 ```
 PASS: All BC values match within tolerance.   # OpenMP
 PASS: All BC values match within tolerance.   # GPU
-PASS: All BC values match within tolerance.   # GPU_Managed
-PASS: All BC values match within tolerance.   # GPU_ReadMostly  <- 提案手法 1
 PASS: All BC values match within tolerance.   # GPU_Opt
 ========================================
-  PASS: 5  FAIL: 0
+  PASS: 3  FAIL: 0
 ========================================
 ```
 
@@ -244,7 +234,7 @@ PASS: All BC values match within tolerance.   # GPU_Opt
 
 ## 5. STEP 3: ベースライン計測
 
-**目的**: 全グラフ・全実装の実行時間計測。Sequential → OpenMP → GPU → GPU_Managed → GPU_ReadMostly → GPU_Opt の段階的高速化を記録する。  
+**目的**: 全グラフ・全実装の実行時間計測。Sequential → OpenMP → GPU → GPU_Opt の段階的高速化を記録する。  
 **使用キュー**: `regular-g`  **walltime**: 24 時間
 
 ```bash
@@ -257,9 +247,9 @@ qsub scripts/run_baseline.sh
 
 | グラフ規模 | 対象グラフ | 計測対象実装 |
 |-----------|---------|-----------|
-| small (7K, 11K) | benchmark_7000_41459, benchmark_11023_62184 | sequential, omp, gpu, gpu_managed, gpu_readmostly, gpu_opt |
-| medium (56K〜410K) | snap 実世界グラフ 7 本 | omp, gpu, gpu_managed, gpu_readmostly, gpu_opt |
-| large (800K〜2M) | roadNet-*, web-Google | gpu, gpu_readmostly, gpu_opt |
+| small (7K, 11K) | benchmark_7000_41459, benchmark_11023_62184 | sequential, omp, gpu, gpu_opt |
+| medium (56K〜410K) | snap 実世界グラフ 7 本 | omp, gpu, gpu_opt |
+| large (800K〜2M) | roadNet-*, web-Google | gpu, gpu_opt |
 
 ---
 
@@ -269,9 +259,7 @@ qsub scripts/run_baseline.sh
 
 | ステップ | 比較 | 測定する効果 |
 |---------|------|------|
-| 1 | GPU vs GPU_Managed | Unified Memory の基本コスト (GH200 では NVLink-C2C がボトルネックとなり意図的に大幅劣化) |
-| 2 | GPU_Managed vs GPU_ReadMostly | **提案手法 1**: SetReadMostly + 適応型 Prefetch 効果 |
-| 3 | GPU_ReadMostly vs GPU_Opt | **提案手法 2**: 2-stream 非同期パイプライン効果 |
+| 1 | GPU vs GPU_Opt | **提案手法**: ReadMostly + 2-stream 非同期パイプライン効果 |
 
 ```bash
 # バッチジョブとして投入 (推奨, select=1, walltime=2h)
@@ -284,20 +272,6 @@ bash scripts/run_ablation.sh
 ```
 
 **対象グラフ**: benchmark_7000_41459 (7K), benchmark_11023_62184 (11K), 56438_300801 (56K), 325557_3216152 (325K)
-
-### GPU_ReadMostly の技術的意義
-
-GH200 では Unified Memory を使用すると、グラフ構造データがデフォルトで CPU 側 LPDDR5X に配置される。  
-GPU がこのデータにアクセスする際は NVLink-C2C (実効帯域 156 GB/s) を経由するため、  
-HBM3 直接アクセス (実効帯域 1488 GB/s) と比べて約 9.6 倍のレイテンシが生じる。
-
-`GPU_ReadMostly` は `cudaMemAdviseSetReadMostly` と `cudaMemPrefetchAsync` を用い、  
-グラフのトポロジデータを HBM3 に積極的にキャッシュすることで NVLink-C2C ボトルネックを解消する。
-
-> **注意**: テストグラフ (最大 27 MB) はすべて HBM3 配置閾値 (HBM3 容量の 35%) を下回るため、  
-> 全グラフで HBM3 配置が選択される。結果として `GPU ≈ GPU_ReadMostly` の性能となるが、  
-> これは意図通りの動作であり、「手法 1 が GPU 性能を完全回復した」ことの証拠である。  
-> 重要な比較は **GPU_Managed (5 倍遅い) → GPU_ReadMostly (GPU 同等)** である。
 
 ---
 
@@ -333,8 +307,7 @@ qsub scripts/measure_bandwidth.sh
 | Pinned HtoD | 425 GB/s | 900 GB/s | 47% |
 | NVLink-C2C Prefetch | 156 GB/s | 900 GB/s | 17% |
 
-NVLink-C2C の実効帯域 (156 GB/s) が GPU_Managed 劣化の直接的な原因であり、  
-HBM3 と比較して 9.6 倍の帯域差が BC 実行時間に直接反映される。
+NVLink-C2C の実効帯域 (156 GB/s) は HBM3 と比較して 9.6 倍の帯域差がある。
 
 ---
 
@@ -427,7 +400,6 @@ qdel <JobID>
 ### GPU 実装が遅い / GTEPS が期待値より低い
 - バッチサイズを確認: `run_batchsize_sweep.sh` で最適値を計測
 - グラフが小さすぎる場合: GPU の立ち上がりコストが支配的になる
-- `gpu_managed` は NVLink-C2C 帯域 (156 GB/s) がボトルネックのため 56K+ グラフで意図的に低速
 
 ### Graph クラスの API
 

@@ -65,9 +65,9 @@ ${NSYS} profile \
 #    dram__bytes.sum.per_second                         : DRAM 帯域 (HBM3)
 #    nvlrx__bytes.sum.per_second                        : NVLink 受信帯域 (C2C)
 # ================================================================
-echo "=== [4/4] Nsight Compute: gpu vs gpu_managed vs gpu_opt (11K graph) ==="
+echo "=== [4/4] Nsight Compute: gpu vs gpu_opt (11K graph) ==="
 
-for IMPL in gpu gpu_managed gpu_readmostly gpu_opt; do
+for IMPL in gpu gpu_opt; do
     echo "  ncu: ${IMPL}"
     ${NCU} \
         --target-processes all \

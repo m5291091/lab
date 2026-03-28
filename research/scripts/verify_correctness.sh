@@ -26,7 +26,7 @@ echo "========================================"
 
 # ---- 参照 BC の生成 (sequential) ----
 echo ""
-echo ">>> [1/6] Sequential を参照として実行 (--dump-bc)"
+echo ">>> [1/4] Sequential を参照として実行 (--dump-bc)"
 REF="${VERIFY_DIR}/ref_sequential_${GNAME}.txt"
 "${RUNNER}" sequential "${GRAPH}" --dump-bc > "${REF}" 2>/dev/null
 echo "  -> 保存: ${REF}  ($(wc -l < "${REF}") 行)"
@@ -51,8 +51,6 @@ compare_impl() {
 
 compare_impl "omp"             "OpenMP"
 compare_impl "gpu"             "GPU (cudaMalloc)"
-compare_impl "gpu_managed"     "GPU_Managed (Unified Memory v1)"
-compare_impl "gpu_readmostly"  "GPU_ReadMostly (ReadMostly + Prefetch, 手法1)"
 compare_impl "gpu_opt"         "GPU_Opt (Unified Memory v2 + 4opt)"
 
 echo ""

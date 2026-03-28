@@ -3,14 +3,14 @@
 #
 # 取得グラフ一覧:
 #
-#  [medium]  ~100K-500K ノード  → omp + gpu + gpu_managed + gpu_opt
+#  [medium]  ~100K-500K ノード  → omp + gpu + gpu_opt
 #   email-EuAll   : 265K nodes,  420K edges  (EU メール通信ネットワーク)
 #   amazon0302    : 262K nodes,  1.2M edges  (Amazon 商品共購買ネットワーク)
 #   web-Stanford  : 281K nodes,  2.3M edges  (Stanford Web グラフ)
 #   web-NotreDame : 325K nodes,  1.5M edges  (Notre Dame Web グラフ)
 #   amazon0505    : 410K nodes,  3.4M edges  (Amazon 商品共購買ネットワーク大)
 #
-#  [large]   ~500K-2M ノード    → gpu + gpu_managed + gpu_opt
+#  [large]   ~500K-2M ノード    → gpu + gpu_opt
 #   web-Google    : 875K nodes,  5.1M edges  (Google Web グラフ)
 #   roadNet-PA    : 1.09M nodes, 1.5M edges  (ペンシルバニア道路ネットワーク)
 #   roadNet-TX    : 1.38M nodes, 1.9M edges  (テキサス道路ネットワーク)

@@ -33,34 +33,26 @@ IMPL_LABELS = {
     'Sequential':      'Sequential',
     'OpenMP':          'OpenMP',
     'GPU':             'GPU (device mem)',
-    'GPU_Managed':     'GPU + Unified Mem',
-    'GPU_ReadMostly':  'GPU + ReadMostly (Method 1)',
     'GPU_Opt':         'GPU + Optimized UM (Method 1+2)',
     # Legacy lowercase aliases
     'sequential':      'Sequential',
     'omp':             'OpenMP',
     'gpu':             'GPU (device mem)',
-    'gpu_managed':     'GPU + Unified Mem',
-    'gpu_readmostly':  'GPU + ReadMostly (Method 1)',
     'gpu_opt':         'GPU + Optimized UM (Method 1+2)',
 }
 
-IMPL_ORDER     = ['Sequential', 'OpenMP', 'GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
-IMPL_ORDER_ALT = ['sequential', 'omp',   'gpu', 'gpu_managed', 'gpu_readmostly', 'gpu_opt']
+IMPL_ORDER     = ['Sequential', 'OpenMP', 'GPU', 'GPU_Opt']
+IMPL_ORDER_ALT = ['sequential', 'omp',   'gpu', 'gpu_opt']
 
 IMPL_COLORS = {
     'Sequential':     '#555555',
     'OpenMP':         '#2196F3',
     'GPU':            '#4CAF50',
-    'GPU_Managed':    '#FF9800',
-    'GPU_ReadMostly': '#9C27B0',
     'GPU_Opt':        '#F44336',
     # Legacy lowercase
     'sequential':     '#555555',
     'omp':            '#2196F3',
     'gpu':            '#4CAF50',
-    'gpu_managed':    '#FF9800',
-    'gpu_readmostly': '#9C27B0',
     'gpu_opt':        '#F44336',
 }
 
@@ -68,15 +60,11 @@ IMPL_MARKERS = {
     'Sequential':     'o',
     'OpenMP':         's',
     'GPU':            '^',
-    'GPU_Managed':    'D',
-    'GPU_ReadMostly': 'P',
     'GPU_Opt':        '*',
     # Legacy lowercase
     'sequential':     'o',
     'omp':            's',
     'gpu':            '^',
-    'gpu_managed':    'D',
-    'gpu_readmostly': 'P',
     'gpu_opt':        '*',
 }
 
@@ -167,8 +155,8 @@ def format_nodes(n: int) -> str:
     return str(n)
 
 
-KNOWN_IMPLS = {'Sequential', 'OpenMP', 'GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt',
-               'sequential', 'omp', 'gpu', 'gpu_managed', 'gpu_readmostly', 'gpu_opt',
+KNOWN_IMPLS = {'Sequential', 'OpenMP', 'GPU', 'GPU_Opt',
+               'sequential', 'omp', 'gpu', 'gpu_opt',
                'mpi_gpu', 'brandes_mpi_runner'}
 
 
@@ -405,13 +393,13 @@ def plot_gteps(df: pd.DataFrame, out_dir: Path):
 
 
 def plot_phase2_comparison(df: pd.DataFrame, out_dir: Path):
-    """Phase2: execution time comparison for gpu / gpu_managed / gpu_opt (grouped bar chart)."""
+    """Phase2: execution time comparison for gpu / gpu_opt (grouped bar chart)."""
     if df.empty:
         print("[SKIP] Phase2 graph: no data")
         return
 
     df = add_graph_metadata(df)
-    impls = ['GPU', 'GPU_Managed', 'GPU_Opt', 'gpu', 'gpu_managed', 'gpu_opt']
+    impls = ['GPU', 'GPU_Opt', 'gpu', 'gpu_opt']
     impls_present = [i for i in impls if i in df['Implementation'].values]
     if not impls_present:
         print("[SKIP] Phase2 graph: no GPU implementation data")
@@ -442,7 +430,7 @@ def plot_phase2_comparison(df: pd.DataFrame, out_dir: Path):
     ax.set_yscale('log')
     ax.set_xlabel('Graph Size (nodes)')
     ax.set_ylabel('Execution Time (sec) [log scale]')
-    ax.set_title('GPU Memory Strategy Comparison\n(gpu vs. gpu_managed vs. gpu_opt)')
+    ax.set_title('GPU Memory Strategy Comparison\n(gpu vs. gpu_opt)')
     ax.legend()
     ax.grid(True, axis='y', alpha=0.3)
 
@@ -804,12 +792,12 @@ def assess_thesis_adequacy(baseline_df: pd.DataFrame,
     # --- 3. NVLink-C2C effectiveness evaluation ---
     if not baseline_df.empty and not phase2_df.empty:
         score += 1
-        strengths.append("+ gpu vs gpu_managed comparison available (NVLink-C2C evaluable)")
+        strengths.append("+ gpu vs gpu_opt comparison available")
     elif not phase2_df.empty:
         score += 1
         strengths.append("+ Phase2 data available (Unified Memory evaluable)")
     else:
-        issues.append("~ No Phase2 data -- cannot demonstrate gpu_managed effect")
+        issues.append("~ No Phase2 data -- cannot demonstrate gpu_opt effect")
 
     # --- 4. Bandwidth data ---
     if not bw_df.empty:
@@ -1140,9 +1128,9 @@ def make_scaling_table(strong_df: pd.DataFrame, tables_dir: Path):
 # ============================================================
 
 def plot_ablation(df: pd.DataFrame, out_dir: Path):
-    """Ablation study: GTEPS comparison for GPU -> GPU_Managed -> GPU_ReadMostly -> GPU_Opt.
+    """Ablation study: GTEPS comparison for GPU -> GPU_Opt.
 
-    Visualizes the independent contribution of Method 1 (ReadMostly) and Method 2 (2-stream).
+    Visualizes the contribution of optimizations.
     """
     if df.empty:
         print("[SKIP] Ablation graph: no data")
@@ -1153,14 +1141,12 @@ def plot_ablation(df: pd.DataFrame, out_dir: Path):
     # Normalize implementation names (unify lowercase/mixed case)
     name_map = {
         'gpu':            'GPU',
-        'gpu_managed':    'GPU_Managed',
-        'gpu_readmostly': 'GPU_ReadMostly',
         'gpu_opt':        'GPU_Opt',
     }
     df = df.copy()
     df['Implementation'] = df['Implementation'].replace(name_map)
 
-    ablation_order = ['GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
+    ablation_order = ['GPU', 'GPU_Opt']
     impls_present  = [i for i in ablation_order if i in df['Implementation'].values]
     if len(impls_present) < 2:
         print(f"[SKIP] Ablation graph: insufficient implementations ({impls_present})")
@@ -1245,14 +1231,12 @@ def make_ablation_table(df: pd.DataFrame, tables_dir: Path):
     df = add_graph_metadata(df)
     name_map = {
         'gpu':            'GPU',
-        'gpu_managed':    'GPU_Managed',
-        'gpu_readmostly': 'GPU_ReadMostly',
         'gpu_opt':        'GPU_Opt',
     }
     df = df.copy()
     df['Implementation'] = df['Implementation'].replace(name_map)
 
-    ablation_order = ['GPU', 'GPU_Managed', 'GPU_ReadMostly', 'GPU_Opt']
+    ablation_order = ['GPU', 'GPU_Opt']
     impls_present  = [i for i in ablation_order if i in df['Implementation'].values]
 
     # GTEPS pivot
