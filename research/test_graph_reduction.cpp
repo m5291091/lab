@@ -1219,6 +1219,496 @@ static bool test_s6_pipeline_complex() {
 }
 
 // ============================================================
+//     新規テスト: 安全 Degree-2 圧縮 + 重み付き Brandes + BC 復元
+// ============================================================
+
+// ============================================================
+// テストケース SAFE-1: 安全条件チェッカーの基本動作
+//   2つの三角形をチェーンで接続: 安全チェーンが1つ存在
+//   Triangle1: 0-1-2-0, Chain: 2-3-4-5, Triangle2: 5-6-7-5
+// ============================================================
+static bool test_safe_dumbbell() {
+    fprintf(stderr, "\n=== SAFE Test: Dumbbell graph (two triangles connected by chain) ===\n");
+
+    vector<pair<int,int>> edges = {
+        {0,1}, {1,2}, {2,0},     // triangle 1
+        {2,3}, {3,4}, {4,5},     // chain (3,4 are degree-2)
+        {5,6}, {6,7}, {7,5}      // triangle 2
+    };
+    TestGraph tg = buildCSR(8, edges);
+
+    SafeDegree2CompressResult result = safeDegree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // 1 safe chain: 2-3-4-5 (internal: [3,4])
+    if (result.safeChains.size() != 1) {
+        fprintf(stderr, "FAIL: Expected 1 safe chain, got %zu\n", result.safeChains.size());
+        return false;
+    }
+
+    if (result.unsafeChains.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 unsafe chains, got %zu\n", result.unsafeChains.size());
+        return false;
+    }
+
+    // 内部頂点は 3 と 4
+    const auto& chain = result.safeChains[0];
+    if (chain.internalVertices.size() != 2) {
+        fprintf(stderr, "FAIL: Expected 2 internal vertices, got %zu\n", chain.internalVertices.size());
+        return false;
+    }
+
+    // pathLength = 3 (2 internal + 1)
+    if (chain.pathLength != 3) {
+        fprintf(stderr, "FAIL: Expected pathLength=3, got %d\n", chain.pathLength);
+        return false;
+    }
+
+    // 縮約グラフ: 6 vertices (0,1,2,5,6,7), 6 edges
+    if (result.reducedGraph.nodeCount != 6) {
+        fprintf(stderr, "FAIL: Expected 6 remaining vertices, got %d\n", result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース SAFE-2: 安全条件 C2 違反 (直接辺が存在)
+//   Triangle + parallel chain: 0-1 (direct) + 0-2-1 (chain)
+// ============================================================
+static bool test_safe_c2_violation() {
+    fprintf(stderr, "\n=== SAFE Test: C2 violation (direct edge exists) ===\n");
+
+    vector<pair<int,int>> edges = {
+        {0,1}, {0,2}, {2,1},    // 0-1 direct, chain 0-2-1
+        {0,3}, {1,4}            // extra edges to make 0,1 non-degree-2
+    };
+    TestGraph tg = buildCSR(5, edges);
+
+    // After degree-1 peeling would remove 3,4, but we test safeDegree2Compress directly
+    SafeDegree2CompressResult result = safeDegree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // Chain 0-2-1: C2 violated (0-1 direct edge exists) → unsafe
+    if (result.safeChains.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 safe chains, got %zu\n", result.safeChains.size());
+        return false;
+    }
+
+    if (result.unsafeChains.size() != 1) {
+        fprintf(stderr, "FAIL: Expected 1 unsafe chain, got %zu\n", result.unsafeChains.size());
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース SAFE-3: 安全条件 C3 違反 (共通隣接頂点が存在)
+//   0-2-1 (chain), 0-3, 1-3 (共通隣接 3)
+// ============================================================
+static bool test_safe_c3_violation() {
+    fprintf(stderr, "\n=== SAFE Test: C3 violation (common neighbor) ===\n");
+
+    // 0: adj = [2, 3, 4] degree 3
+    // 1: adj = [2, 3, 5] degree 3
+    // 2: adj = [0, 1] degree 2 → chain 0-2-1
+    // 3: adj = [0, 1] degree 2 → chain 0-3-1
+    // 4: adj = [0] degree 1 (pendant)
+    // 5: adj = [1] degree 1 (pendant)
+    // chains: 0-2-1, 0-3-1
+    // C3 check for chain 0-2-1: common neighbors of 0,1 excluding {2}?
+    //   neighbors(0)\{2} = {3,4}, neighbors(1)\{2} = {3,5}
+    //   common = {3} → C3 violated → unsafe
+    // C3 check for chain 0-3-1: common neighbors of 0,1 excluding {3}?
+    //   neighbors(0)\{3} = {2,4}, neighbors(1)\{3} = {2,5}
+    //   common = {2} → C3 violated → unsafe
+    vector<pair<int,int>> edges = {
+        {0,2}, {2,1},   // chain 0-2-1
+        {0,3}, {3,1},   // chain 0-3-1
+        {0,4}, {1,5}    // pendants to keep 0,1 non-degree-2
+    };
+    TestGraph tg = buildCSR(6, edges);
+
+    SafeDegree2CompressResult result = safeDegree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // Both chains should be unsafe due to C3
+    if (result.safeChains.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 safe chains, got %zu\n", result.safeChains.size());
+        return false;
+    }
+
+    fprintf(stderr, "  Unsafe chains: %zu\n", result.unsafeChains.size());
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース SAFE-4: 安全条件 C1 違反 (サイクルチェーン)
+//   0-1-2-0 where 1,2 are degree-2
+//   But this forms a cycle → C1: a==b → unsafe
+//   Actually in our tracing, this is detected as a pure cycle since
+//   all vertices are degree-2, so no chains are found at all.
+//   Let me create a specific test: 0-1-2-0 with 0 having extra edge
+//   0: adj = [1,2,3] degree 3
+//   1: adj = [0,2] degree 2
+//   2: adj = [1,0] degree 2
+//   Chain from 0, through 1: 0-1-2-0 → endpointA=0, endpointB=0 → C1 violated
+// ============================================================
+static bool test_safe_c1_violation() {
+    fprintf(stderr, "\n=== SAFE Test: C1 violation (cycle chain) ===\n");
+
+    // 0-1-2-0 (triangle) + 0-3 pendant → 0 has degree 3, 1 and 2 have degree 2
+    // Chain: 0-1-2-0 → endpointA = endpointB = 0 → C1 violated
+    vector<pair<int,int>> edges = {
+        {0,1}, {1,2}, {2,0}, {0,3}
+    };
+    TestGraph tg = buildCSR(4, edges);
+
+    SafeDegree2CompressResult result = safeDegree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // The chain 0-1-2-0 is unsafe (C1: a==b)
+    if (result.safeChains.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 safe chains, got %zu\n", result.safeChains.size());
+        return false;
+    }
+
+    fprintf(stderr, "  Unsafe chains: %zu\n", result.unsafeChains.size());
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース SAFE-5: 重み付き Brandes (Dial's algorithm) の正確性
+//   パスグラフ 0-1-2 を手動で重み付き CSR として渡す
+//   weight(0-1)=1, weight(1-2)=2
+//   → これは 0-a-1-b-c-2 のような元グラフに対応
+//   → 距離: d(0,1)=1, d(0,2)=3, d(1,2)=2
+//   → BC(0)=0, BC(1)=1, BC(2)=0 (全パス: 0-1, 0-2 via 1, 1-2. 1 は 0-2 の中間)
+//   (無向グラフ: BC = Σ pairs / 2)
+// ============================================================
+static bool test_weighted_brandes_basic() {
+    fprintf(stderr, "\n=== WEIGHTED Test: Basic weighted Brandes on path ===\n");
+
+    // 重み付き CSR: 0-1 (w=1), 1-2 (w=2)
+    WeightedReducedGraph wg;
+    wg.nodeCount = 3;
+    wg.edgeCount = 2;
+    wg.adjacencyListPointers = {0, 1, 3, 4};
+    wg.adjacencyList = {1, 0, 2, 1};
+    wg.edgeWeight = {1, 1, 2, 2};
+    wg.newToOrig = {0, 1, 2};
+    wg.origToNew = {0, 1, 2};
+
+    WeightedBrandesResult result = computeWeightedBCWithEdgeDep(wg);
+
+    // BC(1) = 1.0 (中間点), BC(0) = BC(2) = 0
+    fprintf(stderr, "  BC: ");
+    for (int i = 0; i < 3; ++i) fprintf(stderr, "%.4f ", result.bc[i]);
+    fprintf(stderr, "\n");
+
+    if (fabs(result.bc[0] - 0.0) > 1e-9 ||
+        fabs(result.bc[1] - 1.0) > 1e-9 ||
+        fabs(result.bc[2] - 0.0) > 1e-9) {
+        fprintf(stderr, "FAIL: BC values don't match expected\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース SAFE-6: 重み=1 の場合、重み付き Brandes == 無重み Brandes
+//   全辺重み1 の三角形で検証
+// ============================================================
+static bool test_weighted_brandes_unit_weight() {
+    fprintf(stderr, "\n=== WEIGHTED Test: Unit weight == unweighted Brandes ===\n");
+
+    // K4 グラフ (完全グラフ、全辺重み 1)
+    vector<pair<int,int>> edges = {{0,1}, {0,2}, {0,3}, {1,2}, {1,3}, {2,3}};
+    TestGraph tg = buildCSR(4, edges);
+
+    // 無重み参照
+    vector<double> refBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 4);
+
+    // 重み付き (全辺重み 1)
+    WeightedReducedGraph wg;
+    wg.nodeCount = 4;
+    wg.edgeCount = 6;
+    wg.adjacencyListPointers = tg.adjacencyListPointers;
+    wg.adjacencyList = tg.adjacencyList;
+    wg.edgeWeight.assign(tg.adjacencyList.size(), 1);
+    wg.newToOrig = {0, 1, 2, 3};
+    wg.origToNew = {0, 1, 2, 3};
+
+    WeightedBrandesResult result = computeWeightedBCWithEdgeDep(wg);
+
+    fprintf(stderr, "  Weighted BC:   ");
+    for (int i = 0; i < 4; ++i) fprintf(stderr, "%.4f ", result.bc[i]);
+    fprintf(stderr, "\n  Reference BC:  ");
+    for (int i = 0; i < 4; ++i) fprintf(stderr, "%.4f ", refBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(result.bc, refBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース PIPELINE-D2-1: ダンベルグラフの E2E パイプライン
+//   2つの三角形をチェーンで接続 → 安全チェーンが圧縮され、
+//   重み付き Brandes + Degree-2 復元 → 元グラフの BC と一致
+// ============================================================
+static bool test_pipeline_dumbbell() {
+    fprintf(stderr, "\n=== PIPELINE-D2 Test: Dumbbell (two triangles + safe chain) ===\n");
+
+    vector<pair<int,int>> edges = {
+        {0,1}, {1,2}, {2,0},     // triangle 1
+        {2,3}, {3,4}, {4,5},     // chain (3,4 are degree-2) → safe
+        {5,6}, {6,7}, {7,5}      // triangle 2
+    };
+    TestGraph tg = buildCSR(8, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 8);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース PIPELINE-D2-2: 長いチェーン (安全) + ペンダント
+//   ハブ A(0) とハブ B(5): 0-1-2-3-4-5 のチェーン + ペンダント
+//   0 は degree >= 3 (ペンダント追加), 5 も degree >= 3
+// ============================================================
+static bool test_pipeline_long_safe_chain() {
+    fprintf(stderr, "\n=== PIPELINE-D2 Test: Long safe chain + pendants ===\n");
+
+    // Two K3 hubs connected by a long chain
+    // Hub 0: 0-8-9-0 (triangle)
+    // Hub 5: 5-10-11-5 (triangle)
+    // Chain: 0-1-2-3-4-5 (1,2,3,4 are degree-2)
+    vector<pair<int,int>> edges = {
+        {0,8}, {8,9}, {9,0},       // triangle 1
+        {0,1}, {1,2}, {2,3}, {3,4}, {4,5},  // chain
+        {5,10}, {10,11}, {11,5}    // triangle 2
+    };
+    TestGraph tg = buildCSR(12, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 12);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース PIPELINE-D2-3: 安全チェーンと非安全チェーンの混合
+//   安全: 2つのハブ間に直接辺なしのチェーン
+//   非安全: 同じハブ間に直接辺ありのチェーン
+// ============================================================
+static bool test_pipeline_mixed_safe_unsafe() {
+    fprintf(stderr, "\n=== PIPELINE-D2 Test: Mixed safe/unsafe chains ===\n");
+
+    // Hub 0 (degree 4), Hub 3 (degree 4)
+    // Chain 0-1-2-3 (via 1,2) → check safety:
+    //   C2: no direct 0-3 edge → safe... wait, let me add a direct edge
+    // Actually let me create:
+    // Hub 0 (triangle 0-4-5)
+    // Hub 3 (triangle 3-6-7)
+    // Safe chain: 0-1-2-3 (no direct 0-3 edge)
+    //
+    // Hub 8 (triangle 8-10-11)
+    // Hub 9 (triangle 9-12-13)
+    // Unsafe chain: 8-14-9 + direct edge 8-9 → C2 violated
+    vector<pair<int,int>> edges = {
+        {0,4}, {4,5}, {5,0},       // triangle for hub 0
+        {3,6}, {6,7}, {7,3},       // triangle for hub 3
+        {0,1}, {1,2}, {2,3},       // safe chain 0-1-2-3
+        {8,10}, {10,11}, {11,8},   // triangle for hub 8
+        {9,12}, {12,13}, {13,9},   // triangle for hub 9
+        {8,14}, {14,9},            // chain 8-14-9
+        {8,9}                      // direct edge → makes chain unsafe
+    };
+    TestGraph tg = buildCSR(15, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 15);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース PIPELINE-D2-4: 複数の安全チェーンが並列に存在
+//   0-1-2-3 と 0-4-5-3 (parallel safe chains between hubs 0 and 3)
+//   但し C3 チェック: chain1 の端点 0,3 は chain2 の内部頂点 4,5 を共有しない
+//   → common neighbors? neighbors(0) = {1,4,...}, neighbors(3) = {2,5,...}
+//   chain1 内部 = {1,2}, chain2 内部 = {4,5}
+//   For chain1: common neighbors of 0,3 excluding {1,2}:
+//     neighbors(0)\{1,2} includes 4, neighbors(3)\{1,2} includes 5
+//     Common = {} (4 ∉ neighbors(3), 5 ∉ neighbors(0)) → safe!
+//   For chain2: common neighbors of 0,3 excluding {4,5}:
+//     neighbors(0)\{4,5} includes 1, neighbors(3)\{4,5} includes 2
+//     Common = {} → safe!
+// ============================================================
+static bool test_pipeline_parallel_safe_chains() {
+    fprintf(stderr, "\n=== PIPELINE-D2 Test: Parallel safe chains ===\n");
+
+    // Hub 0: needs degree >= 3 (has edges to 1, 4, and 6)
+    // Hub 3: needs degree >= 3 (has edges to 2, 5, and 7)
+    vector<pair<int,int>> edges = {
+        {0,1}, {1,2}, {2,3},       // safe chain 1: 0-1-2-3
+        {0,4}, {4,5}, {5,3},       // safe chain 2: 0-4-5-3
+        {0,6}, {3,7}               // extra edges to make 0,3 non-degree-2
+    };
+    TestGraph tg = buildCSR(8, edges);
+
+    // Note: 6 and 7 are degree-1, will be peeled by degree-1 peeling
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 8);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース PIPELINE-D2-5: Degree-1 + Degree-2 統合テスト (大規模)
+//   ペンダント、安全チェーン、非安全チェーンが混在する複合グラフ
+// ============================================================
+static bool test_pipeline_d2_complex() {
+    fprintf(stderr, "\n=== PIPELINE-D2 Test: Complex graph with deg1+deg2 ===\n");
+
+    // K4 core: 0-1-2-3
+    // Safe chain: 0-4-5-6-1 (no direct 0-1 edge in core? Wait, K4 has 0-1)
+    // Let me create a different topology:
+    //
+    // Hub A (0): triangle 0-10-11
+    // Hub B (1): triangle 1-12-13
+    // Hub C (2): triangle 2-14-15
+    // Safe chain A-B: 0-3-4-1
+    // Safe chain B-C: 1-5-6-2
+    // Safe chain A-C: 0-7-8-9-2
+    // Pendants: 0-16, 1-17, 2-18
+    vector<pair<int,int>> edges = {
+        {0,10}, {10,11}, {11,0},     // triangle A
+        {1,12}, {12,13}, {13,1},     // triangle B
+        {2,14}, {14,15}, {15,2},     // triangle C
+        {0,3}, {3,4}, {4,1},        // safe chain A-B
+        {1,5}, {5,6}, {6,2},        // safe chain B-C
+        {0,7}, {7,8}, {8,9}, {9,2}, // safe chain A-C
+        {0,16}, {1,17}, {2,18}      // pendants
+    };
+    TestGraph tg = buildCSR(19, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 19);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
 // メイン
 // ============================================================
 int main(int argc, char* argv[]) {
@@ -1263,6 +1753,23 @@ int main(int argc, char* argv[]) {
     run(test_s6_pipeline_triangle_chain());
     run(test_s6_pipeline_twins());
     run(test_s6_pipeline_complex());
+
+    // 安全 Degree-2 圧縮テスト
+    run(test_safe_dumbbell());
+    run(test_safe_c2_violation());
+    run(test_safe_c3_violation());
+    run(test_safe_c1_violation());
+
+    // 重み付き Brandes テスト
+    run(test_weighted_brandes_basic());
+    run(test_weighted_brandes_unit_weight());
+
+    // Degree-2 統合パイプラインテスト
+    run(test_pipeline_dumbbell());
+    run(test_pipeline_long_safe_chain());
+    run(test_pipeline_mixed_safe_unsafe());
+    run(test_pipeline_parallel_safe_chains());
+    run(test_pipeline_d2_complex());
 
     // ファイルからのテスト（引数で指定）
     for (int i = 1; i < argc; ++i) {
