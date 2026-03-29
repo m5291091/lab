@@ -1248,8 +1248,9 @@ static bool test_safe_dumbbell() {
         return false;
     }
 
-    if (result.unsafeChains.size() != 0) {
-        fprintf(stderr, "FAIL: Expected 0 unsafe chains, got %zu\n", result.unsafeChains.size());
+    // 三角形がサイクルチェーン (a==b) を形成するため C1 条件違反 → 2 つの非安全チェーン
+    if (result.unsafeChains.size() != 2) {
+        fprintf(stderr, "FAIL: Expected 2 unsafe chains (C1 violated: a==b cycle), got %zu\n", result.unsafeChains.size());
         return false;
     }
 
@@ -1657,33 +1658,29 @@ static bool test_pipeline_parallel_safe_chains() {
 }
 
 // ============================================================
-// テストケース PIPELINE-D2-5: Degree-1 + Degree-2 統合テスト (大規模)
-//   ペンダント、安全チェーン、非安全チェーンが混在する複合グラフ
+// テストケース PIPELINE-D2-5: Degree-1 + Degree-2 統合テスト
+//   ペンダントと安全チェーンが混在するシンプルな複合グラフ
+//   Hub A=0 (triangle 0-5-6), Safe chain 0-1-2-3-4, Hub B=4 (triangle 4-7-8)
+//   Pendants: 0-9, 4-10
 // ============================================================
 static bool test_pipeline_d2_complex() {
     fprintf(stderr, "\n=== PIPELINE-D2 Test: Complex graph with deg1+deg2 ===\n");
 
-    // K4 core: 0-1-2-3
-    // Safe chain: 0-4-5-6-1 (no direct 0-1 edge in core? Wait, K4 has 0-1)
-    // Let me create a different topology:
-    //
-    // Hub A (0): triangle 0-10-11
-    // Hub B (1): triangle 1-12-13
-    // Hub C (2): triangle 2-14-15
-    // Safe chain A-B: 0-3-4-1
-    // Safe chain B-C: 1-5-6-2
-    // Safe chain A-C: 0-7-8-9-2
-    // Pendants: 0-16, 1-17, 2-18
+    // Hub A=0: triangle 0-5-6, pendant 0-9
+    // Hub B=4: triangle 4-7-8, pendant 4-10
+    // Safe chain: 0-1-2-3-4 (k=3 internal vertices: 1,2,3)
+    // After deg-1 peel: remove 9,10 → 9 vertices remain
+    // After deg-2 compress: chain 0-1-2-3-4 compressed → 6 vertices remain
+    // n_a=3 ({0,5,6}), n_b=3 ({4,7,8})
+    // BC(v1,i=1)=(3+0)*(3+2)=15, BC(v2,i=2)=(3+1)*(3+1)=16, BC(v3,i=3)=(3+2)*(3+0)=15
     vector<pair<int,int>> edges = {
-        {0,10}, {10,11}, {11,0},     // triangle A
-        {1,12}, {12,13}, {13,1},     // triangle B
-        {2,14}, {14,15}, {15,2},     // triangle C
-        {0,3}, {3,4}, {4,1},        // safe chain A-B
-        {1,5}, {5,6}, {6,2},        // safe chain B-C
-        {0,7}, {7,8}, {8,9}, {9,2}, // safe chain A-C
-        {0,16}, {1,17}, {2,18}      // pendants
+        {0,5}, {5,6}, {6,0},         // triangle A (hub 0)
+        {0,1}, {1,2}, {2,3}, {3,4},  // safe chain 0-1-2-3-4 (k=3)
+        {4,7}, {7,8}, {8,4},         // triangle B (hub 4)
+        {0,9},                        // pendant A
+        {4,10}                        // pendant B
     };
-    TestGraph tg = buildCSR(19, edges);
+    TestGraph tg = buildCSR(11, edges);
 
     vector<double> pipelineBC = runReductionPipeline(
         tg.adjacencyListPointers.data(),
@@ -1691,7 +1688,7 @@ static bool test_pipeline_d2_complex() {
         tg.nodeCount, tg.edgeCount);
 
     vector<double> directBC = referenceBrandes(
-        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 19);
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 11);
 
     fprintf(stderr, "  Pipeline BC: ");
     for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);

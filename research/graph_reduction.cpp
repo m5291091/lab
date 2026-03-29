@@ -7,6 +7,7 @@
 #include <cstdio>
 #include <unordered_map>
 #include <set>
+#include <climits>
 
 using namespace std;
 
@@ -912,17 +913,10 @@ WeightedBrandesResult computeWeightedBCWithEdgeDep(const WeightedReducedGraph& w
                     double contrib = (static_cast<double>(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
                     delta[v] += contrib;
 
-                    // 辺依存性: v→w の辺インデックスを探索
+                    // 辺依存性: v→w の辺インデックスを探索 (正規化前の値を記録)
                     for (int ei = ap[v]; ei < ap[v + 1]; ++ei) {
                         if (adj[ei] == w && dist[w] == dist[v] + ew[ei]) {
-                            result.edgeDep[ei] += contrib / 2.0;  // 無向グラフのため
-                            break;
-                        }
-                    }
-                    // 辺依存性: w→v の辺インデックスも記録 (対称)
-                    for (int ei = ap[w]; ei < ap[w + 1]; ++ei) {
-                        if (adj[ei] == v && dist[w] == dist[v] + ew[ei]) {
-                            result.edgeDep[ei] += contrib / 2.0;
+                            result.edgeDep[ei] += contrib;
                             break;
                         }
                     }
@@ -1105,10 +1099,31 @@ void restoreDegree2BC(vector<double>& bc,
         expanded[origV] = brandesResult.bc[newV];
     }
 
-    // 各安全チェーンの内部頂点に BC を復元
-    const int* ap = wg.adjacencyListPointers.data();
-    const int* adj = wg.adjacencyList.data();
+    // Dijkstra ヘルパー: 重み付き縮約グラフ上での最短距離を計算
+    // 辺重みは最大でも nodeCount 程度なので、1e9 はオーバーフロー安全
+    const int INF = 1000000000;
+    auto dijkstra = [&](int src) -> vector<int> {
+        vector<int> dist(wg.nodeCount, INF);
+        priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> pq;
+        dist[src] = 0;
+        pq.push({0, src});
+        while (!pq.empty()) {
+            auto top = pq.top(); pq.pop();
+            int d = top.first, u = top.second;
+            if (d > dist[u]) continue;
+            for (int ei = wg.adjacencyListPointers[u]; ei < wg.adjacencyListPointers[u + 1]; ++ei) {
+                int v = wg.adjacencyList[ei];
+                int w = wg.edgeWeight[ei];
+                if (dist[u] + w < dist[v]) {
+                    dist[v] = dist[u] + w;
+                    pq.push({dist[v], v});
+                }
+            }
+        }
+        return dist;
+    };
 
+    // 各安全チェーンの BC を復元
     for (const auto& chain : compResult.safeChains) {
         int a = chain.endpointA;
         int b = chain.endpointB;
@@ -1119,18 +1134,34 @@ void restoreDegree2BC(vector<double>& bc,
 
         if (newA < 0 || newB < 0) continue;
 
-        // 辺 (newA, newB) の辺依存性を取得
-        double chainDep = 0.0;
-        for (int ei = ap[newA]; ei < ap[newA + 1]; ++ei) {
-            if (adj[ei] == newB) {
-                chainDep = brandesResult.edgeDep[ei];
-                break;
+        int k = static_cast<int>(chain.internalVertices.size());
+        int w_chain = chain.pathLength;  // = k + 1
+
+        // Dijkstra で newA, newB からの距離を計算
+        vector<int> dist_a = dijkstra(newA);
+        vector<int> dist_b = dijkstra(newB);
+
+        // n_a: A 側の頂点数 (dist_a[v] + w_chain == dist_b[v] を満たす頂点)
+        // n_b: B 側の頂点数 (dist_b[v] + w_chain == dist_a[v] を満たす頂点)
+        int n_a = 0, n_b = 0;
+        for (int v = 0; v < wg.nodeCount; ++v) {
+            if (dist_a[v] != INF && dist_b[v] != INF) {
+                if (dist_a[v] + w_chain == dist_b[v]) n_a++;
+                if (dist_b[v] + w_chain == dist_a[v]) n_b++;
             }
         }
 
-        // チェーン内部全頂点に同一の BC 値を割り当て
-        for (int iv : chain.internalVertices) {
-            expanded[iv] = chainDep;
+        // ハブ頂点の BC 補正: チェーン内部頂点を経由するペアの寄与を追加
+        // 元の g1 の ID で BC を補正 (複数チェーンの端点は加算)
+        expanded[a] += (double)k * (double)(n_a - 1);
+        expanded[b] += (double)k * (double)(n_b - 1);
+
+        // チェーン内部頂点の BC 復元
+        // v_i (A 側から i 番目, 1-indexed) の BC = (n_a + i - 1) * (n_b + k - i)
+        for (int idx = 0; idx < k; ++idx) {
+            int i = idx + 1;  // 1-indexed, A 端点側から
+            expanded[chain.internalVertices[idx]] =
+                (double)(n_a + i - 1) * (double)(n_b + k - i);
         }
     }
 
