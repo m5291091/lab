@@ -549,6 +549,218 @@ bool verifyNoTwins(const ReducedGraph& g) {
 }
 
 // ============================================================
+// 安全条件付き Degree-2 チェーン圧縮 (Sariyüce 2013 の安全条件)
+// ============================================================
+SafeDegree2CompressResult safeDegree2Compress(const int* ap, const int* adj,
+                                              int nodeCount, int edgeCount) {
+    SafeDegree2CompressResult result;
+
+    // --- 1. 全頂点の次数を計算し、Degree-2 を識別 ---
+    vector<int> degree(nodeCount);
+    vector<bool> isDeg2(nodeCount, false);
+    for (int i = 0; i < nodeCount; ++i) {
+        degree[i] = ap[i + 1] - ap[i];
+        if (degree[i] == 2) {
+            isDeg2[i] = true;
+        }
+    }
+
+    // --- 2. 非 Degree-2 頂点から出発してチェーンをたどる ---
+    vector<bool> visited(nodeCount, false);
+    vector<int> chainOf(nodeCount, -1);
+    vector<CompressedChain> allChains;
+
+    for (int v = 0; v < nodeCount; ++v) {
+        if (isDeg2[v]) continue;
+
+        for (int i = ap[v]; i < ap[v + 1]; ++i) {
+            int w = adj[i];
+            if (!isDeg2[w] || visited[w]) continue;
+
+            CompressedChain chain;
+            chain.endpointA = v;
+
+            vector<int> internal;
+            int prev = v;
+            int curr = w;
+
+            while (isDeg2[curr] && !visited[curr]) {
+                visited[curr] = true;
+                internal.push_back(curr);
+
+                int next = -1;
+                for (int j = ap[curr]; j < ap[curr + 1]; ++j) {
+                    if (adj[j] != prev) {
+                        next = adj[j];
+                        break;
+                    }
+                }
+
+                prev = curr;
+                curr = next;
+            }
+
+            chain.endpointB = curr;
+            chain.internalVertices = internal;
+            chain.pathLength = static_cast<int>(internal.size()) + 1;
+            allChains.push_back(chain);
+        }
+    }
+
+    // --- 3. 未訪問の Degree-2 頂点はサイクル成分 ---
+    vector<bool> isCycleVertex(nodeCount, false);
+    for (int v = 0; v < nodeCount; ++v) {
+        if (isDeg2[v] && !visited[v]) {
+            isCycleVertex[v] = true;
+        }
+    }
+
+    // --- 4. 各チェーンの安全条件を判定 ---
+    // 高速隣接チェック用: 各頂点の隣接をセット化
+    vector<set<int>> neighborSet(nodeCount);
+    for (int v = 0; v < nodeCount; ++v) {
+        for (int i = ap[v]; i < ap[v + 1]; ++i) {
+            neighborSet[v].insert(adj[i]);
+        }
+    }
+
+    vector<bool> isSafe(allChains.size(), true);
+    for (size_t ci = 0; ci < allChains.size(); ++ci) {
+        const CompressedChain& c = allChains[ci];
+        int a = c.endpointA;
+        int b = c.endpointB;
+
+        // C1: a ≠ b（サイクルでない）
+        if (a == b) {
+            isSafe[ci] = false;
+            continue;
+        }
+
+        // C2: a-b 間に直接辺がない
+        if (neighborSet[a].count(b) > 0) {
+            isSafe[ci] = false;
+            continue;
+        }
+
+        // C3: a と b に {v₁...vₖ} 以外の共通隣接頂点がない
+        set<int> internalSet(c.internalVertices.begin(), c.internalVertices.end());
+        bool hasCommonNeighbor = false;
+        for (int na : neighborSet[a]) {
+            if (internalSet.count(na) > 0) continue;  // チェーン内部は除外
+            if (na == b) continue;  // C2 で既にチェック済みだが念のため
+            if (neighborSet[b].count(na) > 0) {
+                hasCommonNeighbor = true;
+                break;
+            }
+        }
+        if (hasCommonNeighbor) {
+            isSafe[ci] = false;
+            continue;
+        }
+    }
+
+    // --- 5. 安全/非安全チェーンを分類 ---
+    vector<bool> removedByChain(nodeCount, false);
+    int safeChainCount = 0;
+    for (size_t ci = 0; ci < allChains.size(); ++ci) {
+        if (isSafe[ci]) {
+            result.safeChains.push_back(allChains[ci]);
+            int scIdx = safeChainCount++;
+            for (int iv : allChains[ci].internalVertices) {
+                chainOf[iv] = scIdx;
+                removedByChain[iv] = true;
+            }
+        } else {
+            result.unsafeChains.push_back(allChains[ci]);
+        }
+    }
+
+    // --- 6. 除去対象: 安全チェーンの内部頂点のみ ---
+    vector<bool> removed(nodeCount, false);
+    for (int v = 0; v < nodeCount; ++v) {
+        if (removedByChain[v]) {
+            removed[v] = true;
+        }
+    }
+
+    // --- 7. 縮約グラフの構築 ---
+    ReducedGraph& rg = result.reducedGraph;
+    rg.origToNew.assign(nodeCount, -1);
+
+    int newId = 0;
+    for (int i = 0; i < nodeCount; ++i) {
+        if (!removed[i]) {
+            rg.origToNew[i] = newId;
+            rg.newToOrig.push_back(i);
+            newId++;
+        }
+    }
+    rg.nodeCount = newId;
+
+    // 各頂点の隣接リストを構築
+    vector<vector<int>> newAdj(rg.nodeCount);
+    for (int newV = 0; newV < rg.nodeCount; ++newV) {
+        int origV = rg.newToOrig[newV];
+        vector<bool> seen(rg.nodeCount, false);
+
+        for (int i = ap[origV]; i < ap[origV + 1]; ++i) {
+            int origW = adj[i];
+
+            if (!removed[origW]) {
+                int newW = rg.origToNew[origW];
+                if (newW != newV && !seen[newW]) {
+                    newAdj[newV].push_back(newW);
+                    seen[newW] = true;
+                }
+            } else {
+                // origW は安全チェーン内部頂点 → チェーンの他端を接続
+                int ci = chainOf[origW];
+                if (ci < 0) continue;
+                const CompressedChain& c = result.safeChains[ci];
+                int otherEndpoint = (c.endpointA == origV) ? c.endpointB : c.endpointA;
+                int newOther = rg.origToNew[otherEndpoint];
+                if (newOther >= 0 && newOther != newV && !seen[newOther]) {
+                    newAdj[newV].push_back(newOther);
+                    seen[newOther] = true;
+                }
+            }
+        }
+    }
+
+    // CSR の構築
+    rg.adjacencyListPointers.resize(rg.nodeCount + 1, 0);
+    for (int i = 0; i < rg.nodeCount; ++i) {
+        rg.adjacencyListPointers[i + 1] =
+            rg.adjacencyListPointers[i] + static_cast<int>(newAdj[i].size());
+    }
+
+    int totalAdj = rg.adjacencyListPointers[rg.nodeCount];
+    rg.edgeCount = totalAdj / 2;
+    rg.adjacencyList.resize(totalAdj);
+
+    for (int i = 0; i < rg.nodeCount; ++i) {
+        int base = rg.adjacencyListPointers[i];
+        for (int j = 0; j < static_cast<int>(newAdj[i].size()); ++j) {
+            rg.adjacencyList[base + j] = newAdj[i][j];
+        }
+    }
+
+    int removedCount = nodeCount - rg.nodeCount;
+    int removedEdges = edgeCount - rg.edgeCount;
+    fprintf(stderr, "[SafeDeg2Compress] Safe chains: %zu, Unsafe chains: %zu\n",
+            result.safeChains.size(), result.unsafeChains.size());
+    fprintf(stderr, "[SafeDeg2Compress] Removed %d vertices (%.1f%%), %d edges (%.1f%%)\n",
+            removedCount,
+            nodeCount > 0 ? 100.0 * removedCount / nodeCount : 0.0,
+            removedEdges,
+            edgeCount > 0 ? 100.0 * removedEdges / edgeCount : 0.0);
+    fprintf(stderr, "[SafeDeg2Compress] Reduced graph: %d vertices, %d edges\n",
+            rg.nodeCount, rg.edgeCount);
+
+    return result;
+}
+
+// ============================================================
 // Step 4: 縮約グラフ上での厳密 BC 計算 (CPU Brandes)
 // ============================================================
 vector<double> computeBCOnReducedGraph(const ReducedGraph& rg) {
@@ -612,6 +824,122 @@ vector<double> computeBCOnReducedGraph(const ReducedGraph& rg) {
 }
 
 // ============================================================
+// 重み付き Brandes 法 (Dial's algorithm + 辺依存性記録)
+// ============================================================
+//
+// Dial's algorithm: 整数重み SSSP のための bucket queue
+//   - 各 bucket[d] に距離 d の頂点を格納
+//   - 最大距離 D_max は辺重みの合計の上界
+//   - 計算量: O(V + E + D_max)
+//
+// 辺依存性:
+//   Brandes の back-propagation で辺 (v,w) の依存性を記録:
+//     edge_dep(v,w) += (σ[v]/σ[w]) × (1 + δ[w])  when dist[w] = dist[v] + weight(v,w)
+//   安全チェーンの縮約辺の edge_dep がチェーン内部頂点の BC に対応
+// ============================================================
+WeightedBrandesResult computeWeightedBCWithEdgeDep(const WeightedReducedGraph& wg) {
+    const int n = wg.nodeCount;
+    const int* ap = wg.adjacencyListPointers.data();
+    const int* adj = wg.adjacencyList.data();
+    const int* ew = wg.edgeWeight.data();
+    int totalAdj = static_cast<int>(wg.adjacencyList.size());
+
+    WeightedBrandesResult result;
+    result.bc.assign(n, 0.0);
+    result.edgeDep.assign(totalAdj, 0.0);
+
+    if (n <= 1) return result;
+
+    // D_max の計算 (全辺重みの合計 / 2 が上界)
+    int maxWeight = 0;
+    for (int i = 0; i < totalAdj; ++i) {
+        if (ew[i] > maxWeight) maxWeight = ew[i];
+    }
+    // 最大距離 = (n-1) * maxWeight が上界
+    int dMax = (n - 1) * maxWeight;
+
+    for (int s = 0; s < n; ++s) {
+        // --- Dial's algorithm (bucket queue SSSP) ---
+        vector<int> S;
+        S.reserve(n);
+        vector<vector<int>> pred(n);
+        vector<long long> sigma(n, 0);
+        vector<int> dist(n, -1);
+        vector<double> delta(n, 0.0);
+
+        // bucket queue
+        vector<vector<int>> bucket(dMax + 1);
+
+        dist[s] = 0;
+        sigma[s] = 1;
+        bucket[0].push_back(s);
+
+        int settled = 0;
+        for (int d = 0; d <= dMax && settled < n; ++d) {
+            for (size_t bi = 0; bi < bucket[d].size(); ++bi) {
+                int v = bucket[d][bi];
+                if (dist[v] != d) continue;  // 古いエントリをスキップ
+                S.push_back(v);
+                settled++;
+
+                for (int i = ap[v]; i < ap[v + 1]; ++i) {
+                    int w = adj[i];
+                    int newDist = d + ew[i];
+                    if (newDist > dMax) continue;
+
+                    if (dist[w] < 0) {
+                        // 未到達
+                        dist[w] = newDist;
+                        sigma[w] = sigma[v];
+                        pred[w].push_back(v);
+                        bucket[newDist].push_back(w);
+                    } else if (dist[w] == newDist) {
+                        // 同距離の別経路
+                        sigma[w] += sigma[v];
+                        pred[w].push_back(v);
+                    }
+                    // dist[w] < newDist の場合は何もしない
+                }
+            }
+        }
+
+        // --- バックプロパゲーション + 辺依存性記録 ---
+        // 逆 pred マップ: w の predecessor v のうち、CSR 上の辺インデックスを検索
+        for (int i = static_cast<int>(S.size()) - 1; i >= 0; --i) {
+            int w = S[i];
+            for (int v : pred[w]) {
+                if (sigma[w] != 0) {
+                    double contrib = (static_cast<double>(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
+                    delta[v] += contrib;
+
+                    // 辺依存性: v→w の辺インデックスを探索
+                    for (int ei = ap[v]; ei < ap[v + 1]; ++ei) {
+                        if (adj[ei] == w && dist[w] == dist[v] + ew[ei]) {
+                            result.edgeDep[ei] += contrib / 2.0;  // 無向グラフのため
+                            break;
+                        }
+                    }
+                    // 辺依存性: w→v の辺インデックスも記録 (対称)
+                    for (int ei = ap[w]; ei < ap[w + 1]; ++ei) {
+                        if (adj[ei] == v && dist[w] == dist[v] + ew[ei]) {
+                            result.edgeDep[ei] += contrib / 2.0;
+                            break;
+                        }
+                    }
+                }
+            }
+            if (w != s) {
+                result.bc[w] += delta[w] / 2.0;
+            }
+        }
+    }
+
+    fprintf(stderr, "[WeightedBC] Computed weighted BC on graph (%d vertices, %d edges, maxWeight=%d)\n",
+            n, wg.edgeCount, maxWeight);
+    return result;
+}
+
+// ============================================================
 // Step 5: BC 復元（逆変換）
 // ============================================================
 //
@@ -621,12 +949,9 @@ vector<double> computeBCOnReducedGraph(const ReducedGraph& rg) {
 //   「残存頂点ソースのみの部分和」と一致する。除去頂点分の
 //   ソース寄与を BFS で追加するだけで正確な復元が可能。
 //
-//   一方、Degree-2 チェーン圧縮と Twin 統合は辺の付け替えを伴い、
-//   最短経路構造そのものが変化する。そのため、縮約グラフの BC は
-//   元グラフの BC の部分和にならない。正確な復元には重み付き
-//   Brandes 等が必要であり、本パイプラインでは Degree-1 peeling
-//   のみを BC 計算の前処理として使用する。
-//   (Step 2, 3 の関数はグラフ分析用として別途利用可能)
+//   Degree-2 チェーン圧縮は安全条件を満たすチェーンのみ縮約し、
+//   Bentert et al. (2018) の復元公式により辺依存性から内部頂点の
+//   BC を復元する。安全でないチェーンは元のままグラフに残す。
 //
 // Degree-1 復元公式（数学的導出）:
 //   葉頂点 v (唯一の隣接 = p) を除去した G' → 元グラフ G への復元:
@@ -756,16 +1081,76 @@ void restoreDegree1BC(vector<double>& bc,
 }
 
 // ============================================================
-// Step 6: End-to-End パイプライン
+// Step 2 逆変換: Degree-2 チェーンの BC 復元 (Bentert 2018)
+// ============================================================
+//
+// 安全条件を満たすチェーン a - v₁ - ... - vₖ - b について:
+//   BC_G(vᵢ) = 辺 (a_new, b_new) の辺依存性
+//   ∵ 安全条件により s-t 最短経路がチェーンを通過 ⟺ 縮約辺 a-b を通過
+//     かつチェーン内部全頂点は一意にこの経路上にある
+//
+// 端点 a, b の BC は重み付き Brandes で正しく計算済み（g1 の ID で管理）
+// ============================================================
+void restoreDegree2BC(vector<double>& bc,
+                      const SafeDegree2CompressResult& compResult,
+                      const WeightedBrandesResult& brandesResult,
+                      const WeightedReducedGraph& wg,
+                      int origNodeCount) {
+    const ReducedGraph& rg = compResult.reducedGraph;
+
+    // BC を元の g1 (Degree-1 Peeling 後) グラフの ID にマッピング
+    vector<double> expanded(origNodeCount, 0.0);
+    for (int newV = 0; newV < rg.nodeCount; ++newV) {
+        int origV = rg.newToOrig[newV];
+        expanded[origV] = brandesResult.bc[newV];
+    }
+
+    // 各安全チェーンの内部頂点に BC を復元
+    const int* ap = wg.adjacencyListPointers.data();
+    const int* adj = wg.adjacencyList.data();
+
+    for (const auto& chain : compResult.safeChains) {
+        int a = chain.endpointA;
+        int b = chain.endpointB;
+
+        // 縮約グラフ上での a, b の新 ID
+        int newA = rg.origToNew[a];
+        int newB = rg.origToNew[b];
+
+        if (newA < 0 || newB < 0) continue;
+
+        // 辺 (newA, newB) の辺依存性を取得
+        double chainDep = 0.0;
+        for (int ei = ap[newA]; ei < ap[newA + 1]; ++ei) {
+            if (adj[ei] == newB) {
+                chainDep = brandesResult.edgeDep[ei];
+                break;
+            }
+        }
+
+        // チェーン内部全頂点に同一の BC 値を割り当て
+        for (int iv : chain.internalVertices) {
+            expanded[iv] = chainDep;
+        }
+    }
+
+    bc = expanded;
+
+    fprintf(stderr, "[RestoreDeg2BC] Restored BC for %zu safe chains (%zu unsafe skipped)\n",
+            compResult.safeChains.size(), compResult.unsafeChains.size());
+}
+
+// ============================================================
+// Step 6: End-to-End パイプライン (Degree-1 + Degree-2 統合版)
 // ============================================================
 //
 // パイプライン構成:
-//   Step 1 (Degree-1 Peeling) -> Step 4 (BC 計算) -> Step 5 (復元)
-//
-// Note: Step 2 (チェーン圧縮) と Step 3 (Twin 統合) は
-//   辺の付け替えを伴うため、BC の正確な復元が困難。
-//   これらはグラフ分析・縮約率の計測用として別途利用可能。
-//   将来的に重み付き Brandes を実装すれば統合可能。
+//   Step 1 (Degree-1 Peeling) →
+//   Step 2 (安全 Degree-2 圧縮) →
+//   重み付き Brandes (Dial's algorithm + 辺依存性記録) →
+//   Degree-2 BC 復元 →
+//   Degree-1 BC 復元 →
+//   全頂点 BC
 // ============================================================
 vector<double> runReductionPipeline(const int* ap, const int* adj,
                                     int nodeCount, int edgeCount) {
@@ -781,12 +1166,19 @@ vector<double> runReductionPipeline(const int* ap, const int* adj,
             g1.nodeCount, g1.edgeCount,
             nodeCount > 0 ? 100.0 * (1.0 - static_cast<double>(g1.nodeCount) / nodeCount) : 0.0);
 
-    // --- (参考情報) Step 2, 3 の縮約率を計測 ---
+    // --- Step 2: 安全条件付き Degree-2 圧縮 ---
+    fprintf(stderr, "[Pipeline] Step 2: Safe Degree-2 Compression...\n");
+    SafeDegree2CompressResult s2 = safeDegree2Compress(
+        g1.adjacencyListPointers.data(), g1.adjacencyList.data(),
+        g1.nodeCount, g1.edgeCount);
+
+    const ReducedGraph& g2 = s2.reducedGraph;
+    fprintf(stderr, "[Pipeline] After Step 2: %d vertices, %d edges (safe: %zu chains, unsafe: %zu chains)\n",
+            g2.nodeCount, g2.edgeCount,
+            s2.safeChains.size(), s2.unsafeChains.size());
+
+    // --- (参考情報) Step 3 の縮約率を計測 ---
     {
-        Degree2CompressResult s2 = degree2Compress(
-            g1.adjacencyListPointers.data(), g1.adjacencyList.data(),
-            g1.nodeCount, g1.edgeCount);
-        const ReducedGraph& g2 = s2.reducedGraph;
         TwinMergeResult s3 = twinMerge(
             g2.adjacencyListPointers.data(), g2.adjacencyList.data(),
             g2.nodeCount, g2.edgeCount);
@@ -794,12 +1186,54 @@ vector<double> runReductionPipeline(const int* ap, const int* adj,
                 nodeCount, s3.reducedGraph.nodeCount, edgeCount, s3.reducedGraph.edgeCount);
     }
 
-    // --- Step 4: BC 計算 on 縮約グラフ (Step 1 のみ適用) ---
-    fprintf(stderr, "[Pipeline] Step 4: Computing BC on Step-1 reduced graph...\n");
-    vector<double> bc = computeBCOnReducedGraph(g1);
+    // --- 重み付き CSR の構築 ---
+    // 安全チェーンの縮約辺に pathLength を重みとして付与
+    // 通常辺は重み 1
+    WeightedReducedGraph wg;
+    wg.nodeCount = g2.nodeCount;
+    wg.edgeCount = g2.edgeCount;
+    wg.adjacencyListPointers = g2.adjacencyListPointers;
+    wg.adjacencyList = g2.adjacencyList;
+    wg.newToOrig = g2.newToOrig;
+    wg.origToNew = g2.origToNew;
 
-    // --- Step 5: BC 復元 (Degree-1 逆変換) ---
-    fprintf(stderr, "[Pipeline] Step 5: Restoring BC (Degree-1 BFS-based)...\n");
+    int totalAdj2 = static_cast<int>(g2.adjacencyList.size());
+    wg.edgeWeight.assign(totalAdj2, 1);  // デフォルト重み 1
+
+    // 安全チェーンの縮約辺に pathLength を設定
+    for (const auto& chain : s2.safeChains) {
+        int newA = g2.origToNew[chain.endpointA];
+        int newB = g2.origToNew[chain.endpointB];
+
+        if (newA < 0 || newB < 0) continue;
+
+        // newA → newB の辺に重みを設定
+        for (int ei = g2.adjacencyListPointers[newA]; ei < g2.adjacencyListPointers[newA + 1]; ++ei) {
+            if (g2.adjacencyList[ei] == newB) {
+                wg.edgeWeight[ei] = chain.pathLength;
+                break;
+            }
+        }
+        // newB → newA の辺にも同じ重みを設定
+        for (int ei = g2.adjacencyListPointers[newB]; ei < g2.adjacencyListPointers[newB + 1]; ++ei) {
+            if (g2.adjacencyList[ei] == newA) {
+                wg.edgeWeight[ei] = chain.pathLength;
+                break;
+            }
+        }
+    }
+
+    // --- Step 4: 重み付き Brandes (Dial's algorithm + 辺依存性) ---
+    fprintf(stderr, "[Pipeline] Step 4: Computing weighted BC with edge dependencies...\n");
+    WeightedBrandesResult brandesResult = computeWeightedBCWithEdgeDep(wg);
+
+    // --- Step 5a: Degree-2 BC 復元 ---
+    fprintf(stderr, "[Pipeline] Step 5a: Restoring Degree-2 BC...\n");
+    vector<double> bc = brandesResult.bc;
+    restoreDegree2BC(bc, s2, brandesResult, wg, g1.nodeCount);
+
+    // --- Step 5b: Degree-1 BC 復元 ---
+    fprintf(stderr, "[Pipeline] Step 5b: Restoring Degree-1 BC (BFS-based)...\n");
     restoreDegree1BC(bc, s1, nodeCount);
 
     fprintf(stderr, "[Pipeline] Complete. Restored BC for %d vertices.\n", nodeCount);
