@@ -50,6 +50,14 @@ add_executable(brandes_runner
 # OpenMP をリンク (NVTX v3 はヘッダーオンリーのためリンク不要)
 target_link_libraries(brandes_runner PRIVATE OpenMP::OpenMP_CXX)
 
+# --- グラフ縮約テスト (CPU のみ、CUDA 不要) ---
+add_executable(test_graph_reduction
+    test_graph_reduction.cpp
+    graph_reduction.cpp
+    Graph.cpp
+)
+target_link_libraries(test_graph_reduction PRIVATE OpenMP::OpenMP_CXX)
+
 # --- 帯域計測ツール (NVLink-C2C / HBM3 実効帯域) ---
 add_executable(bandwidth_benchmark
     tools/bandwidth_benchmark.cu
