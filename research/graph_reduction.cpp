@@ -547,3 +547,261 @@ bool verifyNoTwins(const ReducedGraph& g) {
 
     return true;
 }
+
+// ============================================================
+// Step 4: 縮約グラフ上での厳密 BC 計算 (CPU Brandes)
+// ============================================================
+vector<double> computeBCOnReducedGraph(const ReducedGraph& rg) {
+    const int n = rg.nodeCount;
+    const int* ap = rg.adjacencyListPointers.data();
+    const int* adj = rg.adjacencyList.data();
+    vector<double> bc(n, 0.0);
+
+    if (n <= 1) return bc;
+
+    // Brandes 法 (逐次版)
+    for (int s = 0; s < n; ++s) {
+        // BFS + 最短経路カウント
+        vector<int> S;              // スタック（BFS 順）
+        S.reserve(n);
+        vector<vector<int>> pred(n);
+        vector<long long> sigma(n, 0);
+        vector<int> dist(n, -1);
+        vector<double> delta(n, 0.0);
+
+        dist[s] = 0;
+        sigma[s] = 1;
+        queue<int> Q;
+        Q.push(s);
+
+        while (!Q.empty()) {
+            int v = Q.front();
+            Q.pop();
+            S.push_back(v);
+
+            for (int i = ap[v]; i < ap[v + 1]; ++i) {
+                int w = adj[i];
+                if (dist[w] < 0) {
+                    Q.push(w);
+                    dist[w] = dist[v] + 1;
+                }
+                if (dist[w] == dist[v] + 1) {
+                    sigma[w] += sigma[v];
+                    pred[w].push_back(v);
+                }
+            }
+        }
+
+        // バックプロパゲーション
+        for (int i = static_cast<int>(S.size()) - 1; i >= 0; --i) {
+            int w = S[i];
+            for (int v : pred[w]) {
+                if (sigma[w] != 0) {
+                    delta[v] += (static_cast<double>(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
+                }
+            }
+            if (w != s) {
+                bc[w] += delta[w] / 2.0;  // 無向グラフのため 2 で割る
+            }
+        }
+    }
+
+    fprintf(stderr, "[ComputeBC] Computed BC on reduced graph (%d vertices, %d edges)\n",
+            n, rg.edgeCount);
+    return bc;
+}
+
+// ============================================================
+// Step 5: BC 復元（逆変換）
+// ============================================================
+//
+// 重要な設計判断:
+//   Degree-1 頂点の除去は、残存頂点間の最短経路を変えない。
+//   したがって、縮約グラフ上の Brandes 結果は、元グラフの
+//   「残存頂点ソースのみの部分和」と一致する。除去頂点分の
+//   ソース寄与を BFS で追加するだけで正確な復元が可能。
+//
+//   一方、Degree-2 チェーン圧縮と Twin 統合は辺の付け替えを伴い、
+//   最短経路構造そのものが変化する。そのため、縮約グラフの BC は
+//   元グラフの BC の部分和にならない。正確な復元には重み付き
+//   Brandes 等が必要であり、本パイプラインでは Degree-1 peeling
+//   のみを BC 計算の前処理として使用する。
+//   (Step 2, 3 の関数はグラフ分析用として別途利用可能)
+//
+// Degree-1 復元公式（数学的導出）:
+//   葉頂点 v (唯一の隣接 = p) を除去した G' → 元グラフ G への復元:
+//   - BC(v) = 0  (葉は他の s-t 最短経路上に存在しない)
+//   - BC(p)_G = BC(p)_{G'} + (n-2)
+//       n = |V(G)| = |V(G')| + 1
+//       理由: 全ソース s!=v,p について delta_s(p) が +1 増加 (t=v の項)、
+//             ソース v からの delta_v(p) = n-2 (全頂点が p を経由)
+//   - BC(u)_G = BC(u)_{G'} + delta^{G'}_p(u)  (u != p, v)
+//       delta^{G'}_p(u) = Brandes の source=p での u の依存性 (G' 上)
+//       理由: 対称性により t=v の寄与 = source=p での u の寄与
+// ----------------------------------------------------------
+
+// BFS + back-propagation from single source in adjacency list graph
+// Returns dependency delta[u] for all u
+static vector<double> singleSourceDependency(
+        const vector<vector<int>>& adjList, int n, int src) {
+    vector<int> S;
+    S.reserve(n);
+    vector<vector<int>> pred(n);
+    vector<long long> sigma(n, 0);
+    vector<int> dist(n, -1);
+    vector<double> delta(n, 0.0);
+
+    dist[src] = 0;
+    sigma[src] = 1;
+    queue<int> Q;
+    Q.push(src);
+
+    while (!Q.empty()) {
+        int v = Q.front(); Q.pop();
+        S.push_back(v);
+        for (int w : adjList[v]) {
+            if (dist[w] < 0) { Q.push(w); dist[w] = dist[v] + 1; }
+            if (dist[w] == dist[v] + 1) { sigma[w] += sigma[v]; pred[w].push_back(v); }
+        }
+    }
+
+    for (int i = static_cast<int>(S.size()) - 1; i >= 0; --i) {
+        int w = S[i];
+        for (int v : pred[w]) {
+            if (sigma[w] != 0)
+                delta[v] += (static_cast<double>(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
+        }
+    }
+
+    return delta;
+}
+
+// ----------------------------------------------------------
+// Step 1 逆変換: Degree-1 頂点の BC 復元 (BFS ベース正確復元)
+//
+// 処理: peeledStack を逆順に走査し、各頂点を順に復元する。
+//   各復元で parent p から BFS を実行して全頂点の依存性を計算し、
+//   BC 値を更新する。
+// ----------------------------------------------------------
+void restoreDegree1BC(vector<double>& bc,
+                      const Degree1PeelResult& peelResult,
+                      int origNodeCount) {
+    const ReducedGraph& rg = peelResult.reducedGraph;
+    const auto& stack = peelResult.peeledStack;
+
+    if (stack.empty()) {
+        // 除去なし: 単純にマッピングのみ
+        vector<double> expanded(origNodeCount, 0.0);
+        for (int newV = 0; newV < rg.nodeCount; ++newV) {
+            expanded[rg.newToOrig[newV]] = bc[newV];
+        }
+        bc = expanded;
+        fprintf(stderr, "[RestoreDeg1BC] No peeled vertices, mapping only\n");
+        return;
+    }
+
+    // 動的隣接リストを構築 (元グラフの ID で管理)
+    vector<vector<int>> adjList(origNodeCount);
+
+    // 縮約グラフの辺を追加
+    for (int newV = 0; newV < rg.nodeCount; ++newV) {
+        int origV = rg.newToOrig[newV];
+        for (int i = rg.adjacencyListPointers[newV]; i < rg.adjacencyListPointers[newV + 1]; ++i) {
+            int origW = rg.newToOrig[rg.adjacencyList[i]];
+            adjList[origV].push_back(origW);
+        }
+    }
+
+    // BC を元グラフの ID にマッピング
+    vector<double> origBC(origNodeCount, 0.0);
+    for (int newV = 0; newV < rg.nodeCount; ++newV) {
+        origBC[rg.newToOrig[newV]] = bc[newV];
+    }
+
+    // 現在のグラフのアクティブ頂点数
+    int currentN = rg.nodeCount;
+
+    // peeledStack を逆順に処理
+    for (int i = static_cast<int>(stack.size()) - 1; i >= 0; --i) {
+        int v = stack[i].originalId;
+        int p = stack[i].neighborId;
+
+        // (1) p から BFS を実行 (v はまだグラフにいない)
+        vector<double> delta = singleSourceDependency(adjList, origNodeCount, p);
+
+        // (2) BC(p) += currentN - 1
+        //     (n = currentN + 1 が復元後のサイズ、n-2 = currentN - 1)
+        origBC[p] += static_cast<double>(currentN - 1);
+
+        // (3) BC(u) += delta_p(u) for all u != p
+        for (int u = 0; u < origNodeCount; ++u) {
+            if (u != p && delta[u] > 0.0) {
+                origBC[u] += delta[u];
+            }
+        }
+
+        // (4) v をグラフに追加
+        adjList[v].push_back(p);
+        adjList[p].push_back(v);
+
+        // (5) BC(v) = 0 (既に 0 初期化済み)
+
+        currentN++;
+    }
+
+    bc = origBC;
+
+    fprintf(stderr, "[RestoreDeg1BC] Restored BC for %zu peeled vertices (BFS-based)\n",
+            stack.size());
+}
+
+// ============================================================
+// Step 6: End-to-End パイプライン
+// ============================================================
+//
+// パイプライン構成:
+//   Step 1 (Degree-1 Peeling) -> Step 4 (BC 計算) -> Step 5 (復元)
+//
+// Note: Step 2 (チェーン圧縮) と Step 3 (Twin 統合) は
+//   辺の付け替えを伴うため、BC の正確な復元が困難。
+//   これらはグラフ分析・縮約率の計測用として別途利用可能。
+//   将来的に重み付き Brandes を実装すれば統合可能。
+// ============================================================
+vector<double> runReductionPipeline(const int* ap, const int* adj,
+                                    int nodeCount, int edgeCount) {
+    fprintf(stderr, "\n[Pipeline] Original graph: %d vertices, %d edges\n",
+            nodeCount, edgeCount);
+
+    // --- Step 1: Degree-1 Peeling ---
+    fprintf(stderr, "[Pipeline] Step 1: Degree-1 Peeling...\n");
+    Degree1PeelResult s1 = degree1Peel(ap, adj, nodeCount, edgeCount);
+
+    const ReducedGraph& g1 = s1.reducedGraph;
+    fprintf(stderr, "[Pipeline] After Step 1: %d vertices, %d edges (%.1f%% vertex reduction)\n",
+            g1.nodeCount, g1.edgeCount,
+            nodeCount > 0 ? 100.0 * (1.0 - static_cast<double>(g1.nodeCount) / nodeCount) : 0.0);
+
+    // --- (参考情報) Step 2, 3 の縮約率を計測 ---
+    {
+        Degree2CompressResult s2 = degree2Compress(
+            g1.adjacencyListPointers.data(), g1.adjacencyList.data(),
+            g1.nodeCount, g1.edgeCount);
+        const ReducedGraph& g2 = s2.reducedGraph;
+        TwinMergeResult s3 = twinMerge(
+            g2.adjacencyListPointers.data(), g2.adjacencyList.data(),
+            g2.nodeCount, g2.edgeCount);
+        fprintf(stderr, "[Pipeline] (Info) Full reduction Step1+2+3: %d -> %d vertices, %d -> %d edges\n",
+                nodeCount, s3.reducedGraph.nodeCount, edgeCount, s3.reducedGraph.edgeCount);
+    }
+
+    // --- Step 4: BC 計算 on 縮約グラフ (Step 1 のみ適用) ---
+    fprintf(stderr, "[Pipeline] Step 4: Computing BC on Step-1 reduced graph...\n");
+    vector<double> bc = computeBCOnReducedGraph(g1);
+
+    // --- Step 5: BC 復元 (Degree-1 逆変換) ---
+    fprintf(stderr, "[Pipeline] Step 5: Restoring BC (Degree-1 BFS-based)...\n");
+    restoreDegree1BC(bc, s1, nodeCount);
+
+    fprintf(stderr, "[Pipeline] Complete. Restored BC for %d vertices.\n", nodeCount);
+    return bc;
+}

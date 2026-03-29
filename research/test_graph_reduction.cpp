@@ -2,10 +2,13 @@
 #include "Graph.h"
 
 #include <vector>
+#include <queue>
+#include <stack>
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
+#include <cmath>
 
 using namespace std;
 
@@ -851,6 +854,371 @@ static bool test_s3_full_pipeline() {
 }
 
 // ============================================================
+//           Step 4-6: BC 計算・復元・パイプライン テスト
+// ============================================================
+
+// リファレンス Brandes 法（テスト用、test_graph_reduction.cpp 内蔵）
+static vector<double> referenceBrandes(const int* ap, const int* adj, int n) {
+    vector<double> bc(n, 0.0);
+    if (n <= 1) return bc;
+
+    for (int s = 0; s < n; ++s) {
+        vector<int> S;
+        S.reserve(n);
+        vector<vector<int>> pred(n);
+        vector<long long> sigma(n, 0);
+        vector<int> dist(n, -1);
+        vector<double> delta(n, 0.0);
+
+        dist[s] = 0;
+        sigma[s] = 1;
+        queue<int> Q;
+        Q.push(s);
+
+        while (!Q.empty()) {
+            int v = Q.front(); Q.pop();
+            S.push_back(v);
+            for (int i = ap[v]; i < ap[v + 1]; ++i) {
+                int w = adj[i];
+                if (dist[w] < 0) { Q.push(w); dist[w] = dist[v] + 1; }
+                if (dist[w] == dist[v] + 1) { sigma[w] += sigma[v]; pred[w].push_back(v); }
+            }
+        }
+        for (int i = static_cast<int>(S.size()) - 1; i >= 0; --i) {
+            int w = S[i];
+            for (int v : pred[w]) {
+                if (sigma[w] != 0)
+                    delta[v] += (static_cast<double>(sigma[v]) / sigma[w]) * (1.0 + delta[w]);
+            }
+            if (w != s) bc[w] += delta[w] / 2.0;
+        }
+    }
+    return bc;
+}
+
+// BC 比較ヘルパー: 最大許容誤差で比較
+static bool compareBCVectors(const vector<double>& actual,
+                             const vector<double>& expected,
+                             double tolerance = 1e-9) {
+    if (actual.size() != expected.size()) {
+        fprintf(stderr, "  BC size mismatch: got %zu, expected %zu\n",
+                actual.size(), expected.size());
+        return false;
+    }
+    int mismatches = 0;
+    for (size_t i = 0; i < actual.size(); ++i) {
+        if (fabs(actual[i] - expected[i]) > tolerance) {
+            if (mismatches < 10) {
+                fprintf(stderr, "  BC mismatch at vertex %zu: got %.10f, expected %.10f (diff=%.2e)\n",
+                        i, actual[i], expected[i], fabs(actual[i] - expected[i]));
+            }
+            mismatches++;
+        }
+    }
+    if (mismatches > 0) {
+        fprintf(stderr, "  Total mismatches: %d / %zu\n", mismatches, actual.size());
+    }
+    return mismatches == 0;
+}
+
+// ============================================================
+// テストケース S4-1: 縮約グラフ上の BC 計算（三角形）
+// ============================================================
+static bool test_s4_bc_on_triangle() {
+    fprintf(stderr, "\n=== S4 Test: BC on Triangle ===\n");
+
+    // 三角形 0-1-2
+    vector<pair<int,int>> edges = {{0,1}, {1,2}, {2,0}};
+    TestGraph tg = buildCSR(3, edges);
+
+    ReducedGraph rg;
+    rg.nodeCount = tg.nodeCount;
+    rg.edgeCount = tg.edgeCount;
+    rg.adjacencyListPointers = tg.adjacencyListPointers;
+    rg.adjacencyList = tg.adjacencyList;
+    rg.newToOrig = {0, 1, 2};
+    rg.origToNew = {0, 1, 2};
+
+    vector<double> bc = computeBCOnReducedGraph(rg);
+
+    // 三角形: 各頂点の BC = 0 (全頂点が直接接続)
+    vector<double> expected = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 3);
+
+    if (!compareBCVectors(bc, expected)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S4-2: 縮約グラフ上の BC 計算（パスグラフ）
+// ============================================================
+static bool test_s4_bc_on_path() {
+    fprintf(stderr, "\n=== S4 Test: BC on Path ===\n");
+
+    // パス 0-1-2-3-4
+    vector<pair<int,int>> edges = {{0,1}, {1,2}, {2,3}, {3,4}};
+    TestGraph tg = buildCSR(5, edges);
+
+    ReducedGraph rg;
+    rg.nodeCount = tg.nodeCount;
+    rg.edgeCount = tg.edgeCount;
+    rg.adjacencyListPointers = tg.adjacencyListPointers;
+    rg.adjacencyList = tg.adjacencyList;
+    rg.newToOrig = {0, 1, 2, 3, 4};
+    rg.origToNew = {0, 1, 2, 3, 4};
+
+    vector<double> bc = computeBCOnReducedGraph(rg);
+
+    vector<double> expected = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 5);
+
+    if (!compareBCVectors(bc, expected)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-1: End-to-End パイプライン（完全グラフ K4）
+//   K4 は縮約不可 → パイプライン結果 == 直接計算結果
+// ============================================================
+static bool test_s6_pipeline_k4() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on K4 (no reduction) ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {0,2}, {0,3}, {1,2}, {1,3}, {2,3}};
+    TestGraph tg = buildCSR(4, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 4);
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-2: End-to-End パイプライン（三角形 + ペンダント）
+//   頂点 3,4 が除去される → 復元後の BC が直接計算と一致するか
+// ============================================================
+static bool test_s6_pipeline_triangle_pendants() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on Triangle+Pendants ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {1,2}, {2,0}, {0,3}, {1,4}};
+    TestGraph tg = buildCSR(5, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 5);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-3: End-to-End パイプライン（スターグラフ）
+//   4 つの葉が除去 → BC = 0 (葉), BC = 0 (中心, 全ペアが中心経由だが Brandes 式で BC(中心) = (n-1)(n-2)/2 ... ?)
+// ============================================================
+static bool test_s6_pipeline_star() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on Star Graph ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {0,2}, {0,3}, {0,4}};
+    TestGraph tg = buildCSR(5, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 5);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-4: End-to-End パイプライン（パスグラフ）
+// ============================================================
+static bool test_s6_pipeline_path() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on Path Graph ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {1,2}, {2,3}, {3,4}};
+    TestGraph tg = buildCSR(5, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 5);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-5: End-to-End パイプライン（三角形 + Degree-2 チェーン）
+//   0-1, 1-2, 2-0, 0-3-4-1  (チェーン 0-3-4-1)
+// ============================================================
+static bool test_s6_pipeline_triangle_chain() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on Triangle + Chain ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {1,2}, {2,0}, {0,3}, {3,4}, {4,1}};
+    TestGraph tg = buildCSR(5, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 5);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-6: End-to-End パイプライン（open twins）
+//   0-2, 0-3, 1-2, 1-3  → 0,1 は twins, 2,3 は twins
+// ============================================================
+static bool test_s6_pipeline_twins() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on Open Twins ===\n");
+
+    vector<pair<int,int>> edges = {{0,2}, {0,3}, {1,2}, {1,3}};
+    TestGraph tg = buildCSR(4, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 4);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S6-7: End-to-End パイプライン（複合グラフ: ペンダント + チェーン + twin）
+// ============================================================
+static bool test_s6_pipeline_complex() {
+    fprintf(stderr, "\n=== S6 Test: Pipeline on Complex Graph ===\n");
+
+    // ハブ 0 と 5:
+    // 0-1 (pendant), 0-2-3-5 (chain), 0-4-5 (chain), 0-5 (direct)
+    // 5-6, 5-7 (pendants)
+    vector<pair<int,int>> edges = {
+        {0,1},              // pendant from 0
+        {0,2}, {2,3}, {3,5}, // chain 0-2-3-5
+        {0,4}, {4,5},       // chain 0-4-5
+        {0,5},              // direct 0-5
+        {5,6}, {5,7}        // pendants from 5
+    };
+    TestGraph tg = buildCSR(8, edges);
+
+    vector<double> pipelineBC = runReductionPipeline(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    vector<double> directBC = referenceBrandes(
+        tg.adjacencyListPointers.data(), tg.adjacencyList.data(), 8);
+
+    fprintf(stderr, "  Pipeline BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", pipelineBC[i]);
+    fprintf(stderr, "\n  Direct   BC: ");
+    for (int i = 0; i < tg.nodeCount; ++i) fprintf(stderr, "%.4f ", directBC[i]);
+    fprintf(stderr, "\n");
+
+    if (!compareBCVectors(pipelineBC, directBC)) {
+        fprintf(stderr, "FAIL\n");
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
 // メイン
 // ============================================================
 int main(int argc, char* argv[]) {
@@ -882,6 +1250,19 @@ int main(int argc, char* argv[]) {
     run(test_s3_no_twins());
     run(test_s3_triple_twins());
     run(test_s3_full_pipeline());
+
+    // Step 4 テスト: 縮約グラフ上の BC 計算
+    run(test_s4_bc_on_triangle());
+    run(test_s4_bc_on_path());
+
+    // Step 6 テスト: End-to-End パイプライン正確性検証
+    run(test_s6_pipeline_k4());
+    run(test_s6_pipeline_triangle_pendants());
+    run(test_s6_pipeline_star());
+    run(test_s6_pipeline_path());
+    run(test_s6_pipeline_triangle_chain());
+    run(test_s6_pipeline_twins());
+    run(test_s6_pipeline_complex());
 
     // ファイルからのテスト（引数で指定）
     for (int i = 1; i < argc; ++i) {
