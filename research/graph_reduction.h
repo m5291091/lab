@@ -88,3 +88,33 @@ bool verifyNoDegree1(const ReducedGraph& g);
 //   (純粋な Degree-2 サイクル成分は許容)
 // ----------------------------------------------------------
 bool verifyNoDegree2Chain(const ReducedGraph& g);
+
+// ----------------------------------------------------------
+// Twin Vertex Merging: 同一構造（隣接リスト一致）頂点の統合情報
+// ----------------------------------------------------------
+struct TwinGroup {
+    int representative;          // 代表頂点 ID（入力グラフの ID）
+    std::vector<int> members;    // 統合された頂点 ID 群（代表含む、入力グラフの ID）
+};
+
+// ----------------------------------------------------------
+// Step 3: Twin Vertex Merging の結果
+// ----------------------------------------------------------
+struct TwinMergeResult {
+    ReducedGraph reducedGraph;
+    std::vector<TwinGroup> twinGroups;  // サイズ>=2 のグループのみ格納
+};
+
+// ----------------------------------------------------------
+// Step 3: 同一構造頂点の統合（Identical/Twin Vertex Merging）
+//   - 隣接リストが完全一致する頂点群を代表頂点に統合
+//   - 統合情報を記録し、新しい CSR 形式で返す
+// ----------------------------------------------------------
+TwinMergeResult twinMerge(const int* adjacencyListPointers,
+                          const int* adjacencyList,
+                          int nodeCount, int edgeCount);
+
+// ----------------------------------------------------------
+// 検証ヘルパー: 統合後グラフに同一構造頂点が存在しないことを確認
+// ----------------------------------------------------------
+bool verifyNoTwins(const ReducedGraph& g);

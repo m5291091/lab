@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <cassert>
 #include <cstdio>
+#include <unordered_map>
+#include <set>
 
 using namespace std;
 
@@ -345,5 +347,203 @@ bool verifyNoDegree2Chain(const ReducedGraph& g) {
             return false;
         }
     }
+    return true;
+}
+
+// ============================================================
+// Step 3: 同一構造頂点の統合（Identical/Twin Vertex Merging）
+// ============================================================
+
+// ハッシュ関数: ソート済み隣接リストのハッシュ値を計算
+static size_t hashNeighborList(const vector<int>& sorted_neighbors) {
+    size_t h = 0;
+    for (int v : sorted_neighbors) {
+        // FNV-1a inspired hash
+        h ^= static_cast<size_t>(v) + 0x9e3779b9 + (h << 6) + (h >> 2);
+    }
+    return h;
+}
+
+TwinMergeResult twinMerge(const int* ap, const int* adj,
+                          int nodeCount, int edgeCount) {
+    TwinMergeResult result;
+
+    // --- 1. 各頂点の隣接リストをソートしハッシュ化 ---
+    vector<vector<int>> sortedNeighbors(nodeCount);
+    vector<size_t> hashes(nodeCount);
+
+    for (int v = 0; v < nodeCount; ++v) {
+        sortedNeighbors[v].assign(adj + ap[v], adj + ap[v + 1]);
+        sort(sortedNeighbors[v].begin(), sortedNeighbors[v].end());
+        hashes[v] = hashNeighborList(sortedNeighbors[v]);
+    }
+
+    // --- 2. 同一ハッシュの頂点をグループ化 ---
+    unordered_map<size_t, vector<int>> hashGroups;
+    for (int v = 0; v < nodeCount; ++v) {
+        hashGroups[hashes[v]].push_back(v);
+    }
+
+    // --- 3. 隣接リストの完全一致を確認し、twin グループを構築 ---
+    // representative[v] = v の代表頂点 (入力グラフの ID)
+    vector<int> representative(nodeCount);
+    for (int v = 0; v < nodeCount; ++v) {
+        representative[v] = v;  // 初期値: 自分自身
+    }
+
+    for (auto& [h, vertices] : hashGroups) {
+        if (vertices.size() < 2) continue;
+
+        // ハッシュ衝突排除: 隣接リストの完全一致でサブグループに分割
+        vector<bool> assigned(vertices.size(), false);
+
+        for (size_t i = 0; i < vertices.size(); ++i) {
+            if (assigned[i]) continue;
+
+            vector<int> group;
+            group.push_back(vertices[i]);
+            assigned[i] = true;
+
+            for (size_t j = i + 1; j < vertices.size(); ++j) {
+                if (assigned[j]) continue;
+
+                // 完全一致チェック
+                if (sortedNeighbors[vertices[i]] == sortedNeighbors[vertices[j]]) {
+                    group.push_back(vertices[j]);
+                    assigned[j] = true;
+                }
+            }
+
+            if (group.size() >= 2) {
+                // 代表頂点は最小 ID
+                int rep = *min_element(group.begin(), group.end());
+                TwinGroup tg;
+                tg.representative = rep;
+                tg.members = group;
+
+                for (int v : group) {
+                    representative[v] = rep;
+                }
+
+                result.twinGroups.push_back(tg);
+            }
+        }
+    }
+
+    // --- 4. 縮約グラフの構築 ---
+    ReducedGraph& rg = result.reducedGraph;
+
+    // 代表頂点のみ保持
+    vector<bool> isRepresentative(nodeCount, false);
+    for (int v = 0; v < nodeCount; ++v) {
+        if (representative[v] == v) {
+            isRepresentative[v] = true;
+        }
+    }
+
+    rg.origToNew.assign(nodeCount, -1);
+    int newId = 0;
+    for (int i = 0; i < nodeCount; ++i) {
+        if (isRepresentative[i]) {
+            rg.origToNew[i] = newId;
+            rg.newToOrig.push_back(i);
+            newId++;
+        }
+    }
+    rg.nodeCount = newId;
+
+    // 各代表頂点の隣接リストを構築（隣接頂点を代表に変換＋重複排除）
+    vector<vector<int>> newAdj(rg.nodeCount);
+    for (int newV = 0; newV < rg.nodeCount; ++newV) {
+        int origV = rg.newToOrig[newV];
+        set<int> neighborSet;
+
+        for (int i = ap[origV]; i < ap[origV + 1]; ++i) {
+            int origW = adj[i];
+            int repW = representative[origW];
+            int newW = rg.origToNew[repW];
+
+            // 自己ループ回避、重複排除
+            if (newW >= 0 && newW != newV) {
+                neighborSet.insert(newW);
+            }
+        }
+
+        newAdj[newV].assign(neighborSet.begin(), neighborSet.end());
+    }
+
+    // CSR の構築
+    rg.adjacencyListPointers.resize(rg.nodeCount + 1, 0);
+    for (int i = 0; i < rg.nodeCount; ++i) {
+        rg.adjacencyListPointers[i + 1] =
+            rg.adjacencyListPointers[i] + static_cast<int>(newAdj[i].size());
+    }
+
+    int totalAdj = rg.adjacencyListPointers[rg.nodeCount];
+    rg.edgeCount = totalAdj / 2;
+    rg.adjacencyList.resize(totalAdj);
+
+    for (int i = 0; i < rg.nodeCount; ++i) {
+        int base = rg.adjacencyListPointers[i];
+        for (int j = 0; j < static_cast<int>(newAdj[i].size()); ++j) {
+            rg.adjacencyList[base + j] = newAdj[i][j];
+        }
+    }
+
+    int removedCount = nodeCount - rg.nodeCount;
+    int removedEdges = edgeCount - rg.edgeCount;
+    fprintf(stderr, "[TwinMerge] Found %zu twin groups, removed %d vertices (%.1f%%), %d edges (%.1f%%)\n",
+            result.twinGroups.size(), removedCount,
+            nodeCount > 0 ? 100.0 * removedCount / nodeCount : 0.0,
+            removedEdges,
+            edgeCount > 0 ? 100.0 * removedEdges / edgeCount : 0.0);
+    fprintf(stderr, "[TwinMerge] Reduced graph: %d vertices, %d edges\n",
+            rg.nodeCount, rg.edgeCount);
+
+    return result;
+}
+
+// ============================================================
+// 検証: 統合後グラフに同一構造頂点が存在しないことを確認
+// ============================================================
+bool verifyNoTwins(const ReducedGraph& g) {
+    const auto& ap = g.adjacencyListPointers;
+    const auto& adj = g.adjacencyList;
+
+    // 各頂点の隣接リストをソートしハッシュ化
+    unordered_map<size_t, vector<int>> hashGroups;
+
+    for (int v = 0; v < g.nodeCount; ++v) {
+        vector<int> sorted_neighbors(adj.data() + ap[v], adj.data() + ap[v + 1]);
+        sort(sorted_neighbors.begin(), sorted_neighbors.end());
+        size_t h = hashNeighborList(sorted_neighbors);
+        hashGroups[h].push_back(v);
+    }
+
+    for (auto& [h, vertices] : hashGroups) {
+        if (vertices.size() < 2) continue;
+
+        // 完全一致チェック
+        for (size_t i = 0; i < vertices.size(); ++i) {
+            vector<int> ni(adj.data() + ap[vertices[i]],
+                           adj.data() + ap[vertices[i] + 1]);
+            sort(ni.begin(), ni.end());
+
+            for (size_t j = i + 1; j < vertices.size(); ++j) {
+                vector<int> nj(adj.data() + ap[vertices[j]],
+                               adj.data() + ap[vertices[j] + 1]);
+                sort(nj.begin(), nj.end());
+
+                if (ni == nj) {
+                    fprintf(stderr, "[Verify] FAIL: vertices %d (orig=%d) and %d (orig=%d) "
+                            "have identical neighbor sets\n",
+                            vertices[i], g.newToOrig[vertices[i]],
+                            vertices[j], g.newToOrig[vertices[j]]);
+                    return false;
+                }
+            }
+        }
+    }
+
     return true;
 }

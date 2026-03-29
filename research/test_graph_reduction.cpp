@@ -680,6 +680,180 @@ static bool test_s2_chain_info() {
 }
 
 // ============================================================
+//                    Step 3: Twin Vertex Merging テスト
+// ============================================================
+
+// ============================================================
+// テストケース S3-1: 明確な open twin
+//   0 -- 2, 0 -- 3
+//   1 -- 2, 1 -- 3
+//   頂点 0 と 1 は同じ隣接リスト {2,3} → twin
+//   頂点 2 と 3 は同じ隣接リスト {0,1} → twin
+//   2 グループ統合 → 2 頂点残り
+// ============================================================
+static bool test_s3_open_twins() {
+    fprintf(stderr, "\n=== S3 Test: Open Twins ===\n");
+
+    vector<pair<int,int>> edges = {{0,2}, {0,3}, {1,2}, {1,3}};
+    TestGraph tg = buildCSR(4, edges);
+
+    TwinMergeResult result = twinMerge(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // 2 twin groups: {0,1} and {2,3}
+    if (result.twinGroups.size() != 2) {
+        fprintf(stderr, "FAIL: Expected 2 twin groups, got %zu\n",
+                result.twinGroups.size());
+        return false;
+    }
+
+    // 2 vertices remain (representatives)
+    if (result.reducedGraph.nodeCount != 2) {
+        fprintf(stderr, "FAIL: Expected 2 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    if (!verifyNoTwins(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S3-2: twin なし (完全グラフ K4)
+//   全頂点が全他頂点に隣接 → 隣接リストは異なる（自分を含まないため）
+//   実際: vertex 0 neighbors = {1,2,3}, vertex 1 neighbors = {0,2,3}
+//   → 0 と 1 は異なる隣接リスト → twin ではない
+// ============================================================
+static bool test_s3_no_twins() {
+    fprintf(stderr, "\n=== S3 Test: No Twins (K4) ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {0,2}, {0,3}, {1,2}, {1,3}, {2,3}};
+    TestGraph tg = buildCSR(4, edges);
+
+    TwinMergeResult result = twinMerge(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    if (result.twinGroups.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 twin groups, got %zu\n",
+                result.twinGroups.size());
+        return false;
+    }
+
+    if (result.reducedGraph.nodeCount != 4) {
+        fprintf(stderr, "FAIL: Expected 4 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S3-3: 3頂点の open twin グループ + 2頂点グループ
+//   0,1,2 all connect to {3,4} → 3-way twin
+//   3,4 both connect to {0,1,2} → 2-way twin
+//   結果: 2 twin groups, 2 vertices remain
+// ============================================================
+static bool test_s3_triple_twins() {
+    fprintf(stderr, "\n=== S3 Test: Triple Open Twins ===\n");
+
+    vector<pair<int,int>> edges = {
+        {0,3}, {0,4},
+        {1,3}, {1,4},
+        {2,3}, {2,4}
+    };
+    TestGraph tg = buildCSR(5, edges);
+
+    TwinMergeResult result = twinMerge(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // 2 twin groups: {0,1,2} and {3,4}
+    if (result.twinGroups.size() != 2) {
+        fprintf(stderr, "FAIL: Expected 2 twin groups, got %zu\n",
+                result.twinGroups.size());
+        return false;
+    }
+
+    // 2 vertices remain
+    if (result.reducedGraph.nodeCount != 2) {
+        fprintf(stderr, "FAIL: Expected 2 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    if (!verifyNoTwins(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S3-4: Step1 + Step2 + Step3 パイプライン
+// ============================================================
+static bool test_s3_full_pipeline() {
+    fprintf(stderr, "\n=== S3 Test: Full Pipeline (Step1+Step2+Step3) ===\n");
+
+    // グラフ: ハブ H(0) に 2 本のペンダント(1,2)と 2 本のチェーン(3-4-5, 6-7-8) が接続
+    // ハブ H2(9) に同じチェーンの他端が接続、さらに twin 候補を作る
+    // 簡単化: ハブ 0 と 9, チェーン 0-3-4-9, 0-5-6-9, ペンダント 0-1, 0-2
+    vector<pair<int,int>> edges = {
+        {0,1}, {0,2},           // pendants
+        {0,3}, {3,4}, {4,9},    // chain 1
+        {0,5}, {5,6}, {6,9},    // chain 2
+        {0,9}                   // direct edge
+    };
+    TestGraph tg = buildCSR(10, edges);
+
+    // Step 1: Degree-1 peeling
+    fprintf(stderr, "  --- Step 1 ---\n");
+    Degree1PeelResult s1 = degree1Peel(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    if (!verifyNoDegree1(s1.reducedGraph)) return false;
+
+    // Step 2: Degree-2 chain compression
+    fprintf(stderr, "  --- Step 2 ---\n");
+    const ReducedGraph& g1 = s1.reducedGraph;
+    Degree2CompressResult s2 = degree2Compress(
+        g1.adjacencyListPointers.data(),
+        g1.adjacencyList.data(),
+        g1.nodeCount, g1.edgeCount);
+
+    if (!verifyNoDegree2Chain(s2.reducedGraph)) return false;
+
+    // Step 3: Twin merge
+    fprintf(stderr, "  --- Step 3 ---\n");
+    const ReducedGraph& g2 = s2.reducedGraph;
+    TwinMergeResult s3 = twinMerge(
+        g2.adjacencyListPointers.data(),
+        g2.adjacencyList.data(),
+        g2.nodeCount, g2.edgeCount);
+
+    if (!verifyNoTwins(s3.reducedGraph)) return false;
+
+    fprintf(stderr, "  Final graph: %d vertices, %d edges\n",
+            s3.reducedGraph.nodeCount, s3.reducedGraph.edgeCount);
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
 // メイン
 // ============================================================
 int main(int argc, char* argv[]) {
@@ -705,6 +879,12 @@ int main(int argc, char* argv[]) {
     run(test_s2_long_chain());
     run(test_s2_pipeline_step1_step2());
     run(test_s2_chain_info());
+
+    // Step 3 テスト
+    run(test_s3_open_twins());
+    run(test_s3_no_twins());
+    run(test_s3_triple_twins());
+    run(test_s3_full_pipeline());
 
     // ファイルからのテスト（引数で指定）
     for (int i = 1; i < argc; ++i) {
