@@ -210,11 +210,8 @@ static bool test_complete_graph() {
 
 // ============================================================
 // テストケース 5: 木グラフ（全頂点が最終的に除去される）
-//        0
-//       /  \  (backslash)
-//      1    2
-//     /  \  (backslash)
-//    3    4
+//   vertex 0 connects to 1, 2
+//   vertex 1 connects to 0, 3, 4
 // ============================================================
 static bool test_tree_graph() {
     fprintf(stderr, "\n=== Test: Tree Graph ===\n");

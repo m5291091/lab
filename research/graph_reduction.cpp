@@ -354,11 +354,11 @@ bool verifyNoDegree2Chain(const ReducedGraph& g) {
 // Step 3: 同一構造頂点の統合（Identical/Twin Vertex Merging）
 // ============================================================
 
-// ハッシュ関数: ソート済み隣接リストのハッシュ値を計算
+// ハッシュ関数: ソート済み隣接リストのハッシュ値を計算 (Boost hash_combine 方式)
 static size_t hashNeighborList(const vector<int>& sorted_neighbors) {
     size_t h = 0;
     for (int v : sorted_neighbors) {
-        // FNV-1a inspired hash
+        // hash_combine 方式
         h ^= static_cast<size_t>(v) + 0x9e3779b9 + (h << 6) + (h >> 2);
     }
     return h;
