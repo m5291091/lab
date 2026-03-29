@@ -378,6 +378,308 @@ static bool test_with_file(const char* filepath) {
 }
 
 // ============================================================
+//                    Step 2: Degree-2 Chain Compression テスト
+// ============================================================
+
+// ============================================================
+// テストケース S2-1: 三角形の各辺にチェーンを挿入
+//   0-1 直接 + 0-3-1 チェーン
+//   1-2 直接 + 1-4-2 チェーン
+//   2-0 直接 + 2-5-0 チェーン
+//   頂点 3,4,5 は Degree-2 → 圧縮
+//   頂点 0,1,2 は Degree-4 → 残る
+//   結果: 三角形 0-1-2 (直接辺のみ、チェーン辺は重複排除)
+// ============================================================
+static bool test_s2_triangle_chains() {
+    fprintf(stderr, "\n=== S2 Test: Triangle with Degree-2 chains ===\n");
+
+    // 0-1, 1-2, 2-0 (direct triangle)
+    // 0-3, 3-1, 1-4, 4-2, 2-5, 5-0 (chains)
+    vector<pair<int,int>> edges = {
+        {0,1}, {1,2}, {2,0},
+        {0,3}, {3,1}, {1,4}, {4,2}, {2,5}, {5,0}
+    };
+    TestGraph tg = buildCSR(6, edges);
+
+    Degree2CompressResult result = degree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // 3 chains: 0-3-1, 1-4-2, 2-5-0
+    if (result.chains.size() != 3) {
+        fprintf(stderr, "FAIL: Expected 3 chains, got %zu\n", result.chains.size());
+        return false;
+    }
+
+    // 3 vertices remain (0, 1, 2)
+    if (result.reducedGraph.nodeCount != 3) {
+        fprintf(stderr, "FAIL: Expected 3 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    // 3 edges (triangle)
+    if (result.reducedGraph.edgeCount != 3) {
+        fprintf(stderr, "FAIL: Expected 3 edges, got %d\n",
+                result.reducedGraph.edgeCount);
+        return false;
+    }
+
+    if (!verifyNoDegree2Chain(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S2-2: 完全グラフ K4（Degree-2 頂点なし → 変化なし）
+// ============================================================
+static bool test_s2_complete_graph() {
+    fprintf(stderr, "\n=== S2 Test: Complete Graph K4 (no compression) ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {0,2}, {0,3}, {1,2}, {1,3}, {2,3}};
+    TestGraph tg = buildCSR(4, edges);
+
+    Degree2CompressResult result = degree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    if (result.chains.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 chains, got %zu\n", result.chains.size());
+        return false;
+    }
+
+    if (result.reducedGraph.nodeCount != 4) {
+        fprintf(stderr, "FAIL: Expected 4 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    if (!verifyNoDegree2Chain(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S2-3: 純粋な Degree-2 サイクル (0-1-2-3-0)
+// 全頂点 Degree-2 → サイクル → 圧縮しない（保持）
+// ============================================================
+static bool test_s2_pure_cycle() {
+    fprintf(stderr, "\n=== S2 Test: Pure Degree-2 Cycle ===\n");
+
+    vector<pair<int,int>> edges = {{0,1}, {1,2}, {2,3}, {3,0}};
+    TestGraph tg = buildCSR(4, edges);
+
+    Degree2CompressResult result = degree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // 圧縮なし（純粋サイクル）
+    if (result.chains.size() != 0) {
+        fprintf(stderr, "FAIL: Expected 0 chains, got %zu\n", result.chains.size());
+        return false;
+    }
+
+    if (result.reducedGraph.nodeCount != 4) {
+        fprintf(stderr, "FAIL: Expected 4 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    if (!verifyNoDegree2Chain(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S2-4: 長いチェーン (ハブ2つ + 中間パス)
+//   0(hub, deg3) - 2 - 3 - 4 - 1(hub, deg3)
+//   0-5, 1-6  (extra edges to make 0,1 have deg >= 3)
+//   5-6 (to connect)
+// ============================================================
+static bool test_s2_long_chain() {
+    fprintf(stderr, "\n=== S2 Test: Long Degree-2 Chain ===\n");
+
+    // 0-2, 2-3, 3-4, 4-1  (chain: 0-2-3-4-1)
+    // 0-5, 1-6, 5-6        (make 0,1 non-degree-2; 5,6 also non-degree-2)
+    // Also: 0-1 NOT directly connected
+    vector<pair<int,int>> edges = {
+        {0,2}, {2,3}, {3,4}, {4,1},
+        {0,5}, {1,6}, {5,6}
+    };
+    TestGraph tg = buildCSR(7, edges);
+
+    // degrees: 0:2, 1:2, 2:2, 3:2, 4:2, 5:2, 6:2
+    // Hmm, all degree-2! That's a long path 5-0-2-3-4-1-6-5? No, that's a cycle.
+    // Wait: 0 has neighbors [2,5], 1 has neighbors [4,6], 5 has neighbors [0,6], 6 has neighbors [1,5]
+    // All degree-2. This forms a cycle: 0-2-3-4-1-6-5-0
+    // Need to add more edges to make some vertices non-degree-2
+
+    // Let me redesign: add edge 0-1 to make 0 and 1 degree-3
+    // edges: 0-2, 2-3, 3-4, 4-1, 0-5, 1-6, 5-6, 0-1
+    fprintf(stderr, "  (Redesigning: adding 0-1 edge)\n");
+
+    vector<pair<int,int>> edges2 = {
+        {0,2}, {2,3}, {3,4}, {4,1},
+        {0,5}, {1,6}, {5,6}, {0,1}
+    };
+    TestGraph tg2 = buildCSR(7, edges2);
+    // degrees: 0:[2,5,1]=3, 1:[4,6,0]=3, 2:[0,3]=2, 3:[2,4]=2, 4:[3,1]=2, 5:[0,6]=2, 6:[1,5]=2
+
+    Degree2CompressResult result = degree2Compress(
+        tg2.adjacencyListPointers.data(),
+        tg2.adjacencyList.data(),
+        tg2.nodeCount, tg2.edgeCount);
+
+    // Chains: 0-2-3-4-1 (internal: 2,3,4), 0-5-6-1 (internal: 5,6)
+    if (result.chains.size() != 2) {
+        fprintf(stderr, "FAIL: Expected 2 chains, got %zu\n", result.chains.size());
+        return false;
+    }
+
+    // 2 vertices remain (0, 1)
+    if (result.reducedGraph.nodeCount != 2) {
+        fprintf(stderr, "FAIL: Expected 2 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    if (!verifyNoDegree2Chain(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S2-5: Step 1 + Step 2 の連続適用
+//   三角形 (0,1,2) + ペンダント (0-3) + チェーン (1-4-5-2)
+//   Step1: 頂点 3 を除去 → 0 は degree 3→2
+//   Step2: 0 は degree-2 (chain: 1-0-2), 4,5 は degree-2 (chain: 1-4-5-2)
+//     → 圧縮後: 頂点 1,2 のみ残る
+// ============================================================
+static bool test_s2_pipeline_step1_step2() {
+    fprintf(stderr, "\n=== S2 Test: Step1 + Step2 Pipeline ===\n");
+
+    // 0-1, 1-2, 2-0  (triangle)
+    // 0-3             (pendant)
+    // 1-4, 4-5, 5-2   (chain bypassing 1-2 edge)
+    vector<pair<int,int>> edges = {
+        {0,1}, {1,2}, {2,0},
+        {0,3},
+        {1,4}, {4,5}, {5,2}
+    };
+    TestGraph tg = buildCSR(6, edges);
+
+    // Step 1: Degree-1 peeling
+    Degree1PeelResult s1 = degree1Peel(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    if (!verifyNoDegree1(s1.reducedGraph)) {
+        return false;
+    }
+
+    // After step1: vertex 3 removed. Remaining: 0,1,2,4,5 (5 vertices)
+    if (s1.reducedGraph.nodeCount != 5) {
+        fprintf(stderr, "FAIL: After Step1, expected 5 vertices, got %d\n",
+                s1.reducedGraph.nodeCount);
+        return false;
+    }
+
+    // Step 2: Degree-2 chain compression
+    const ReducedGraph& g1 = s1.reducedGraph;
+    Degree2CompressResult s2 = degree2Compress(
+        g1.adjacencyListPointers.data(),
+        g1.adjacencyList.data(),
+        g1.nodeCount, g1.edgeCount);
+
+    if (!verifyNoDegree2Chain(s2.reducedGraph)) {
+        return false;
+    }
+
+    // After step2: vertex 0 (now deg-2), 4, 5 are degree-2 chains
+    // Chains: 1-0-2 and 1-4-5-2 → endpoints 1,2 already adjacent
+    // Result: vertices 1,2 remain (2 vertices, 1 edge)
+    if (s2.reducedGraph.nodeCount != 2) {
+        fprintf(stderr, "FAIL: After Step2, expected 2 vertices, got %d\n",
+                s2.reducedGraph.nodeCount);
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
+// テストケース S2-6: チェーン情報の整合性検証
+// ============================================================
+static bool test_s2_chain_info() {
+    fprintf(stderr, "\n=== S2 Test: Chain Info Consistency ===\n");
+
+    // Hub 0 (deg 4) connected to chains ending at Hub 1 (deg 4)
+    // 0-2-3-1, 0-4-1, 0-1 direct
+    // Additional: 0-5, 1-6, 5-6 to increase hub degrees
+    vector<pair<int,int>> edges = {
+        {0,2}, {2,3}, {3,1},    // chain: 0-2-3-1
+        {0,4}, {4,1},           // chain: 0-4-1
+        {0,1},                  // direct edge
+        {0,5}, {1,6}, {5,6}    // extra to boost degrees
+    };
+    TestGraph tg = buildCSR(7, edges);
+    // Degrees: 0:[2,4,1,5]=4, 1:[3,4,0,6]=4, 2:[0,3]=2, 3:[2,1]=2, 4:[0,1]=2, 5:[0,6]=2, 6:[1,5]=2
+
+    Degree2CompressResult result = degree2Compress(
+        tg.adjacencyListPointers.data(),
+        tg.adjacencyList.data(),
+        tg.nodeCount, tg.edgeCount);
+
+    // Chains should include: 0-2-3-1, 0-4-1, 0-5-6-1
+    // All chains have endpoints 0 and 1
+    for (const auto& chain : result.chains) {
+        fprintf(stderr, "  Chain: %d -> [", chain.endpointA);
+        for (size_t i = 0; i < chain.internalVertices.size(); ++i) {
+            if (i > 0) fprintf(stderr, ",");
+            fprintf(stderr, "%d", chain.internalVertices[i]);
+        }
+        fprintf(stderr, "] -> %d (len=%d)\n", chain.endpointB, chain.pathLength);
+
+        // Each chain's path length should equal internal vertices + 1
+        if (chain.pathLength != static_cast<int>(chain.internalVertices.size()) + 1) {
+            fprintf(stderr, "FAIL: pathLength mismatch\n");
+            return false;
+        }
+    }
+
+    // After compression: only vertices 0 and 1 remain
+    if (result.reducedGraph.nodeCount != 2) {
+        fprintf(stderr, "FAIL: Expected 2 remaining vertices, got %d\n",
+                result.reducedGraph.nodeCount);
+        return false;
+    }
+
+    if (!verifyNoDegree2Chain(result.reducedGraph)) {
+        return false;
+    }
+
+    fprintf(stderr, "PASS\n");
+    return true;
+}
+
+// ============================================================
 // メイン
 // ============================================================
 int main(int argc, char* argv[]) {
@@ -388,13 +690,21 @@ int main(int argc, char* argv[]) {
         else fail++;
     };
 
-    // 手動テストケース
+    // Step 1 テスト
     run(test_star_graph());
     run(test_path_graph());
     run(test_triangle_with_pendants());
     run(test_complete_graph());
     run(test_tree_graph());
     run(test_id_mapping());
+
+    // Step 2 テスト
+    run(test_s2_triangle_chains());
+    run(test_s2_complete_graph());
+    run(test_s2_pure_cycle());
+    run(test_s2_long_chain());
+    run(test_s2_pipeline_step1_step2());
+    run(test_s2_chain_info());
 
     // ファイルからのテスト（引数で指定）
     for (int i = 1; i < argc; ++i) {

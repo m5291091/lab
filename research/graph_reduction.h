@@ -51,6 +51,40 @@ Degree1PeelResult degree1Peel(const int* adjacencyListPointers,
                               int nodeCount, int edgeCount);
 
 // ----------------------------------------------------------
+// Degree-2 Chain Compression: 圧縮されたチェーンの情報
+// ----------------------------------------------------------
+struct CompressedChain {
+    int endpointA;                    // 入力グラフでのチェーン端点 A の ID
+    int endpointB;                    // 入力グラフでのチェーン端点 B の ID
+    std::vector<int> internalVertices; // 入力グラフでの内部頂点列 (A→B の順)
+    int pathLength;                   // 元の辺数 = internalVertices.size() + 1
+};
+
+// ----------------------------------------------------------
+// Step 2: Degree-2 Chain Compression の結果
+// ----------------------------------------------------------
+struct Degree2CompressResult {
+    ReducedGraph reducedGraph;
+    std::vector<CompressedChain> chains;
+};
+
+// ----------------------------------------------------------
+// Step 2: Degree-2 チェーン圧縮
+//   - Degree-2 頂点の連鎖（チェーン）を単一辺に置換
+//   - 純粋な Degree-2 サイクル成分はそのまま保持
+//   - 圧縮後のグラフを新しい CSR 形式で返す
+// ----------------------------------------------------------
+Degree2CompressResult degree2Compress(const int* adjacencyListPointers,
+                                      const int* adjacencyList,
+                                      int nodeCount, int edgeCount);
+
+// ----------------------------------------------------------
 // 検証ヘルパー: 縮約後グラフに Degree-1 頂点がないことを確認
 // ----------------------------------------------------------
 bool verifyNoDegree1(const ReducedGraph& g);
+
+// ----------------------------------------------------------
+// 検証ヘルパー: 圧縮後グラフに Degree-2 チェーンがないことを確認
+//   (純粋な Degree-2 サイクル成分は許容)
+// ----------------------------------------------------------
+bool verifyNoDegree2Chain(const ReducedGraph& g);
