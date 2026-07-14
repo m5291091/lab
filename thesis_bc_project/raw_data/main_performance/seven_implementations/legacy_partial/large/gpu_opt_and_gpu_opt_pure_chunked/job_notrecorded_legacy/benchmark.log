@@ -1,0 +1,275 @@
+╔══════════════════════════════════════════════════════════════╗
+║  Miyabi-G gpu_opt / gpu_opt_pure_chunked ベンチマーク (large) ║
+╠══════════════════════════════════════════════════════════════╣
+║  開始時刻 : 2026-05-11 13:28:59
+║  Runner   : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/brandes_runner
+║  Data     : /work/gj17/j17000/m5291091/lab/data
+║  結果     : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859
+║  DryRun   : 0
+║  Trials   : (Dynamic per graph/method)
+║  Timeout  : 18000s
+╚══════════════════════════════════════════════════════════════╝
+
+=== [Step 0] ビルド ===
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  LAB    : /work/gj17/j17000/m5291091/lab
+║  BUILD  : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building brandes_runner...
+-- Using cugraph_bc_mini from: /work/gj17/j17000/m5291091/lab/mylab/research/cugraph_bc_mini/build
+-- NVTX3 found: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include
+-- Configuring done (0.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi
+[ 13%] Built target bandwidth_benchmark
+[100%] Built target brandes_runner
+[Stage 2] brandes_runner: DONE (/work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/brandes_runner)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runner : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/brandes_runner
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_full.sh  (PBS) または bash で実行
+╚══════════════════════════════════════════╝
+
+
+==========================================
+  手法: gpu_opt
+==========================================
+  [RUN] gpu_opt × roadNet-PA [trial 1/3]  (経過: 0h0m)
+Running: GPU_Opt on roadNet-PA...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=831.1508 s (cum=1639.1913 s), Backward wall=165.4414 s (cum=309.5528 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1063.744505 
+  > GTEPS = 1.5772 (nodes=1088092, edges=1541898)
+    → 1063.744505 sec (GTEPS=1.5772)
+  [RUN] gpu_opt × roadNet-PA [trial 2/3]  (経過: 0h0m)
+Running: GPU_Opt on roadNet-PA...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=830.3558 s (cum=1637.5797 s), Backward wall=165.9253 s (cum=310.4498 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1063.565426 
+  > GTEPS = 1.5775 (nodes=1088092, edges=1541898)
+    → 1063.565426 sec (GTEPS=1.5775)
+  [RUN] gpu_opt × roadNet-PA [trial 3/3]  (経過: 0h0m)
+Running: GPU_Opt on roadNet-PA...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=831.7121 s (cum=1641.5438 s), Backward wall=164.1048 s (cum=307.5360 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1063.561320 
+  > GTEPS = 1.5775 (nodes=1088092, edges=1541898)
+    → 1063.561320 sec (GTEPS=1.5775)
+  [RUN] gpu_opt × roadNet-TX [trial 1/3]  (経過: 0h53m)
+Running: GPU_Opt on roadNet-TX...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=1260.8217 s (cum=2517.9695 s), Backward wall=238.7983 s (cum=474.4760 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1638.184956 
+  > GTEPS = 1.6187 (nodes=1379917, edges=1921660)
+    → 1638.184956 sec (GTEPS=1.6187)
+  [RUN] gpu_opt × roadNet-TX [trial 2/3]  (経過: 0h53m)
+Running: GPU_Opt on roadNet-TX...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=1260.7887 s (cum=2518.4734 s), Backward wall=238.2579 s (cum=473.6123 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1637.831365 
+  > GTEPS = 1.6191 (nodes=1379917, edges=1921660)
+    → 1637.831365 sec (GTEPS=1.6191)
+  [RUN] gpu_opt × roadNet-TX [trial 3/3]  (経過: 0h53m)
+Running: GPU_Opt on roadNet-TX...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=1259.9584 s (cum=2514.8909 s), Backward wall=240.4500 s (cum=476.1475 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1637.710355 
+  > GTEPS = 1.6192 (nodes=1379917, edges=1921660)
+    → 1637.710355 sec (GTEPS=1.6192)
+  [RUN] gpu_opt × roadNet-CA [trial 1/3]  (経過: 2h15m)
+Running: GPU_Opt on roadNet-CA...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=2741.4409 s (cum=5460.9702 s), Backward wall=490.1012 s (cum=963.0137 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3498.371229 
+  > GTEPS = 1.5541 (nodes=1965206, edges=2766607)
+    → 3498.371229 sec (GTEPS=1.5541)
+  [RUN] gpu_opt × roadNet-CA [trial 2/3]  (経過: 2h15m)
+Running: GPU_Opt on roadNet-CA...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=2739.2759 s (cum=5458.9741 s), Backward wall=490.7410 s (cum=963.5811 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3497.918396 
+  > GTEPS = 1.5543 (nodes=1965206, edges=2766607)
+    → 3497.918396 sec (GTEPS=1.5543)
+  [RUN] gpu_opt × roadNet-CA [trial 3/3]  (経過: 2h15m)
+Running: GPU_Opt on roadNet-CA...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=2734.9873 s (cum=5451.8013 s), Backward wall=491.4246 s (cum=967.4839 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3497.494364 
+  > GTEPS = 1.5545 (nodes=1965206, edges=2766607)
+    → 3497.494364 sec (GTEPS=1.5545)
+
+==========================================
+  手法: gpu_opt_pure_chunked
+==========================================
+  [RUN] gpu_opt_pure_chunked × roadNet-PA [trial 1/3]  (経過: 5h10m)
+Running: GPU_Opt_Pure_Chunked on roadNet-PA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=831.5869 s (cum=1643.1600 s), Backward wall=160.6795 s (cum=302.3579 s), SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1061.450245 
+  > GTEPS = 1.5806 (nodes=1088092, edges=1541898)
+    → 1061.450245 sec (GTEPS=1.5806)
+  [RUN] gpu_opt_pure_chunked × roadNet-PA [trial 2/3]  (経過: 5h10m)
+Running: GPU_Opt_Pure_Chunked on roadNet-PA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=830.3864 s (cum=1640.1345 s), Backward wall=162.2628 s (cum=305.1349 s), SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1061.649829 
+  > GTEPS = 1.5803 (nodes=1088092, edges=1541898)
+    → 1061.649829 sec (GTEPS=1.5803)
+  [RUN] gpu_opt_pure_chunked × roadNet-PA [trial 3/3]  (経過: 5h10m)
+Running: GPU_Opt_Pure_Chunked on roadNet-PA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=830.9363 s (cum=1639.8547 s), Backward wall=163.7246 s (cum=306.2038 s), SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1061.294841 
+  > GTEPS = 1.5808 (nodes=1088092, edges=1541898)
+    → 1061.294841 sec (GTEPS=1.5808)
+  [RUN] gpu_opt_pure_chunked × roadNet-TX [trial 1/3]  (経過: 6h3m)
+Running: GPU_Opt_Pure_Chunked on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=1260.9702 s (cum=2520.6384 s), Backward wall=233.6202 s (cum=466.6588 s), SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1634.754416 
+  > GTEPS = 1.6221 (nodes=1379917, edges=1921660)
+    → 1634.754416 sec (GTEPS=1.6221)
+  [RUN] gpu_opt_pure_chunked × roadNet-TX [trial 2/3]  (経過: 6h3m)
+Running: GPU_Opt_Pure_Chunked on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=1258.7490 s (cum=2514.0566 s), Backward wall=236.5304 s (cum=469.9220 s), SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1635.513072 
+  > GTEPS = 1.6213 (nodes=1379917, edges=1921660)
+    → 1635.513072 sec (GTEPS=1.6213)
+  [RUN] gpu_opt_pure_chunked × roadNet-TX [trial 3/3]  (経過: 6h3m)
+Running: GPU_Opt_Pure_Chunked on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=1258.2648 s (cum=2515.0215 s), Backward wall=234.8077 s (cum=468.6213 s), SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1634.898945 
+  > GTEPS = 1.6220 (nodes=1379917, edges=1921660)
+    → 1634.898945 sec (GTEPS=1.6220)
+  [RUN] gpu_opt_pure_chunked × roadNet-CA [trial 1/3]  (経過: 7h25m)
+Running: GPU_Opt_Pure_Chunked on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=2742.2708 s (cum=5467.9072 s), Backward wall=481.0569 s (cum=946.8193 s), SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3492.578248 
+  > GTEPS = 1.5567 (nodes=1965206, edges=2766607)
+    → 3492.578248 sec (GTEPS=1.5567)
+  [RUN] gpu_opt_pure_chunked × roadNet-CA [trial 2/3]  (経過: 7h25m)
+Running: GPU_Opt_Pure_Chunked on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=2739.3049 s (cum=5460.7778 s), Backward wall=485.9274 s (cum=956.0126 s), SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3493.263799 
+  > GTEPS = 1.5564 (nodes=1965206, edges=2766607)
+    → 3493.263799 sec (GTEPS=1.5564)
+  [RUN] gpu_opt_pure_chunked × roadNet-CA [trial 3/3]  (経過: 7h25m)
+Running: GPU_Opt_Pure_Chunked on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=2746.2651 s (cum=5470.2861 s), Backward wall=482.9659 s (cum=947.0103 s), SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3492.395051 
+  > GTEPS = 1.5568 (nodes=1965206, edges=2766607)
+    → 3492.395051 sec (GTEPS=1.5568)
+
+╔══════════════════════════════════════════════════════════════╗
+║  ベンチマーク完了                                           ║
+╠══════════════════════════════════════════════════════════════╣
+║  終了時刻  : 2026-05-11 23:48:50
+║  総実行時間: 10h 19m 50s
+║  実行数    : 6 (成功=18, 失敗=0, スキップ=0)
+║  結果 TSV  : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/results.tsv
+║  正確性    : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/max_bc.tsv
+║  ログ      : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/benchmark.log
+║  フェーズ  : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/phase_timing.log
+╚══════════════════════════════════════════════════════════════╝
+
+=== 正確性検証 (max BC 値の記録) ===
+  roadNet-PA: GPU_Opt=151395302679.08
+  roadNet-PA: GPU_Opt=151395302679.08
+  roadNet-PA: GPU_Opt=151395302679.08
+  roadNet-TX: GPU_Opt=164495142042.45
+  roadNet-TX: GPU_Opt=164495142042.45
+  roadNet-TX: GPU_Opt=164495142042.45
+  roadNet-CA: GPU_Opt=686380725021.27
+  roadNet-CA: GPU_Opt=686380725021.27
+  roadNet-CA: GPU_Opt=686380725021.27
+  roadNet-PA: GPU_Opt_Pure_Chunked=151395302679.08
+  roadNet-PA: GPU_Opt_Pure_Chunked=151395302679.08
+  roadNet-PA: GPU_Opt_Pure_Chunked=151395302679.08
+  roadNet-TX: GPU_Opt_Pure_Chunked=164495142042.45
+  roadNet-TX: GPU_Opt_Pure_Chunked=164495142042.45
+  roadNet-TX: GPU_Opt_Pure_Chunked=164495142042.45
+  roadNet-CA: GPU_Opt_Pure_Chunked=686380725021.27
+  roadNet-CA: GPU_Opt_Pure_Chunked=686380725021.27
+  roadNet-CA: GPU_Opt_Pure_Chunked=686380725021.27
+
+=== 結果一覧 (TSV) ===
+Implementation	Graph	Nodes	Edges	Trial	Time_sec	GTEPS
+GPU_Opt	roadNet-PA	1088092	1541898	1	1063.744505	1.5772
+GPU_Opt	roadNet-PA	1088092	1541898	2	1063.565426	1.5775
+GPU_Opt	roadNet-PA	1088092	1541898	3	1063.561320	1.5775
+GPU_Opt	roadNet-TX	1379917	1921660	1	1638.184956	1.6187
+GPU_Opt	roadNet-TX	1379917	1921660	2	1637.831365	1.6191
+GPU_Opt	roadNet-TX	1379917	1921660	3	1637.710355	1.6192
+GPU_Opt	roadNet-CA	1965206	2766607	1	3498.371229	1.5541
+GPU_Opt	roadNet-CA	1965206	2766607	2	3497.918396	1.5543
+GPU_Opt	roadNet-CA	1965206	2766607	3	3497.494364	1.5545
+GPU_Opt_Pure_Chunked	roadNet-PA	1088092	1541898	1	1061.450245	1.5806
+GPU_Opt_Pure_Chunked	roadNet-PA	1088092	1541898	2	1061.649829	1.5803
+GPU_Opt_Pure_Chunked	roadNet-PA	1088092	1541898	3	1061.294841	1.5808
+GPU_Opt_Pure_Chunked	roadNet-TX	1379917	1921660	1	1634.754416	1.6221
+GPU_Opt_Pure_Chunked	roadNet-TX	1379917	1921660	2	1635.513072	1.6213
+GPU_Opt_Pure_Chunked	roadNet-TX	1379917	1921660	3	1634.898945	1.6220
+GPU_Opt_Pure_Chunked	roadNet-CA	1965206	2766607	1	3492.578248	1.5567
+GPU_Opt_Pure_Chunked	roadNet-CA	1965206	2766607	2	3493.263799	1.5564
+GPU_Opt_Pure_Chunked	roadNet-CA	1965206	2766607	3	3492.395051	1.5568
+
+=== 自動サマリ生成 ===
+  結果読み込み: 6 件 (2 手法 × 3 グラフ) (複数試行の平均値)
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/summary_table.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/speedup_table.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/correctness.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_large_gpu_opt_compare_20260511_132859/summary_table.tsv
+
+
+# スピードアップ (vs PathMerge_BC)
+
+(ベースライン PathMerge_BC の結果がありません)

@@ -1,0 +1,181 @@
+checkpoint=e32b03e9b73e9eb294685c58e488ce2a92521852 job=2367583.opbs result=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs
+[BUILD] scripts/build_miyabi_interactive.sh (output is not a performance result)
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.4s)
+-- Generating done (0.2s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+[ 12%] Built target core
+[ 20%] Built target bandwidth_benchmark
+[ 60%] Built target proposed
+[ 68%] Built target baseline
+[ 84%] Built target run_ablation
+[ 84%] Built target run_pathmerge_sweep
+[ 92%] Built target baseline_cugraph
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+[RUN] sequential data/benchmark_7000_41459 (n=1, no warmup)
+[EXIT] sequential benchmark_7000_41459: 0
+[RUN] gpu_opt data/benchmark_7000_41459 (n=1, no warmup)
+[EXIT] gpu_opt benchmark_7000_41459: 0
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/benchmark_7000_41459/comparison.md
+# BC ベクトル数値比較: Sequential vs GPU_Opt
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/benchmark_7000_41459/sequential.bc.tsv`  (header: impl=Sequential graph=benchmark_7000_41459 nodes=7000)
+  - SHA256: `fa23bf8892bdc799a9f859d3ccbe6859a1d965fb9162dcd62030d073a6771c04`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/benchmark_7000_41459/gpu_opt.bc.tsv`  (header: impl=GPU_Opt graph=benchmark_7000_41459 nodes=7000)
+  - SHA256: `458d0a129e03229b1e349d8725461ef9c6cb99356636b8ebc87bacbe8a16e957`
+
+- checkpoint_sha: e32b03e9b73e9eb294685c58e488ce2a92521852
+- pbs_job_id: 2367583.opbs
+- graph_path: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459
+- graph_sha256: 4a891b4de4a0df86ef73c469f1e81b6206073e7368488e74f3ee2cec43b29ddc
+- n: 7000
+- m: 41459
+- requested_batch: 512
+- effective_batch: 512
+- SUB_BATCH: 512
+- num_subs: 1
+- NS_eff: 2
+
+| 項目 | 値 |
+|:--|:--|
+| ベクトル長 A | 7000 |
+| ベクトル長 B | 7000 |
+| 共通 index 数 | 7000 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| 非有限値数 A | 0 |
+| 非有限値詳細 A (vector A: Sequential) | なし |
+| 非有限値数 B | 0 |
+| 非有限値詳細 B (vector B: GPU_Opt) | なし |
+| 最大絶対誤差 | 6.053597e-09 (index 0) |
+| 最大絶対誤差 index の値 | A=2549196.725646447, B=2549196.725646441 |
+| 最大相対誤差 | 4.563145e-15 (index 1186) |
+| 最大相対誤差 index の値 | A=11161.53593043016, B=11161.53593043011 |
+| Max BC A | index 4, value 3935437.257858 |
+| Max BC B | index 4, value 3935437.257858 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[PASS] benchmark_7000_41459: all 7000 elements within mixed tolerance
+[RUN] sequential data/benchmark_11023_62184 (n=1, no warmup)
+[EXIT] sequential benchmark_11023_62184: 0
+[RUN] gpu_opt data/benchmark_11023_62184 (n=1, no warmup)
+[EXIT] gpu_opt benchmark_11023_62184: 0
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/benchmark_11023_62184/comparison.md
+# BC ベクトル数値比較: Sequential vs GPU_Opt
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/benchmark_11023_62184/sequential.bc.tsv`  (header: impl=Sequential graph=benchmark_11023_62184 nodes=11023)
+  - SHA256: `98381b7869cb86719669aa78ecaeaad90054be77d43544a907cfea27f66fbae6`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/benchmark_11023_62184/gpu_opt.bc.tsv`  (header: impl=GPU_Opt graph=benchmark_11023_62184 nodes=11023)
+  - SHA256: `d9db54898130c8e7acefe2cb304f57a6a52c0b379edae5aa72203e622a0e21f9`
+
+- checkpoint_sha: e32b03e9b73e9eb294685c58e488ce2a92521852
+- pbs_job_id: 2367583.opbs
+- graph_path: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_11023_62184
+- graph_sha256: 8d1df41c579de3150a155ee9cce321784723fdb1824c0a2a160d95004d4b6e31
+- n: 11023
+- m: 62184
+- requested_batch: 512
+- effective_batch: 512
+- SUB_BATCH: 512
+- num_subs: 1
+- NS_eff: 2
+
+| 項目 | 値 |
+|:--|:--|
+| ベクトル長 A | 11023 |
+| ベクトル長 B | 11023 |
+| 共通 index 数 | 11023 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| 非有限値数 A | 0 |
+| 非有限値詳細 A (vector A: Sequential) | なし |
+| 非有限値数 B | 0 |
+| 非有限値詳細 B (vector B: GPU_Opt) | なし |
+| 最大絶対誤差 | 2.980232e-08 (index 10) |
+| 最大絶対誤差 index の値 | A=11951000.93285756, B=11951000.93285759 |
+| 最大相対誤差 | 1.789722e-14 (index 3092) |
+| 最大相対誤差 index の値 | A=11789.69389924664, B=11789.69389924643 |
+| Max BC A | index 10, value 11951000.932858 |
+| Max BC B | index 10, value 11951000.932858 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[PASS] benchmark_11023_62184: all 11023 elements within mixed tolerance
+[RUN] sequential data/chain_200 (n=1, no warmup)
+[EXIT] sequential chain_200: 0
+[RUN] gpu_opt data/chain_200 (n=1, no warmup)
+[EXIT] gpu_opt chain_200: 0
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/chain_200/comparison.md
+# BC ベクトル数値比較: Sequential vs GPU_Opt
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/chain_200/sequential.bc.tsv`  (header: impl=Sequential graph=chain_200 nodes=200)
+  - SHA256: `1f39b65cc3fd9cf8e79e24421ed9bf5883e2869cd3d10db956275ca82c715f4b`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs/chain_200/gpu_opt.bc.tsv`  (header: impl=GPU_Opt graph=chain_200 nodes=200)
+  - SHA256: `3feef9b82e3ef287a3fe010f0797c07d04e9b18206ef88a6a8b3f469c9840dda`
+
+- checkpoint_sha: e32b03e9b73e9eb294685c58e488ce2a92521852
+- pbs_job_id: 2367583.opbs
+- graph_path: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/chain_200
+- graph_sha256: 8fe3b0e05de9eecb9999962374ce843264d040b985e85e7ddc7bfd987494db79
+- n: 200
+- m: 199
+- requested_batch: 512
+- effective_batch: 512
+- SUB_BATCH: 512
+- num_subs: 1
+- NS_eff: 2
+
+| 項目 | 値 |
+|:--|:--|
+| ベクトル長 A | 200 |
+| ベクトル長 B | 200 |
+| 共通 index 数 | 200 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| 非有限値数 A | 0 |
+| 非有限値詳細 A (vector A: Sequential) | なし |
+| 非有限値数 B | 0 |
+| 非有限値詳細 B (vector B: GPU_Opt) | なし |
+| 最大絶対誤差 | 0.000000e+00 (index 0) |
+| 最大絶対誤差 index の値 | A=0.0, B=0.0 |
+| 最大相対誤差 | 0.000000e+00 (index 0) |
+| 最大相対誤差 index の値 | A=0.0, B=0.0 |
+| Max BC A | index 99, value 9900.000000 |
+| Max BC B | index 99, value 9900.000000 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[PASS] chain_200: all 200 elements within mixed tolerance
+PASS: all three graphs completed; timings are not performance results

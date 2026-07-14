@@ -1,0 +1,7 @@
+
+WARNING: Existing SQLite export found: ablation_H1W1A1.sqlite
+         File is older than input file: ablation_H1W1A1.nsys-rep
+         Use --force-export=true to update export file.
+
+usage: nsys stats [<args>] <input-file>
+Try 'nsys stats --help' for more information.

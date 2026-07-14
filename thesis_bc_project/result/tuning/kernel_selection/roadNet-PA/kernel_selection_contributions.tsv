@@ -1,0 +1,2 @@
+Graph	Shared_median_sec	Block_median_sec	Shared_sample_std	Block_sample_std	N_shared	N_block	Faster	Speedup	Shared_MaxBC_Index	Shared_MaxBC_Value	Block_MaxBC_Index	Block_MaxBC_Value	MaxBC_Match
+roadNet-PA	1063.712326	701.573311	0.059545	3.573974	3	3	block	1.516181	557532	151395302679.08	557532	151395302679.08	yes

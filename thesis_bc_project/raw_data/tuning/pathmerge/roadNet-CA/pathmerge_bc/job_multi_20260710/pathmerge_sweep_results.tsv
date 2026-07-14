@@ -1,0 +1,9 @@
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b16	roadNet-CA	1	3609.950435	1.5061
+PathMerge_b32	roadNet-CA	1	3111.176829	1.7476
+PathMerge_b32	roadNet-CA	2	3079.716622	1.7654
+PathMerge_b32	roadNet-CA	3	3060.659395	1.7764
+PathMerge_b64	roadNet-CA	1	3588.386622	1.5152
+PathMerge_b64	roadNet-CA	2	3490.242337	1.5578
+PathMerge_b64	roadNet-CA	3	3491.644750	1.5571
+PathMerge_b128	roadNet-CA	1	3830.858410	1.4193

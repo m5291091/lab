@@ -1,0 +1,5 @@
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.3327 sec, Backward: 1.1470 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.522594 
+  > GTEPS = 0.0595 (nodes=11023, edges=62184)

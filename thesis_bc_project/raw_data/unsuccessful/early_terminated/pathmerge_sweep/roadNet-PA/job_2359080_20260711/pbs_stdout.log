@@ -1,0 +1,8 @@
+=== PathMerge Batch-Size Sweep ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep
+Graphs  : snap/roadNet-PA
+Batches : 8,16,32   Trials: 3
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_pathmerge_sweep_20260711_083659_2359080
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA 8,16,32  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA 8,16,32  (trial 2)

@@ -1,0 +1,69 @@
+checkpoint=ac2b409c25c49c41608749afba8c7081871bfe45 job=2368587.opbs result=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_memory_correctness_20260712_220331_2368587.opbs
+graph=data/325557_3216152 n=325557 m=3216152 sha256=a095b2e7564e6c620bd0f5437917e0b28f4fecab289adf77633e850aa07da584
+[BUILD] scripts/build_miyabi_interactive.sh (run_benchmark は cugraph_bc_mini に依存)
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.4s)
+-- Generating done (0.2s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+[ 12%] Built target core
+[ 20%] Built target bandwidth_benchmark
+[ 60%] Built target proposed
+[ 68%] Built target baseline
+[ 80%] Built target run_ablation
+[ 84%] Built target run_pathmerge_sweep
+[ 92%] Built target baseline_cugraph
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+[RUN] gpu_opt_b9792: BC_BATCH_OVERRIDE=9792 gpu_opt (path=um mode=oversubscribed) (n=1)
+[EXIT] gpu_opt_b9792: 0
+[OK  ] gpu_opt_b9792: valid vector, path_evidence_ok
+[RUN] gpu_opt_b1024: BC_BATCH_OVERRIDE=1024 gpu_opt (path=um mode=in_capacity) (n=1)
+[EXIT] gpu_opt_b1024: 0
+[OK  ] gpu_opt_b1024: valid vector, path_evidence_ok
+[RUN] gpu_opt_pure_chunked_b16384: BC_BATCH_OVERRIDE=16384 gpu_opt_pure_chunked (path=chunked mode=chunked) (n=1)
+[EXIT] gpu_opt_pure_chunked_b16384: 0
+[OK  ] gpu_opt_pure_chunked_b16384: valid vector, path_evidence_ok
+[RUN] gpu_opt_pure_chunked_b1024: BC_BATCH_OVERRIDE=1024 gpu_opt_pure_chunked (path=chunked mode=non_chunk) (n=1)
+[EXIT] gpu_opt_pure_chunked_b1024: 0
+[OK  ] gpu_opt_pure_chunked_b1024: valid vector, path_evidence_ok
+[RUN] gpu_opt_pure_b1024: BC_BATCH_OVERRIDE=1024 gpu_opt_pure (path=pure mode=pure) (n=1)
+[EXIT] gpu_opt_pure_b1024: 0
+[OK  ] gpu_opt_pure_b1024: valid vector, path_evidence_ok
+[RUN] pathmerge_b4096: PATHMERGE_BC_BATCH_SIZE=4096 pathmerge_bc (path=pathmerge mode=comparator) (n=1)
+[EXIT] pathmerge_b4096: 0
+[OK  ] pathmerge_b4096: valid vector, path_evidence_ok
+[RUN DONE] configs ok=6 fail=0
+[MATRIX] comparing valid vectors...
+[CMP ] same_impl_diff_batch: gpu_opt_b9792 vs gpu_opt_b1024 -> FAIL (mismatch=6 max_abs=5.486364e+00 max_rel=2.230184e-06)
+[CMP ] same_impl_diff_batch: gpu_opt_pure_chunked_b16384 vs gpu_opt_pure_chunked_b1024 -> FAIL (mismatch=6 max_abs=5.358586e+00 max_rel=2.847745e-06)
+[CMP ] same_batch_diff_path: gpu_opt_b1024 vs gpu_opt_pure_b1024 -> PASS (mismatch=0 max_abs=1.525879e-05 max_rel=3.015985e-14)
+[CMP ] same_batch_diff_path: gpu_opt_b1024 vs gpu_opt_pure_chunked_b1024 -> PASS (mismatch=0 max_abs=2.288818e-05 max_rel=2.872713e-14)
+[CMP ] same_batch_diff_path: gpu_opt_pure_b1024 vs gpu_opt_pure_chunked_b1024 -> PASS (mismatch=0 max_abs=7.629395e-06 max_rel=2.628983e-14)
+[CMP ] pathmerge_cross: pathmerge_b4096 vs gpu_opt_b1024 -> FAIL (mismatch=11027 max_abs=6.638161e+03 max_rel=2.000197e-03)
+[CMP ] pathmerge_cross: pathmerge_b4096 vs gpu_opt_b9792 -> FAIL (mismatch=11030 max_abs=6.643161e+03 max_rel=2.001870e-03)
+[CMP ] pathmerge_cross: pathmerge_b4096 vs gpu_opt_pure_b1024 -> FAIL (mismatch=11027 max_abs=6.638161e+03 max_rel=2.000197e-03)
+[CMP ] pathmerge_cross: pathmerge_b4096 vs gpu_opt_pure_chunked_b1024 -> FAIL (mismatch=11027 max_abs=6.638161e+03 max_rel=2.000197e-03)
+[CMP ] pathmerge_cross: pathmerge_b4096 vs gpu_opt_pure_chunked_b16384 -> FAIL (mismatch=11028 max_abs=6.643328e+03 max_rel=2.000754e-03)
+core_memory_path_status=FAIL | pathmerge_cross_impl_status=DIFFERENCE_OBSERVED | overall_status=CORE_FAIL
+NOTE: PathMerge=external comparator; acquired results retained; failures recorded, not deleted.

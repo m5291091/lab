@@ -1,0 +1,11 @@
+# 実行時間 (秒)
+Method	roadNet-CA
+GPU_Opt	2127.377226
+GPU_Opt_Pure	2119.279468
+GPU_Opt_Pure_Chunked	2123.183984
+
+# GTEPS
+Method	roadNet-CA
+GPU_Opt	2.5557
+GPU_Opt_Pure	2.5655
+GPU_Opt_Pure_Chunked	2.5608

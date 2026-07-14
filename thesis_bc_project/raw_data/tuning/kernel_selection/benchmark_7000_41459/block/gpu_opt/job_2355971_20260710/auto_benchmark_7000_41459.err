@@ -1,0 +1,8 @@
+Running: GPU_Opt on benchmark_7000_41459...
+  > [BFS kernel] auto=block (avg_deg=11.85, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=0.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=0.0094 s (cum=0.0188 s), Backward wall=0.0264 s (cum=0.0527 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.310006 
+  > GTEPS = 0.9362 (nodes=7000, edges=41459)

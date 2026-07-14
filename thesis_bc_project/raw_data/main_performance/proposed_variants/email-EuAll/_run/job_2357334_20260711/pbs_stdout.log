@@ -1,0 +1,65 @@
+=== Targeted Benchmark ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark
+Graphs  : snap/email-EuAll
+Impls   : gpu_opt gpu_opt_pure gpu_opt_pure_chunked   Trials: 5   Timeout: 21600s
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005425_2357334
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 1/5)
+  -> 30.909866 sec (GTEPS=3.1249)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 2/5)
+  -> 30.768626 sec (GTEPS=3.1393)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 3/5)
+  -> 30.816941 sec (GTEPS=3.1343)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 4/5)
+  -> 30.809385 sec (GTEPS=3.1351)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 5/5)
+  -> 30.752036 sec (GTEPS=3.1410)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 1/5)
+  -> 30.552636 sec (GTEPS=3.1615)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 2/5)
+  -> 30.737780 sec (GTEPS=3.1424)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 3/5)
+  -> 30.722625 sec (GTEPS=3.1440)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 4/5)
+  -> 30.784063 sec (GTEPS=3.1377)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 5/5)
+  -> 30.765465 sec (GTEPS=3.1396)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 1/5)
+  -> 30.710181 sec (GTEPS=3.1452)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 2/5)
+  -> 30.754359 sec (GTEPS=3.1407)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 3/5)
+  -> 30.771129 sec (GTEPS=3.1390)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 4/5)
+  -> 30.740415 sec (GTEPS=3.1421)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll  (trial 5/5)
+  -> 30.778630 sec (GTEPS=3.1382)
+=== Targeted Benchmark Complete ===
+Implementation	Graph	Nodes	Edges	Trial	Time_sec	GTEPS
+GPU_Opt	email-EuAll	265009	364481	1	30.909866	3.1249
+GPU_Opt	email-EuAll	265009	364481	2	30.768626	3.1393
+GPU_Opt	email-EuAll	265009	364481	3	30.816941	3.1343
+GPU_Opt	email-EuAll	265009	364481	4	30.809385	3.1351
+GPU_Opt	email-EuAll	265009	364481	5	30.752036	3.1410
+GPU_Opt_Pure	email-EuAll	265009	364481	1	30.552636	3.1615
+GPU_Opt_Pure	email-EuAll	265009	364481	2	30.737780	3.1424
+GPU_Opt_Pure	email-EuAll	265009	364481	3	30.722625	3.1440
+GPU_Opt_Pure	email-EuAll	265009	364481	4	30.784063	3.1377
+GPU_Opt_Pure	email-EuAll	265009	364481	5	30.765465	3.1396
+GPU_Opt_Pure_Chunked	email-EuAll	265009	364481	1	30.710181	3.1452
+GPU_Opt_Pure_Chunked	email-EuAll	265009	364481	2	30.754359	3.1407
+GPU_Opt_Pure_Chunked	email-EuAll	265009	364481	3	30.771129	3.1390
+GPU_Opt_Pure_Chunked	email-EuAll	265009	364481	4	30.740415	3.1421
+GPU_Opt_Pure_Chunked	email-EuAll	265009	364481	5	30.778630	3.1382
+
+=== 自動サマリ生成 ===
+  結果読み込み: 3 件 (3 手法 × 1 グラフ) (複数試行の平均値)
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005425_2357334/summary_table.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005425_2357334/speedup_table.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005425_2357334/correctness.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005425_2357334/summary_table.tsv
+
+
+# スピードアップ (vs PathMerge_BC)
+
+(ベースライン PathMerge_BC の結果がありません)

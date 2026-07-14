@@ -1,0 +1,109 @@
+=== BFS Kernel Selection 2x2 Experiment ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark  (gpu_opt)
+Graphs  : snap/roadNet-PA
+Kernels : shared block   Trials: 3   Batch: 512
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354329
+[Build] build_miyabi_interactive.sh (Stage1+2)
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.3s)
+You have changed variables that require your cache to be deleted.
+Configure will be re-run and you may have to reset some variables.
+The following variables have changed:
+CMAKE_CXX_COMPILER= g++
+CMAKE_C_COMPILER= gcc
+
+CMake Error at /home/j17000/.local/share/uv/tools/cmake/lib/python3.12/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:225 (configure_file):
+  No such file or directory
+Call Stack (most recent call first):
+  CMakeLists.txt:2 (project)
+
+
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring incomplete, errors occurred!
+[RUN] BC_FORCE_BFS_KERNEL=shared BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA  (trial 1)
+  -> 1063.624042 sec (GTEPS=1.5774)
+[RUN] BC_FORCE_BFS_KERNEL=shared BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA  (trial 2)
+  -> 1063.737404 sec (GTEPS=1.5772)
+[RUN] BC_FORCE_BFS_KERNEL=shared BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA  (trial 3)
+  -> 1063.712326 sec (GTEPS=1.5772)
+[RUN] BC_FORCE_BFS_KERNEL=block BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA  (trial 1)
+  -> 702.092769 sec (GTEPS=2.3896)
+[RUN] BC_FORCE_BFS_KERNEL=block BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA  (trial 2)
+  -> 695.659103 sec (GTEPS=2.4117)
+[RUN] BC_FORCE_BFS_KERNEL=block BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA  (trial 3)
+  -> 701.573311 sec (GTEPS=2.3914)
+=== Kernel Selection Complete ===
+Kernel	Graph	Trial	Time_sec	GTEPS
+shared	roadNet-PA	1	1063.624042	1.5774
+shared	roadNet-PA	2	1063.737404	1.5772
+shared	roadNet-PA	3	1063.712326	1.5772
+block	roadNet-PA	1	702.092769	2.3896
+block	roadNet-PA	2	695.659103	2.4117
+block	roadNet-PA	3	701.573311	2.3914
+
+=== 自動サマリ生成 ===
+  読み込み: 1 グラフ
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354329/kernel_selection_summary.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354329/kernel_selection_contributions.tsv
+
+# BFS カーネル選択 2×2 比較
+
+gpu_opt のヒューリスティクス: avg_deg < 5.0 → shared, それ以外 → block。
+
+| グラフ | avg_deg | shared (s) | block (s) | 速い側 | ヒューリスティクス | 正しい選択? | 選択機構の寄与 (遅/速) |
+|:-----|------:|------:|------:|:----:|:----:|:----:|------:|
+| roadNet-PA | 2.83 | 1063.7 | 701.6 | block | shared | ✗ 誤選択 | 1.52× |
+
+## まとめ
+
+- ヒューリスティクスが速い側を選べた: **0/1** グラフ
+- 誤選択したグラフ: roadNet-PA
+- 選択機構の寄与 (誤選択時に失う倍率) の範囲: 1.52× 〜 1.52×
+
+## 試行数と実行時間ばらつき (中央値 ± 標準偏差)
+
+| グラフ | kernel | 中央値 (s) | 標準偏差 | n |
+|:-----|:----:|------:|------:|--:|
+| roadNet-PA | shared | 1063.7 | 0.0486 | 3 |
+| roadNet-PA | block | 701.6 | 2.9181 | 3 |
+
+## 正確性 (shared vs block の Max BC 一致)
+
+| グラフ | shared Max BC | block Max BC | 一致? |
+|:-----|------:|------:|:----:|
+| roadNet-PA | 151395302679.0800 | 151395302679.0800 | ✓ |

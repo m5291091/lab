@@ -1,0 +1,126 @@
+Running: GPU_Opt_Pure on roadNet-PA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=35.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=827.2316 s (cum=1643.8156 s), Backward wall=156.8861 s (cum=303.5602 s)
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1062.560198 
+  > GTEPS = 1.5789 (nodes=1088092, edges=1541898)
+Running: GPU_Opt_Pure on roadNet-PA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=35.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=831.0154 s (cum=1641.2335 s), Backward wall=161.3888 s (cum=303.5432 s)
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1062.664307 
+  > GTEPS = 1.5788 (nodes=1088092, edges=1541898)
+Running: GPU_Opt_Pure on roadNet-PA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=35.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=830.8489 s (cum=1641.1143 s), Backward wall=162.2686 s (cum=305.3520 s)
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1062.395351 
+  > GTEPS = 1.5792 (nodes=1088092, edges=1541898)
+Running: GPU_Opt_Pure on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=45.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=1261.1182 s (cum=2517.9297 s), Backward wall=235.2857 s (cum=466.9644 s)
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1635.967498 
+  > GTEPS = 1.6209 (nodes=1379917, edges=1921660)
+Running: GPU_Opt_Pure on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=45.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=1259.9628 s (cum=2515.6045 s), Backward wall=237.0704 s (cum=470.2224 s)
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1636.099992 
+  > GTEPS = 1.6208 (nodes=1379917, edges=1921660)
+Running: GPU_Opt_Pure on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=45.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=1258.5929 s (cum=2515.4624 s), Backward wall=235.5094 s (cum=469.6502 s)
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1636.253710 
+  > GTEPS = 1.6206 (nodes=1379917, edges=1921660)
+Running: GPU_Opt_Pure on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=64.41 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=2738.5652 s (cum=5458.8848 s), Backward wall=486.5570 s (cum=957.4547 s)
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3494.981294 
+  > GTEPS = 1.5556 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=64.41 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=2744.4102 s (cum=5450.2378 s), Backward wall=499.0024 s (cum=963.7314 s)
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3495.339685 
+  > GTEPS = 1.5555 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=64.41 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=2734.4094 s (cum=5456.9048 s), Backward wall=483.1283 s (cum=956.7976 s)
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3494.877931 
+  > GTEPS = 1.5557 (nodes=1965206, edges=2766607)
+Running: PathMerge_BC on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1088092
+  > [PathMerge] num_batches=17002
+  > [GPU Phase] BFS: 603.2475 sec, Backward: 306.9258 sec
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 916.823023 
+  > GTEPS = 1.8299 (nodes=1088092, edges=1541898)
+Running: PathMerge_BC on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1088092
+  > [PathMerge] num_batches=17002
+  > [GPU Phase] BFS: 618.1565 sec, Backward: 309.4091 sec
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 934.282666 
+  > GTEPS = 1.7957 (nodes=1088092, edges=1541898)
+Running: PathMerge_BC on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1088092
+  > [PathMerge] num_batches=17002
+  > [GPU Phase] BFS: 606.1096 sec, Backward: 305.9308 sec
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 918.665912 
+  > GTEPS = 1.8263 (nodes=1088092, edges=1541898)
+Running: PathMerge_BC on roadNet-TX...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1379917
+  > [PathMerge] num_batches=21562
+  > [GPU Phase] BFS: 969.0629 sec, Backward: 496.3801 sec
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1475.814503 
+  > GTEPS = 1.7968 (nodes=1379917, edges=1921660)
+Running: PathMerge_BC on roadNet-TX...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1379917
+  > [PathMerge] num_batches=21562
+  > [GPU Phase] BFS: 1009.9237 sec, Backward: 501.6136 sec
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1521.884003 
+  > GTEPS = 1.7424 (nodes=1379917, edges=1921660)
+Running: PathMerge_BC on roadNet-TX...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1379917
+  > [PathMerge] num_batches=21562
+  > [GPU Phase] BFS: 974.9525 sec, Backward: 497.3338 sec
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 1482.678304 
+  > GTEPS = 1.7885 (nodes=1379917, edges=1921660)
+Running: PathMerge_BC on roadNet-CA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1965206
+  > [PathMerge] num_batches=30707
+  > [GPU Phase] BFS: 2541.3198 sec, Backward: 957.4530 sec
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3519.456600 
+  > GTEPS = 1.5448 (nodes=1965206, edges=2766607)
+Running: PathMerge_BC on roadNet-CA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1965206
+  > [PathMerge] num_batches=30707
+  > [GPU Phase] BFS: 2487.0073 sec, Backward: 956.7106 sec
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3464.396358 
+  > GTEPS = 1.5694 (nodes=1965206, edges=2766607)
+Running: PathMerge_BC on roadNet-CA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=1965206
+  > [PathMerge] num_batches=30707
+  > [GPU Phase] BFS: 2522.7253 sec, Backward: 955.6193 sec
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 3499.029697 
+  > GTEPS = 1.5538 (nodes=1965206, edges=2766607)

@@ -1,0 +1,8 @@
+Running: GPU_Opt on chain_200...
+  > [BFS kernel] auto=block (avg_deg=1.99, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=0.02 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=0.0005 s (cum=0.0005 s), Backward wall=0.0001 s (cum=0.0001 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 99, Maximum Betweenness Centrality ==> 9900.00
+  > Elapse time [sec.] = 0.175693 
+  > GTEPS = 0.0002 (nodes=200, edges=199)

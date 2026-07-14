@@ -1,0 +1,380 @@
+=== gpu_opt_pure_chunked batch=512 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=44.7076 s (cum=85.4750 s), Backward wall=34.1172 s (cum=64.3255 s), SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.873676 
+  > GTEPS = 13.4454 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=512 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=44.7855 s (cum=85.4589 s), Backward wall=34.1417 s (cum=64.3581 s), SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.884006 
+  > GTEPS = 13.4436 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=512 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=44.6252 s (cum=85.4568 s), Backward wall=33.9112 s (cum=64.4644 s), SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 78.057491 
+  > GTEPS = 13.4137 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=512 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=44.4702 s (cum=85.4449 s), Backward wall=33.7819 s (cum=64.1816 s), SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.724864 
+  > GTEPS = 13.4711 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=512 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=44.7967 s (cum=85.5668 s), Backward wall=33.8751 s (cum=63.9970 s), SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.787930 
+  > GTEPS = 13.4602 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=1024 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=32.0419 s (cum=62.5559 s), Backward wall=30.5678 s (cum=60.1164 s), SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.083858 
+  > GTEPS = 15.6079 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=1024 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=32.0400 s (cum=62.6352 s), Backward wall=30.5765 s (cum=60.0775 s), SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.106789 
+  > GTEPS = 15.6026 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=1024 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.9844 s (cum=62.6241 s), Backward wall=30.6358 s (cum=60.1113 s), SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.089539 
+  > GTEPS = 15.6066 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=1024 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=32.0960 s (cum=62.7024 s), Backward wall=30.5209 s (cum=60.0176 s), SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.097819 
+  > GTEPS = 15.6047 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=1024 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.9505 s (cum=62.5304 s), Backward wall=30.6366 s (cum=60.1301 s), SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.075393 
+  > GTEPS = 15.6099 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=2048 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.3399 s (cum=48.4243 s), Backward wall=31.4230 s (cum=62.2273 s), SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.620908 
+  > GTEPS = 15.4840 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=2048 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.3640 s (cum=48.4015 s), Backward wall=31.3944 s (cum=62.2318 s), SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.610083 
+  > GTEPS = 15.4865 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=2048 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.3067 s (cum=48.3905 s), Backward wall=31.4249 s (cum=62.2141 s), SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.622075 
+  > GTEPS = 15.4837 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=2048 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.3567 s (cum=48.4460 s), Backward wall=31.4099 s (cum=62.2091 s), SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.630113 
+  > GTEPS = 15.4819 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=2048 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.3661 s (cum=48.4384 s), Backward wall=31.4166 s (cum=62.2201 s), SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.631898 
+  > GTEPS = 15.4815 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=4096 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=21.2507 s (cum=41.6881 s), Backward wall=32.2958 s (cum=63.1601 s), SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.299354 
+  > GTEPS = 15.3302 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=4096 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=21.2136 s (cum=41.6043 s), Backward wall=32.3416 s (cum=63.2574 s), SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.304139 
+  > GTEPS = 15.3291 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=4096 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=21.2057 s (cum=41.6373 s), Backward wall=32.2960 s (cum=63.2138 s), SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.291505 
+  > GTEPS = 15.3319 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=4096 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=21.2105 s (cum=41.6694 s), Backward wall=32.2733 s (cum=63.1737 s), SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.301362 
+  > GTEPS = 15.3297 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=4096 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=21.2045 s (cum=41.6354 s), Backward wall=32.2915 s (cum=63.2022 s), SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.302819 
+  > GTEPS = 15.3294 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=8192 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.2176 s (cum=62.2176 s), Backward wall=7.6328 s (cum=7.6328 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001223.28
+  > Elapse time [sec.] = 70.632748 
+  > GTEPS = 14.8237 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=8192 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.2683 s (cum=62.2683 s), Backward wall=7.6275 s (cum=7.6275 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001223.28
+  > Elapse time [sec.] = 70.702463 
+  > GTEPS = 14.8091 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=8192 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.2399 s (cum=62.2399 s), Backward wall=7.6315 s (cum=7.6315 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001223.28
+  > Elapse time [sec.] = 70.652637 
+  > GTEPS = 14.8196 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=8192 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.2251 s (cum=62.2251 s), Backward wall=7.6198 s (cum=7.6198 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001223.28
+  > Elapse time [sec.] = 70.623329 
+  > GTEPS = 14.8257 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=8192 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.2563 s (cum=62.2563 s), Backward wall=7.6396 s (cum=7.6396 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001223.28
+  > Elapse time [sec.] = 70.675384 
+  > GTEPS = 14.8148 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=10240 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=57.1956 s (cum=57.1956 s), Backward wall=11.2362 s (cum=11.2362 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.61
+  > Elapse time [sec.] = 69.135375 
+  > GTEPS = 15.1448 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=10240 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=57.1955 s (cum=57.1955 s), Backward wall=11.2252 s (cum=11.2252 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.61
+  > Elapse time [sec.] = 69.125001 
+  > GTEPS = 15.1471 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=10240 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=57.2047 s (cum=57.2047 s), Backward wall=11.2275 s (cum=11.2275 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.61
+  > Elapse time [sec.] = 69.126486 
+  > GTEPS = 15.1467 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=10240 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=57.2377 s (cum=57.2377 s), Backward wall=11.2211 s (cum=11.2211 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.61
+  > Elapse time [sec.] = 69.165982 
+  > GTEPS = 15.1381 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=10240 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=57.2364 s (cum=57.2364 s), Backward wall=11.2270 s (cum=11.2270 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.61
+  > Elapse time [sec.] = 69.180098 
+  > GTEPS = 15.1350 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=12288 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=52.7080 s (cum=52.7080 s), Backward wall=15.2020 s (cum=15.2020 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.552755 
+  > GTEPS = 15.2735 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=12288 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=52.7133 s (cum=52.7133 s), Backward wall=15.2004 s (cum=15.2004 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.553223 
+  > GTEPS = 15.2734 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=12288 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=52.7155 s (cum=52.7155 s), Backward wall=15.1953 s (cum=15.1953 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.553250 
+  > GTEPS = 15.2734 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=12288 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=52.7414 s (cum=52.7414 s), Backward wall=15.1927 s (cum=15.1927 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.594346 
+  > GTEPS = 15.2642 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=12288 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=52.7210 s (cum=52.7210 s), Backward wall=15.1957 s (cum=15.1957 s), SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.562413 
+  > GTEPS = 15.2714 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=16384 trial=1 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=16384, SUB_BATCH=6596, num_subs=3, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 3 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.3475 s (cum=62.3475 s), Backward wall=6.4036 s (cum=6.4036 s), SUB_BATCH=6596, num_subs=3
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 69.322278 
+  > GTEPS = 15.1040 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=16384 trial=2 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=16384, SUB_BATCH=6596, num_subs=3, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 3 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.3433 s (cum=62.3433 s), Backward wall=6.4165 s (cum=6.4165 s), SUB_BATCH=6596, num_subs=3
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 69.326938 
+  > GTEPS = 15.1029 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=16384 trial=3 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=16384, SUB_BATCH=6596, num_subs=3, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 3 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.3560 s (cum=62.3560 s), Backward wall=6.3976 s (cum=6.3976 s), SUB_BATCH=6596, num_subs=3
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 69.318197 
+  > GTEPS = 15.1048 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=16384 trial=4 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=16384, SUB_BATCH=6596, num_subs=3, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 3 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.3500 s (cum=62.3500 s), Backward wall=6.4014 s (cum=6.4014 s), SUB_BATCH=6596, num_subs=3
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 69.314921 
+  > GTEPS = 15.1056 (nodes=325557, edges=3216152)
+
+=== gpu_opt_pure_chunked batch=16384 trial=5 rc=0 ===
+Running: GPU_Opt_Pure_Chunked on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=68.72 GB, BATCH=16384, SUB_BATCH=6596, num_subs=3, NS_eff=1
+  > [Mode] Manual chunking: 6596 sources/launch (HBM3 budget=81.1 GB), 3 sub-launches per BATCH
+  > [GPU Phase] BFS wall=62.3752 s (cum=62.3752 s), Backward wall=6.4128 s (cum=6.4128 s), SUB_BATCH=6596, num_subs=3
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 69.351465 
+  > GTEPS = 15.0976 (nodes=325557, edges=3216152)
+

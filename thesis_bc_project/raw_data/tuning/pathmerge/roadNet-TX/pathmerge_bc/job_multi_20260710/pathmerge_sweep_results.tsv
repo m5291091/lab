@@ -1,0 +1,8 @@
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b32	roadNet-TX	1	1620.960440	1.6359
+PathMerge_b32	roadNet-TX	2	1615.624785	1.6413
+PathMerge_b32	roadNet-TX	3	1631.801685	1.6250
+PathMerge_b64	roadNet-TX	1	1493.690042	1.7753
+PathMerge_b64	roadNet-TX	2	1491.127569	1.7783
+PathMerge_b64	roadNet-TX	3	1466.158928	1.8086
+PathMerge_b128	roadNet-TX	1	1668.676282	1.5891

@@ -1,0 +1,9 @@
+# 実行時間 (秒)
+Method	roadNet-PA	roadNet-TX	roadNet-CA
+GPU_Opt_Pure	1062.539952	1636.107067	3495.066303
+PathMerge_BC	923.257200	1493.458937	3494.294218
+
+# GTEPS
+Method	roadNet-PA	roadNet-TX	roadNet-CA
+GPU_Opt_Pure	1.5790	1.6208	1.5556
+PathMerge_BC	1.8173	1.7759	1.5560

@@ -1,0 +1,48 @@
+# 再生成: nsys stats --force-export=true --report cuda_gpu_kern_sum --report cuda_gpu_mem_time_sum --report cuda_api_sum ablation_H1W1A0.nsys-rep
+# nsys 2025.5.1.121-255136380782v0 / checkpoint 88faffa / 元 .nsys-rep 不変
+
+Processing [ablation_H1W1A0.sqlite] with [/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/profilers/13.0/Nsight_Systems/host-linux-armv8/reports/cuda_gpu_kern_sum.py]... 
+
+ ** CUDA GPU Kernel Summary (cuda_gpu_kern_sum):
+
+ Time (%)  Total Time (ns)  Instances    Avg (ns)      Med (ns)    Min (ns)    Max (ns)   StdDev (ns)                                                  Name                                                
+ --------  ---------------  ---------  ------------  ------------  ---------  ----------  -----------  ----------------------------------------------------------------------------------------------------
+     63.9    3,364,359,738        222  15,154,773.6  13,247,584.0  8,624,095  22,887,168  2,834,677.0  void brandes_back_kernel_opt<(bool)1>(int *, int *, double *, int, int, int *, double *, double *, …
+     36.1    1,904,389,595        222   8,578,331.5   7,869,440.0  3,760,960  16,144,352  2,997,654.7  void brandes_bfs_kernel_opt<(bool)1>(int *, int *, int, int, int *, int *, double *, int *, int *, …
+
+Processing [ablation_H1W1A0.sqlite] with [/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/profilers/13.0/Nsight_Systems/host-linux-armv8/reports/cuda_gpu_mem_time_sum.py]... 
+
+ ** CUDA GPU MemOps Summary (by Time) (cuda_gpu_mem_time_sum):
+
+ Time (%)  Total Time (ns)  Count  Avg (ns)  Med (ns)  Min (ns)  Max (ns)  StdDev (ns)               Operation              
+ --------  ---------------  -----  --------  --------  --------  --------  -----------  ------------------------------------
+     99.7       38,330,112    666  57,552.7  59,792.0     6,656    82,848     19,437.7  [CUDA memset]                       
+      0.2           70,752     14   5,053.7   4,000.0     3,040    10,848      2,601.5  [CUDA memcpy Unified Host-to-Device]
+      0.1           41,948     18   2,330.4   2,303.0     1,824     2,688        233.4  [CUDA memcpy Unified Device-to-Host]
+
+Processing [ablation_H1W1A0.sqlite] with [/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/profilers/13.0/Nsight_Systems/host-linux-armv8/reports/cuda_api_sum.py]... 
+
+ ** CUDA API Summary (cuda_api_sum):
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)      Med (ns)    Min (ns)    Max (ns)   StdDev (ns)               Name             
+ --------  ---------------  ---------  ------------  ------------  ---------  ----------  -----------  ------------------------------
+     98.4    3,663,404,576        219  16,727,874.8  18,263,968.0  9,097,664  23,380,832  2,709,483.7  cudaEventSynchronize          
+      0.8       29,786,624          3   9,928,874.7  12,418,112.0      1,632  17,366,880  8,946,238.7  cudaStreamSynchronize         
+      0.4       15,450,592         32     482,831.0     616,688.0      5,920   1,235,904    453,034.7  cudaFree                      
+      0.2        7,678,272          2   3,839,136.0   3,839,136.0  2,960,544   4,717,728  1,242,516.7  cudaDeviceSynchronize         
+      0.0        1,808,896        666       2,716.1       2,432.0      1,888      30,944      1,419.9  cudaMemsetAsync               
+      0.0        1,169,024          3     389,674.7     295,360.0      7,104     866,560    437,421.5  cudaStreamCreate              
+      0.0        1,130,496        444       2,546.2       2,208.0      1,824      98,080      4,624.5  cudaLaunchKernel              
+      0.0        1,086,848         30      36,228.3       3,088.0      1,920     352,576     85,301.0  cudaMemPrefetchAsync_v12020   
+      0.0          776,992         32      24,281.0      10,416.0      2,464     339,520     58,741.6  cudaMallocManaged             
+      0.0          748,608        666       1,124.0       1,088.0        896       5,856        279.1  cudaEventRecord               
+      0.0           69,184          1      69,184.0      69,184.0     69,184      69,184          0.0  cuLibraryLoadData             
+      0.0           53,344          2      26,672.0      26,672.0     24,736      28,608      2,737.9  cudaMemGetInfo                
+      0.0           21,952        444          49.4          64.0         32         224         21.0  cuKernelGetName               
+      0.0           17,792          3       5,930.7       5,920.0      5,024       6,848        912.0  cudaStreamDestroy             
+      0.0            8,768          9         974.2         512.0        288       2,880        890.7  cudaEventCreate               
+      0.0            6,528          9         725.3         416.0        288       1,792        545.4  cudaEventDestroy              
+      0.0            3,168          2       1,584.0       1,584.0        416       2,752      1,651.8  cudaGetDeviceProperties_v12000
+      0.0              864          1         864.0         864.0        864         864          0.0  cuModuleGetLoadingMode        
+      0.0              864          2         432.0         432.0        224         640        294.2  cuLibraryGetKernel            
+

@@ -1,0 +1,4 @@
+Graph	Factor	AddOne	LeaveOneOut	MainEffect	InteractionRel
+email-EuAll	H	1.4317	1.4100	1.4286	0.0154
+email-EuAll	W	0.9837	0.9452	0.9695	0.0408
+email-EuAll	A	1.6960	1.7252	1.7199	0.0169

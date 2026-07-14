@@ -1,0 +1,77 @@
+checkpoint_sha=29d28c50dec5e70f8d3a9a2341904e1ee94c65f3
+pbs_job_id=2368398.opbs
+project_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project
+result_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_memory_correctness_20260712_211738_2368398.opbs
+runner=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark
+graph=data/325557_3216152
+graph_sha256=a095b2e7564e6c620bd0f5437917e0b28f4fecab289adf77633e850aa07da584
+n_nodes=325557
+n_edges=3216152
+runs_per_configuration=1
+warmup=none
+timing_usage=correctness_only_not_performance
+reference=pathmerge_b4096
+execution_order=pathmerge_b4096,gpu_opt_pure_b1024,gpu_opt_pure_chunked_b16384,gpu_opt_b9792
+miyabi_host_mem_gib=100
+miyabi_host_mem_gb=107.374
+um_ns_constant=2
+um_mem_model=managed_alloc_estimate_gb = displayed_dynamic_um_gb * NS_eff / NS
+um_estimate_note=managed allocation estimate is derived from dynamic(UM)/NS/NS_eff logs; it is NOT measured RSS or CPU residency
+um_route_evidence=oversubscription_route_evidence combines (managed_alloc_estimate_gb>free_before_gb, HBM3 streaming, NS_eff=1, num_subs=2, SUB_BATCH<batch, Prefetch cum>0); it is NOT a direct migration-byte measurement
+abs_tol=1e-3
+rel_tol=1e-6
+criterion=abs_diff <= abs_tol + rel_tol * max(abs(reference),abs(candidate))
+
+[config pathmerge_b4096 | role=reference | path=pathmerge]
+impl=pathmerge_bc
+requested_batch=4096
+effective_batch=4096
+SUB_BATCH=not_applicable
+num_subs=80
+NS_eff=not_applicable
+oversubscribed=not_applicable
+uses_um=managed_csr
+runner_exit=0
+vector_sha256=c895c6121671af6605d834e68bc1443b84624ca595506267901c3a59a643e454
+comparison_exit=not_applicable
+reference_vector_length=325557
+candidate_vector_length=not_applicable
+missing_reference_only=not_applicable
+missing_candidate_only=not_applicable
+mismatched_elements=not_applicable
+max_abs_error=not_applicable (index not_applicable; ref=not_applicable cand=not_applicable)
+max_rel_error=not_applicable (index not_applicable; ref=not_applicable cand=not_applicable)
+max_bc_reference=index not_applicable value not_applicable
+max_bc_candidate=index not_applicable value not_applicable
+um_mem_model: NS=not_applicable NS_eff=not_applicable dynamic_um_displayed_gb=not_applicable managed_alloc_estimate_gb=not_applicable (=displayed*NS_eff/NS; log-derived estimate, NOT measured RSS/CPU residency)
+um_mem: free_before_gb=not_applicable managed_alloc_minus_free_before_estimate_gb=not_applicable managed_alloc_headroom_estimate_gb=not_applicable prefetch_cum_s=not_applicable
+oversubscription_route_evidence=not_applicable (combined route evidence: est>free_before + HBM3 streaming + NS_eff=1 + num_subs=2 + SUB_BATCH<batch + Prefetch cum>0; NOT a migration-byte measurement)
+status=PASS
+reason=reference_valid_path_evidence_ok
+
+[config gpu_opt_pure_b1024 | role=candidate | path=pure]
+impl=gpu_opt_pure
+requested_batch=1024
+effective_batch=1024
+SUB_BATCH=not_applicable
+num_subs=not_applicable
+NS_eff=not_applicable
+oversubscribed=not_applicable
+uses_um=false
+runner_exit=0
+vector_sha256=b4f0674431bc4c918b7b5a597ca98be6132c6f9ad06b2f31b300ff31f6b23e95
+comparison_exit=3
+reference_vector_length=325557
+candidate_vector_length=325557
+missing_reference_only=0
+missing_candidate_only=0
+mismatched_elements=11027
+max_abs_error=6.638161e+03 (index 289444; ref=8903157.975814402 cand=8909796.137074383)
+max_rel_error=2.000197e-03 (index 325556; ref=892937.5267641286 cand=894727.1570761405)
+max_bc_reference=index 272817 value 39343001000.107368
+max_bc_candidate=index 272817 value 39343001000.108551
+um_mem_model: NS=not_applicable NS_eff=not_applicable dynamic_um_displayed_gb=not_applicable managed_alloc_estimate_gb=not_applicable (=displayed*NS_eff/NS; log-derived estimate, NOT measured RSS/CPU residency)
+um_mem: free_before_gb=not_applicable managed_alloc_minus_free_before_estimate_gb=not_applicable managed_alloc_headroom_estimate_gb=not_applicable prefetch_cum_s=not_applicable
+oversubscription_route_evidence=not_applicable (combined route evidence: est>free_before + HBM3 streaming + NS_eff=1 + num_subs=2 + SUB_BATCH<batch + Prefetch cum>0; NOT a migration-byte measurement)
+status=FAIL
+reason=full_vector_comparison_failed

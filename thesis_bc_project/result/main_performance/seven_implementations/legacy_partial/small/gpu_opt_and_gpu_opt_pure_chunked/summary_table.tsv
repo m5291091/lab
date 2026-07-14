@@ -1,0 +1,9 @@
+# 実行時間 (秒)
+Method	bench_7K	bench_11K	random_32K	synth_56K
+GPU_Opt	0.229657	0.259485	0.910074	2.012660
+GPU_Opt_Pure_Chunked	0.222345	0.260944	0.898797	2.034345
+
+# GTEPS
+Method	bench_7K	bench_11K	random_32K	synth_56K
+GPU_Opt	1.2801	2.6425	3.6035	8.4352
+GPU_Opt_Pure_Chunked	1.3066	2.6324	3.6487	8.3454

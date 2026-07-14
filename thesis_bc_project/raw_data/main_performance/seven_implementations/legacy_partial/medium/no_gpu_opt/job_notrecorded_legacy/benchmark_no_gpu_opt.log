@@ -1,0 +1,807 @@
+╔══════════════════════════════════════════════════════════════╗
+║  Miyabi-G 全手法ベンチマーク                                ║
+╠══════════════════════════════════════════════════════════════╣
+║  開始時刻 : 2026-05-10 16:11:55
+║  Runner   : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/brandes_runner
+║  Data     : /work/gj17/j17000/m5291091/lab/data
+║  結果     : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155
+║  DryRun   : 0
+║  Trials   : (Dynamic per graph/method)
+║  Timeout  : 18000s
+╚══════════════════════════════════════════════════════════════╝
+
+=== [Step 0] ビルド ===
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  LAB    : /work/gj17/j17000/m5291091/lab
+║  BUILD  : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building brandes_runner...
+-- Using cugraph_bc_mini from: /work/gj17/j17000/m5291091/lab/mylab/research/cugraph_bc_mini/build
+-- NVTX3 found: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include
+-- Configuring done (0.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi
+[ 14%] Built target bandwidth_benchmark
+[100%] Built target brandes_runner
+[Stage 2] brandes_runner: DONE (/work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/brandes_runner)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runner : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/brandes_runner
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_full.sh  (PBS) または bash で実行
+╚══════════════════════════════════════════╝
+
+
+==========================================
+  手法: gpu_opt_pure
+==========================================
+  手法: gpu_opt_pure
+==========================================
+  [RUN] gpu_opt_pure × 325557_3216152 [trial 1/5]  (経過: 2h10m)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.6141 s (cum=85.3586 s), Backward wall=33.9060 s (cum=64.3303 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.941516 
+  > GTEPS = 13.4337 (nodes=325557, edges=3216152)
+    → 77.941516 sec (GTEPS=13.4337)
+  [RUN] gpu_opt_pure × 325557_3216152 [trial 2/5]  (経過: 2h10m)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.6593 s (cum=85.4842 s), Backward wall=34.0542 s (cum=64.4804 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.964795 
+  > GTEPS = 13.4297 (nodes=325557, edges=3216152)
+    → 77.964795 sec (GTEPS=13.4297)
+  [RUN] gpu_opt_pure × 325557_3216152 [trial 3/5]  (経過: 2h10m)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.6097 s (cum=85.2970 s), Backward wall=34.0842 s (cum=64.3381 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.718593 
+  > GTEPS = 13.4722 (nodes=325557, edges=3216152)
+    → 77.718593 sec (GTEPS=13.4722)
+  [RUN] gpu_opt_pure × 325557_3216152 [trial 4/5]  (経過: 2h10m)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.5593 s (cum=85.2859 s), Backward wall=33.8341 s (cum=64.2870 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.890294 
+  > GTEPS = 13.4425 (nodes=325557, edges=3216152)
+    → 77.890294 sec (GTEPS=13.4425)
+  [RUN] gpu_opt_pure × 325557_3216152 [trial 5/5]  (経過: 2h10m)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=42.9324 s (cum=85.2839 s), Backward wall=32.3812 s (cum=64.3303 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.877214 
+  > GTEPS = 13.4448 (nodes=325557, edges=3216152)
+    → 77.877214 sec (GTEPS=13.4448)
+  [RUN] gpu_opt_pure × amazon0302 [trial 1/5]  (経過: 2h17m)
+Running: GPU_Opt_Pure on amazon0302...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=8.59 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=34.0371 s (cum=51.6052 s), Backward wall=31.2722 s (cum=45.8717 s)
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 52.204417 
+  > GTEPS = 4.5177 (nodes=262111, edges=899792)
+    → 52.204417 sec (GTEPS=4.5177)
+  [RUN] gpu_opt_pure × amazon0302 [trial 2/5]  (経過: 2h17m)
+Running: GPU_Opt_Pure on amazon0302...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=8.59 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=34.0064 s (cum=51.6015 s), Backward wall=31.2401 s (cum=45.8776 s)
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 52.281283 
+  > GTEPS = 4.5111 (nodes=262111, edges=899792)
+    → 52.281283 sec (GTEPS=4.5111)
+  [RUN] gpu_opt_pure × amazon0302 [trial 3/5]  (経過: 2h17m)
+Running: GPU_Opt_Pure on amazon0302...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=8.59 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=34.0416 s (cum=51.6116 s), Backward wall=31.2815 s (cum=45.8764 s)
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 52.212869 
+  > GTEPS = 4.5170 (nodes=262111, edges=899792)
+    → 52.212869 sec (GTEPS=4.5170)
+  [RUN] gpu_opt_pure × amazon0302 [trial 4/5]  (経過: 2h17m)
+Running: GPU_Opt_Pure on amazon0302...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=8.59 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=33.9964 s (cum=51.5850 s), Backward wall=31.2390 s (cum=45.8630 s)
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 52.200102 
+  > GTEPS = 4.5181 (nodes=262111, edges=899792)
+    → 52.200102 sec (GTEPS=4.5181)
+  [RUN] gpu_opt_pure × amazon0302 [trial 5/5]  (経過: 2h17m)
+Running: GPU_Opt_Pure on amazon0302...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=8.59 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=34.0738 s (cum=51.6142 s), Backward wall=31.3394 s (cum=45.9263 s)
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 52.230648 
+  > GTEPS = 4.5155 (nodes=262111, edges=899792)
+    → 52.230648 sec (GTEPS=4.5155)
+  [RUN] gpu_opt_pure × email-EuAll [trial 1/5]  (経過: 2h21m)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=163.7537 s (cum=327.1391 s), Backward wall=20.0756 s (cum=39.9905 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 191.043969 
+  > GTEPS = 0.5056 (nodes=265009, edges=364481)
+    → 191.043969 sec (GTEPS=0.5056)
+  [RUN] gpu_opt_pure × email-EuAll [trial 2/5]  (経過: 2h21m)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=164.1095 s (cum=327.5197 s), Backward wall=19.9910 s (cum=39.9185 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 190.952336 
+  > GTEPS = 0.5058 (nodes=265009, edges=364481)
+    → 190.952336 sec (GTEPS=0.5058)
+  [RUN] gpu_opt_pure × email-EuAll [trial 3/5]  (経過: 2h21m)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=164.0462 s (cum=327.5974 s), Backward wall=20.0039 s (cum=39.8388 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 190.962350 
+  > GTEPS = 0.5058 (nodes=265009, edges=364481)
+    → 190.962350 sec (GTEPS=0.5058)
+  [RUN] gpu_opt_pure × email-EuAll [trial 4/5]  (経過: 2h21m)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=163.8178 s (cum=327.0512 s), Backward wall=20.0803 s (cum=39.9780 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 190.849943 
+  > GTEPS = 0.5061 (nodes=265009, edges=364481)
+    → 190.849943 sec (GTEPS=0.5061)
+  [RUN] gpu_opt_pure × email-EuAll [trial 5/5]  (経過: 2h21m)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=163.8979 s (cum=327.2827 s), Backward wall=19.9902 s (cum=39.8266 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 190.867600 
+  > GTEPS = 0.5061 (nodes=265009, edges=364481)
+    → 190.867600 sec (GTEPS=0.5061)
+  [RUN] gpu_opt_pure × web-NotreDame [trial 1/5]  (経過: 2h37m)
+Running: GPU_Opt_Pure on web-NotreDame...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=15.2821 s (cum=30.3838 s), Backward wall=23.8466 s (cum=47.5309 s)
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 41.267563 
+  > GTEPS = 8.6043 (nodes=325729, edges=1090108)
+    → 41.267563 sec (GTEPS=8.6043)
+  [RUN] gpu_opt_pure × web-NotreDame [trial 2/5]  (経過: 2h37m)
+Running: GPU_Opt_Pure on web-NotreDame...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=15.0843 s (cum=29.9378 s), Backward wall=24.1531 s (cum=48.0601 s)
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 41.292494 
+  > GTEPS = 8.5991 (nodes=325729, edges=1090108)
+    → 41.292494 sec (GTEPS=8.5991)
+  [RUN] gpu_opt_pure × web-NotreDame [trial 3/5]  (経過: 2h37m)
+Running: GPU_Opt_Pure on web-NotreDame...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=15.2388 s (cum=29.9392 s), Backward wall=24.3182 s (cum=48.0891 s)
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 41.374251 
+  > GTEPS = 8.5821 (nodes=325729, edges=1090108)
+    → 41.374251 sec (GTEPS=8.5821)
+  [RUN] gpu_opt_pure × web-NotreDame [trial 4/5]  (経過: 2h37m)
+Running: GPU_Opt_Pure on web-NotreDame...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=15.1199 s (cum=29.9519 s), Backward wall=24.1948 s (cum=48.0849 s)
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 41.320307 
+  > GTEPS = 8.5933 (nodes=325729, edges=1090108)
+    → 41.320307 sec (GTEPS=8.5933)
+  [RUN] gpu_opt_pure × web-NotreDame [trial 5/5]  (経過: 2h37m)
+Running: GPU_Opt_Pure on web-NotreDame...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.01 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=15.4479 s (cum=29.8552 s), Backward wall=24.6263 s (cum=48.2038 s)
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 41.315572 
+  > GTEPS = 8.5943 (nodes=325729, edges=1090108)
+    → 41.315572 sec (GTEPS=8.5943)
+  [RUN] gpu_opt_pure × amazon0505 [trial 1/5]  (経過: 2h52m)
+Running: GPU_Opt_Pure on amazon0505...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=13.44 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=60.4651 s (cum=117.9036 s), Backward wall=106.0224 s (cum=208.7489 s)
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 170.050383 
+  > GTEPS = 5.8850 (nodes=410236, edges=2439437)
+    → 170.050383 sec (GTEPS=5.8850)
+  [RUN] gpu_opt_pure × amazon0505 [trial 2/5]  (経過: 2h52m)
+Running: GPU_Opt_Pure on amazon0505...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=13.44 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=59.3094 s (cum=117.1901 s), Backward wall=105.3709 s (cum=209.4159 s)
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 170.015544 
+  > GTEPS = 5.8862 (nodes=410236, edges=2439437)
+    → 170.015544 sec (GTEPS=5.8862)
+  [RUN] gpu_opt_pure × amazon0505 [trial 3/5]  (経過: 2h52m)
+Running: GPU_Opt_Pure on amazon0505...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=13.44 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=59.6331 s (cum=117.5625 s), Backward wall=105.3431 s (cum=209.0881 s)
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 170.037472 
+  > GTEPS = 5.8854 (nodes=410236, edges=2439437)
+    → 170.037472 sec (GTEPS=5.8854)
+  [RUN] gpu_opt_pure × amazon0505 [trial 4/5]  (経過: 2h52m)
+Running: GPU_Opt_Pure on amazon0505...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=13.44 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=59.9044 s (cum=117.5315 s), Backward wall=105.6601 s (cum=209.0719 s)
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 169.996780 
+  > GTEPS = 5.8868 (nodes=410236, edges=2439437)
+    → 169.996780 sec (GTEPS=5.8868)
+  [RUN] gpu_opt_pure × amazon0505 [trial 5/5]  (経過: 2h52m)
+Running: GPU_Opt_Pure on amazon0505...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=13.44 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=59.4338 s (cum=117.3327 s), Backward wall=105.4644 s (cum=209.2185 s)
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 169.969115 
+  > GTEPS = 5.8878 (nodes=410236, edges=2439437)
+    → 169.969115 sec (GTEPS=5.8878)
+  [RUN] gpu_opt_pure × web-Google [trial 1/5]  (経過: 3h6m)
+Running: GPU_Opt_Pure on web-Google...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.04 GB, dynamic(GPU)=28.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=464.1557 s (cum=787.5762 s), Backward wall=532.8156 s (cum=924.0923 s)
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 897.921908 
+  > GTEPS = 4.2152 (nodes=875713, edges=4322051)
+    → 897.921908 sec (GTEPS=4.2152)
+  [RUN] gpu_opt_pure × web-Google [trial 2/5]  (経過: 3h6m)
+Running: GPU_Opt_Pure on web-Google...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.04 GB, dynamic(GPU)=28.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=464.5992 s (cum=787.9371 s), Backward wall=532.9122 s (cum=923.8373 s)
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 897.942924 
+  > GTEPS = 4.2151 (nodes=875713, edges=4322051)
+    → 897.942924 sec (GTEPS=4.2151)
+  [RUN] gpu_opt_pure × web-Google [trial 3/5]  (経過: 3h6m)
+Running: GPU_Opt_Pure on web-Google...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.04 GB, dynamic(GPU)=28.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=464.4137 s (cum=787.5936 s), Backward wall=533.3422 s (cum=924.2343 s)
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 897.659661 
+  > GTEPS = 4.2164 (nodes=875713, edges=4322051)
+    → 897.659661 sec (GTEPS=4.2164)
+  [RUN] gpu_opt_pure × web-Google [trial 4/5]  (経過: 3h6m)
+Running: GPU_Opt_Pure on web-Google...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.04 GB, dynamic(GPU)=28.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=465.9549 s (cum=788.1577 s), Backward wall=533.7605 s (cum=923.0550 s)
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 897.664461 
+  > GTEPS = 4.2164 (nodes=875713, edges=4322051)
+    → 897.664461 sec (GTEPS=4.2164)
+  [RUN] gpu_opt_pure × web-Google [trial 5/5]  (経過: 3h6m)
+Running: GPU_Opt_Pure on web-Google...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.04 GB, dynamic(GPU)=28.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=465.8263 s (cum=788.2507 s), Backward wall=534.0731 s (cum=923.4750 s)
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 897.577446 
+  > GTEPS = 4.2168 (nodes=875713, edges=4322051)
+    → 897.577446 sec (GTEPS=4.2168)
+
+==========================================
+  手法: pathmerge_bc
+==========================================
+  手法: pathmerge_bc
+==========================================
+  [RUN] pathmerge_bc × 325557_3216152 [trial 1/5]  (経過: 4h21m)
+Running: PathMerge_BC on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325557
+  > [PathMerge] num_batches=5087
+  > [GPU Phase] BFS: 545.7094 sec, Backward: 225.8823 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 772.472236 
+  > GTEPS = 1.3554 (nodes=325557, edges=3216152)
+    → 772.472236 sec (GTEPS=1.3554)
+  [RUN] pathmerge_bc × 325557_3216152 [trial 2/5]  (経過: 4h21m)
+Running: PathMerge_BC on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325557
+  > [PathMerge] num_batches=5087
+  > [GPU Phase] BFS: 545.2512 sec, Backward: 225.7642 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 771.898346 
+  > GTEPS = 1.3564 (nodes=325557, edges=3216152)
+    → 771.898346 sec (GTEPS=1.3564)
+  [RUN] pathmerge_bc × 325557_3216152 [trial 3/5]  (経過: 4h21m)
+Running: PathMerge_BC on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325557
+  > [PathMerge] num_batches=5087
+  > [GPU Phase] BFS: 545.6337 sec, Backward: 226.0522 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 772.567517 
+  > GTEPS = 1.3553 (nodes=325557, edges=3216152)
+    → 772.567517 sec (GTEPS=1.3553)
+  [RUN] pathmerge_bc × 325557_3216152 [trial 4/5]  (経過: 4h21m)
+Running: PathMerge_BC on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325557
+  > [PathMerge] num_batches=5087
+  > [GPU Phase] BFS: 545.4258 sec, Backward: 225.8780 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 772.177331 
+  > GTEPS = 1.3560 (nodes=325557, edges=3216152)
+    → 772.177331 sec (GTEPS=1.3560)
+  [RUN] pathmerge_bc × 325557_3216152 [trial 5/5]  (経過: 4h21m)
+Running: PathMerge_BC on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325557
+  > [PathMerge] num_batches=5087
+  > [GPU Phase] BFS: 544.9261 sec, Backward: 226.0855 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 771.889621 
+  > GTEPS = 1.3565 (nodes=325557, edges=3216152)
+    → 771.889621 sec (GTEPS=1.3565)
+  [RUN] pathmerge_bc × amazon0302 [trial 1/5]  (経過: 5h25m)
+Running: PathMerge_BC on amazon0302...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=262111
+  > [PathMerge] num_batches=4096
+  > [GPU Phase] BFS: 127.6470 sec, Backward: 24.8189 sec
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 153.076896 
+  > GTEPS = 1.5407 (nodes=262111, edges=899792)
+    → 153.076896 sec (GTEPS=1.5407)
+  [RUN] pathmerge_bc × amazon0302 [trial 2/5]  (経過: 5h25m)
+Running: PathMerge_BC on amazon0302...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=262111
+  > [PathMerge] num_batches=4096
+  > [GPU Phase] BFS: 127.6339 sec, Backward: 24.8517 sec
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 153.094177 
+  > GTEPS = 1.5405 (nodes=262111, edges=899792)
+    → 153.094177 sec (GTEPS=1.5405)
+  [RUN] pathmerge_bc × amazon0302 [trial 3/5]  (経過: 5h25m)
+Running: PathMerge_BC on amazon0302...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=262111
+  > [PathMerge] num_batches=4096
+  > [GPU Phase] BFS: 127.6581 sec, Backward: 24.8330 sec
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 153.102976 
+  > GTEPS = 1.5404 (nodes=262111, edges=899792)
+    → 153.102976 sec (GTEPS=1.5404)
+  [RUN] pathmerge_bc × amazon0302 [trial 4/5]  (経過: 5h25m)
+Running: PathMerge_BC on amazon0302...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=262111
+  > [PathMerge] num_batches=4096
+  > [GPU Phase] BFS: 127.5882 sec, Backward: 24.8201 sec
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 153.021806 
+  > GTEPS = 1.5413 (nodes=262111, edges=899792)
+    → 153.021806 sec (GTEPS=1.5413)
+  [RUN] pathmerge_bc × amazon0302 [trial 5/5]  (経過: 5h25m)
+Running: PathMerge_BC on amazon0302...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=262111
+  > [PathMerge] num_batches=4096
+  > [GPU Phase] BFS: 127.5774 sec, Backward: 24.8211 sec
+  > index : 33, Maximum Betweenness Centrality ==> 2980418526.54
+  > Elapse time [sec.] = 153.003122 
+  > GTEPS = 1.5414 (nodes=262111, edges=899792)
+    → 153.003122 sec (GTEPS=1.5414)
+  [RUN] pathmerge_bc × email-EuAll [trial 1/5]  (経過: 5h38m)
+Running: PathMerge_BC on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=265009
+  > [PathMerge] num_batches=4141
+  > [GPU Phase] BFS: 171.4917 sec, Backward: 48.2714 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 220.386278 
+  > GTEPS = 0.4383 (nodes=265009, edges=364481)
+    → 220.386278 sec (GTEPS=0.4383)
+  [RUN] pathmerge_bc × email-EuAll [trial 2/5]  (経過: 5h38m)
+Running: PathMerge_BC on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=265009
+  > [PathMerge] num_batches=4141
+  > [GPU Phase] BFS: 171.4947 sec, Backward: 48.2416 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 220.360970 
+  > GTEPS = 0.4383 (nodes=265009, edges=364481)
+    → 220.360970 sec (GTEPS=0.4383)
+  [RUN] pathmerge_bc × email-EuAll [trial 3/5]  (経過: 5h38m)
+Running: PathMerge_BC on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=265009
+  > [PathMerge] num_batches=4141
+  > [GPU Phase] BFS: 171.5253 sec, Backward: 48.2389 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 220.385363 
+  > GTEPS = 0.4383 (nodes=265009, edges=364481)
+    → 220.385363 sec (GTEPS=0.4383)
+  [RUN] pathmerge_bc × email-EuAll [trial 4/5]  (経過: 5h38m)
+Running: PathMerge_BC on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=265009
+  > [PathMerge] num_batches=4141
+  > [GPU Phase] BFS: 171.5185 sec, Backward: 48.2706 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 220.411206 
+  > GTEPS = 0.4382 (nodes=265009, edges=364481)
+    → 220.411206 sec (GTEPS=0.4382)
+  [RUN] pathmerge_bc × email-EuAll [trial 5/5]  (経過: 5h38m)
+Running: PathMerge_BC on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=265009
+  > [PathMerge] num_batches=4141
+  > [GPU Phase] BFS: 171.4004 sec, Backward: 48.3179 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 220.338974 
+  > GTEPS = 0.4384 (nodes=265009, edges=364481)
+    → 220.338974 sec (GTEPS=0.4384)
+  [RUN] pathmerge_bc × web-NotreDame [trial 1/5]  (経過: 5h56m)
+Running: PathMerge_BC on web-NotreDame...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325729
+  > [PathMerge] num_batches=5090
+  > [GPU Phase] BFS: 271.4291 sec, Backward: 77.4624 sec
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 349.725688 
+  > GTEPS = 1.0153 (nodes=325729, edges=1090108)
+    → 349.725688 sec (GTEPS=1.0153)
+  [RUN] pathmerge_bc × web-NotreDame [trial 2/5]  (経過: 5h56m)
+Running: PathMerge_BC on web-NotreDame...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325729
+  > [PathMerge] num_batches=5090
+  > [GPU Phase] BFS: 271.3133 sec, Backward: 77.3494 sec
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 349.495852 
+  > GTEPS = 1.0160 (nodes=325729, edges=1090108)
+    → 349.495852 sec (GTEPS=1.0160)
+  [RUN] pathmerge_bc × web-NotreDame [trial 3/5]  (経過: 5h56m)
+Running: PathMerge_BC on web-NotreDame...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325729
+  > [PathMerge] num_batches=5090
+  > [GPU Phase] BFS: 271.1820 sec, Backward: 77.3199 sec
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 349.335086 
+  > GTEPS = 1.0164 (nodes=325729, edges=1090108)
+    → 349.335086 sec (GTEPS=1.0164)
+  [RUN] pathmerge_bc × web-NotreDame [trial 4/5]  (経過: 5h56m)
+Running: PathMerge_BC on web-NotreDame...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325729
+  > [PathMerge] num_batches=5090
+  > [GPU Phase] BFS: 271.4606 sec, Backward: 77.2484 sec
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 349.543388 
+  > GTEPS = 1.0158 (nodes=325729, edges=1090108)
+    → 349.543388 sec (GTEPS=1.0158)
+  [RUN] pathmerge_bc × web-NotreDame [trial 5/5]  (経過: 5h56m)
+Running: PathMerge_BC on web-NotreDame...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=325729
+  > [PathMerge] num_batches=5090
+  > [GPU Phase] BFS: 271.1602 sec, Backward: 77.3901 sec
+  > index : 0, Maximum Betweenness Centrality ==> 24747250456.69
+  > Elapse time [sec.] = 349.382452 
+  > GTEPS = 1.0163 (nodes=325729, edges=1090108)
+    → 349.382452 sec (GTEPS=1.0163)
+  [RUN] pathmerge_bc × amazon0505 [trial 1/5]  (経過: 9h12m)
+Running: PathMerge_BC on amazon0505...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=410236
+  > [PathMerge] num_batches=6410
+  > [GPU Phase] BFS: 456.3212 sec, Backward: 103.5016 sec
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 560.985980 
+  > GTEPS = 1.7839 (nodes=410236, edges=2439437)
+    → 560.985980 sec (GTEPS=1.7839)
+  [RUN] pathmerge_bc × amazon0505 [trial 2/5]  (経過: 9h12m)
+Running: PathMerge_BC on amazon0505...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=410236
+  > [PathMerge] num_batches=6410
+  > [GPU Phase] BFS: 455.9240 sec, Backward: 103.4740 sec
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 560.569445 
+  > GTEPS = 1.7852 (nodes=410236, edges=2439437)
+    → 560.569445 sec (GTEPS=1.7852)
+  [RUN] pathmerge_bc × amazon0505 [trial 3/5]  (経過: 9h12m)
+Running: PathMerge_BC on amazon0505...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=410236
+  > [PathMerge] num_batches=6410
+  > [GPU Phase] BFS: 456.1562 sec, Backward: 103.4350 sec
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 560.747144 
+  > GTEPS = 1.7847 (nodes=410236, edges=2439437)
+    → 560.747144 sec (GTEPS=1.7847)
+  [RUN] pathmerge_bc × amazon0505 [trial 4/5]  (経過: 9h12m)
+Running: PathMerge_BC on amazon0505...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=410236
+  > [PathMerge] num_batches=6410
+  > [GPU Phase] BFS: 456.3810 sec, Backward: 103.4724 sec
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 561.012430 
+  > GTEPS = 1.7838 (nodes=410236, edges=2439437)
+    → 561.012430 sec (GTEPS=1.7838)
+  [RUN] pathmerge_bc × amazon0505 [trial 5/5]  (経過: 9h12m)
+Running: PathMerge_BC on amazon0505...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=410236
+  > [PathMerge] num_batches=6410
+  > [GPU Phase] BFS: 456.1761 sec, Backward: 103.4408 sec
+  > index : 593, Maximum Betweenness Centrality ==> 16615753058.97
+  > Elapse time [sec.] = 560.774805 
+  > GTEPS = 1.7846 (nodes=410236, edges=2439437)
+    → 560.774805 sec (GTEPS=1.7846)
+  [RUN] pathmerge_bc × web-Google [trial 1/5]  (経過: 9h59m)
+Running: PathMerge_BC on web-Google...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=875713
+  > [PathMerge] num_batches=13684
+  > [GPU Phase] BFS: 2638.2556 sec, Backward: 511.5601 sec
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 3154.176610 
+  > GTEPS = 1.2000 (nodes=875713, edges=4322051)
+    → 3154.176610 sec (GTEPS=1.2000)
+  [RUN] pathmerge_bc × web-Google [trial 2/5]  (経過: 9h59m)
+Running: PathMerge_BC on web-Google...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=875713
+  > [PathMerge] num_batches=13684
+  > [GPU Phase] BFS: 2616.3389 sec, Backward: 511.0751 sec
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 3131.829794 
+  > GTEPS = 1.2085 (nodes=875713, edges=4322051)
+    → 3131.829794 sec (GTEPS=1.2085)
+  [RUN] pathmerge_bc × web-Google [trial 3/5]  (経過: 9h59m)
+Running: PathMerge_BC on web-Google...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=875713
+  > [PathMerge] num_batches=13684
+  > [GPU Phase] BFS: 2587.8918 sec, Backward: 512.0359 sec
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 3104.279116 
+  > GTEPS = 1.2192 (nodes=875713, edges=4322051)
+    → 3104.279116 sec (GTEPS=1.2192)
+  [RUN] pathmerge_bc × web-Google [trial 4/5]  (経過: 9h59m)
+Running: PathMerge_BC on web-Google...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=875713
+  > [PathMerge] num_batches=13684
+  > [GPU Phase] BFS: 2640.2556 sec, Backward: 511.6225 sec
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 3156.247573 
+  > GTEPS = 1.1992 (nodes=875713, edges=4322051)
+    → 3156.247573 sec (GTEPS=1.1992)
+  [RUN] pathmerge_bc × web-Google [trial 5/5]  (経過: 9h59m)
+Running: PathMerge_BC on web-Google...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=875713
+  > [PathMerge] num_batches=13684
+  > [GPU Phase] BFS: 2615.8901 sec, Backward: 510.8639 sec
+  > index : 568909, Maximum Betweenness Centrality ==> 23206521340.60
+  > Elapse time [sec.] = 3131.121056 
+  > GTEPS = 1.2088 (nodes=875713, edges=4322051)
+    → 3131.121056 sec (GTEPS=1.2088)
+
+╔══════════════════════════════════════════════════════════════╗
+║  ベンチマーク完了                                           ║
+╠══════════════════════════════════════════════════════════════╣
+║  終了時刻  : 2026-05-11 06:33:04
+║  総実行時間: 14h 21m 9s
+║  実行数    : 14 (成功=65, 失敗=5, スキップ=0)
+║  結果 TSV  : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/results_no_gpu_opt.tsv
+║  正確性    : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/max_bc_no_gpu_opt.tsv
+║  ログ      : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/benchmark_no_gpu_opt.log
+║  フェーズ  : /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/phase_timing_no_gpu_opt.log
+╚══════════════════════════════════════════════════════════════╝
+
+=== 正確性検証 (max BC 値の一致) ===
+  325557_3216152: GPU_Opt_Pure=39343001000.11  GPU_Opt_Pure=39343001000.11  GPU_Opt_Pure=39343001000.11  GPU_Opt_Pure=39343001000.11  GPU_Opt_Pure=39343001000.11  PathMerge_BC=39343001000.11  PathMerge_BC=39343001000.11  PathMerge_BC=39343001000.11  PathMerge_BC=39343001000.11  PathMerge_BC=39343001000.11  
+  amazon0302: GPU_Opt_Pure=2980418526.54  GPU_Opt_Pure=2980418526.54  GPU_Opt_Pure=2980418526.54  GPU_Opt_Pure=2980418526.54  GPU_Opt_Pure=2980418526.54  PathMerge_BC=2980418526.54  PathMerge_BC=2980418526.54  PathMerge_BC=2980418526.54  PathMerge_BC=2980418526.54  PathMerge_BC=2980418526.54  
+  email-EuAll: GPU_Opt_Pure=2384894520.80  GPU_Opt_Pure=2384894520.80  GPU_Opt_Pure=2384894520.80  GPU_Opt_Pure=2384894520.80  GPU_Opt_Pure=2384894520.80  PathMerge_BC=2384894520.80  PathMerge_BC=2384894520.80  PathMerge_BC=2384894520.80  PathMerge_BC=2384894520.80  PathMerge_BC=2384894520.80  
+  web-NotreDame: GPU_Opt_Pure=24747250456.69  GPU_Opt_Pure=24747250456.69  GPU_Opt_Pure=24747250456.69  GPU_Opt_Pure=24747250456.69  GPU_Opt_Pure=24747250456.69  PathMerge_BC=24747250456.69  PathMerge_BC=24747250456.69  PathMerge_BC=24747250456.69  PathMerge_BC=24747250456.69  PathMerge_BC=24747250456.69  
+  amazon0505: GPU_Opt_Pure=16615753058.97  GPU_Opt_Pure=16615753058.97  GPU_Opt_Pure=16615753058.97  GPU_Opt_Pure=16615753058.97  GPU_Opt_Pure=16615753058.97  PathMerge_BC=16615753058.97  PathMerge_BC=16615753058.97  PathMerge_BC=16615753058.97  PathMerge_BC=16615753058.97  PathMerge_BC=16615753058.97  
+  web-Google: GPU_Opt_Pure=23206521340.60  GPU_Opt_Pure=23206521340.60  GPU_Opt_Pure=23206521340.60  GPU_Opt_Pure=23206521340.60  GPU_Opt_Pure=23206521340.60  PathMerge_BC=23206521340.60  PathMerge_BC=23206521340.60  PathMerge_BC=23206521340.60  PathMerge_BC=23206521340.60  PathMerge_BC=23206521340.60  
+
+=== 結果一覧 (TSV) ===
+Implementation	Graph	Nodes	Edges	Trial	Time_sec	GTEPS
+GPU_Opt_Pure	325557_3216152	325557	3216152	1	77.941516	13.4337
+GPU_Opt_Pure	325557_3216152	325557	3216152	2	77.964795	13.4297
+GPU_Opt_Pure	325557_3216152	325557	3216152	3	77.718593	13.4722
+GPU_Opt_Pure	325557_3216152	325557	3216152	4	77.890294	13.4425
+GPU_Opt_Pure	325557_3216152	325557	3216152	5	77.877214	13.4448
+GPU_Opt_Pure	amazon0302	262111	899792	1	52.204417	4.5177
+GPU_Opt_Pure	amazon0302	262111	899792	2	52.281283	4.5111
+GPU_Opt_Pure	amazon0302	262111	899792	3	52.212869	4.5170
+GPU_Opt_Pure	amazon0302	262111	899792	4	52.200102	4.5181
+GPU_Opt_Pure	amazon0302	262111	899792	5	52.230648	4.5155
+GPU_Opt_Pure	email-EuAll	265009	364481	1	191.043969	0.5056
+GPU_Opt_Pure	email-EuAll	265009	364481	2	190.952336	0.5058
+GPU_Opt_Pure	email-EuAll	265009	364481	3	190.962350	0.5058
+GPU_Opt_Pure	email-EuAll	265009	364481	4	190.849943	0.5061
+GPU_Opt_Pure	email-EuAll	265009	364481	5	190.867600	0.5061
+GPU_Opt_Pure	web-NotreDame	325729	1090108	1	41.267563	8.6043
+GPU_Opt_Pure	web-NotreDame	325729	1090108	2	41.292494	8.5991
+GPU_Opt_Pure	web-NotreDame	325729	1090108	3	41.374251	8.5821
+GPU_Opt_Pure	web-NotreDame	325729	1090108	4	41.320307	8.5933
+GPU_Opt_Pure	web-NotreDame	325729	1090108	5	41.315572	8.5943
+GPU_Opt_Pure	amazon0505	410236	2439437	1	170.050383	5.8850
+GPU_Opt_Pure	amazon0505	410236	2439437	2	170.015544	5.8862
+GPU_Opt_Pure	amazon0505	410236	2439437	3	170.037472	5.8854
+GPU_Opt_Pure	amazon0505	410236	2439437	4	169.996780	5.8868
+GPU_Opt_Pure	amazon0505	410236	2439437	5	169.969115	5.8878
+GPU_Opt_Pure	web-Google	875713	4322051	1	897.921908	4.2152
+GPU_Opt_Pure	web-Google	875713	4322051	2	897.942924	4.2151
+GPU_Opt_Pure	web-Google	875713	4322051	3	897.659661	4.2164
+GPU_Opt_Pure	web-Google	875713	4322051	4	897.664461	4.2164
+GPU_Opt_Pure	web-Google	875713	4322051	5	897.577446	4.2168
+PathMerge_BC	325557_3216152	325557	3216152	1	772.472236	1.3554
+PathMerge_BC	325557_3216152	325557	3216152	2	771.898346	1.3564
+PathMerge_BC	325557_3216152	325557	3216152	3	772.567517	1.3553
+PathMerge_BC	325557_3216152	325557	3216152	4	772.177331	1.3560
+PathMerge_BC	325557_3216152	325557	3216152	5	771.889621	1.3565
+PathMerge_BC	amazon0302	262111	899792	1	153.076896	1.5407
+PathMerge_BC	amazon0302	262111	899792	2	153.094177	1.5405
+PathMerge_BC	amazon0302	262111	899792	3	153.102976	1.5404
+PathMerge_BC	amazon0302	262111	899792	4	153.021806	1.5413
+PathMerge_BC	amazon0302	262111	899792	5	153.003122	1.5414
+PathMerge_BC	email-EuAll	265009	364481	1	220.386278	0.4383
+PathMerge_BC	email-EuAll	265009	364481	2	220.360970	0.4383
+PathMerge_BC	email-EuAll	265009	364481	3	220.385363	0.4383
+PathMerge_BC	email-EuAll	265009	364481	4	220.411206	0.4382
+PathMerge_BC	email-EuAll	265009	364481	5	220.338974	0.4384
+PathMerge_BC	web-NotreDame	325729	1090108	1	349.725688	1.0153
+PathMerge_BC	web-NotreDame	325729	1090108	2	349.495852	1.0160
+PathMerge_BC	web-NotreDame	325729	1090108	3	349.335086	1.0164
+PathMerge_BC	web-NotreDame	325729	1090108	4	349.543388	1.0158
+PathMerge_BC	web-NotreDame	325729	1090108	5	349.382452	1.0163
+PathMerge_BC	amazon0505	410236	2439437	1	560.985980	1.7839
+PathMerge_BC	amazon0505	410236	2439437	2	560.569445	1.7852
+PathMerge_BC	amazon0505	410236	2439437	3	560.747144	1.7847
+PathMerge_BC	amazon0505	410236	2439437	4	561.012430	1.7838
+PathMerge_BC	amazon0505	410236	2439437	5	560.774805	1.7846
+PathMerge_BC	web-Google	875713	4322051	1	3154.176610	1.2000
+PathMerge_BC	web-Google	875713	4322051	2	3131.829794	1.2085
+PathMerge_BC	web-Google	875713	4322051	3	3104.279116	1.2192
+PathMerge_BC	web-Google	875713	4322051	4	3156.247573	1.1992
+PathMerge_BC	web-Google	875713	4322051	5	3131.121056	1.2088
+
+手動サマリ生成:
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/summary_table_no_gpu_opt.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/speedup_table_no_gpu_opt.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/phase_table_no_gpu_opt.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/correctness_no_gpu_opt.md
+  → /work/gj17/j17000/m5291091/lab/mylab/research/build_miyabi/result_benchmark_20260510_161155/summary_table_no_gpu_opt.tsv
+
+# ベンチマーク結果: 実行時間 (秒)
+
+| 手法 | synth_326K | amazon0302 | email-EuAll | web-ND | amazon0505 | web-Google |
+|:-----|------:|------:|------:|------:|------:|------:|
+| GPU_Opt_Pure | 77.88 | 52.23 | 190.9 | 41.31 | 170.0 | 897.8 |
+| PathMerge_BC | 772.2 | 153.1 | 220.4 | 349.5 | 560.8 | 3135.5 |
+
+# ベンチマーク結果: GTEPS (高いほど高速)
+
+| 手法 | synth_326K | amazon0302 | email-EuAll | web-ND | amazon0505 | web-Google |
+|:-----|------:|------:|------:|------:|------:|------:|
+| GPU_Opt_Pure | 13.4446 | 4.5159 | 0.5059 | 8.5946 | 5.8862 | 4.2160 |
+| PathMerge_BC | 1.3559 | 1.5409 | 0.4383 | 1.0160 | 1.7844 | 1.2071 |
+
+# スピードアップ (vs PathMerge_BC)
+
+| 手法 | synth_326K | amazon0302 | email-EuAll | web-ND | amazon0505 | web-Google |
+|:-----|------:|------:|------:|------:|------:|------:|
+| GPU_Opt_Pure | 9.92× | 2.93× | 1.15× | 8.46× | 3.30× | 3.49× |
+| PathMerge_BC | 1.00× | 1.00× | 1.00× | 1.00× | 1.00× | 1.00× |
+# スケーリング分析 (GTEPS vs グラフサイズ)
+
+| グラフ | Nodes | Edges | n×m | GPU_Opt_Pure | PathMerge_BC |
+|:------|------:|------:|------:|------:|------:|
+| synth_326K | 325,557 | 3,216,152 | 1.05e+12 | 13.4446 | 1.3559 |
+| amazon0302 | 262,111 | 899,792 | 2.36e+11 | 4.5159 | 1.5409 |
+| email-EuAll | 265,009 | 364,481 | 9.66e+10 | 0.5059 | 0.4383 |
+| web-ND | 325,729 | 1,090,108 | 3.55e+11 | 8.5946 | 1.0160 |
+| amazon0505 | 410,236 | 2,439,437 | 1.00e+12 | 5.8862 | 1.7844 |
+| web-Google | 875,713 | 4,322,051 | 3.78e+12 | 4.2160 | 1.2071 |
+# フェーズ別タイミング (BFS / Backward)
+
+| 手法 | synth_326K (BFS) | synth_326K (Bwd) | amazon0302 (BFS) | amazon0302 (Bwd) | email-EuAll (BFS) | email-EuAll (Bwd) | web-ND (BFS) | web-ND (Bwd) | amazon0505 (BFS) | amazon0505 (Bwd) | web-Google (BFS) | web-Google (Bwd) |
+|:-----|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|------:|
+| GPU_Opt_Pure | — | — | — | — | — | — | — | — | — | — | — | — |
+| PathMerge_BC | 544.9261 | 226.0855 | 127.5774 | 24.8211 | 171.4004 | 48.3179 | 271.1602 | 77.3901 | 456.1761 | 103.4408 | 2615.8901 | 510.8639 |
+# 正確性検証 (max BC 値)
+
+## synth_326K
+
+| 手法 | Max BC Index | Max BC Value | 差分 (%) |
+|:-----|:-----------|-------------:|---------:|
+| GPU_Opt_Pure | 272817 | 39343001000.11 | 0 (基準) |
+| PathMerge_BC | 272817 | 39343001000.11 | 0 (基準) |
+
+## amazon0302
+
+| 手法 | Max BC Index | Max BC Value | 差分 (%) |
+|:-----|:-----------|-------------:|---------:|
+| GPU_Opt_Pure | 33 | 2980418526.54 | 0 (基準) |
+| PathMerge_BC | 33 | 2980418526.54 | 0 (基準) |
+
+## email-EuAll
+
+| 手法 | Max BC Index | Max BC Value | 差分 (%) |
+|:-----|:-----------|-------------:|---------:|
+| GPU_Opt_Pure | 10 | 2384894520.80 | 0 (基準) |
+| PathMerge_BC | 10 | 2384894520.80 | 0 (基準) |
+
+## web-ND
+
+| 手法 | Max BC Index | Max BC Value | 差分 (%) |
+|:-----|:-----------|-------------:|---------:|
+| GPU_Opt_Pure | 0 | 24747250456.69 | 0 (基準) |
+| PathMerge_BC | 0 | 24747250456.69 | 0 (基準) |
+
+## amazon0505
+
+| 手法 | Max BC Index | Max BC Value | 差分 (%) |
+|:-----|:-----------|-------------:|---------:|
+| GPU_Opt_Pure | 593 | 16615753058.97 | 0 (基準) |
+| PathMerge_BC | 593 | 16615753058.97 | 0 (基準) |
+
+## web-Google
+
+| 手法 | Max BC Index | Max BC Value | 差分 (%) |
+|:-----|:-----------|-------------:|---------:|
+| GPU_Opt_Pure | 568909 | 23206521340.60 | 0 (基準) |
+| PathMerge_BC | 568909 | 23206521340.60 | 0 (基準) |
+
+
+# グラフ別詳細結果
+
+## synth_326K (325557_3216152)
+
+| 手法 | 実行時間 (秒) | GTEPS | vs PathMerge_BC |
+|:-----|----------:|------:|----------------:|
+| GPU_Opt_Pure | 77.88 | 13.4446 | 9.92× |
+| PathMerge_BC | 772.2 | 1.3559 | 1.00× |
+
+## amazon0302 (amazon0302)
+
+| 手法 | 実行時間 (秒) | GTEPS | vs PathMerge_BC |
+|:-----|----------:|------:|----------------:|
+| GPU_Opt_Pure | 52.23 | 4.5159 | 2.93× |
+| PathMerge_BC | 153.1 | 1.5409 | 1.00× |
+
+## email-EuAll (email-EuAll)
+
+| 手法 | 実行時間 (秒) | GTEPS | vs PathMerge_BC |
+|:-----|----------:|------:|----------------:|
+| GPU_Opt_Pure | 190.9 | 0.5059 | 1.15× |
+| PathMerge_BC | 220.4 | 0.4383 | 1.00× |
+
+## web-ND (web-NotreDame)
+
+| 手法 | 実行時間 (秒) | GTEPS | vs PathMerge_BC |
+|:-----|----------:|------:|----------------:|
+| GPU_Opt_Pure | 41.31 | 8.5946 | 8.46× |
+| PathMerge_BC | 349.5 | 1.0160 | 1.00× |
+
+## amazon0505 (amazon0505)
+
+| 手法 | 実行時間 (秒) | GTEPS | vs PathMerge_BC |
+|:-----|----------:|------:|----------------:|
+| GPU_Opt_Pure | 170.0 | 5.8862 | 3.30× |
+| PathMerge_BC | 560.8 | 1.7844 | 1.00× |
+
+## web-Google (web-Google)
+
+| 手法 | 実行時間 (秒) | GTEPS | vs PathMerge_BC |
+|:-----|----------:|------:|----------------:|
+| GPU_Opt_Pure | 897.8 | 4.2160 | 3.49× |
+| PathMerge_BC | 3135.5 | 1.2071 | 1.00× |

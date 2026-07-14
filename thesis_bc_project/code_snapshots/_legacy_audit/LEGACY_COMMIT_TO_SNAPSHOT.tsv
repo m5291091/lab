@@ -1,0 +1,8 @@
+SourceSnapshotID	OriginalCommit	CommitShort	CommitDate	OriginalTreeRoot	CoversExperiments	PBSJobIDs	FileCount
+small_correctness_20260712	e32b03e9b73e9eb294685c58e488ce2a92521852	e32b03e9	2026-07-12	thesis_bc_project	correctness/small_full_vector（小グラフ独立参照 full-vector 正確性）	2367583.opbs	32
+phase_def_block_20260710	88faffa391026852a4440e5b9a063c08c29624f7	88faffa	2026-07-11	thesis_bc_project	main_performance/proposed_variants; tuning/pathmerge; tuning/kernel_selection; ablation; profiling; phase_breakdown; correctness/pathmerge_tuned（実験実施は 2026-07-10〜11）	2356120;2357334-2357337;2355000;2355001;2359080;2359081;2359096;2359169;2360072;2360073;2361040;2361041;2362006;2354329;2354330;2354994;2354999;2359175	41
+memory_correctness_20260712	ac2b409c25c49c41608749afba8c7081871bfe45	ac2b409	2026-07-12	thesis_bc_project	correctness/memory_paths（canonical memory-path comparison matrix）	2368587.opbs	31
+memory_diagnostic_20260713	43d1cf5542f3234dddc93c88c5fdd72761f52271	43d1cf5	2026-07-13	thesis_bc_project	correctness/memory_paths（T-RESET/T-NSEFF 診断）	2369632.opbs	32
+memory_correctness_oom_20260712	6282798ce9942c6297cbdf2963aa7a3c65c6b807	6282798	2026-07-12	thesis_bc_project	unsuccessful/oom（memory-path 正確性 UM b10240 OOM）	2368269.opbs	31
+memory_correctness_failfast_20260712	29d28c50dec5e70f8d3a9a2341904e1ee94c65f3	29d28c50	2026-07-12	thesis_bc_project	unsuccessful/early_terminated（比較不一致 fail-fast）	2368398.opbs	31
+oldtree_f05ec52_20260512	f05ec52ae657df40224f624e30f9cc78aaa3bd48	f05ec52	2026-05-12	mylab/research	memory_scalability（UM オーバーサブスクリプション feasibility, 旧ツリー）; main_performance/seven_implementations（legacy, 近似・旧ツリー代表）	UMv2(not_recorded)	22

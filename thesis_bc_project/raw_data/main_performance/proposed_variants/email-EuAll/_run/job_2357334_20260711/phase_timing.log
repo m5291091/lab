@@ -1,0 +1,110 @@
+Running: GPU_Opt on email-EuAll...
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.0829 s (cum=18.1375 s), Backward wall=20.0790 s (cum=40.1163 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.909866 
+  > GTEPS = 3.1249 (nodes=265009, edges=364481)
+Running: GPU_Opt on email-EuAll...
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.1173 s (cum=18.1298 s), Backward wall=20.0546 s (cum=39.9898 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.768626 
+  > GTEPS = 3.1393 (nodes=265009, edges=364481)
+Running: GPU_Opt on email-EuAll...
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.1239 s (cum=18.1080 s), Backward wall=20.1881 s (cum=40.2081 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.816941 
+  > GTEPS = 3.1343 (nodes=265009, edges=364481)
+Running: GPU_Opt on email-EuAll...
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.0579 s (cum=18.0895 s), Backward wall=20.0709 s (cum=40.1043 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.809385 
+  > GTEPS = 3.1351 (nodes=265009, edges=364481)
+Running: GPU_Opt on email-EuAll...
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.1482 s (cum=18.1362 s), Backward wall=20.0734 s (cum=39.9804 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.752036 
+  > GTEPS = 3.1410 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=9.3414 s (cum=18.2369 s), Backward wall=19.9258 s (cum=39.4460 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.552636 
+  > GTEPS = 3.1615 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=9.1498 s (cum=18.1042 s), Backward wall=20.1861 s (cum=40.1590 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.737780 
+  > GTEPS = 3.1424 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=9.0925 s (cum=18.1011 s), Backward wall=20.1247 s (cum=40.1349 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.722625 
+  > GTEPS = 3.1440 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=9.1151 s (cum=18.0512 s), Backward wall=20.2351 s (cum=40.2575 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.784063 
+  > GTEPS = 3.1377 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=8.70 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=9.0564 s (cum=18.0661 s), Backward wall=20.1410 s (cum=40.2113 s)
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.765465 
+  > GTEPS = 3.1396 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure_Chunked on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(SUB_BATCH alloc)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.1649 s (cum=18.1167 s), Backward wall=20.1420 s (cum=40.0602 s), SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.710181 
+  > GTEPS = 3.1452 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure_Chunked on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(SUB_BATCH alloc)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.1560 s (cum=18.1544 s), Backward wall=20.1618 s (cum=40.1489 s), SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.754359 
+  > GTEPS = 3.1407 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure_Chunked on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(SUB_BATCH alloc)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.0843 s (cum=18.0951 s), Backward wall=20.1767 s (cum=40.2406 s), SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.771129 
+  > GTEPS = 3.1390 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure_Chunked on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(SUB_BATCH alloc)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.1862 s (cum=18.1499 s), Backward wall=20.1956 s (cum=40.1359 s), SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.740415 
+  > GTEPS = 3.1421 (nodes=265009, edges=364481)
+Running: GPU_Opt_Pure_Chunked on email-EuAll...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(SUB_BATCH alloc)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.0532 s (cum=18.0843 s), Backward wall=20.1492 s (cum=40.2513 s), SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.778630 
+  > GTEPS = 3.1382 (nodes=265009, edges=364481)

@@ -1,0 +1,64 @@
+# ビルド成果物（build ディレクトリ全体は追跡しない）
+build/
+build_miyabi/
+cugraph_bc_mini/build/
+result_benchmark_*/
+result_um_oversubscribe*/
+
+# バイナリ・オブジェクト・ライブラリ（アーカイブ raw_data/ code_snapshots/ 内も含め全体で除外）
+# ※ 実行バイナリ(run_benchmark 等)は build_miyabi/ に生成され上記で除外済み
+*.o
+*.obj
+*.a
+*.so
+*.so.*
+*.lib
+*.dll
+*.exe
+*.elf
+
+# CMake 生成物
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+CTestTestfile.cmake
+
+# nsys 再生成物（.nsys-rep から nsys stats で再生成可能なため非追跡）
+*.sqlite
+*.sqlite3
+
+# PBS ジョブ出力
+*.o[0-9]*
+*.e[0-9]*
+bc_bench_*.o*
+bc_bench_*.e*
+
+# data/snap/ は論文で使用する正式 graph input のため追跡する
+# （旧: download_snap_graphs.sh で再取得可能として除外していたが、Git 履歴非依存化のため追跡へ変更）
+
+# Python キャッシュ
+__pycache__/
+*.pyc
+
+# 中間・一時ファイル
+*.i
+*.ii
+*.ptx
+*.cubin
+*.tmp
+.DS_Store
+
+# 生成された論文用図表
+thesis_figures/
+
+# 生データアーカイブ / 実験時コードスナップショット（Git 履歴非依存化のため追跡対象）
+# raw_data/ = 生 BC ベクトル + PBS stdout（MANIFEST.tsv / SHA256SUMS 付き）
+# code_snapshots/ = 実験時コード（src/include/experiments/scripts/CMakeLists）
+# 上記のバイナリ/生成物ルールは両ディレクトリ内にも適用される（生データ本体・ソースのみ追跡）。
+!raw_data/
+!code_snapshots/
+
+# レガシー実験結果（mylab/research/build_miyabi から移動したアーカイブ。追跡対象に含める）
+!legacy_results_miyabi/
+!legacy_results_miyabi/result_benchmark_*/
+!legacy_results_miyabi/result_um_oversubscribe*/

@@ -1,0 +1,18 @@
+checkpoint_sha=88faffa391026852a4440e5b9a063c08c29624f7 git_HEAD=88faffa391026852a4440e5b9a063c08c29624f7
+=== PathMerge Batch-Size Sweep ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep
+Graphs  : snap/roadNet-TX
+Batches : 32,64,128   Trials: 1
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/t1_tx_screen
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX 32  (trial 1/1)
+  -> 1620.960440 sec
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX 64  (trial 1/1)
+  -> 1493.690042 sec
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX 128  (trial 1/1)
+  -> 1668.676282 sec
+=== PathMerge Sweep Complete ===
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b32	roadNet-TX	1	1620.960440	1.6359
+PathMerge_b64	roadNet-TX	1	1493.690042	1.7753
+PathMerge_b128	roadNet-TX	1	1668.676282	1.5891

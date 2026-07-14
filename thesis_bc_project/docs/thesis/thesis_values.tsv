@@ -1,0 +1,79 @@
+ValueID	Chapter	TableOrFigure	Graph	Implementation	Metric	Value	Unit	Aggregation	Trials	Batch	SourceFile	SourceRow	Notes
+PERF-EMAIL-PROP-MED	6	T-PERF	email-EuAll	GPU_Opt	time	30.81	sec	median	5	b512	raw_data/main_performance/proposed_variants/email-EuAll/_run/job_2357334_20260711/results.tsv	GPU_Opt trials1-5	in-capacity req/eff/SUB=512
+PERF-EMAIL-PROP-MEAN	6	T-PERF	email-EuAll	GPU_Opt	time	30.81	sec	mean	5	b512	raw_data/main_performance/proposed_variants/email-EuAll/_run/job_2357334_20260711/results.tsv	GPU_Opt trials1-5	mean=30.8114
+PERF-EMAIL-PROP-SD	6	T-PERF	email-EuAll	GPU_Opt	time	0.061	sec	sample_sd	5	b512	raw_data/main_performance/proposed_variants/email-EuAll/_run/job_2357334_20260711/results.tsv	GPU_Opt trials1-5	ddof=1
+PERF-EMAIL-PROP-GTEPS	6	T-PERF	email-EuAll	GPU_Opt	gteps	3.14	GTEPS	median	5	b512	raw_data/main_performance/proposed_variants/email-EuAll/_run/job_2357334_20260711/results.tsv	GPU_Opt GTEPS col	median of GTEPS column=3.1351
+PERF-EMAIL-PM-MED	6	T-PERF	email-EuAll	PathMerge_tuned	time	97.80	sec	median	3	b2048	raw_data/tuning/pathmerge/email-EuAll/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv	PathMerge_b2048 t1-3	tuned=掃引最良
+PERF-EMAIL-PM-SD	6	T-PERF	email-EuAll	PathMerge_tuned	time	0.988	sec	sample_sd	3	b2048	raw_data/tuning/pathmerge/email-EuAll/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv	PathMerge_b2048 t1-3	mean=97.8956
+PERF-EMAIL-SPEEDUP	6	T-PERF	email-EuAll	GPU_Opt_vs_PathMerge_tuned	speedup	3.17	x	median/median	NA	b512/b2048	result/main_performance/proposed_vs_pathmerge/comparison.tsv	email-EuAll	97.80/30.81=3.1743
+PERF-EMAIL-PM-DEFAULT	6	T-PERF	email-EuAll	PathMerge_default	time	220.39	sec	median	5	b64	raw_data/main_performance/seven_implementations/legacy_partial/medium/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv	PathMerge_BC email-EuAll	vs既定=7.15x(区別用)
+PERF-PA-PROP-MED	6	T-PERF	roadNet-PA	GPU_Opt	time	699.52	sec	median	3	b512	raw_data/main_performance/proposed_variants/roadNet-PA/_run/job_2357334_20260711/results.tsv	GPU_Opt t1-3	in-capacity req/eff/SUB=512
+PERF-PA-PROP-SD	6	T-PERF	roadNet-PA	GPU_Opt	time	1.695	sec	sample_sd	3	b512	raw_data/main_performance/proposed_variants/roadNet-PA/_run/job_2357334_20260711/results.tsv	GPU_Opt t1-3	mean=700.489
+PERF-PA-PROP-GTEPS	6	T-PERF	roadNet-PA	GPU_Opt	gteps	2.40	GTEPS	median	3	b512	raw_data/main_performance/proposed_variants/roadNet-PA/_run/job_2357334_20260711/results.tsv	GPU_Opt GTEPS col	median=2.3984
+PERF-PA-PM-MED	6	T-PERF	roadNet-PA	PathMerge_tuned	time	918.67	sec	median	3	b64	raw_data/main_performance/seven_implementations/legacy_partial/large/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv	PathMerge_BC roadNet-PA	tuned=既定b64同一設定(legacy採用)
+PERF-PA-PM-SD	6	T-PERF	roadNet-PA	PathMerge_tuned	time	9.593	sec	sample_sd	3	b64	raw_data/main_performance/seven_implementations/legacy_partial/large/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv	PathMerge_BC roadNet-PA	mean=923.257
+PERF-PA-SPEEDUP	6	T-PERF	roadNet-PA	GPU_Opt_vs_PathMerge_tuned	speedup	1.31	x	median/median	NA	b512/b64	result/main_performance/proposed_vs_pathmerge/comparison.tsv	roadNet-PA	918.67/699.52=1.3133
+PERF-TX-PROP-MED	6	T-PERF	roadNet-TX	GPU_Opt	time	980.13	sec	median	3	b512	raw_data/main_performance/proposed_variants/roadNet-TX/_run/job_2357334_20260711/results.tsv	GPU_Opt t1-3	in-capacity req/eff/SUB=512
+PERF-TX-PROP-SD	6	T-PERF	roadNet-TX	GPU_Opt	time	6.352	sec	sample_sd	3	b512	raw_data/main_performance/proposed_variants/roadNet-TX/_run/job_2357334_20260711/results.tsv	GPU_Opt t1-3	mean=983.656
+PERF-TX-PROP-GTEPS	6	T-PERF	roadNet-TX	GPU_Opt	gteps	2.71	GTEPS	median	3	b512	raw_data/main_performance/proposed_variants/roadNet-TX/_run/job_2357334_20260711/results.tsv	GPU_Opt GTEPS col	median=2.7055
+PERF-TX-PM-MED	6	T-PERF	roadNet-TX	PathMerge_tuned	time	1482.68	sec	median	3	b64	raw_data/main_performance/seven_implementations/legacy_partial/large/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv	PathMerge_BC roadNet-TX	tuned=既定b64同一設定
+PERF-TX-PM-SD	6	T-PERF	roadNet-TX	PathMerge_tuned	time	24.855	sec	sample_sd	3	b64	raw_data/main_performance/seven_implementations/legacy_partial/large/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv	PathMerge_BC roadNet-TX	mean=1493.459
+PERF-TX-SPEEDUP	6	T-PERF	roadNet-TX	GPU_Opt_vs_PathMerge_tuned	speedup	1.51	x	median/median	NA	b512/b64	result/main_performance/proposed_vs_pathmerge/comparison.tsv	roadNet-TX	1482.68/980.13=1.5127
+PERF-CA-PROP-MED	6	T-PERF	roadNet-CA	GPU_Opt	time	2129.10	sec	median	3	b512	raw_data/main_performance/proposed_variants/roadNet-CA/_run/job_2357334_20260711/results.tsv	GPU_Opt t1-3	in-capacity req/eff/SUB=512
+PERF-CA-PROP-SD	6	T-PERF	roadNet-CA	GPU_Opt	time	4.021	sec	sample_sd	3	b512	raw_data/main_performance/proposed_variants/roadNet-CA/_run/job_2357334_20260711/results.tsv	GPU_Opt t1-3	mean=2127.377
+PERF-CA-PROP-GTEPS	6	T-PERF	roadNet-CA	GPU_Opt	gteps	2.55	GTEPS	median	3	b512	raw_data/main_performance/proposed_variants/roadNet-CA/_run/job_2357334_20260711/results.tsv	GPU_Opt GTEPS col	median=2.5536
+PERF-CA-PM-MED	6	T-PERF	roadNet-CA	PathMerge_tuned	time	3079.72	sec	median	3	b32	raw_data/tuning/pathmerge/roadNet-CA/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv	PathMerge_b32 t1-3	tuned=掃引最良b32
+PERF-CA-PM-SD	6	T-PERF	roadNet-CA	PathMerge_tuned	time	25.511	sec	sample_sd	3	b32	raw_data/tuning/pathmerge/roadNet-CA/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv	PathMerge_b32 t1-3	mean=3083.851
+PERF-CA-SPEEDUP	6	T-PERF	roadNet-CA	GPU_Opt_vs_PathMerge_tuned	speedup	1.45	x	median/median	NA	b512/b32	result/main_performance/proposed_vs_pathmerge/comparison.tsv	roadNet-CA	3079.72/2129.10=1.4465
+PERF-CA-PM-DEFAULT	6	T-PERF	roadNet-CA	PathMerge_default	time	3499.03	sec	median	3	b64	raw_data/main_performance/seven_implementations/legacy_partial/large/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv	PathMerge_BC roadNet-CA	vs既定=1.64x(区別用)
+ABL-H-SYNTH	7	T-ABL	synthetic4	Ablation_H	main_effect	1.655	x	geomean	5	b512	result/ablation/synthetic_2354994/ablation_contributions.tsv	MainEffect H	4グラフ幾何平均
+ABL-W-SYNTH	7	T-ABL	synthetic4	Ablation_W	main_effect	1.065	x	geomean	5	b512	result/ablation/synthetic_2354994/ablation_contributions.tsv	MainEffect W	グラフ依存(0.992-1.175)
+ABL-A-SYNTH	7	T-ABL	synthetic4	Ablation_A	main_effect	1.396	x	geomean	5	b512	result/ablation/synthetic_2354994/ablation_contributions.tsv	MainEffect A	4グラフ幾何平均
+ABL-H-EMAIL	7	T-ABL	email-EuAll	Ablation_H	main_effect	1.429	x	geomean	3	b512	result/ablation/email_2354999/ablation_contributions.tsv	email-EuAll H	MainEffect=1.4286
+ABL-W-EMAIL	7	T-ABL	email-EuAll	Ablation_W	main_effect	0.970	x	geomean	3	b512	result/ablation/email_2354999/ablation_contributions.tsv	email-EuAll W	わずかに悪化(0.9695)
+ABL-A-EMAIL	7	T-ABL	email-EuAll	Ablation_A	main_effect	1.720	x	geomean	3	b512	result/ablation/email_2354999/ablation_contributions.tsv	email-EuAll A	MainEffect=1.7199
+ABL-H-56438	7	T-ABL	56438_300801	Ablation_H	main_effect	1.965	x	geomean	5	b512	result/ablation/synthetic_2354994/ablation_contributions.tsv	56438 H	Hが最大のグラフ
+ABL-W-56438	7	T-ABL	56438_300801	Ablation_W	main_effect	0.992	x	geomean	5	b512	result/ablation/synthetic_2354994/ablation_contributions.tsv	56438 W	中立
+ABL-BASE-325557	7	appxB	325557_3216152	Ablation_H0W0A0	time	176.4	sec	median	5	b512	result/ablation/synthetic_2354994/ablation_summary.md	H0W0A0 325557	baseline
+ABL-FULL-325557	7	appxB	325557_3216152	Ablation_H1W1A1	time	73.17	sec	median	5	b512	result/ablation/synthetic_2354994/ablation_summary.md	H1W1A1 325557	full
+KSEL-PA-BLOCK	7	T-KSEL	roadNet-PA	forced_block	time	701.57	sec	median	3	b512	raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/job_2354329_20260710/kernel_selection_results.tsv	block t1-3	現行実装は常時block
+KSEL-PA-SHARED	7	T-KSEL	roadNet-PA	forced_shared	time	1063.71	sec	median	3	b512	raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/job_2354329_20260710/kernel_selection_results.tsv	shared t1-3	BC_FORCE_BFS_KERNEL=shared強制
+KSEL-PA-SPEEDUP	7	T-KSEL	roadNet-PA	block_vs_shared	speedup	1.52	x	median/median	3	b512	result/tuning/kernel_selection/roadNet-PA/kernel_selection_summary.md	roadNet-PA	Max BC一致
+KSEL-TX-BLOCK	7	T-KSEL	roadNet-TX	forced_block	time	984.59	sec	median	3	b512	raw_data/tuning/kernel_selection/roadNet-TX/gpu_opt_forced/job_2354330_20260710/kernel_selection_results.tsv	block t1-3	現行実装は常時block
+KSEL-TX-SHARED	7	T-KSEL	roadNet-TX	forced_shared	time	1639.16	sec	median	3	b512	raw_data/tuning/kernel_selection/roadNet-TX/gpu_opt_forced/job_2354330_20260710/kernel_selection_results.tsv	shared t1-3	BC_FORCE_BFS_KERNEL=shared強制
+KSEL-TX-SPEEDUP	7	T-KSEL	roadNet-TX	block_vs_shared	speedup	1.66	x	median/median	3	b512	raw_data/tuning/kernel_selection/roadNet-TX/gpu_opt_forced/job_2354330_20260710/kernel_selection_results.tsv	roadNet-TX	Max BC一致
+MEM-PURE-MAXBATCH	8	T-MEM	325557_3216152	GPU_Opt_Pure	max_success_batch	4096	batch	feasibility	5	NA	raw_data/memory_scalability/325557_3216152/gpu_opt_pure/job_notrecorded_20260512/oversubscribe_results_gpu_opt_pure.tsv	pure b4096 SUCCESS	b8192+ OOM(exp A,oldtree_f05ec52_20260512)
+MEM-UM-MAXBATCH-A	8	T-MEM	325557_3216152	GPU_Opt	max_success_batch	10240	batch	feasibility	5	NA	raw_data/memory_scalability/325557_3216152/gpu_opt/job_notrecorded_20260512/oversubscribe_results_gpu_opt.tsv	gpu_opt b10240 SUCCESS	b12288 OOM(exp A,oldtree_f05ec52_20260512)
+MEM-CHUNK-MAXBATCH	8	T-MEM	325557_3216152	GPU_Opt_Pure_Chunked	max_success_batch	16384	batch	feasibility	5	NA	raw_data/memory_scalability/325557_3216152/gpu_opt_pure_chunked/job_notrecorded_20260512/oversubscribe_results_gpu_opt_pure_chunked.tsv	chunked b16384 SUCCESS	全SUCCESS(exp A,oldtree_f05ec52_20260512)
+MEM-UM-B9792-OK	8	T-MEM	325557_3216152	GPU_Opt	oversubscription_complete	1	bool	single_run	1	b9792	result/correctness/memory_paths/canonical_job_2368587/execution_summary.tsv	gpu_opt_b9792 PASS	SUB_BATCH=6596 num_subs=2 NS_eff=1 prefetch33.18s(exp B,100GiB)
+MEM-UM-B10240-OOM-B	8	T-MEM	325557_3216152	GPU_Opt	oom	1	bool	single_run	1	b10240	failure/failed/oom/memory_correctness_2368269/correctness_summary.tsv	gpu_opt_b10240 FAIL	dynamic213.38GB runner_exit137(exp B,100GiB)
+MEM-CHUNK-B16384-SUBS	8	T-MEM	325557_3216152	GPU_Opt_Pure_Chunked	num_subs	3	count	single_run	1	b16384	result/correctness/memory_paths/canonical_job_2368587/execution_summary.tsv	chunked_b16384	完走(exp B,100GiB)
+MEM-UM-T-B4096	8	appxD	325557_3216152	GPU_Opt	time	67.65	sec	median	5	b4096	raw_data/memory_scalability/325557_3216152/gpu_opt/job_notrecorded_20260512/oversubscribe_results_gpu_opt.tsv	gpu_opt b4096	non-headline(oldtree_f05ec52_20260512) in-capacity
+MEM-UM-T-B8192	8	appxD	325557_3216152	GPU_Opt	time	109.82	sec	median	5	b8192	raw_data/memory_scalability/325557_3216152/gpu_opt/job_notrecorded_20260512/oversubscribe_results_gpu_opt.tsv	gpu_opt b8192	non-headline oversubscribed
+MEM-UM-T-B10240	8	appxD	325557_3216152	GPU_Opt	time	324.22	sec	median	5	b10240	raw_data/memory_scalability/325557_3216152/gpu_opt/job_notrecorded_20260512/oversubscribe_results_gpu_opt.tsv	gpu_opt b10240	non-headline spill増大
+CORR-SMALL-B7000-MISMATCH	9	T-CORR	benchmark_7000_41459	Sequential_vs_GPU_Opt	mismatch	0	count	single_run	1	b512	result/correctness/small_full_vector/correctness_summary.tsv	benchmark_7000_41459	missing0 NaN0 PASS
+CORR-SMALL-B7000-MAXABS	9	T-CORR	benchmark_7000_41459	Sequential_vs_GPU_Opt	max_abs_error	6.05e-9	abs	single_run	1	b512	result/correctness/small_full_vector/correctness_summary.tsv	benchmark_7000_41459	max_rel=4.56e-15
+CORR-SMALL-B11023-MISMATCH	9	T-CORR	benchmark_11023_62184	Sequential_vs_GPU_Opt	mismatch	0	count	single_run	1	b512	result/correctness/small_full_vector/correctness_summary.tsv	benchmark_11023_62184	max_rel=1.79e-14
+CORR-SMALL-CHAIN-MISMATCH	9	T-CORR	chain_200	Sequential_vs_GPU_Opt	mismatch	0	count	single_run	1	b512	result/correctness/small_full_vector/correctness_summary.tsv	chain_200	max_abs=0 max_rel=0
+CORR-SAMEBATCH-MISMATCH	9	T-CORR	325557_3216152	UM_vs_Pure_vs_Chunked_b1024	mismatch	0	count	single_run	1	b1024	result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv	same_batch_diff_path	非byte(SHA256相異) max_rel~3e-14
+CORR-STRESS-B9792-MISMATCH	9	T-CORR	325557_3216152	gpu_opt_b9792_vs_b1024	mismatch	6	count	single_run	1	b9792/b1024	result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv	same_impl_diff_batch	max_rel=2.23e-6(>1e-6) FAIL
+CORR-STRESS-B16384-MISMATCH	9	T-CORR	325557_3216152	chunked_b16384_vs_b1024	mismatch	6	count	single_run	1	b16384/b1024	result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv	same_impl_diff_batch	max_rel=2.85e-6 FAIL
+CORR-STRESS-UNION	9	T-STRESS	325557_3216152	stress_affected_vertices	union_count	8	count	single_run	1	NA	result/correctness/memory_paths/analysis/six_vertex_detail.tsv	影響頂点和集合	原因未特定
+CORR-STRESS-TOL	9	T-STRESS	325557_3216152	tolerance_sensitivity	mismatch_at_1e-6	6	count	single_run	1	NA	result/correctness/memory_paths/analysis/tolerance_sensitivity.tsv	gpu_b9792 vs b1024	2e-6→1,3e-6→0(補助,FAIL不変)
+CORR-PATHMERGE-DIFF	9	T-CORR	325557_3216152	PathMerge_b4096_vs_GPU_Opt	diff_elements	11027	count	single_run	1	b4096/b1024	result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv	pathmerge_cross	max_rel=2.0e-3 正誤未決定 external comparator
+CORR-MAXBC-325557	9	appxC	325557_3216152	all_impls	max_bc_value	39343001000.108	dimensionless	single_run	1	NA	result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv	max_bc_a/b	全実装で一致(末尾FP差)
+ENV-BW-HBM3	5	T-BW	NA	bandwidth_benchmark	hbm3_dtod	1818.6	GB/s	single	1	NA	raw_data/profiling/job_2359175_20260711/bandwidth.log	HBM3_DtoD	理論比45.2%
+ENV-BW-C2C	5	T-BW	NA	bandwidth_benchmark	c2c_prefetch	177.7	GB/s	single	1	NA	raw_data/profiling/job_2359175_20260711/bandwidth.log	NVLink_C2C_Prefetch	理論比19.7%
+ENV-BW-HTOD	5	T-BW	NA	bandwidth_benchmark	pinned_htod	424.1	GB/s	single	1	NA	raw_data/profiling/job_2359175_20260711/bandwidth.log	Pinned_HtoD	理論比47.1%
+PROF-NSYS-BACKWARD	7	F-NSYS	325557_3216152	GPU_Opt(H1W1A0)	kernel_time_pct	63.9	percent	trace	1	NA	raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt	brandes_back_kernel_opt	backwardが支配的
+PROF-NSYS-BFS	7	F-NSYS	325557_3216152	GPU_Opt(H1W1A0)	kernel_time_pct	36.1	percent	trace	1	NA	raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt	brandes_bfs_kernel_opt	bfsフェーズ
+GRAPH-EMAIL-N	5	T-GRAPH	email-EuAll	NA	nodes	265009	count	NA	NA	NA	docs/graph_stats.tsv	email-EuAll	avg_deg2.75 CV13.93
+GRAPH-EMAIL-M	5	T-GRAPH	email-EuAll	NA	edges	364481	count	NA	NA	NA	docs/graph_stats.tsv	email-EuAll	無向辺数m
+GRAPH-PA-N	5	T-GRAPH	roadNet-PA	NA	nodes	1088092	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-PA	avg_deg2.83 CV0.36
+GRAPH-PA-M	5	T-GRAPH	roadNet-PA	NA	edges	1541898	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-PA	無向辺数m
+GRAPH-TX-N	5	T-GRAPH	roadNet-TX	NA	nodes	1379917	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-TX	avg_deg2.79
+GRAPH-TX-M	5	T-GRAPH	roadNet-TX	NA	edges	1921660	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-TX	無向辺数m
+GRAPH-CA-N	5	T-GRAPH	roadNet-CA	NA	nodes	1965206	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-CA	avg_deg2.82
+GRAPH-CA-M	5	T-GRAPH	roadNet-CA	NA	edges	2766607	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-CA	無向辺数m
+GRAPH-325557-N	5	T-GRAPH	325557_3216152	NA	nodes	325557	count	NA	NA	NA	docs/graph_stats.tsv	325557_3216152	avg_deg19.76 CV11.15
+GRAPH-325557-M	5	T-GRAPH	325557_3216152	NA	edges	3216152	count	NA	NA	NA	docs/graph_stats.tsv	325557_3216152	UM/memory-path用

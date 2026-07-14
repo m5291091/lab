@@ -1,0 +1,134 @@
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.3s)
+You have changed variables that require your cache to be deleted.
+Configure will be re-run and you may have to reset some variables.
+The following variables have changed:
+CMAKE_CXX_COMPILER= g++
+CMAKE_C_COMPILER= gcc
+
+CMake Error at /home/j17000/.local/share/uv/tools/cmake/lib/python3.12/site-packages/cmake/data/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:225 (configure_file):
+  No such file or directory
+Call Stack (most recent call first):
+  CMakeLists.txt:2 (project)
+
+
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring incomplete, errors occurred!
+=== graph=roadNet-PA kernel=shared trial=1 ===
+Running: GPU_Opt on roadNet-PA...
+  > [BFS kernel] forced=shared (avg_deg=2.83, heuristic=shared)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=831.1141 s (cum=1638.7175 s), Backward wall=165.7650 s (cum=309.9364 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1063.624042 
+  > GTEPS = 1.5774 (nodes=1088092, edges=1541898)
+=== graph=roadNet-PA kernel=shared trial=2 ===
+Running: GPU_Opt on roadNet-PA...
+  > [BFS kernel] forced=shared (avg_deg=2.83, heuristic=shared)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=830.5831 s (cum=1636.0074 s), Backward wall=167.4426 s (cum=311.8830 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1063.737404 
+  > GTEPS = 1.5772 (nodes=1088092, edges=1541898)
+=== graph=roadNet-PA kernel=shared trial=3 ===
+Running: GPU_Opt on roadNet-PA...
+  > [BFS kernel] forced=shared (avg_deg=2.83, heuristic=shared)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=829.8296 s (cum=1635.3859 s), Backward wall=167.4240 s (cum=312.4100 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1063.712326 
+  > GTEPS = 1.5772 (nodes=1088092, edges=1541898)
+=== graph=roadNet-PA kernel=block trial=1 ===
+Running: GPU_Opt on roadNet-PA...
+  > [BFS kernel] forced=block (avg_deg=2.83, heuristic=shared)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=348.0068 s (cum=646.0379 s), Backward wall=289.6480 s (cum=529.6299 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 702.092769 
+  > GTEPS = 2.3896 (nodes=1088092, edges=1541898)
+=== graph=roadNet-PA kernel=block trial=2 ===
+Running: GPU_Opt on roadNet-PA...
+  > [BFS kernel] forced=block (avg_deg=2.83, heuristic=shared)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=337.6196 s (cum=650.3698 s), Backward wall=269.9565 s (cum=515.2041 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 695.659103 
+  > GTEPS = 2.4117 (nodes=1088092, edges=1541898)
+=== graph=roadNet-PA kernel=block trial=3 ===
+Running: GPU_Opt on roadNet-PA...
+  > [BFS kernel] forced=block (avg_deg=2.83, heuristic=shared)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=35.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=346.5006 s (cum=642.5925 s), Backward wall=290.2049 s (cum=529.9556 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 701.573311 
+  > GTEPS = 2.3914 (nodes=1088092, edges=1541898)
+  読み込み: 1 グラフ
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354329/kernel_selection_summary.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354329/kernel_selection_contributions.tsv
+
+# BFS カーネル選択 2×2 比較
+
+gpu_opt のヒューリスティクス: avg_deg < 5.0 → shared, それ以外 → block。
+
+| グラフ | avg_deg | shared (s) | block (s) | 速い側 | ヒューリスティクス | 正しい選択? | 選択機構の寄与 (遅/速) |
+|:-----|------:|------:|------:|:----:|:----:|:----:|------:|
+| roadNet-PA | 2.83 | 1063.7 | 701.6 | block | shared | ✗ 誤選択 | 1.52× |
+
+## まとめ
+
+- ヒューリスティクスが速い側を選べた: **0/1** グラフ
+- 誤選択したグラフ: roadNet-PA
+- 選択機構の寄与 (誤選択時に失う倍率) の範囲: 1.52× 〜 1.52×
+
+## 試行数と実行時間ばらつき (中央値 ± 標準偏差)
+
+| グラフ | kernel | 中央値 (s) | 標準偏差 | n |
+|:-----|:----:|------:|------:|--:|
+| roadNet-PA | shared | 1063.7 | 0.0486 | 3 |
+| roadNet-PA | block | 701.6 | 2.9181 | 3 |
+
+## 正確性 (shared vs block の Max BC 一致)
+
+| グラフ | shared Max BC | block Max BC | 一致? |
+|:-----|------:|------:|:----:|
+| roadNet-PA | 151395302679.0800 | 151395302679.0800 | ✓ |

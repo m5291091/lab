@@ -1,0 +1,85 @@
+=== graph=roadNet-TX impl=gpu_opt trial=1 ===
+Running: GPU_Opt on roadNet-TX...
+  > [BFS kernel] auto=block (avg_deg=2.79, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=355.0275 s (cum=682.6140 s), Backward wall=479.2409 s (cum=929.5062 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 979.845669 
+  > GTEPS = 2.7063 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt trial=2 ===
+Running: GPU_Opt on roadNet-TX...
+  > [BFS kernel] auto=block (avg_deg=2.79, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=355.4268 s (cum=684.2401 s), Backward wall=477.5630 s (cum=927.9081 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 980.134755 
+  > GTEPS = 2.7055 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt trial=3 ===
+Running: GPU_Opt on roadNet-TX...
+  > [BFS kernel] auto=block (avg_deg=2.79, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.02 GB, dynamic(UM)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=409.3695 s (cum=750.4504 s), Backward wall=470.0655 s (cum=868.3887 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 990.988855 
+  > GTEPS = 2.6758 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt_pure trial=1 ===
+Running: GPU_Opt_Pure on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=45.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=407.7782 s (cum=753.6042 s), Backward wall=466.0405 s (cum=864.0899 s)
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 991.495352 
+  > GTEPS = 2.6745 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt_pure trial=2 ===
+Running: GPU_Opt_Pure on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=45.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=386.3582 s (cum=739.9505 s), Backward wall=454.9342 s (cum=873.6439 s)
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 988.560627 
+  > GTEPS = 2.6824 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt_pure trial=3 ===
+Running: GPU_Opt_Pure on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(GPU)=45.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=350.9757 s (cum=681.7351 s), Backward wall=474.1795 s (cum=928.9152 s)
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 979.116258 
+  > GTEPS = 2.7083 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt_pure_chunked trial=1 ===
+Running: GPU_Opt_Pure_Chunked on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=356.2801 s (cum=683.7551 s), Backward wall=479.3095 s (cum=929.9750 s), SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 980.090014 
+  > GTEPS = 2.7056 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt_pure_chunked trial=2 ===
+Running: GPU_Opt_Pure_Chunked on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=409.4054 s (cum=761.9623 s), Backward wall=460.0220 s (cum=858.6573 s), SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 992.839433 
+  > GTEPS = 2.6709 (nodes=1379917, edges=1921660)
+=== graph=roadNet-TX impl=gpu_opt_pure_chunked trial=3 ===
+Running: GPU_Opt_Pure_Chunked on roadNet-TX...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.02 GB, dynamic(SUB_BATCH alloc)=45.23 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=412.2245 s (cum=764.5927 s), Backward wall=461.6537 s (cum=860.0934 s), SUB_BATCH=512, num_subs=1
+  > index : 400570, Maximum Betweenness Centrality ==> 164495142042.45
+  > Elapse time [sec.] = 992.949477 
+  > GTEPS = 2.6706 (nodes=1379917, edges=1921660)
+  結果読み込み: 3 件 (3 手法 × 1 グラフ) (複数試行の平均値)
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005551_2357336/summary_table.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005551_2357336/speedup_table.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005551_2357336/correctness.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_005551_2357336/summary_table.tsv
+
+
+# スピードアップ (vs PathMerge_BC)
+
+(ベースライン PathMerge_BC の結果がありません)

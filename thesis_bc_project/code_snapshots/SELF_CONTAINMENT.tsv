@@ -1,0 +1,8 @@
+Snapshot	Classification	SnapshotContent	DepsVerified	GraphsVerified	Problems
+small_correctness_20260712	DEPENDENCIES_CAPTURED	32/32	2/2	3/3	none
+phase_def_block_20260710	DEPENDENCIES_CAPTURED	41/41	2/2	9/9	none
+memory_correctness_20260712	DEPENDENCIES_CAPTURED	31/31	2/2	1/1	none
+memory_diagnostic_20260713	DEPENDENCIES_CAPTURED	32/32	2/2	1/1	none
+memory_correctness_oom_20260712	DEPENDENCIES_CAPTURED	31/31	2/2	1/1	none
+memory_correctness_failfast_20260712	DEPENDENCIES_CAPTURED	31/31	2/2	1/1	none
+oldtree_f05ec52_20260512	DEPENDENCIES_CAPTURED	22/22	1/1	1/1	none

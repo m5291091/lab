@@ -1,0 +1,88 @@
+checkpoint_sha=ac2b409c25c49c41608749afba8c7081871bfe45
+pbs_job_id=2368587.opbs
+project_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project
+result_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_memory_correctness_20260712_220331_2368587.opbs
+runner=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark
+graph=data/325557_3216152
+graph_sha256=a095b2e7564e6c620bd0f5437917e0b28f4fecab289adf77633e850aa07da584
+n_nodes=325557
+n_edges=3216152
+runs_per_configuration=1
+warmup=none
+timing_usage=correctness_only_not_performance
+design=comparison_matrix
+external_comparator=pathmerge_b4096
+miyabi_host_mem_gib=100
+miyabi_host_mem_gb=107.374
+um_ns_constant=2
+um_mem_model=managed_alloc_estimate_gb = displayed_dynamic_um_gb * NS_eff / NS (log-derived estimate, NOT measured RSS/CPU residency)
+um_route_evidence=oversubscription_route_evidence combines (managed_alloc_estimate_gb>free_before_gb, HBM3 streaming, NS_eff=1, num_subs=2, SUB_BATCH<batch, Prefetch cum>0); NOT a direct migration-byte measurement
+abs_tol=1e-3
+rel_tol=1e-6
+criterion=abs_diff <= abs_tol + rel_tol * max(abs(a),abs(b))
+
+[exec gpu_opt_b9792 | impl=gpu_opt | path=um | mode=oversubscribed]
+requested_batch=9792 effective_batch=9792 runner_exit=0 vector_valid=yes
+SUB_BATCH=6596 num_subs=2 NS_eff=1 oversubscribed=true uses_um=true
+um_mem_model: NS=2 NS_eff=1 dynamic_um_displayed_gb=204.04 managed_alloc_estimate_gb=102.02 (log-derived estimate, NOT measured RSS)
+um_mem: free_before_gb=101.4 managed_alloc_minus_free_before_estimate_gb=0.62 managed_alloc_headroom_estimate_gb=5.35 prefetch_cum_s=33.1807
+oversubscription_route_evidence=PASS
+vector_sha256=be8f52d32ac03cd495a08c5c6cd138fcdcec916a16830e62e7bc8d3c968d25c5
+status=PASS
+reason=runner_ok_and_path_evidence_ok
+
+[exec gpu_opt_b1024 | impl=gpu_opt | path=um | mode=in_capacity]
+requested_batch=1024 effective_batch=1024 runner_exit=0 vector_valid=yes
+SUB_BATCH=1024 num_subs=1 NS_eff=2 oversubscribed=false uses_um=true
+um_mem_model: NS=2 NS_eff=2 dynamic_um_displayed_gb=21.34 managed_alloc_estimate_gb=21.34 (log-derived estimate, NOT measured RSS)
+um_mem: free_before_gb=101.4 managed_alloc_minus_free_before_estimate_gb=-80.06 managed_alloc_headroom_estimate_gb=86.03 prefetch_cum_s=0.0000
+oversubscription_route_evidence=in_capacity_control
+vector_sha256=4a40a553a388ba2cb29d4ea366db979983fa398c55bb8a694882f260efd431cb
+status=PASS
+reason=runner_ok_and_path_evidence_ok
+
+[exec gpu_opt_pure_chunked_b16384 | impl=gpu_opt_pure_chunked | path=chunked | mode=chunked]
+requested_batch=16384 effective_batch=16384 runner_exit=0 vector_valid=yes
+SUB_BATCH=6596 num_subs=3 NS_eff=1 oversubscribed=true uses_um=false
+um_mem_model: NS=not_applicable NS_eff=1 dynamic_um_displayed_gb=not_applicable managed_alloc_estimate_gb=not_applicable (log-derived estimate, NOT measured RSS)
+um_mem: free_before_gb=not_applicable managed_alloc_minus_free_before_estimate_gb=not_applicable managed_alloc_headroom_estimate_gb=not_applicable prefetch_cum_s=not_applicable
+oversubscription_route_evidence=not_applicable
+vector_sha256=618ffdc4108f0c24a148bc1aa2a18b83d14b48319cd18438f89196b40930a86d
+status=PASS
+reason=runner_ok_and_path_evidence_ok
+
+[exec gpu_opt_pure_chunked_b1024 | impl=gpu_opt_pure_chunked | path=chunked | mode=non_chunk]
+requested_batch=1024 effective_batch=1024 runner_exit=0 vector_valid=yes
+SUB_BATCH=1024 num_subs=1 NS_eff=2 oversubscribed=false uses_um=false
+um_mem_model: NS=not_applicable NS_eff=2 dynamic_um_displayed_gb=not_applicable managed_alloc_estimate_gb=not_applicable (log-derived estimate, NOT measured RSS)
+um_mem: free_before_gb=not_applicable managed_alloc_minus_free_before_estimate_gb=not_applicable managed_alloc_headroom_estimate_gb=not_applicable prefetch_cum_s=not_applicable
+oversubscription_route_evidence=not_applicable
+vector_sha256=5ff0bef083dff51e0c6f15894912549dd5e28bb42e5eaabf626654edbf4627de
+status=PASS
+reason=runner_ok_and_path_evidence_ok
+
+[exec gpu_opt_pure_b1024 | impl=gpu_opt_pure | path=pure | mode=pure]
+requested_batch=1024 effective_batch=1024 runner_exit=0 vector_valid=yes
+SUB_BATCH=not_applicable num_subs=not_applicable NS_eff=not_applicable oversubscribed=not_applicable uses_um=false
+um_mem_model: NS=not_applicable NS_eff=not_applicable dynamic_um_displayed_gb=not_applicable managed_alloc_estimate_gb=not_applicable (log-derived estimate, NOT measured RSS)
+um_mem: free_before_gb=not_applicable managed_alloc_minus_free_before_estimate_gb=not_applicable managed_alloc_headroom_estimate_gb=not_applicable prefetch_cum_s=not_applicable
+oversubscription_route_evidence=not_applicable
+vector_sha256=fc95255fe422693d5f7c8d80d39624015b3f9ad2020b54916f61358718439984
+status=PASS
+reason=runner_ok_and_path_evidence_ok
+
+[exec pathmerge_b4096 | impl=pathmerge_bc | path=pathmerge | mode=comparator]
+requested_batch=4096 effective_batch=4096 runner_exit=0 vector_valid=yes
+SUB_BATCH=not_applicable num_subs=80 NS_eff=not_applicable oversubscribed=not_applicable uses_um=managed_csr
+um_mem_model: NS=not_applicable NS_eff=not_applicable dynamic_um_displayed_gb=not_applicable managed_alloc_estimate_gb=not_applicable (log-derived estimate, NOT measured RSS)
+um_mem: free_before_gb=not_applicable managed_alloc_minus_free_before_estimate_gb=not_applicable managed_alloc_headroom_estimate_gb=not_applicable prefetch_cum_s=not_applicable
+oversubscription_route_evidence=not_applicable
+vector_sha256=94e6379ac52e76025052ff98e97274a16b6467b57454d73c6d68aaa9eeeebd9d
+status=PASS
+reason=runner_ok_and_path_evidence_ok
+
+[final]
+configs_ok=6 configs_fail=0
+CORE_MEMORY_PATH: pass=3 fail=2 skip=0 -> core_memory_path_status=FAIL
+PATHMERGE_CROSS_IMPL_DIAGNOSTIC: pass=0 fail=5 skip=0 -> pathmerge_cross_impl_status=DIFFERENCE_OBSERVED
+overall_status=CORE_FAIL (exit=1)

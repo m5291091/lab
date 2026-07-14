@@ -1,0 +1,54 @@
+=== BC Profiling Job ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Graph   : /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801
+UM graph: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175
+nsys    : /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nsys
+=== [1/4] bandwidth_benchmark ===
+=== GH200 メモリ帯域ベンチマーク ===
+  GPU: NVIDIA GH200 120GB
+  HBM3 総容量: 102 GB
+  計測バッファ: 1024 MB
+
+  HBM3 (DtoD):        1818.6 GB/s  (4020 GB/s 理論比: 45.2%)
+  Pinned HtoD:        424.1 GB/s  (900 GB/s 理論比: 47.1%)
+  Pinned DtoH:        297.6 GB/s  (900 GB/s 理論比: 33.1%)
+  NVLink-C2C Prefetch: 177.7 GB/s  (900 GB/s 理論比: 19.7%)
+
+TSV 出力は stdout に出力されました。
+論文への記載: NVLink-C2C Prefetch の帯域が Pinned HtoD と比較して
+どれほど近いかが GH200 特性活用の直接証拠になります。
+Transfer_Type	Size_GB	Time_ms	Bandwidth_GBs	Theoretical_GBs	Ratio_pct
+HBM3_DtoD	1.074	0.59	1818.6	4020	45.2
+Pinned_HtoD	1.074	2.53	424.1	900	47.1
+Pinned_DtoH	1.074	3.61	297.6	900	33.1
+NVLink_C2C_Prefetch	1.074	6.04	177.7	900	19.7
+=== [2/4] nsys ablation H1W1A0 (async init OFF) ===
+=== nsys profile -> /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175/ablation_H1W1A0 (duration=full) ===
+    cmd: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 H1W1A0
+    exit=0
+=== [3/4] nsys ablation H1W1A1 (async init ON) ===
+=== nsys profile -> /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175/ablation_H1W1A1 (duration=full) ===
+    cmd: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 H1W1A1
+    exit=0
+=== [4/4] nsys gpu_opt UM prefetch (325557_3216152) ===
+=== nsys profile -> /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175/um_prefetch_gpu_opt (duration=25) ===
+    cmd: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152
+    exit=143
+=== Profiling Complete ===
+total 3542
+drwxr-s---  2 j17000 gj17    4096 Jul 11 09:21 .
+drwxr-s--- 36 j17000 gj17    4096 Jul 11 09:21 ..
+-rw-r-----  1 j17000 gj17   21534 Jul 11 09:21 ablation_H1W1A0.console.log
+-rw-rw-r--  1 j17000 gj17  357970 Jul 11 09:21 ablation_H1W1A0.nsys-rep
+-rw-r-----  1 j17000 gj17 1433600 Jul 11 09:21 ablation_H1W1A0.sqlite
+-rw-r-----  1 j17000 gj17     915 Jul 11 09:21 ablation_H1W1A0.stats.txt
+-rw-r-----  1 j17000 gj17   21077 Jul 11 09:21 ablation_H1W1A1.console.log
+-rw-rw-r--  1 j17000 gj17  354951 Jul 11 09:21 ablation_H1W1A1.nsys-rep
+-rw-r-----  1 j17000 gj17 1400832 Jul 11 09:21 ablation_H1W1A1.sqlite
+-rw-r-----  1 j17000 gj17     915 Jul 11 09:21 ablation_H1W1A1.stats.txt
+-rw-r-----  1 j17000 gj17     819 Jul 11 09:21 bandwidth.log
+-rw-r-----  1 j17000 gj17   22195 Jul 11 09:21 um_prefetch_gpu_opt.console.log
+-rw-rw-r--  1 j17000 gj17  568048 Jul 11 09:21 um_prefetch_gpu_opt.nsys-rep
+-rw-r-----  1 j17000 gj17 3231744 Jul 11 09:21 um_prefetch_gpu_opt.sqlite
+-rw-r-----  1 j17000 gj17     935 Jul 11 09:21 um_prefetch_gpu_opt.stats.txt

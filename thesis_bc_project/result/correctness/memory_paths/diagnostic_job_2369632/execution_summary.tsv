@@ -1,0 +1,4 @@
+config	env	exp_force_full_reset	exp_force_ns_eff_one	exp_NS_eff	runner_exit	vector_valid	effective_batch	NS_eff	SUB_BATCH	num_subs	diag_force_full_reset	diag_force_ns_eff_one	diag_mode	full_memset_calls	visited_reset_calls	exp_full_memset	exp_visited	route_confirmed	vector_sha256	status	reason
+CONTROL	none	false	false	2	0	yes	1024	2	1024	1	false	false	false	3	315	3	315	yes	e4458d31c904d904d1b3f4e0c21bf35ee279324e64b39444e8cd1b44585fdede	PASS	ok
+T-RESET	BC_DIAG_FORCE_FULL_RESET=1	true	false	2	0	yes	1024	2	1024	1	true	false	true	318	0	318	0	yes	95395d1c5cf4a0cd75af0a2ec078edb5770c3ac201fb6ecaca2118fc63b4ce28	PASS	ok
+T-NSEFF	BC_DIAG_FORCE_NS_EFF_ONE=1	false	true	1	0	yes	1024	1	1024	1	false	true	true	2	316	2	316	yes	45edeb2c6b8dc65cbb98280f863407d146b2d2007d3f92b1668475713f759d35	PASS	ok

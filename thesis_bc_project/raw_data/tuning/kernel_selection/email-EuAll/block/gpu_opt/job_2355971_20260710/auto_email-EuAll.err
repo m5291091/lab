@@ -1,0 +1,8 @@
+Running: GPU_Opt on email-EuAll...
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.00 GB, dynamic(UM)=8.70 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=9.0999 s (cum=18.1422 s), Backward wall=20.1905 s (cum=40.2869 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.854594 
+  > GTEPS = 3.1305 (nodes=265009, edges=364481)

@@ -1,0 +1,13 @@
+Running: GPU_Opt on 325557_3216152...
+  > [BFS kernel] auto=block (avg_deg=19.76, heuristic=block)
+  > [Diag] force_full_reset=false
+  > [Diag] force_ns_eff_one=false
+  > [Diag] diagnostic_mode=false
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.1798 s (cum=62.3363 s), Backward wall=30.9397 s (cum=59.7135 s), Prefetch cum=0.0000 s, SUB_BATCH=1024, num_subs=1
+  > [Diag] full_memset_calls=3
+  > [Diag] visited_reset_calls=315
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.583769 
+  > GTEPS = 15.7252 (nodes=325557, edges=3216152)

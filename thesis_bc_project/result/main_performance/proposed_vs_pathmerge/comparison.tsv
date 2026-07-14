@@ -1,0 +1,5 @@
+Graph	Proposed_block_s	n_proposed	PathMerge_tuned_s	tuned_batch	n_tuned	Speedup	Proposed_source	PathMerge_source
+email-EuAll	30.81	5	97.80	b2048	3	3.17	proposed_variants/email-EuAll/results.tsv	tuning/pathmerge/email-EuAll/pathmerge_sweep_results.tsv
+roadNet-PA	699.52	3	918.67	b64	3	1.31	proposed_variants/roadNet-PA/results.tsv	seven_implementations/legacy_partial/large/results_no_gpu_opt.tsv
+roadNet-TX	980.13	3	1482.68	b64	3	1.51	proposed_variants/roadNet-TX/results.tsv	seven_implementations/legacy_partial/large/results_no_gpu_opt.tsv
+roadNet-CA	2129.10	3	3079.72	b32	3	1.45	proposed_variants/roadNet-CA/results.tsv	tuning/pathmerge/roadNet-CA/pathmerge_sweep_results.tsv

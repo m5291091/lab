@@ -1,0 +1,238 @@
+=== BC Ablation Experiment ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation
+Graphs  : benchmark_7000_41459 benchmark_11023_62184 56438_300801 325557_3216152
+Mode    : all   Trials: 5
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_ablation_20260710_182735_2354994
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 all  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 all  (trial 2)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 all  (trial 3)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 all  (trial 4)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 all  (trial 5)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_11023_62184 all  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_11023_62184 all  (trial 2)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_11023_62184 all  (trial 3)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_11023_62184 all  (trial 4)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_11023_62184 all  (trial 5)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 all  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 all  (trial 2)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 all  (trial 3)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 all  (trial 4)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/56438_300801 all  (trial 5)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 all  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 all  (trial 2)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 all  (trial 3)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 all  (trial 4)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 all  (trial 5)
+=== Ablation Complete ===
+Config	Graph	Trial	Time_sec	GTEPS
+Ablation_H0_W0_A0	benchmark_7000_41459	1	0.056044	5.1784
+Ablation_H0_W0_A1	benchmark_7000_41459	1	0.043375	6.6907
+Ablation_H0_W1_A0	benchmark_7000_41459	1	0.047983	6.0483
+Ablation_H0_W1_A1	benchmark_7000_41459	1	0.039475	7.3518
+Ablation_H1_W0_A0	benchmark_7000_41459	1	0.037516	7.7357
+Ablation_H1_W0_A1	benchmark_7000_41459	1	0.030033	9.6631
+Ablation_H1_W1_A0	benchmark_7000_41459	1	0.030794	9.4243
+Ablation_H1_W1_A1	benchmark_7000_41459	1	0.024220	11.9823
+Ablation_H0_W0_A0	benchmark_7000_41459	2	0.055944	5.1876
+Ablation_H0_W0_A1	benchmark_7000_41459	2	0.047010	6.1735
+Ablation_H0_W1_A0	benchmark_7000_41459	2	0.047848	6.0653
+Ablation_H0_W1_A1	benchmark_7000_41459	2	0.040408	7.1821
+Ablation_H1_W0_A0	benchmark_7000_41459	2	0.037555	7.7277
+Ablation_H1_W0_A1	benchmark_7000_41459	2	0.030664	9.4644
+Ablation_H1_W1_A0	benchmark_7000_41459	2	0.030817	9.4173
+Ablation_H1_W1_A1	benchmark_7000_41459	2	0.024701	11.7492
+Ablation_H0_W0_A0	benchmark_7000_41459	3	0.056000	5.1824
+Ablation_H0_W0_A1	benchmark_7000_41459	3	0.043951	6.6031
+Ablation_H0_W1_A0	benchmark_7000_41459	3	0.047935	6.0543
+Ablation_H0_W1_A1	benchmark_7000_41459	3	0.040490	7.1675
+Ablation_H1_W0_A0	benchmark_7000_41459	3	0.037762	7.6853
+Ablation_H1_W0_A1	benchmark_7000_41459	3	0.030730	9.4438
+Ablation_H1_W1_A0	benchmark_7000_41459	3	0.030817	9.4173
+Ablation_H1_W1_A1	benchmark_7000_41459	3	0.025249	11.4938
+Ablation_H0_W0_A0	benchmark_7000_41459	4	0.055571	5.2224
+Ablation_H0_W0_A1	benchmark_7000_41459	4	0.044580	6.5099
+Ablation_H0_W1_A0	benchmark_7000_41459	4	0.047647	6.0909
+Ablation_H0_W1_A1	benchmark_7000_41459	4	0.041129	7.0562
+Ablation_H1_W0_A0	benchmark_7000_41459	4	0.037430	7.7536
+Ablation_H1_W0_A1	benchmark_7000_41459	4	0.029892	9.7088
+Ablation_H1_W1_A0	benchmark_7000_41459	4	0.030631	9.4744
+Ablation_H1_W1_A1	benchmark_7000_41459	4	0.024660	11.7684
+Ablation_H0_W0_A0	benchmark_7000_41459	5	0.055777	5.2031
+Ablation_H0_W0_A1	benchmark_7000_41459	5	0.044221	6.5628
+Ablation_H0_W1_A0	benchmark_7000_41459	5	0.047784	6.0734
+Ablation_H0_W1_A1	benchmark_7000_41459	5	0.040967	7.0840
+Ablation_H1_W0_A0	benchmark_7000_41459	5	0.037290	7.7826
+Ablation_H1_W0_A1	benchmark_7000_41459	5	0.030251	9.5934
+Ablation_H1_W1_A0	benchmark_7000_41459	5	0.030506	9.5133
+Ablation_H1_W1_A1	benchmark_7000_41459	5	0.024595	11.7996
+Ablation_H0_W0_A0	benchmark_11023_62184	1	0.155606	4.4051
+Ablation_H0_W0_A1	benchmark_11023_62184	1	0.096309	7.1173
+Ablation_H0_W1_A0	benchmark_11023_62184	1	0.153860	4.4550
+Ablation_H0_W1_A1	benchmark_11023_62184	1	0.094285	7.2700
+Ablation_H1_W0_A0	benchmark_11023_62184	1	0.083936	8.1664
+Ablation_H1_W0_A1	benchmark_11023_62184	1	0.054717	12.5274
+Ablation_H1_W1_A0	benchmark_11023_62184	1	0.083598	8.1994
+Ablation_H1_W1_A1	benchmark_11023_62184	1	0.054758	12.5178
+Ablation_H0_W0_A0	benchmark_11023_62184	2	0.157071	4.3640
+Ablation_H0_W0_A1	benchmark_11023_62184	2	0.094649	7.2421
+Ablation_H0_W1_A0	benchmark_11023_62184	2	0.151187	4.5338
+Ablation_H0_W1_A1	benchmark_11023_62184	2	0.096477	7.1049
+Ablation_H1_W0_A0	benchmark_11023_62184	2	0.084188	8.1419
+Ablation_H1_W0_A1	benchmark_11023_62184	2	0.054144	12.6598
+Ablation_H1_W1_A0	benchmark_11023_62184	2	0.083897	8.1702
+Ablation_H1_W1_A1	benchmark_11023_62184	2	0.054671	12.5377
+Ablation_H0_W0_A0	benchmark_11023_62184	3	0.153957	4.4523
+Ablation_H0_W0_A1	benchmark_11023_62184	3	0.095471	7.1797
+Ablation_H0_W1_A0	benchmark_11023_62184	3	0.153494	4.4657
+Ablation_H0_W1_A1	benchmark_11023_62184	3	0.093254	7.3504
+Ablation_H1_W0_A0	benchmark_11023_62184	3	0.083900	8.1699
+Ablation_H1_W0_A1	benchmark_11023_62184	3	0.054673	12.5372
+Ablation_H1_W1_A0	benchmark_11023_62184	3	0.084048	8.1555
+Ablation_H1_W1_A1	benchmark_11023_62184	3	0.055756	12.2937
+Ablation_H0_W0_A0	benchmark_11023_62184	4	0.156449	4.3813
+Ablation_H0_W0_A1	benchmark_11023_62184	4	0.095976	7.1420
+Ablation_H0_W1_A0	benchmark_11023_62184	4	0.152473	4.4956
+Ablation_H0_W1_A1	benchmark_11023_62184	4	0.094130	7.2820
+Ablation_H1_W0_A0	benchmark_11023_62184	4	0.084426	8.1190
+Ablation_H1_W0_A1	benchmark_11023_62184	4	0.054575	12.5598
+Ablation_H1_W1_A0	benchmark_11023_62184	4	0.084350	8.1263
+Ablation_H1_W1_A1	benchmark_11023_62184	4	0.055315	12.3917
+Ablation_H0_W0_A0	benchmark_11023_62184	5	0.155951	4.3953
+Ablation_H0_W0_A1	benchmark_11023_62184	5	0.097498	7.0305
+Ablation_H0_W1_A0	benchmark_11023_62184	5	0.153300	4.4713
+Ablation_H0_W1_A1	benchmark_11023_62184	5	0.092800	7.3863
+Ablation_H1_W0_A0	benchmark_11023_62184	5	0.084500	8.1119
+Ablation_H1_W0_A1	benchmark_11023_62184	5	0.055738	12.2978
+Ablation_H1_W1_A0	benchmark_11023_62184	5	0.084560	8.1062
+Ablation_H1_W1_A1	benchmark_11023_62184	5	0.055550	12.3394
+Ablation_H0_W0_A0	56438_300801	1	3.976097	4.2697
+Ablation_H0_W0_A1	56438_300801	1	3.277375	5.1799
+Ablation_H0_W1_A0	56438_300801	1	3.963516	4.2832
+Ablation_H0_W1_A1	56438_300801	1	3.227384	5.2602
+Ablation_H1_W0_A0	56438_300801	1	2.012951	8.4337
+Ablation_H1_W0_A1	56438_300801	1	1.620168	10.4783
+Ablation_H1_W1_A0	56438_300801	1	2.083709	8.1473
+Ablation_H1_W1_A1	56438_300801	1	1.647959	10.3016
+Ablation_H0_W0_A0	56438_300801	2	3.975052	4.2708
+Ablation_H0_W0_A1	56438_300801	2	3.278142	5.1787
+Ablation_H0_W1_A0	56438_300801	2	3.968872	4.2774
+Ablation_H0_W1_A1	56438_300801	2	3.221999	5.2690
+Ablation_H1_W0_A0	56438_300801	2	2.011607	8.4393
+Ablation_H1_W0_A1	56438_300801	2	1.623107	10.4593
+Ablation_H1_W1_A0	56438_300801	2	2.081964	8.1541
+Ablation_H1_W1_A1	56438_300801	2	1.646102	10.3132
+Ablation_H0_W0_A0	56438_300801	3	3.979156	4.2664
+Ablation_H0_W0_A1	56438_300801	3	3.276283	5.1817
+Ablation_H0_W1_A0	56438_300801	3	3.971102	4.2750
+Ablation_H0_W1_A1	56438_300801	3	3.217845	5.2758
+Ablation_H1_W0_A0	56438_300801	3	2.012500	8.4356
+Ablation_H1_W0_A1	56438_300801	3	1.619469	10.4828
+Ablation_H1_W1_A0	56438_300801	3	2.083729	8.1472
+Ablation_H1_W1_A1	56438_300801	3	1.651386	10.2802
+Ablation_H0_W0_A0	56438_300801	4	3.977577	4.2681
+Ablation_H0_W0_A1	56438_300801	4	3.277497	5.1797
+Ablation_H0_W1_A0	56438_300801	4	3.965917	4.2806
+Ablation_H0_W1_A1	56438_300801	4	3.225628	5.2630
+Ablation_H1_W0_A0	56438_300801	4	2.012922	8.4338
+Ablation_H1_W0_A1	56438_300801	4	1.617956	10.4926
+Ablation_H1_W1_A0	56438_300801	4	2.081052	8.1577
+Ablation_H1_W1_A1	56438_300801	4	1.649608	10.2913
+Ablation_H0_W0_A0	56438_300801	5	3.986843	4.2582
+Ablation_H0_W0_A1	56438_300801	5	3.276129	5.1819
+Ablation_H0_W1_A0	56438_300801	5	3.971307	4.2748
+Ablation_H0_W1_A1	56438_300801	5	3.224815	5.2644
+Ablation_H1_W0_A0	56438_300801	5	2.009440	8.4484
+Ablation_H1_W0_A1	56438_300801	5	1.619542	10.4823
+Ablation_H1_W1_A0	56438_300801	5	2.085697	8.1395
+Ablation_H1_W1_A1	56438_300801	5	1.648082	10.3008
+Ablation_H0_W0_A0	325557_3216152	1	176.499175	5.9323
+Ablation_H0_W0_A1	325557_3216152	1	112.107097	9.3396
+Ablation_H0_W1_A0	325557_3216152	1	163.700166	6.3961
+Ablation_H0_W1_A1	325557_3216152	1	100.931930	10.3737
+Ablation_H1_W0_A0	325557_3216152	1	124.594405	8.4036
+Ablation_H1_W0_A1	325557_3216152	1	81.684899	12.8180
+Ablation_H1_W1_A0	325557_3216152	1	115.602630	9.0572
+Ablation_H1_W1_A1	325557_3216152	1	73.160699	14.3115
+Ablation_H0_W0_A0	325557_3216152	2	176.273764	5.9399
+Ablation_H0_W0_A1	325557_3216152	2	112.121695	9.3384
+Ablation_H0_W1_A0	325557_3216152	2	163.758087	6.3938
+Ablation_H0_W1_A1	325557_3216152	2	100.747634	10.3927
+Ablation_H1_W0_A0	325557_3216152	2	124.550105	8.4066
+Ablation_H1_W0_A1	325557_3216152	2	81.702279	12.8153
+Ablation_H1_W1_A0	325557_3216152	2	115.679890	9.0512
+Ablation_H1_W1_A1	325557_3216152	2	73.361727	14.2723
+Ablation_H0_W0_A0	325557_3216152	3	176.377429	5.9364
+Ablation_H0_W0_A1	325557_3216152	3	112.126686	9.3380
+Ablation_H0_W1_A0	325557_3216152	3	163.775986	6.3931
+Ablation_H0_W1_A1	325557_3216152	3	100.774364	10.3900
+Ablation_H1_W0_A0	325557_3216152	3	124.607520	8.4027
+Ablation_H1_W0_A1	325557_3216152	3	81.658002	12.8223
+Ablation_H1_W1_A0	325557_3216152	3	115.627324	9.0553
+Ablation_H1_W1_A1	325557_3216152	3	73.171411	14.3094
+Ablation_H0_W0_A0	325557_3216152	4	176.371341	5.9366
+Ablation_H0_W0_A1	325557_3216152	4	112.140839	9.3368
+Ablation_H0_W1_A0	325557_3216152	4	163.723856	6.3952
+Ablation_H0_W1_A1	325557_3216152	4	100.920807	10.3749
+Ablation_H1_W0_A0	325557_3216152	4	124.580846	8.4045
+Ablation_H1_W0_A1	325557_3216152	4	81.911587	12.7826
+Ablation_H1_W1_A0	325557_3216152	4	115.678980	9.0513
+Ablation_H1_W1_A1	325557_3216152	4	73.110497	14.3213
+Ablation_H0_W0_A0	325557_3216152	5	176.369826	5.9366
+Ablation_H0_W0_A1	325557_3216152	5	112.345169	9.3199
+Ablation_H0_W1_A0	325557_3216152	5	163.865469	6.3896
+Ablation_H0_W1_A1	325557_3216152	5	100.784210	10.3889
+Ablation_H1_W0_A0	325557_3216152	5	124.448354	8.4135
+Ablation_H1_W0_A1	325557_3216152	5	81.685797	12.8179
+Ablation_H1_W1_A0	325557_3216152	5	115.678792	9.0513
+Ablation_H1_W1_A1	325557_3216152	5	73.225436	14.2989
+
+=== 自動サマリ生成 (寄与表 + 交互作用 + フェーズ帰属) ===
+  読み込み: 4 グラフ × 8 構成
+  フェーズ帰属: ablation.log を解析 (8 構成)
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_ablation_20260710_182735_2354994/ablation_summary.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_ablation_20260710_182735_2354994/ablation_contributions.tsv
+
+
+# 単独寄与 (add-one): T(H0W0A0) / T(その工夫だけ ON)
+
+| 工夫 | benchmark_7000_41459 | benchmark_11023_62184 | 56438_300801 | 325557_3216152 | 幾何平均 |
+|:-----|------:|------:|------:|------:|------:|
+| H (ハイブリッド BFS) | 1.491× | 1.852× | 1.976× | 1.416× | 1.667× |
+| W (Warp 協調蓄積) | 1.169× | 1.017× | 1.002× | 1.077× | 1.064× |
+| A (2 ストリーム非同期初期化) | 1.265× | 1.625× | 1.214× | 1.573× | 1.407× |
+
+# 除外寄与 (leave-one-out): T(full から 1 つ OFF) / T(H1W1A1)
+
+| 工夫 | benchmark_7000_41459 | benchmark_11023_62184 | 56438_300801 | 325557_3216152 | 幾何平均 |
+|:-----|------:|------:|------:|------:|------:|
+| H (ハイブリッド BFS) | 1.642× | 1.702× | 1.957× | 1.377× | 1.657× |
+| W (Warp 協調蓄積) | 1.227× | 0.988× | 0.983× | 1.116× | 1.074× |
+| A (2 ストリーム非同期初期化) | 1.249× | 1.519× | 1.264× | 1.581× | 1.396× |
+
+# 主効果 (フル要因): 他 2 軸で平均した T(F=0)/T(F=1) の幾何平均
+
+| 工夫 | benchmark_7000_41459 | benchmark_11023_62184 | 56438_300801 | 325557_3216152 | 幾何平均 |
+|:-----|------:|------:|------:|------:|------:|
+| H (ハイブリッド BFS) | 1.536× | 1.782× | 1.965× | 1.395× | 1.655× |
+| W (Warp 協調蓄積) | 1.175× | 1.007× | 0.992× | 1.096× | 1.065× |
+| A (2 ストリーム非同期初期化) | 1.234× | 1.577× | 1.238× | 1.576× | 1.396× |
+
+# 交互作用チェック (単独寄与 vs 除外寄与 の相対差)
+
+閾値 10% 超で「交互作用あり」と判定 (単独と最終系で工夫の効き方が異なる = 他工夫との相互作用)。
+
+| 工夫 | グラフ | 単独寄与 | 除外寄与 | 相対差 | 判定 |
+|:-----|:-----|------:|------:|------:|:----:|
+| H | benchmark_7000_41459 | 1.491× | 1.642× | 9.2% | — |
+| H | benchmark_11023_62184 | 1.852× | 1.702× | 8.9% | — |
+| H | 56438_300801 | 1.976× | 1.957× | 1.0% | — |
+| H | 325557_3216152 | 1.416× | 1.377× | 2.8% | — |
+| W | benchmark_7000_41459 | 1.169× | 1.227× | 4.7% | — |
+| W | benchmark_11023_62184 | 1.017× | 0.988× | 2.9% | — |
+| W | 56438_300801 | 1.002× | 0.983× | 2.0% | — |
+| W | 325557_3216152 | 1.077× | 1.116× | 3.5% | — |
+| A | benchmark_7000_41459 | 1.265× | 1.249× | 1.3% | — |
+| A | benchmark_11023_62184 | 1.625× | 1.519× | 6.9% | — |
+| A | 56438_300801 | 1.214× | 1.264× | 4.0% | — |
+| A | 325557_3216152 | 1.573× | 1.581× | 0.5% | — |

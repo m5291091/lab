@@ -1,0 +1,48 @@
+#include "Graph.h"
+
+// コンストラクタ／デストラクタ
+Graph::Graph() : nodeCount(0), edgeCount(0),
+                 adjacencyList(nullptr), adjacencyListPointers(nullptr) {}
+
+Graph::~Graph() {
+    delete[] adjacencyList;
+    delete[] adjacencyListPointers;
+}
+
+// 各種メソッド本体
+int Graph::getNodeCount() const {
+    return nodeCount;
+}
+
+int Graph::getEdgeCount() const {
+    return edgeCount;
+}
+
+void Graph::readGraph() {
+    // CSR フォーマットの読み込み
+    std::cin >> nodeCount >> edgeCount;
+    adjacencyListPointers = new int[nodeCount + 1];
+    adjacencyList = new int[2 * edgeCount];
+    for (int i = 0; i <= nodeCount; ++i) {
+        std::cin >> adjacencyListPointers[i];
+    }
+    for (int i = 0; i < 2 * edgeCount; ++i) {
+        std::cin >> adjacencyList[i];
+    }
+}
+
+int* Graph::getAdjacencyList() const {
+    return adjacencyList;
+}
+
+int* Graph::getAdjacencyListPointers() const {
+    return adjacencyListPointers;
+}
+
+void Graph::setSourcePath(const std::string& path) {
+    sourcePath = path;
+}
+
+const std::string& Graph::getSourcePath() const {
+    return sourcePath;
+}

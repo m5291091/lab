@@ -1,0 +1,42 @@
+=== graph=snap/email-EuAll trial=1 ===
+=== PathMerge batch_size=8 ===
+Running: PathMerge_b8 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=8, num_sources=265009, num_batches=33127
+  > [GPU Phase] BFS: 621.9596 sec, Backward: 163.7343 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 786.914750 
+  > GTEPS = 0.1227 (nodes=265009, edges=364481)
+=== PathMerge batch_size=16 ===
+Running: PathMerge_b16 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=16, num_sources=265009, num_batches=16564
+  > [GPU Phase] BFS: 388.2596 sec, Backward: 102.0944 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 491.012537 
+  > GTEPS = 0.1967 (nodes=265009, edges=364481)
+=== PathMerge batch_size=64 ===
+Running: PathMerge_b64 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=265009, num_batches=4141
+  > [GPU Phase] BFS: 177.9597 sec, Backward: 47.6447 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 226.049570 
+  > GTEPS = 0.4273 (nodes=265009, edges=364481)
+=== PathMerge batch_size=256 ===
+Running: PathMerge_b256 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=256, num_sources=265009, num_batches=1036
+  > [GPU Phase] BFS: 103.5113 sec, Backward: 21.9705 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 125.914082 
+  > GTEPS = 0.7671 (nodes=265009, edges=364481)
+=== PathMerge batch_size=1024 ===
+Running: PathMerge_b1024 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=1024, num_sources=265009, num_batches=259
+  > [GPU Phase] BFS: 83.4605 sec, Backward: 13.6644 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 97.692453 
+  > GTEPS = 0.9887 (nodes=265009, edges=364481)
+
+  > [PathMerge Sweep] BEST batch_size=1024, time=97.692453 s
+=== graph=snap/email-EuAll trial=2 ===
+=== PathMerge batch_size=8 ===
+Running: PathMerge_b8 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=8, num_sources=265009, num_batches=33127

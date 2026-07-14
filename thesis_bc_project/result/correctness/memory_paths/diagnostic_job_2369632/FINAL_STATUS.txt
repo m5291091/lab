@@ -1,0 +1,6 @@
+overall_status=DIAGNOSTIC_COMPLETE
+non_interference=verified_mismatch0
+reset_status=RESET_NOT_DISTINGUISHED
+nseff_status=NS_EFF_NOT_DISTINGUISHED
+mm_control_treset=0
+mm_control_tnseff=0

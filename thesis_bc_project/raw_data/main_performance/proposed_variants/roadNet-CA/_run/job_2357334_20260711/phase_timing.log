@@ -1,0 +1,66 @@
+Running: GPU_Opt on roadNet-CA...
+  > [BFS kernel] auto=block (avg_deg=2.82, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=816.3645 s (cum=1619.1582 s), Backward wall=950.2782 s (cum=1885.1357 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2129.100624 
+  > GTEPS = 2.5536 (nodes=1965206, edges=2766607)
+Running: GPU_Opt on roadNet-CA...
+  > [BFS kernel] auto=block (avg_deg=2.82, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=811.2329 s (cum=1619.1880 s), Backward wall=950.0266 s (cum=1894.1241 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2130.249052 
+  > GTEPS = 2.5523 (nodes=1965206, edges=2766607)
+Running: GPU_Opt on roadNet-CA...
+  > [BFS kernel] auto=block (avg_deg=2.82, heuristic=block)
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=824.1116 s (cum=1576.1139 s), Backward wall=1004.9690 s (cum=1934.4130 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2122.782003 
+  > GTEPS = 2.5612 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=64.41 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=824.3661 s (cum=1572.4148 s), Backward wall=1009.1172 s (cum=1938.8655 s)
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2120.692664 
+  > GTEPS = 2.5638 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=64.41 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=813.8170 s (cum=1584.7700 s), Backward wall=984.5564 s (cum=1924.5122 s)
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2119.980012 
+  > GTEPS = 2.5646 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=64.41 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=816.3543 s (cum=1582.6465 s), Backward wall=988.9788 s (cum=1925.0625 s)
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2117.165728 
+  > GTEPS = 2.5680 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure_Chunked on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=825.1439 s (cum=1583.4840 s), Backward wall=999.6700 s (cum=1925.4419 s), SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2119.106989 
+  > GTEPS = 2.5657 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure_Chunked on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=819.3546 s (cum=1620.0468 s), Backward wall=951.8399 s (cum=1880.8831 s), SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2130.552566 
+  > GTEPS = 2.5519 (nodes=1965206, edges=2766607)
+Running: GPU_Opt_Pure_Chunked on roadNet-CA...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=64.41 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=828.3750 s (cum=1581.6195 s), Backward wall=1003.5782 s (cum=1927.7395 s), SUB_BATCH=512, num_subs=1
+  > index : 1584888, Maximum Betweenness Centrality ==> 686380725021.27
+  > Elapse time [sec.] = 2119.892398 
+  > GTEPS = 2.5647 (nodes=1965206, edges=2766607)

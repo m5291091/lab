@@ -1,0 +1,10 @@
+comparison	1e-6(official)	2e-6	3e-6	1e-5
+gpu_b9792 vs gpu_b1024	6	1	0	0
+chunk_b16384 vs chunk_b1024	6	1	0	0
+gpu_b9792 vs chunk_b16384	4	2	0	0
+Pure_b1024 398 vs 587	0	0	0	0
+PathMerge 398 vs 587	0	0	0	0
+PathMerge 269 vs 587	0	0	0	0
+PathMerge(587) vs gpu_b1024	11027	1355	952	283
+PathMerge(587) vs pure_b1024	11027	1355	952	283
+PathMerge(587) vs chunk_b16384	11028	1355	952	283

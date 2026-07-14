@@ -1,0 +1,64 @@
+checkpoint_sha=6282798ce9942c6297cbdf2963aa7a3c65c6b807
+pbs_job_id=2368269.opbs
+project_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project
+result_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_memory_correctness_20260712_204001_2368269.opbs
+runner=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark
+graph=data/325557_3216152
+graph_sha256=a095b2e7564e6c620bd0f5437917e0b28f4fecab289adf77633e850aa07da584
+n_nodes=325557
+n_edges=3216152
+runs_per_configuration=1
+warmup=none
+timing_usage=correctness_only_not_performance
+reference=pathmerge_b4096
+abs_tol=1e-3
+rel_tol=1e-6
+criterion=abs_diff <= abs_tol + rel_tol * max(abs(reference),abs(candidate))
+
+[config pathmerge_b4096 | role=reference | path=pathmerge]
+impl=pathmerge_bc
+requested_batch=4096
+effective_batch=4096
+SUB_BATCH=not_applicable
+num_subs=80
+NS_eff=not_applicable
+oversubscribed=not_applicable
+uses_um=managed_csr
+runner_exit=0
+vector_sha256=1569b9e341f1baecaca010aa36f01d1b9bc1e97530a6156de3d6a9874acf9f84
+comparison_exit=not_applicable
+reference_vector_length=325557
+candidate_vector_length=not_applicable
+missing_reference_only=not_applicable
+missing_candidate_only=not_applicable
+mismatched_elements=not_applicable
+max_abs_error=not_applicable (index not_applicable; ref=not_applicable cand=not_applicable)
+max_rel_error=not_applicable (index not_applicable; ref=not_applicable cand=not_applicable)
+max_bc_reference=index not_applicable value not_applicable
+max_bc_candidate=index not_applicable value not_applicable
+status=PASS
+reason=reference_valid_path_evidence_ok
+
+[config gpu_opt_b10240 | role=candidate | path=um]
+impl=gpu_opt
+requested_batch=10240
+effective_batch=10240
+SUB_BATCH=6596
+num_subs=2
+NS_eff=1
+oversubscribed=true
+uses_um=true
+runner_exit=137
+vector_sha256=e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+comparison_exit=not_applicable
+reference_vector_length=not_applicable
+candidate_vector_length=not_applicable
+missing_reference_only=not_applicable
+missing_candidate_only=not_applicable
+mismatched_elements=not_applicable
+max_abs_error=not_applicable (index not_applicable; ref=not_applicable cand=not_applicable)
+max_rel_error=not_applicable (index not_applicable; ref=not_applicable cand=not_applicable)
+max_bc_reference=index not_applicable value not_applicable
+max_bc_candidate=index not_applicable value not_applicable
+status=FAIL
+reason=runner_exit_137

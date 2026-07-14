@@ -1,0 +1,219 @@
+=== graph=snap/email-EuAll trial=1 ===
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.2733 s, Backward cum=41.8741 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on email-EuAll...
+  > [Ablation H0 W0 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=33.7217 s, Backward cum=37.9884 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 72.107592 
+  > GTEPS = 1.3395 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on email-EuAll...
+  > [Ablation H0 W0 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=40.3475 s, Backward cum=43.8657 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 42.495161 
+  > GTEPS = 2.2730 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on email-EuAll...
+  > [Ablation H0 W1 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=33.7353 s, Backward cum=39.1621 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 73.294355 
+  > GTEPS = 1.3178 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on email-EuAll...
+  > [Ablation H0 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=40.2460 s, Backward cum=44.8755 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 42.899488 
+  > GTEPS = 2.2516 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on email-EuAll...
+  > [Ablation H1 W0 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=15.1833 s, Backward cum=34.7701 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 50.350710 
+  > GTEPS = 1.9184 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on email-EuAll...
+  > [Ablation H1 W0 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.1166 s, Backward cum=38.7067 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 28.750180 
+  > GTEPS = 3.3597 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on email-EuAll...
+  > [Ablation H1 W1 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=15.1757 s, Backward cum=36.9090 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 52.481184 
+  > GTEPS = 1.8405 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on email-EuAll...
+  > [Ablation H1 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.2694 s, Backward cum=41.9381 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.421410 
+  > GTEPS = 3.1751 (nodes=265009, edges=364481)
+=== graph=snap/email-EuAll trial=2 ===
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.2759 s, Backward cum=41.8500 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on email-EuAll...
+  > [Ablation H0 W0 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=33.7200 s, Backward cum=37.9545 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 72.070743 
+  > GTEPS = 1.3402 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on email-EuAll...
+  > [Ablation H0 W0 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=40.1794 s, Backward cum=43.8470 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 42.363314 
+  > GTEPS = 2.2801 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on email-EuAll...
+  > [Ablation H0 W1 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=33.6573 s, Backward cum=39.1849 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 73.243350 
+  > GTEPS = 1.3188 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on email-EuAll...
+  > [Ablation H0 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=40.2067 s, Backward cum=44.9176 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 42.881928 
+  > GTEPS = 2.2525 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on email-EuAll...
+  > [Ablation H1 W0 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=15.1820 s, Backward cum=34.7633 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 50.340890 
+  > GTEPS = 1.9187 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on email-EuAll...
+  > [Ablation H1 W0 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.1442 s, Backward cum=38.7215 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 28.753547 
+  > GTEPS = 3.3593 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on email-EuAll...
+  > [Ablation H1 W1 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=15.1911 s, Backward cum=36.8943 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 52.481763 
+  > GTEPS = 1.8405 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on email-EuAll...
+  > [Ablation H1 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=17.7740 s, Backward cum=42.0879 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.254042 
+  > GTEPS = 3.1927 (nodes=265009, edges=364481)
+=== graph=snap/email-EuAll trial=3 ===
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.2585 s, Backward cum=41.8130 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on email-EuAll...
+  > [Ablation H0 W0 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=33.6803 s, Backward cum=37.9237 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 72.001806 
+  > GTEPS = 1.3415 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on email-EuAll...
+  > [Ablation H0 W0 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=40.2080 s, Backward cum=44.0262 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 42.535161 
+  > GTEPS = 2.2708 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on email-EuAll...
+  > [Ablation H0 W1 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=33.6990 s, Backward cum=39.1688 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 73.264358 
+  > GTEPS = 1.3184 (nodes=265009, edges=364481)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on email-EuAll...
+  > [Ablation H0 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=40.2177 s, Backward cum=44.9003 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 42.893899 
+  > GTEPS = 2.2519 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on email-EuAll...
+  > [Ablation H1 W0 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=15.1802 s, Backward cum=34.7129 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 50.289317 
+  > GTEPS = 1.9207 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on email-EuAll...
+  > [Ablation H1 W0 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.1421 s, Backward cum=38.7311 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 28.765522 
+  > GTEPS = 3.3579 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on email-EuAll...
+  > [Ablation H1 W1 A0] NS=1, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=15.1839 s, Backward cum=36.9439 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 52.524467 
+  > GTEPS = 1.8390 (nodes=265009, edges=364481)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on email-EuAll...
+  > [Ablation H1 W1 A1] NS=2, tpb=128, BATCH=512, max_depth=4096, avg_deg=2.75
+  > [Ablation Phase] BFS cum=18.2753 s, Backward cum=41.9417 s
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 30.424089 
+  > GTEPS = 3.1748 (nodes=265009, edges=364481)
+  読み込み: 1 グラフ × 8 構成
+  フェーズ帰属: ablation.log を解析 (8 構成)
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_ablation_20260710_182735_2354999/ablation_summary.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_ablation_20260710_182735_2354999/ablation_contributions.tsv
+
+
+# 単独寄与 (add-one): T(H0W0A0) / T(その工夫だけ ON)
+
+| 工夫 | email-EuAll | 幾何平均 |
+|:-----|------:|------:|
+| H (ハイブリッド BFS) | 1.432× | 1.432× |
+| W (Warp 協調蓄積) | 0.984× | 0.984× |
+| A (2 ストリーム非同期初期化) | 1.696× | 1.696× |
+
+# 除外寄与 (leave-one-out): T(full から 1 つ OFF) / T(H1W1A1)
+
+| 工夫 | email-EuAll | 幾何平均 |
+|:-----|------:|------:|
+| H (ハイブリッド BFS) | 1.410× | 1.410× |
+| W (Warp 協調蓄積) | 0.945× | 0.945× |
+| A (2 ストリーム非同期初期化) | 1.725× | 1.725× |
+
+# 主効果 (フル要因): 他 2 軸で平均した T(F=0)/T(F=1) の幾何平均
+
+| 工夫 | email-EuAll | 幾何平均 |
+|:-----|------:|------:|
+| H (ハイブリッド BFS) | 1.429× | 1.429× |
+| W (Warp 協調蓄積) | 0.970× | 0.970× |
+| A (2 ストリーム非同期初期化) | 1.720× | 1.720× |
+
+# 交互作用チェック (単独寄与 vs 除外寄与 の相対差)
+
+閾値 10% 超で「交互作用あり」と判定 (単独と最終系で工夫の効き方が異なる = 他工夫との相互作用)。
+
+| 工夫 | グラフ | 単独寄与 | 除外寄与 | 相対差 | 判定 |
+|:-----|:-----|------:|------:|------:|:----:|
+| H | email-EuAll | 1.432× | 1.410× | 1.5% | — |
+| W | email-EuAll | 0.984× | 0.945× | 4.1% | — |
+| A | email-EuAll | 1.696× | 1.725× | 1.7% | — |

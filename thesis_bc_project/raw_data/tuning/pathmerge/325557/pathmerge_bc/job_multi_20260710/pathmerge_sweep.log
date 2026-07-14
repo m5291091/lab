@@ -1,0 +1,54 @@
+=== graph=325557_3216152 trial=1 ===
+=== PathMerge batch_size=4096 ===
+Running: PathMerge_b4096 on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=325557, num_batches=80
+  > [GPU Phase] BFS: 127.0070 sec, Backward: 40.4621 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 169.270083 
+  > GTEPS = 6.1856 (nodes=325557, edges=3216152)
+=== PathMerge batch_size=8192 ===
+Running: PathMerge_b8192 on 325557_3216152...
+  > [PathMerge] WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 6018 (free=101.4 GB, 14324508 B/source)
+  > [PathMerge] free_mem=101.4 GB, batch_size=6018, num_sources=325557, num_batches=55
+  > [GPU Phase] BFS: 127.1065 sec, Backward: 39.6323 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 168.716513 
+  > GTEPS = 6.2059 (nodes=325557, edges=3216152)
+
+  > [PathMerge Sweep] BEST batch_size=8192, time=168.716513 s
+=== graph=325557_3216152 trial=2 ===
+=== PathMerge batch_size=4096 ===
+Running: PathMerge_b4096 on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=325557, num_batches=80
+  > [GPU Phase] BFS: 125.3615 sec, Backward: 40.5233 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 167.574471 
+  > GTEPS = 6.2482 (nodes=325557, edges=3216152)
+=== PathMerge batch_size=8192 ===
+Running: PathMerge_b8192 on 325557_3216152...
+  > [PathMerge] WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 6018 (free=101.4 GB, 14324508 B/source)
+  > [PathMerge] free_mem=101.4 GB, batch_size=6018, num_sources=325557, num_batches=55
+  > [GPU Phase] BFS: 126.5189 sec, Backward: 39.6289 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 168.130241 
+  > GTEPS = 6.2276 (nodes=325557, edges=3216152)
+
+  > [PathMerge Sweep] BEST batch_size=4096, time=167.574471 s
+=== graph=325557_3216152 trial=3 ===
+=== PathMerge batch_size=4096 ===
+Running: PathMerge_b4096 on 325557_3216152...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=325557, num_batches=80
+  > [GPU Phase] BFS: 125.2161 sec, Backward: 40.5078 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 167.408767 
+  > GTEPS = 6.2544 (nodes=325557, edges=3216152)
+=== PathMerge batch_size=8192 ===
+Running: PathMerge_b8192 on 325557_3216152...
+  > [PathMerge] WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 6018 (free=101.4 GB, 14324508 B/source)
+  > [PathMerge] free_mem=101.4 GB, batch_size=6018, num_sources=325557, num_batches=55
+  > [GPU Phase] BFS: 126.6689 sec, Backward: 39.6238 sec
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 168.266215 
+  > GTEPS = 6.2225 (nodes=325557, edges=3216152)
+
+  > [PathMerge Sweep] BEST batch_size=4096, time=167.408767 s

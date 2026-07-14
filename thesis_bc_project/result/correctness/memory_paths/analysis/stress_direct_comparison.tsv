@@ -1,0 +1,2 @@
+comparison	sha_a	sha_b	mismatch	max_abs	max_abs_idx	max_abs_a	max_abs_b	max_rel	max_rel_idx	maxbc_a_idx	maxbc_a_val	maxbc_b_idx	maxbc_b_val	B_gt_A	B_lt_A	mixed_verdict
+gpu_b9792_vs_chunk_b16384	be8f52d32ac03cd495a08c5c6cd138fcdcec916a16830e62e7bc8d3c968d25c5	618ffdc4108f0c24a148bc1aa2a18b83d14b48319cd18438f89196b40930a86d	4	1.000000e+00	325556	894728.6570761406	894727.6570761404	2.847745e-06	95156	272817	39343001000.108543	272817	39343001000.108582	35384	56595	exceeds(4)

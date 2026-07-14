@@ -1,0 +1,28 @@
+=== graph=snap/roadNet-PA trial=1 ===
+=== PathMerge batch_size=8 ===
+Running: PathMerge_b8 on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=8, num_sources=1088092, num_batches=136012
+  > [GPU Phase] BFS: 1577.0154 sec, Backward: 1129.2728 sec
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 2714.978259 
+  > GTEPS = 0.6180 (nodes=1088092, edges=1541898)
+=== PathMerge batch_size=16 ===
+Running: PathMerge_b16 on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=16, num_sources=1088092, num_batches=68006
+  > [GPU Phase] BFS: 970.4754 sec, Backward: 596.2084 sec
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1573.869732 
+  > GTEPS = 1.0660 (nodes=1088092, edges=1541898)
+=== PathMerge batch_size=32 ===
+Running: PathMerge_b32 on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=32, num_sources=1088092, num_batches=34003
+  > [GPU Phase] BFS: 654.4409 sec, Backward: 354.9197 sec
+  > index : 557532, Maximum Betweenness Centrality ==> 151395302679.08
+  > Elapse time [sec.] = 1015.980496 
+  > GTEPS = 1.6513 (nodes=1088092, edges=1541898)
+
+  > [PathMerge Sweep] BEST batch_size=32, time=1015.980496 s
+=== graph=snap/roadNet-PA trial=2 ===
+=== PathMerge batch_size=8 ===
+Running: PathMerge_b8 on roadNet-PA...
+  > [PathMerge] free_mem=101.4 GB, batch_size=8, num_sources=1088092, num_batches=136012

@@ -1,0 +1,52 @@
+checkpoint=e32b03e9b73e9eb294685c58e488ce2a92521852 job=2367583.opbs result=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_small_correctness_20260712_181140_2367583.opbs
+[BUILD] scripts/build_miyabi_interactive.sh (output is not a performance result)
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.4s)
+-- Generating done (0.2s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+[ 12%] Built target core
+[ 20%] Built target bandwidth_benchmark
+[ 60%] Built target proposed
+[ 68%] Built target baseline
+[ 84%] Built target run_ablation
+[ 84%] Built target run_pathmerge_sweep
+[ 92%] Built target baseline_cugraph
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+[RUN] sequential data/benchmark_7000_41459 (n=1, no warmup)
+[EXIT] sequential benchmark_7000_41459: 0
+[RUN] gpu_opt data/benchmark_7000_41459 (n=1, no warmup)
+[EXIT] gpu_opt benchmark_7000_41459: 0
+[PASS] benchmark_7000_41459: all 7000 elements within mixed tolerance
+[RUN] sequential data/benchmark_11023_62184 (n=1, no warmup)
+[EXIT] sequential benchmark_11023_62184: 0
+[RUN] gpu_opt data/benchmark_11023_62184 (n=1, no warmup)
+[EXIT] gpu_opt benchmark_11023_62184: 0
+[PASS] benchmark_11023_62184: all 11023 elements within mixed tolerance
+[RUN] sequential data/chain_200 (n=1, no warmup)
+[EXIT] sequential chain_200: 0
+[RUN] gpu_opt data/chain_200 (n=1, no warmup)
+[EXIT] gpu_opt chain_200: 0
+[PASS] chain_200: all 200 elements within mixed tolerance
+PASS: all three graphs completed; timings are not performance results

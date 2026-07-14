@@ -1,0 +1,18 @@
+=== GH200 メモリ帯域ベンチマーク ===
+  GPU: NVIDIA GH200 120GB
+  HBM3 総容量: 102 GB
+  計測バッファ: 1024 MB
+
+  HBM3 (DtoD):        1818.6 GB/s  (4020 GB/s 理論比: 45.2%)
+  Pinned HtoD:        424.1 GB/s  (900 GB/s 理論比: 47.1%)
+  Pinned DtoH:        297.6 GB/s  (900 GB/s 理論比: 33.1%)
+  NVLink-C2C Prefetch: 177.7 GB/s  (900 GB/s 理論比: 19.7%)
+
+TSV 出力は stdout に出力されました。
+論文への記載: NVLink-C2C Prefetch の帯域が Pinned HtoD と比較して
+どれほど近いかが GH200 特性活用の直接証拠になります。
+Transfer_Type	Size_GB	Time_ms	Bandwidth_GBs	Theoretical_GBs	Ratio_pct
+HBM3_DtoD	1.074	0.59	1818.6	4020	45.2
+Pinned_HtoD	1.074	2.53	424.1	900	47.1
+Pinned_DtoH	1.074	3.61	297.6	900	33.1
+NVLink_C2C_Prefetch	1.074	6.04	177.7	900	19.7

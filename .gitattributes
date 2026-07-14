@@ -1,0 +1,65 @@
+# .gitattributes (Gate J2)
+# 目的: Git 履歴非依存アーカイブに含まれる byte-exact な検証済みキャプチャ 56 件についてのみ,
+#       git の whitespace 検査 (trailing-whitespace / space-before-tab / blank-line-at-EOF) を無効化する.
+#       これらは SHA256SUMS で原本一致を検証する verbatim 資料であり, 内容・改行・末尾空白を改変してはならない
+#       (改変すると SHA256 不一致になる). -whitespace は検査解除のみで, text/eol などの内容変換は一切伴わない.
+# 方針:
+#   - raw_data/** や code_snapshots/** の一括除外は行わない (明示 56 パスのみ列挙).
+#   - 我々が生成・記述する README / MANIFEST / SHA256SUMS / *.tsv / scripts の検査は無効化しない (clean を維持).
+#   - 内訳: vendored cuGraph 3rd-party 3 + 実験時ソーススナップショット 49 + 取得 stderr(.err) 4.
+thesis_bc_project/code_snapshots/_dependencies/cugraph_bc_subset_20260710/third_party/cugraph/README.md -whitespace
+thesis_bc_project/code_snapshots/_dependencies/cugraph_bc_subset_20260710/third_party/cugraph/thirdparty/mmio/mmio.c -whitespace
+thesis_bc_project/code_snapshots/_dependencies/cugraph_bc_subset_20260710/third_party/cugraph/thirdparty/mmio/mmio.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/CMakeLists.txt -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/include/baseline/baseline_graph.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/include/baseline/baseline_utils.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/include/core/common.hpp -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/include/proposed/brandes_kernels.cuh -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/src/baseline/gpu_unopt.cu -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_20260712/src/baseline/omp.cpp -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/CMakeLists.txt -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/include/baseline/baseline_graph.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/include/baseline/baseline_utils.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/include/core/common.hpp -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/include/proposed/brandes_kernels.cuh -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/src/baseline/gpu_unopt.cu -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_failfast_20260712/src/baseline/omp.cpp -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/CMakeLists.txt -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/include/baseline/baseline_graph.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/include/baseline/baseline_utils.h -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/include/core/common.hpp -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/include/proposed/brandes_kernels.cuh -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/src/baseline/gpu_unopt.cu -whitespace
+thesis_bc_project/code_snapshots/memory_correctness_oom_20260712/src/baseline/omp.cpp -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/CMakeLists.txt -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/include/baseline/baseline_graph.h -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/include/baseline/baseline_utils.h -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/include/core/common.hpp -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/include/proposed/brandes_kernels.cuh -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/src/baseline/gpu_unopt.cu -whitespace
+thesis_bc_project/code_snapshots/memory_diagnostic_20260713/src/baseline/omp.cpp -whitespace
+thesis_bc_project/code_snapshots/oldtree_f05ec52_20260512/brandes_gpu.cu -whitespace
+thesis_bc_project/code_snapshots/oldtree_f05ec52_20260512/brandes_omp.cpp -whitespace
+thesis_bc_project/code_snapshots/oldtree_f05ec52_20260512/common.h -whitespace
+thesis_bc_project/code_snapshots/oldtree_f05ec52_20260512/main.cpp -whitespace
+thesis_bc_project/code_snapshots/oldtree_f05ec52_20260512/scripts/run_um_oversubscribe_experiment.sh -whitespace
+thesis_bc_project/code_snapshots/oldtree_f05ec52_20260512/scripts/statistical_analysis.py -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/CMakeLists.txt -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/include/baseline/baseline_graph.h -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/include/baseline/baseline_utils.h -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/include/core/common.hpp -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/include/proposed/brandes_kernels.cuh -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/scripts/statistical_analysis.py -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/src/baseline/gpu_unopt.cu -whitespace
+thesis_bc_project/code_snapshots/phase_def_block_20260710/src/baseline/omp.cpp -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/CMakeLists.txt -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/include/baseline/baseline_graph.h -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/include/baseline/baseline_utils.h -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/include/core/common.hpp -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/include/proposed/brandes_kernels.cuh -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/src/baseline/gpu_unopt.cu -whitespace
+thesis_bc_project/code_snapshots/small_correctness_20260712/src/baseline/omp.cpp -whitespace
+thesis_bc_project/raw_data/tuning/kernel_selection/benchmark_7000_41459/block/gpu_opt/job_2355971_20260710/auto_benchmark_7000_41459.err -whitespace
+thesis_bc_project/raw_data/tuning/kernel_selection/benchmark_7000_41459/shared/gpu_opt/job_2355971_20260710/shared_benchmark_7000_41459.err -whitespace
+thesis_bc_project/raw_data/tuning/kernel_selection/email-EuAll/block/gpu_opt/job_2355971_20260710/auto_email-EuAll.err -whitespace
+thesis_bc_project/raw_data/tuning/kernel_selection/email-EuAll/shared/gpu_opt/job_2355971_20260710/shared_email-EuAll.err -whitespace

@@ -1,0 +1,40 @@
+
+NOTICE: Existing SQLite export found: um_prefetch_gpu_opt.sqlite
+        It is assumed file was previously exported from: um_prefetch_gpu_opt.nsys-rep
+        Consider using --force-export=true if needed.
+
+Processing [um_prefetch_gpu_opt.sqlite] with [/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/profilers/13.0/Nsight_Systems/host-linux-armv8/reports/um_total_sum.py]... 
+
+ ** Unified Memory Totals Summary (um_total_sum):
+
+ Total HtoD Migration Size (MB)  Total DtoH Migration Size (MB)  Total CPU Page Faults  Total GPU PageFaults  Minimum Virtual Address  Maximum Virtual Address
+ ------------------------------  ------------------------------  ---------------------  --------------------  -----------------------  -----------------------
+                         27.918                           0.066                     85                     9  0x400293620000           0x4002E1E00000         
+
+Processing [um_prefetch_gpu_opt.sqlite] with [/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/profilers/13.0/Nsight_Systems/host-linux-armv8/reports/um_sum.py]... 
+
+ ** Unified Memory Analysis Summary (um_sum):
+
+ Virtual Address  HtoD Migration size (MB)  DtoH Migration size (MB)  CPU Page Faults   GPU Page Faults  Migration Throughput (MB/s)
+ ---------------  ------------------------  ------------------------  ---------------  ----------------  ---------------------------
+ 0x4002E0C00000                      2.097                                          1                                    207,391.556
+ 0x4002E0A00000                      2.097                                          1                                    206,737.244
+ 0x4002E1800000                      2.097                                          1                                    206,087.127
+ 0x4002E0400000                      2.097                                          1                                    204,799.476
+ 0x4002E1600000                      2.097                                          1                                    202,897.359
+ 0x4002E0800000                      2.097                                          1                                    202,270.310
+ 0x4002E0600000                      2.097                                          1                                    201,647.456
+ 0x4002E0200000                      2.097                                          1                                    201,028.796
+ 0x4002E0E00000                      2.097                                          1                                    199,195.886
+ 0x4002E1000000                      2.097                                          1                                    195,045.622
+
+Processing [um_prefetch_gpu_opt.sqlite] with [/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/profilers/13.0/Nsight_Systems/host-linux-armv8/reports/cuda_gpu_mem_time_sum.py]... 
+
+ ** CUDA GPU MemOps Summary (by Time) (cuda_gpu_mem_time_sum):
+
+ Time (%)  Total Time (ns)  Count  Avg (ns)   Med (ns)   Min (ns)  Max (ns)  StdDev (ns)               Operation              
+ --------  ---------------  -----  ---------  ---------  --------  --------  -----------  ------------------------------------
+     93.8        2,358,752      6  393,125.3  348,768.0   172,160   659,648    219,124.7  [CUDA memset]                       
+      6.1          152,671     17    8,980.6   10,240.0     3,072    11,488      2,717.0  [CUDA memcpy Unified Host-to-Device]
+      0.1            2,112      1    2,112.0    2,112.0     2,112     2,112          0.0  [CUDA memcpy Unified Device-to-Host]
+

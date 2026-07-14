@@ -1,0 +1,16 @@
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b512	email-EuAll	1	106.434775	0.9075
+PathMerge_b1024	email-EuAll	1	100.101618	0.9649
+PathMerge_b2048	email-EuAll	1	97.798748	0.9876
+PathMerge_b4096	email-EuAll	1	101.160326	0.9548
+PathMerge_b8192	email-EuAll	1	103.013717	0.9376
+PathMerge_b512	email-EuAll	2	106.564268	0.9064
+PathMerge_b1024	email-EuAll	2	99.797694	0.9679
+PathMerge_b2048	email-EuAll	2	96.959824	0.9962
+PathMerge_b4096	email-EuAll	2	101.691590	0.9498
+PathMerge_b8192	email-EuAll	2	103.270797	0.9353
+PathMerge_b512	email-EuAll	3	105.908648	0.9120
+PathMerge_b1024	email-EuAll	3	99.929143	0.9666
+PathMerge_b2048	email-EuAll	3	98.928186	0.9764
+PathMerge_b4096	email-EuAll	3	101.580514	0.9509
+PathMerge_b8192	email-EuAll	3	104.200792	0.9270

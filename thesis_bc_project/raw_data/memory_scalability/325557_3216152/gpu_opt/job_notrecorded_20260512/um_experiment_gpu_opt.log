@@ -1,0 +1,286 @@
+=== gpu_opt batch=512 trial=1 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=43.2853 s (cum=83.1831 s), Backward wall=33.6124 s (cum=63.8734 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 76.712667 
+  > GTEPS = 13.6489 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=512 trial=2 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=42.5546 s (cum=83.5739 s), Backward wall=32.8090 s (cum=64.1737 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 76.872453 
+  > GTEPS = 13.6205 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=512 trial=3 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=41.9917 s (cum=83.6996 s), Backward wall=32.1341 s (cum=64.0714 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 76.885588 
+  > GTEPS = 13.6182 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=512 trial=4 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=43.4381 s (cum=83.4185 s), Backward wall=33.4546 s (cum=63.7330 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 76.690964 
+  > GTEPS = 13.6527 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=512 trial=5 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=10.67 GB, BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=43.2668 s (cum=83.6308 s), Backward wall=33.4396 s (cum=64.1103 s), Prefetch cum=0.0000 s, SUB_BATCH=512, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 76.869187 
+  > GTEPS = 13.6211 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=1024 trial=1 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.1271 s (cum=62.1978 s), Backward wall=30.9326 s (cum=59.6253 s), Prefetch cum=0.0000 s, SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.369268 
+  > GTEPS = 15.7760 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=1024 trial=2 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.1576 s (cum=62.2911 s), Backward wall=30.8637 s (cum=59.5256 s), Prefetch cum=0.0000 s, SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.382768 
+  > GTEPS = 15.7728 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=1024 trial=3 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.1186 s (cum=62.2321 s), Backward wall=30.8715 s (cum=59.5437 s), Prefetch cum=0.0000 s, SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.370263 
+  > GTEPS = 15.7758 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=1024 trial=4 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.1224 s (cum=62.2209 s), Backward wall=30.8878 s (cum=59.6297 s), Prefetch cum=0.0000 s, SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.388282 
+  > GTEPS = 15.7715 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=1024 trial=5 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=31.1678 s (cum=62.3048 s), Backward wall=30.8164 s (cum=59.4587 s), Prefetch cum=0.0000 s, SUB_BATCH=1024, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.356056 
+  > GTEPS = 15.7791 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=2048 trial=1 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.1904 s (cum=47.7203 s), Backward wall=31.5343 s (cum=61.5741 s), Prefetch cum=0.0000 s, SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.821642 
+  > GTEPS = 15.6692 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=2048 trial=2 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.1579 s (cum=47.7299 s), Backward wall=31.5008 s (cum=61.5751 s), Prefetch cum=0.0000 s, SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.804690 
+  > GTEPS = 15.6732 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=2048 trial=3 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.1252 s (cum=47.6586 s), Backward wall=31.5596 s (cum=61.6697 s), Prefetch cum=0.0000 s, SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.838311 
+  > GTEPS = 15.6653 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=2048 trial=4 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.1476 s (cum=47.6969 s), Backward wall=31.5388 s (cum=61.6363 s), Prefetch cum=0.0000 s, SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.827485 
+  > GTEPS = 15.6678 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=2048 trial=5 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=42.68 GB, BATCH=2048, SUB_BATCH=2048, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=24.1571 s (cum=47.7036 s), Backward wall=31.5391 s (cum=61.6292 s), Prefetch cum=0.0000 s, SUB_BATCH=2048, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 66.826969 
+  > GTEPS = 15.6679 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=4096 trial=1 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=20.9411 s (cum=40.5741 s), Backward wall=32.4176 s (cum=62.5347 s), Prefetch cum=0.0000 s, SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.644773 
+  > GTEPS = 15.4785 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=4096 trial=2 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=20.9148 s (cum=40.5714 s), Backward wall=32.4073 s (cum=62.5517 s), Prefetch cum=0.0000 s, SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.641539 
+  > GTEPS = 15.4793 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=4096 trial=3 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=20.9661 s (cum=40.6150 s), Backward wall=32.4122 s (cum=62.5150 s), Prefetch cum=0.0000 s, SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.662175 
+  > GTEPS = 15.4745 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=4096 trial=4 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=20.9804 s (cum=40.6288 s), Backward wall=32.4018 s (cum=62.5031 s), Prefetch cum=0.0000 s, SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.666014 
+  > GTEPS = 15.4737 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=4096 trial=5 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=85.35 GB, BATCH=4096, SUB_BATCH=4096, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=20.9648 s (cum=40.5984 s), Backward wall=32.4229 s (cum=62.5103 s), Prefetch cum=0.0000 s, SUB_BATCH=4096, num_subs=1
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.652155 
+  > GTEPS = 15.4768 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=8192 trial=1 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=170.70 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=84.0321 s (cum=84.0321 s), Backward wall=7.5966 s (cum=7.5966 s), Prefetch cum=17.5471 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 109.841713 
+  > GTEPS = 9.5323 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=8192 trial=2 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=170.70 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=83.8245 s (cum=83.8245 s), Backward wall=7.5972 s (cum=7.5972 s), Prefetch cum=17.4853 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 109.572345 
+  > GTEPS = 9.5557 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=8192 trial=3 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=170.70 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=83.9852 s (cum=83.9852 s), Backward wall=7.6065 s (cum=7.6065 s), Prefetch cum=17.5382 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 109.795508 
+  > GTEPS = 9.5363 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=8192 trial=4 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=170.70 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=84.0396 s (cum=84.0396 s), Backward wall=7.6139 s (cum=7.6139 s), Prefetch cum=17.5658 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 109.888739 
+  > GTEPS = 9.5282 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=8192 trial=5 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=170.70 GB, BATCH=8192, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=83.9431 s (cum=83.9431 s), Backward wall=7.6086 s (cum=7.6086 s), Prefetch cum=17.5176 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 109.819164 
+  > GTEPS = 9.5342 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=10240 trial=1 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=213.38 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=292.0499 s (cum=292.0499 s), Backward wall=11.1973 s (cum=11.1973 s), Prefetch cum=144.6559 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 324.215055 
+  > GTEPS = 3.2295 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=10240 trial=2 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=213.38 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=266.1887 s (cum=266.1887 s), Backward wall=11.1946 s (cum=11.1946 s), Prefetch cum=120.9369 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 298.516956 
+  > GTEPS = 3.5075 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=10240 trial=3 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=213.38 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=278.6277 s (cum=278.6277 s), Backward wall=11.2250 s (cum=11.2250 s), Prefetch cum=134.6096 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 310.543986 
+  > GTEPS = 3.3716 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=10240 trial=4 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=213.38 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=294.8727 s (cum=294.8727 s), Backward wall=11.2085 s (cum=11.2085 s), Prefetch cum=144.3327 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 326.772651 
+  > GTEPS = 3.2042 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=10240 trial=5 rc=0 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=213.38 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=292.8733 s (cum=292.8733 s), Backward wall=11.2302 s (cum=11.2302 s), Prefetch cum=137.1149 s, SUB_BATCH=6596, num_subs=2
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 324.978607 
+  > GTEPS = 3.2219 (nodes=325557, edges=3216152)
+
+=== gpu_opt batch=12288 trial=1 rc=137 ===
+Running: GPU_Opt on 325557_3216152...
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=256.05 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+

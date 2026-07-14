@@ -1,0 +1,5 @@
+Running: Sequential on chain_200...
+  > [Phase] BFS: 0.0007 sec, Backward: 0.0001 sec
+  > index : 99, Maximum Betweenness Centrality ==> 9900.00
+  > Elapse time [sec.] = 0.001437 
+  > GTEPS = 0.0277 (nodes=200, edges=199)

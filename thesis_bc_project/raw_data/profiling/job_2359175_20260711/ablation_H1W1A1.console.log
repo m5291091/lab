@@ -1,0 +1,132 @@
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=10.66
+  > [Ablation Phase] BFS cum=1.2921 s, Backward cum=1.9224 s
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on 56438_300801...
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=10.66
+  > [Ablation Phase] BFS cum=1.2320 s, Backward cum=2.0030 s
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 1.646719 
+  > GTEPS = 10.3094 (nodes=56438, edges=300801)
+Ablation_H1_W1_A1	56438_300801	1.646719	10.3094
+Collecting data...
+Generating '/tmp/2359175.1094/nsys-report-d6d7.qdstrm'
+[ 1/11] [0%                          ] ablation_H1W1A1.nsys-rep[ 1/11] [0%                          ] ablation_H1W1A1.nsys-rep[ 1/11] [13%                         ] ablation_H1W1A1.nsys-rep[ 1/11] [===22%                      ] ablation_H1W1A1.nsys-rep[ 1/11] [=====31%                    ] ablation_H1W1A1.nsys-rep[ 1/11] [=====32%                    ] ablation_H1W1A1.nsys-rep[ 1/11] [======33%                   ] ablation_H1W1A1.nsys-rep[ 1/11] [======34%                   ] ablation_H1W1A1.nsys-rep[ 1/11] [=======37%                  ] ablation_H1W1A1.nsys-rep[ 1/11] [=======38%                  ] ablation_H1W1A1.nsys-rep[ 1/11] [========42%                 ] ablation_H1W1A1.nsys-rep[ 1/11] [============54%             ] ablation_H1W1A1.nsys-rep[ 1/11] [====================83%     ] ablation_H1W1A1.nsys-rep[ 1/11] [========================100%] ablation_H1W1A1.nsys-rep[ 1/11] [========================100%] ablation_H1W1A1.nsys-rep
+[ 2/11] [0%                          ] ablation_H1W1A1.sqlite[2KProcessing 11155 events: 
+[ 2/11] [1%                          ] ablation_H1W1A1.sqlite[ 2/11] [2%                          ] ablation_H1W1A1.sqlite[ 2/11] [3%                          ] ablation_H1W1A1.sqlite[ 2/11] [4%                          ] ablation_H1W1A1.sqlite[ 2/11] [5%                          ] ablation_H1W1A1.sqlite[ 2/11] [6%                          ] ablation_H1W1A1.sqlite[ 2/11] [7%                          ] ablation_H1W1A1.sqlite[ 2/11] [8%                          ] ablation_H1W1A1.sqlite[ 2/11] [9%                          ] ablation_H1W1A1.sqlite[ 2/11] [10%                         ] ablation_H1W1A1.sqlite[ 2/11] [11%                         ] ablation_H1W1A1.sqlite[ 2/11] [12%                         ] ablation_H1W1A1.sqlite[ 2/11] [13%                         ] ablation_H1W1A1.sqlite[ 2/11] [14%                         ] ablation_H1W1A1.sqlite[ 2/11] [=15%                        ] ablation_H1W1A1.sqlite[ 2/11] [=16%                        ] ablation_H1W1A1.sqlite[ 2/11] [=17%                        ] ablation_H1W1A1.sqlite[ 2/11] [==18%                       ] ablation_H1W1A1.sqlite[ 2/11] [==19%                       ] ablation_H1W1A1.sqlite[ 2/11] [==20%                       ] ablation_H1W1A1.sqlite[ 2/11] [==21%                       ] ablation_H1W1A1.sqlite[ 2/11] [===22%                      ] ablation_H1W1A1.sqlite[ 2/11] [===23%                      ] ablation_H1W1A1.sqlite[ 2/11] [===24%                      ] ablation_H1W1A1.sqlite[ 2/11] [====25%                     ] ablation_H1W1A1.sqlite[ 2/11] [====26%                     ] ablation_H1W1A1.sqlite[ 2/11] [====27%                     ] ablation_H1W1A1.sqlite[ 2/11] [====28%                     ] ablation_H1W1A1.sqlite[ 2/11] [=====29%                    ] ablation_H1W1A1.sqlite[ 2/11] [=====30%                    ] ablation_H1W1A1.sqlite[ 2/11] [=====31%                    ] ablation_H1W1A1.sqlite[ 2/11] [=====32%                    ] ablation_H1W1A1.sqlite[ 2/11] [======33%                   ] ablation_H1W1A1.sqlite[ 2/11] [======34%                   ] ablation_H1W1A1.sqlite[ 2/11] [======35%                   ] ablation_H1W1A1.sqlite[ 2/11] [=======36%                  ] ablation_H1W1A1.sqlite[ 2/11] [=======37%                  ] ablation_H1W1A1.sqlite[ 2/11] [=======38%                  ] ablation_H1W1A1.sqlite[ 2/11] [=======39%                  ] ablation_H1W1A1.sqlite[ 2/11] [========40%                 ] ablation_H1W1A1.sqlite[ 2/11] [========41%                 ] ablation_H1W1A1.sqlite[ 2/11] [========42%                 ] ablation_H1W1A1.sqlite[ 2/11] [=========43%                ] ablation_H1W1A1.sqlite[ 2/11] [=========44%                ] ablation_H1W1A1.sqlite[ 2/11] [=========45%                ] ablation_H1W1A1.sqlite[ 2/11] [=========46%                ] ablation_H1W1A1.sqlite[ 2/11] [==========47%               ] ablation_H1W1A1.sqlite[ 2/11] [==========48%               ] ablation_H1W1A1.sqlite[ 2/11] [==========49%               ] ablation_H1W1A1.sqlite[ 2/11] [===========50%              ] ablation_H1W1A1.sqlite[ 2/11] [===========51%              ] ablation_H1W1A1.sqlite[ 2/11] [===========52%              ] ablation_H1W1A1.sqlite[ 2/11] [===========53%              ] ablation_H1W1A1.sqlite[ 2/11] [============54%             ] ablation_H1W1A1.sqlite[ 2/11] [============55%             ] ablation_H1W1A1.sqlite[ 2/11] [============56%             ] ablation_H1W1A1.sqlite[ 2/11] [============57%             ] ablation_H1W1A1.sqlite[ 2/11] [=============58%            ] ablation_H1W1A1.sqlite[ 2/11] [=============59%            ] ablation_H1W1A1.sqlite[ 2/11] [=============60%            ] ablation_H1W1A1.sqlite[ 2/11] [==============61%           ] ablation_H1W1A1.sqlite[ 2/11] [==============62%           ] ablation_H1W1A1.sqlite[ 2/11] [==============63%           ] ablation_H1W1A1.sqlite[ 2/11] [==============64%           ] ablation_H1W1A1.sqlite[ 2/11] [===============65%          ] ablation_H1W1A1.sqlite[ 2/11] [===============66%          ] ablation_H1W1A1.sqlite[ 2/11] [===============67%          ] ablation_H1W1A1.sqlite[ 2/11] [================68%         ] ablation_H1W1A1.sqlite[ 2/11] [================69%         ] ablation_H1W1A1.sqlite[ 2/11] [================70%         ] ablation_H1W1A1.sqlite[ 2/11] [================71%         ] ablation_H1W1A1.sqlite[ 2/11] [=================72%        ] ablation_H1W1A1.sqlite[ 2/11] [=================73%        ] ablation_H1W1A1.sqlite[ 2/11] [=================74%        ] ablation_H1W1A1.sqlite[ 2/11] [==================75%       ] ablation_H1W1A1.sqlite[ 2/11] [==================76%       ] ablation_H1W1A1.sqlite[ 2/11] [==================77%       ] ablation_H1W1A1.sqlite[ 2/11] [==================78%       ] ablation_H1W1A1.sqlite[ 2/11] [===================79%      ] ablation_H1W1A1.sqlite[ 2/11] [===================80%      ] ablation_H1W1A1.sqlite[ 2/11] [===================81%      ] ablation_H1W1A1.sqlite[ 2/11] [===================82%      ] ablation_H1W1A1.sqlite[ 2/11] [====================83%     ] ablation_H1W1A1.sqlite[ 2/11] [====================84%     ] ablation_H1W1A1.sqlite[ 2/11] [====================85%     ] ablation_H1W1A1.sqlite[ 2/11] [=====================86%    ] ablation_H1W1A1.sqlite[ 2/11] [=====================87%    ] ablation_H1W1A1.sqlite[ 2/11] [=====================88%    ] ablation_H1W1A1.sqlite[ 2/11] [=====================89%    ] ablation_H1W1A1.sqlite[ 2/11] [======================90%   ] ablation_H1W1A1.sqlite[ 2/11] [======================91%   ] ablation_H1W1A1.sqlite[ 2/11] [======================92%   ] ablation_H1W1A1.sqlite[ 2/11] [=======================93%  ] ablation_H1W1A1.sqlite[ 2/11] [=======================94%  ] ablation_H1W1A1.sqlite[ 2/11] [=======================95%  ] ablation_H1W1A1.sqlite[ 2/11] [=======================96%  ] ablation_H1W1A1.sqlite[ 2/11] [========================97% ] ablation_H1W1A1.sqlite[ 2/11] [========================98% ] ablation_H1W1A1.sqlite[ 2/11] [========================99% ] ablation_H1W1A1.sqlite[ 2/11] [========================100%] ablation_H1W1A1.sqlite[ 2/11] [========================100%] ablation_H1W1A1.sqlite
+SKIPPED: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175/ablation_H1W1A1.sqlite does not contain NV Tools Extension (NVTX) data.
+[ 3/11] Executing 'nvtx_sum' stats report
+[ 4/11] Executing 'osrt_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)      Med (ns)    Min (ns)    Max (ns)      StdDev (ns)            Name         
+ --------  ---------------  ---------  ------------  ------------  --------  -------------  -------------  ----------------------
+     79.3    6,756,983,552        138  48,963,648.9  18,347,232.0     1,728    100,112,288   49,146,071.8  poll                  
+     19.2    1,638,858,208         28  58,530,650.3      59,856.0    11,072  1,636,554,688  309,263,661.5  pthread_cond_wait     
+      1.3      108,220,864        698     155,044.2       7,440.0     1,024     15,395,360      679,611.8  ioctl                 
+      0.2       17,499,840         93     188,170.3       6,976.0     1,152      1,005,120      307,331.0  mmap                  
+      0.0        1,789,376        589       3,038.0       2,848.0     1,280         19,456        1,394.4  getc                  
+      0.0          653,280         36      18,146.7       3,152.0     1,952        181,984       42,980.8  fopen                 
+      0.0          399,904          4      99,976.0     101,072.0    95,072        102,688        3,417.4  pthread_create        
+      0.0          340,224         10      34,022.4      16,560.0     9,440        133,696       41,043.0  sem_timedwait         
+      0.0          312,896         39       8,023.0       7,648.0     1,792         16,928        2,605.4  mmap64                
+      0.0          248,736         57       4,363.8       4,064.0     1,280          9,280        1,773.0  open64                
+      0.0          188,544         19       9,923.4       1,728.0     1,024        153,280       34,737.0  fclose                
+      0.0          154,112          1     154,112.0     154,112.0   154,112        154,112            0.0  freopen               
+      0.0           88,320         38       2,324.2       2,016.0     1,280          4,000          795.7  write                 
+      0.0           65,440         18       3,635.6       2,160.0     1,216         13,216        3,650.0  munmap                
+      0.0           44,928          3      14,976.0      11,296.0     1,472         32,160       15,671.5  fgets                 
+      0.0           35,744         27       1,323.9       1,280.0     1,120          1,632          115.8  pthread_cond_signal   
+      0.0           34,752          9       3,861.3       3,008.0     1,216          8,352        2,599.1  open                  
+      0.0           33,216          8       4,152.0       1,760.0     1,440         19,712        6,308.2  fflush                
+      0.0           22,976         11       2,088.7       1,664.0     1,120          4,672        1,180.4  read                  
+      0.0           16,800          5       3,360.0       1,728.0     1,344          7,456        2,729.5  fwrite                
+      0.0           16,000          4       4,000.0       3,760.0     2,176          6,304        1,863.2  pipe2                 
+      0.0           14,528          2       7,264.0       7,264.0     6,176          8,352        1,538.7  socket                
+      0.0           13,568          5       2,713.6       2,464.0     1,824          4,128          856.4  close                 
+      0.0           12,736          2       6,368.0       6,368.0     5,920          6,816          633.6  fread                 
+      0.0            8,416          1       8,416.0       8,416.0     8,416          8,416            0.0  connect               
+      0.0            4,608          1       4,608.0       4,608.0     4,608          4,608            0.0  pthread_cond_broadcast
+      0.0            1,312          1       1,312.0       1,312.0     1,312          1,312            0.0  bind                  
+      0.0            1,120          1       1,120.0       1,120.0     1,120          1,120            0.0  putc                  
+      0.0            1,120          1       1,120.0       1,120.0     1,120          1,120            0.0  fcntl                 
+
+[ 5/11] Executing 'cuda_api_sum' stats report
+
+ Time (%)  Total Time (ns)  Num Calls    Avg (ns)      Med (ns)    Min (ns)    Max (ns)   StdDev (ns)               Name             
+ --------  ---------------  ---------  ------------  ------------  ---------  ----------  -----------  ------------------------------
+     98.0    3,222,120,576        218  14,780,369.6  14,281,664.0  9,076,800  26,665,312  2,523,507.9  cudaEventSynchronize          
+      1.0       31,435,520          4   7,858,880.0   7,065,840.0      1,472  17,302,368  9,164,893.8  cudaStreamSynchronize         
+      0.5       16,682,048         40     417,051.2     500,064.0      6,144   1,030,944    365,227.5  cudaFree                      
+      0.2        7,878,656          2   3,939,328.0   3,939,328.0  3,543,200   4,335,456    560,209.6  cudaDeviceSynchronize         
+      0.1        1,785,536         40      44,638.4      11,200.0      2,304     576,640    115,291.6  cudaMallocManaged             
+      0.1        1,778,752        666       2,670.8       2,432.0      1,888      29,824      1,401.1  cudaMemsetAsync               
+      0.0        1,342,656          4     335,664.0     139,584.0      6,368   1,057,120    495,878.4  cudaStreamCreate              
+      0.0        1,142,272         38      30,059.8       2,960.0      1,920     391,072     85,225.1  cudaMemPrefetchAsync_v12020   
+      0.0        1,133,920        444       2,553.9       2,208.0      1,824      96,928      4,557.8  cudaLaunchKernel              
+      0.0          767,232        666       1,152.0       1,120.0        896       5,760        289.2  cudaEventRecord               
+      0.0           69,728          1      69,728.0      69,728.0     69,728      69,728          0.0  cuLibraryLoadData             
+      0.0           53,568          2      26,784.0      26,784.0     25,312      28,256      2,081.7  cudaMemGetInfo                
+      0.0           23,872          4       5,968.0       5,984.0      4,992       6,912        854.5  cudaStreamDestroy             
+      0.0           20,864        444          47.0          32.0         32         128         17.5  cuKernelGetName               
+      0.0           11,232         12         936.0         672.0        288       2,336        696.6  cudaEventCreate               
+      0.0           10,208         12         850.7         640.0        352       1,984        506.0  cudaEventDestroy              
+      0.0            2,880          2       1,440.0       1,440.0        480       2,400      1,357.6  cudaGetDeviceProperties_v12000
+      0.0            1,184          2         592.0         592.0        576         608         22.6  cuLibraryGetKernel            
+      0.0              928          1         928.0         928.0        928         928          0.0  cuModuleGetLoadingMode        
+
+[ 6/11] Executing 'cuda_gpu_kern_sum' stats report
+
+ Time (%)  Total Time (ns)  Instances    Avg (ns)      Med (ns)    Min (ns)    Max (ns)   StdDev (ns)                                                  Name                                                
+ --------  ---------------  ---------  ------------  ------------  ---------  ----------  -----------  ----------------------------------------------------------------------------------------------------
+     60.9    3,924,708,323        222  17,678,866.3  17,207,824.0  8,588,800  29,338,976  1,984,721.8  void brandes_back_kernel_opt<(bool)1>(int *, int *, double *, int, int, int *, double *, double *, …
+     39.1    2,523,298,594        222  11,366,209.9  10,962,256.0  5,496,576  16,287,872  1,798,011.3  void brandes_bfs_kernel_opt<(bool)1>(int *, int *, int, int, int *, int *, double *, int *, int *, …
+
+[ 7/11] Executing 'cuda_gpu_mem_time_sum' stats report
+
+ Time (%)  Total Time (ns)  Count  Avg (ns)  Med (ns)  Min (ns)  Max (ns)  StdDev (ns)               Operation              
+ --------  ---------------  -----  --------  --------  --------  --------  -----------  ------------------------------------
+     99.8       43,827,808    666  65,807.5  79,680.0     6,816   112,640     20,062.8  [CUDA memset]                       
+      0.2           71,008     14   5,072.0   4,096.0     2,880    10,816      2,598.2  [CUDA memcpy Unified Host-to-Device]
+      0.1           37,852     18   2,102.9   1,904.0     1,791     2,752        322.6  [CUDA memcpy Unified Device-to-Host]
+
+[ 8/11] Executing 'cuda_gpu_mem_size_sum' stats report
+
+ Total (MB)   Count  Avg (MB)  Med (MB)  Min (MB)  Max (MB)  StdDev (MB)               Operation              
+ -----------  -----  --------  --------  --------  --------  -----------  ------------------------------------
+ 127,409.914    666   191.306   231.170    26.639   231.170       56.076  [CUDA memset]                       
+       6.685     14     0.477     0.262     0.066     2.097        0.697  [CUDA memcpy Unified Host-to-Device]
+       1.442     18     0.080     0.066     0.066     0.197        0.042  [CUDA memcpy Unified Device-to-Host]
+
+[ 9/11] Executing 'um_sum' stats report
+
+ Virtual Address  HtoD Migration size (MB)  DtoH Migration size (MB)  CPU Page Faults   GPU Page Faults  Migration Throughput (MB/s)
+ ---------------  ------------------------  ------------------------  ---------------  ----------------  ---------------------------
+ 0x4002C0200000                      4.194                                          2                                    194,754.118
+ 0x4002C0090000                                                0.393                                                      85,332.984
+ 0x4002C0040000                      0.786                     0.131                4                                     74,666.476
+ 0x4002C0000000                      0.524                                          2                                     63,999.836
+ 0x4002C0400000                      0.655                                          2                                     53,894.185
+ 0x4002C00A0000                      0.262                                                                                37,751.095
+ 0x4002C0060000                                                0.131                4                                     36,591.763
+ 0x4002C0080000                                                0.131                4                                     35,027.157
+ 0x4002C0070000                                                0.131                                                      35,008.545
+ 0x4002C0050000                                                0.131                4                                     34,711.798
+
+[10/11] Executing 'um_total_sum' stats report
+
+ Total HtoD Migration Size (MB)  Total DtoH Migration Size (MB)  Total CPU Page Faults  Total GPU PageFaults  Minimum Virtual Address  Maximum Virtual Address
+ ------------------------------  ------------------------------  ---------------------  --------------------  -----------------------  -----------------------
+                          6.685                           1.442                     48                    49  0x40026B620000           0x4002C0420000         
+
+[11/11] Executing 'um_cpu_page_faults_sum' stats report
+
+ CPU Page Faults                                        CPU Instruction Address                                                                          Source File                                    Source Line
+ ---------------  ----------------------------------------------------------------------------------------------------  ------------------------------------------------------------------------------  -----------
+              34  __GI_memcpy                                                                                                                                                                                     0
+              10  __GI___memset_generic                                                                                                                                                                           0
+               2  std::vector<double, std::allocator<double> > (anonymous namespace)::ablation_impl<true, true, true>…  /work/gj17/j17000/m5291091/lab/thesis_bc_project/src/proposed/host_ablation.cu          163
+               2  std::vector<double, std::allocator<double> > (anonymous namespace)::ablation_impl<true, true, true>…  /work/gj17/j17000/m5291091/lab/thesis_bc_project/src/proposed/host_ablation.cu          230
+
+Generated:
+	/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175/ablation_H1W1A1.nsys-rep
+	/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_profiling_20260711_092110_2359175/ablation_H1W1A1.sqlite

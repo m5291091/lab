@@ -1,0 +1,2 @@
+Graph	Shared_median_sec	Block_median_sec	Shared_sample_std	Block_sample_std	N_shared	N_block	Faster	Speedup	Shared_MaxBC_Index	Shared_MaxBC_Value	Block_MaxBC_Index	Block_MaxBC_Value	MaxBC_Match
+roadNet-TX	1639.164633	984.587390	0.283975	7.260415	3	3	block	1.664824	400570	164495142042.45	400570	164495142042.45	yes

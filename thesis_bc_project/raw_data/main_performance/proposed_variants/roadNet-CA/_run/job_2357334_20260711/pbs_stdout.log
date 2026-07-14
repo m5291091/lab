@@ -1,0 +1,47 @@
+=== Targeted Benchmark ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark
+Graphs  : snap/roadNet-CA
+Impls   : gpu_opt gpu_opt_pure gpu_opt_pure_chunked   Trials: 3   Timeout: 21600s
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_012956_2357337
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 1/3)
+  -> 2129.100624 sec (GTEPS=2.5536)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 2/3)
+  -> 2130.249052 sec (GTEPS=2.5523)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 3/3)
+  -> 2122.782003 sec (GTEPS=2.5612)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 1/3)
+  -> 2120.692664 sec (GTEPS=2.5638)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 2/3)
+  -> 2119.980012 sec (GTEPS=2.5646)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 3/3)
+  -> 2117.165728 sec (GTEPS=2.5680)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 1/3)
+  -> 2119.106989 sec (GTEPS=2.5657)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 2/3)
+  -> 2130.552566 sec (GTEPS=2.5519)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt_pure_chunked /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-CA  (trial 3/3)
+  -> 2119.892398 sec (GTEPS=2.5647)
+=== Targeted Benchmark Complete ===
+Implementation	Graph	Nodes	Edges	Trial	Time_sec	GTEPS
+GPU_Opt	roadNet-CA	1965206	2766607	1	2129.100624	2.5536
+GPU_Opt	roadNet-CA	1965206	2766607	2	2130.249052	2.5523
+GPU_Opt	roadNet-CA	1965206	2766607	3	2122.782003	2.5612
+GPU_Opt_Pure	roadNet-CA	1965206	2766607	1	2120.692664	2.5638
+GPU_Opt_Pure	roadNet-CA	1965206	2766607	2	2119.980012	2.5646
+GPU_Opt_Pure	roadNet-CA	1965206	2766607	3	2117.165728	2.5680
+GPU_Opt_Pure_Chunked	roadNet-CA	1965206	2766607	1	2119.106989	2.5657
+GPU_Opt_Pure_Chunked	roadNet-CA	1965206	2766607	2	2130.552566	2.5519
+GPU_Opt_Pure_Chunked	roadNet-CA	1965206	2766607	3	2119.892398	2.5647
+
+=== 自動サマリ生成 ===
+  結果読み込み: 3 件 (3 手法 × 1 グラフ) (複数試行の平均値)
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_012956_2357337/summary_table.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_012956_2357337/speedup_table.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_012956_2357337/correctness.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_benchmark_20260711_012956_2357337/summary_table.tsv
+
+
+# スピードアップ (vs PathMerge_BC)
+
+(ベースライン PathMerge_BC の結果がありません)

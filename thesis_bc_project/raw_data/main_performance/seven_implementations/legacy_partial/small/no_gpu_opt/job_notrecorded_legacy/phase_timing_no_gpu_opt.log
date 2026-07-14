@@ -1,0 +1,1270 @@
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2651 sec, Backward: 0.5368 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.641473 
+  > GTEPS = 0.0514 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2496 sec, Backward: 0.4945 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.563351 
+  > GTEPS = 0.0522 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.3054 sec, Backward: 0.5326 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.677999 
+  > GTEPS = 0.0511 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2680 sec, Backward: 0.5405 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.647623 
+  > GTEPS = 0.0514 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2731 sec, Backward: 0.5352 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.646354 
+  > GTEPS = 0.0514 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2788 sec, Backward: 0.5358 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.652346 
+  > GTEPS = 0.0513 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2848 sec, Backward: 0.5265 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.633038 
+  > GTEPS = 0.0515 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2068 sec, Backward: 0.5212 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.592850 
+  > GTEPS = 0.0519 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.2438 sec, Backward: 0.4942 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.546694 
+  > GTEPS = 0.0523 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_7000_41459...
+  > [Phase] BFS: 4.3465 sec, Backward: 0.5483 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 5.730182 
+  > GTEPS = 0.0506 (nodes=7000, edges=41459)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2931 sec, Backward: 1.1571 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.480909 
+  > GTEPS = 0.0597 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.1533 sec, Backward: 1.1012 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.252650 
+  > GTEPS = 0.0609 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.3266 sec, Backward: 1.1334 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.457562 
+  > GTEPS = 0.0598 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2151 sec, Backward: 1.1094 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.347654 
+  > GTEPS = 0.0604 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.1875 sec, Backward: 1.1156 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.311188 
+  > GTEPS = 0.0606 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2334 sec, Backward: 1.1491 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.494172 
+  > GTEPS = 0.0596 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2411 sec, Backward: 1.1331 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.416668 
+  > GTEPS = 0.0600 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2546 sec, Backward: 1.1307 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.433919 
+  > GTEPS = 0.0599 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2282 sec, Backward: 1.1182 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.372624 
+  > GTEPS = 0.0603 (nodes=11023, edges=62184)
+Running: Sequential on benchmark_11023_62184...
+  > [Phase] BFS: 8.2097 sec, Backward: 1.1158 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 11.341782 
+  > GTEPS = 0.0604 (nodes=11023, edges=62184)
+Running: Sequential on random...
+  > [Phase] BFS: 115.6132 sec, Backward: 18.3863 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 174.760691 
+  > GTEPS = 0.0188 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 116.4345 sec, Backward: 18.4130 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 174.056760 
+  > GTEPS = 0.0188 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 112.3251 sec, Backward: 17.8422 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 169.267074 
+  > GTEPS = 0.0194 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 114.0502 sec, Backward: 18.0194 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 170.732521 
+  > GTEPS = 0.0192 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 110.5144 sec, Backward: 17.3439 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 166.094956 
+  > GTEPS = 0.0197 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 116.1529 sec, Backward: 17.9259 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 172.459463 
+  > GTEPS = 0.0190 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 113.6526 sec, Backward: 17.6571 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 170.453310 
+  > GTEPS = 0.0192 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 115.7233 sec, Backward: 18.2600 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 173.356856 
+  > GTEPS = 0.0189 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 112.7827 sec, Backward: 17.6948 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 169.449026 
+  > GTEPS = 0.0194 (nodes=32212, edges=101805)
+Running: Sequential on random...
+  > [Phase] BFS: 113.8559 sec, Backward: 17.8898 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 171.104685 
+  > GTEPS = 0.0192 (nodes=32212, edges=101805)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.2011 sec, Backward: 4.6330 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.102881 
+  > GTEPS = 2.8209 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.2310 sec, Backward: 4.6007 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101501 
+  > GTEPS = 2.8592 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.1858 sec, Backward: 4.6189 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101546 
+  > GTEPS = 2.8579 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.1792 sec, Backward: 4.6160 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.100894 
+  > GTEPS = 2.8764 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.1853 sec, Backward: 4.6187 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101164 
+  > GTEPS = 2.8687 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.1824 sec, Backward: 4.6204 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101645 
+  > GTEPS = 2.8552 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.1783 sec, Backward: 4.6362 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101021 
+  > GTEPS = 2.8728 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.1906 sec, Backward: 4.6372 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.102016 
+  > GTEPS = 2.8448 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.2167 sec, Backward: 4.6334 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101903 
+  > GTEPS = 2.8479 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_7000_41459...
+  > [Phase] BFS: 2.2132 sec, Backward: 4.6132 sec (total thread-time)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.101770 
+  > GTEPS = 2.8517 (nodes=7000, edges=41459)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6103 sec, Backward: 6.3620 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.150392 
+  > GTEPS = 4.5578 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6459 sec, Backward: 6.4186 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.213851 
+  > GTEPS = 3.2053 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6204 sec, Backward: 6.3450 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.150902 
+  > GTEPS = 4.5424 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6387 sec, Backward: 6.3767 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.150691 
+  > GTEPS = 4.5487 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6108 sec, Backward: 6.3556 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.151201 
+  > GTEPS = 4.5334 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6413 sec, Backward: 6.3603 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.152842 
+  > GTEPS = 4.4847 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.7216 sec, Backward: 6.3657 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.155339 
+  > GTEPS = 4.4126 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6423 sec, Backward: 6.3879 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.153451 
+  > GTEPS = 4.4669 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6511 sec, Backward: 6.3568 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.153479 
+  > GTEPS = 4.4661 (nodes=11023, edges=62184)
+Running: OpenMP on benchmark_11023_62184...
+  > [Phase] BFS: 3.6183 sec, Backward: 6.3726 sec (total thread-time)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.150303 
+  > GTEPS = 4.5605 (nodes=11023, edges=62184)
+Running: OpenMP on random...
+  > [Phase] BFS: 78.6685 sec, Backward: 153.2662 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.334751 
+  > GTEPS = 0.9834 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 79.1001 sec, Backward: 151.6568 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.316996 
+  > GTEPS = 0.9886 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 80.3315 sec, Backward: 152.2328 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.386507 
+  > GTEPS = 0.9684 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 82.0271 sec, Backward: 152.6613 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.421551 
+  > GTEPS = 0.9584 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 81.5224 sec, Backward: 151.5020 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.351302 
+  > GTEPS = 0.9785 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 79.9911 sec, Backward: 151.6668 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.355838 
+  > GTEPS = 0.9772 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 80.7299 sec, Backward: 151.1125 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.377402 
+  > GTEPS = 0.9710 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 80.6448 sec, Backward: 152.1251 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.356274 
+  > GTEPS = 0.9771 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 80.3843 sec, Backward: 151.0081 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.335449 
+  > GTEPS = 0.9832 (nodes=32212, edges=101805)
+Running: OpenMP on random...
+  > [Phase] BFS: 79.4874 sec, Backward: 153.4218 sec (total thread-time)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 3.361366 
+  > GTEPS = 0.9756 (nodes=32212, edges=101805)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 349.6281 sec, Backward: 584.5600 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.440007 
+  > GTEPS = 1.2631 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 341.5534 sec, Backward: 582.6195 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.315412 
+  > GTEPS = 1.2750 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 340.6406 sec, Backward: 581.1485 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.278524 
+  > GTEPS = 1.2785 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 342.9453 sec, Backward: 582.6525 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.352042 
+  > GTEPS = 1.2715 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 346.1322 sec, Backward: 584.4218 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.386251 
+  > GTEPS = 1.2682 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 332.1328 sec, Backward: 578.8430 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.090079 
+  > GTEPS = 1.2969 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 341.7051 sec, Backward: 580.2827 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.296811 
+  > GTEPS = 1.2767 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 346.8990 sec, Backward: 584.1140 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.391017 
+  > GTEPS = 1.2678 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 348.5989 sec, Backward: 585.9604 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.374188 
+  > GTEPS = 1.2694 (nodes=56438, edges=300801)
+Running: OpenMP on 56438_300801...
+  > [Phase] BFS: 354.0701 sec, Backward: 588.1743 sec (total thread-time)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 13.615552 
+  > GTEPS = 1.2469 (nodes=56438, edges=300801)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2492 sec, Backward: 0.5453 sec
+  > [cuGraph Phase] Init: 0.2660 s, H2D+Build: 0.0010 s, BC: 0.8116 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.8116 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.078828 
+  > GTEPS = 0.2690 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2619 sec, Backward: 0.6471 sec
+  > [cuGraph Phase] Init: 0.1694 s, H2D+Build: 0.0004 s, BC: 0.9250 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9250 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.095019 
+  > GTEPS = 0.2650 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2769 sec, Backward: 0.6579 sec
+  > [cuGraph Phase] Init: 0.1829 s, H2D+Build: 0.0004 s, BC: 0.9514 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9514 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.134922 
+  > GTEPS = 0.2557 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2749 sec, Backward: 0.6285 sec
+  > [cuGraph Phase] Init: 0.1792 s, H2D+Build: 0.0003 s, BC: 0.9196 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9196 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.099292 
+  > GTEPS = 0.2640 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2867 sec, Backward: 0.6931 sec
+  > [cuGraph Phase] Init: 0.1698 s, H2D+Build: 0.0004 s, BC: 0.9963 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9963 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.166856 
+  > GTEPS = 0.2487 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2998 sec, Backward: 0.6496 sec
+  > [cuGraph Phase] Init: 0.1667 s, H2D+Build: 0.0004 s, BC: 0.9655 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9655 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.132886 
+  > GTEPS = 0.2562 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2849 sec, Backward: 0.6502 sec
+  > [cuGraph Phase] Init: 0.2373 s, H2D+Build: 0.0003 s, BC: 0.9516 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9516 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.189555 
+  > GTEPS = 0.2440 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2782 sec, Backward: 0.6251 sec
+  > [cuGraph Phase] Init: 0.1695 s, H2D+Build: 0.0003 s, BC: 0.9196 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9196 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.089762 
+  > GTEPS = 0.2663 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2786 sec, Backward: 0.6250 sec
+  > [cuGraph Phase] Init: 0.1710 s, H2D+Build: 0.0004 s, BC: 0.9198 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9198 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.091453 
+  > GTEPS = 0.2659 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_7000_41459...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=7000, num_sources=7000
+  > [cuGraph] num_batches=1 (max_per_batch=7000)
+  > [cuGraph Phase] BFS: 0.2779 sec, Backward: 0.6321 sec
+  > [cuGraph Phase] Init: 0.1723 s, H2D+Build: 0.0003 s, BC: 0.9262 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 0.9262 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 1.099165 
+  > GTEPS = 0.2640 (nodes=7000, edges=41459)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9617 sec, Backward: 1.7828 sec
+  > [cuGraph Phase] Init: 0.1698 s, H2D+Build: 0.0004 s, BC: 2.7652 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.7652 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.935675 
+  > GTEPS = 0.2335 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9125 sec, Backward: 1.6280 sec
+  > [cuGraph Phase] Init: 0.1667 s, H2D+Build: 0.0004 s, BC: 2.5606 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.5606 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.727912 
+  > GTEPS = 0.2513 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9422 sec, Backward: 1.7014 sec
+  > [cuGraph Phase] Init: 0.1761 s, H2D+Build: 0.0004 s, BC: 2.6641 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.6641 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.841009 
+  > GTEPS = 0.2413 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.8948 sec, Backward: 1.6723 sec
+  > [cuGraph Phase] Init: 0.1787 s, H2D+Build: 0.0005 s, BC: 2.5965 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.5965 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.776031 
+  > GTEPS = 0.2469 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9555 sec, Backward: 1.7206 sec
+  > [cuGraph Phase] Init: 0.1699 s, H2D+Build: 0.0003 s, BC: 2.6965 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.6965 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.867076 
+  > GTEPS = 0.2391 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.8955 sec, Backward: 1.6333 sec
+  > [cuGraph Phase] Init: 0.1687 s, H2D+Build: 0.0004 s, BC: 2.5489 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.5489 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.718264 
+  > GTEPS = 0.2522 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9107 sec, Backward: 1.6456 sec
+  > [cuGraph Phase] Init: 0.1719 s, H2D+Build: 0.0004 s, BC: 2.5765 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.5765 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.749099 
+  > GTEPS = 0.2493 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9446 sec, Backward: 1.7770 sec
+  > [cuGraph Phase] Init: 0.1748 s, H2D+Build: 0.0005 s, BC: 2.7504 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.7504 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.925982 
+  > GTEPS = 0.2343 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.8900 sec, Backward: 1.7048 sec
+  > [cuGraph Phase] Init: 0.1754 s, H2D+Build: 0.0004 s, BC: 2.6149 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.6149 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.791140 
+  > GTEPS = 0.2456 (nodes=11023, edges=62184)
+Running: cuGraph_BC on benchmark_11023_62184...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=11023, num_sources=11023
+  > [cuGraph] num_batches=1 (max_per_batch=11023)
+  > [cuGraph Phase] BFS: 0.9076 sec, Backward: 1.6658 sec
+  > [cuGraph Phase] Init: 0.1676 s, H2D+Build: 0.0004 s, BC: 2.5939 s, D2H: 0.0000 s
+  > [cuGraph BC-only] 2.5939 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 2.762146 
+  > GTEPS = 0.2482 (nodes=11023, edges=62184)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.2698 sec, Backward: 12.3521 sec
+  > [cuGraph Phase] Init: 0.1752 s, H2D+Build: 0.0005 s, BC: 16.6951 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 16.6951 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 16.871121 
+  > GTEPS = 0.1944 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.4459 sec, Backward: 12.8137 sec
+  > [cuGraph Phase] Init: 0.1776 s, H2D+Build: 0.0005 s, BC: 17.3338 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 17.3338 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 17.512199 
+  > GTEPS = 0.1873 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.4292 sec, Backward: 13.2001 sec
+  > [cuGraph Phase] Init: 0.1833 s, H2D+Build: 0.0005 s, BC: 17.7030 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 17.7030 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 17.887185 
+  > GTEPS = 0.1833 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.2204 sec, Backward: 12.3260 sec
+  > [cuGraph Phase] Init: 0.1821 s, H2D+Build: 0.0005 s, BC: 16.6165 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 16.6165 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 16.799376 
+  > GTEPS = 0.1952 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.1838 sec, Backward: 12.2236 sec
+  > [cuGraph Phase] Init: 0.1738 s, H2D+Build: 0.0004 s, BC: 16.4780 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 16.4780 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 16.652607 
+  > GTEPS = 0.1969 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.3552 sec, Backward: 12.6186 sec
+  > [cuGraph Phase] Init: 0.1730 s, H2D+Build: 0.0004 s, BC: 17.0477 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 17.0477 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 17.221545 
+  > GTEPS = 0.1904 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.3671 sec, Backward: 13.0967 sec
+  > [cuGraph Phase] Init: 0.1769 s, H2D+Build: 0.0004 s, BC: 17.5372 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 17.5372 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 17.714791 
+  > GTEPS = 0.1851 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.4957 sec, Backward: 12.5440 sec
+  > [cuGraph Phase] Init: 0.1892 s, H2D+Build: 0.0005 s, BC: 17.1130 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 17.1130 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 17.303086 
+  > GTEPS = 0.1895 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.3028 sec, Backward: 12.2852 sec
+  > [cuGraph Phase] Init: 0.1753 s, H2D+Build: 0.0004 s, BC: 16.6580 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 16.6580 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 16.834077 
+  > GTEPS = 0.1948 (nodes=32212, edges=101805)
+Running: cuGraph_BC on random...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=32212, num_sources=32212
+  > [cuGraph] num_batches=1 (max_per_batch=32212)
+  > [cuGraph Phase] BFS: 4.3689 sec, Backward: 12.9063 sec
+  > [cuGraph Phase] Init: 0.1787 s, H2D+Build: 0.0005 s, BC: 17.3493 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 17.3493 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 17.528864 
+  > GTEPS = 0.1871 (nodes=32212, edges=101805)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22444, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22444)
+  > [cuGraph Phase] BFS: 22.0495 sec, Backward: 50.5849 sec
+  > [cuGraph Phase] Init: 0.1711 s, H2D+Build: 0.0007 s, BC: 72.8322 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 72.8322 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696212.00
+  > Elapse time [sec.] = 73.004549 
+  > GTEPS = 0.2325 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22444, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22444)
+  > [cuGraph Phase] BFS: 21.3335 sec, Backward: 48.6953 sec
+  > [cuGraph Phase] Init: 0.1681 s, H2D+Build: 0.0007 s, BC: 70.2162 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 70.2162 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696212.00
+  > Elapse time [sec.] = 70.385442 
+  > GTEPS = 0.2412 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22443, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22443)
+  > [cuGraph Phase] BFS: 21.0649 sec, Backward: 48.2232 sec
+  > [cuGraph Phase] Init: 0.1690 s, H2D+Build: 0.0007 s, BC: 69.4755 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 69.4755 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696286.88
+  > Elapse time [sec.] = 69.645688 
+  > GTEPS = 0.2438 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22442, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22442)
+  > [cuGraph Phase] BFS: 21.9909 sec, Backward: 50.1566 sec
+  > [cuGraph Phase] Init: 0.1731 s, H2D+Build: 0.0007 s, BC: 72.3453 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 72.3453 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696254.12
+  > Elapse time [sec.] = 72.519543 
+  > GTEPS = 0.2341 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22442, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22442)
+  > [cuGraph Phase] BFS: 21.8878 sec, Backward: 50.3995 sec
+  > [cuGraph Phase] Init: 0.1820 s, H2D+Build: 0.0006 s, BC: 72.4859 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 72.4859 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696254.12
+  > Elapse time [sec.] = 72.669095 
+  > GTEPS = 0.2336 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22441, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22441)
+  > [cuGraph Phase] BFS: 21.8784 sec, Backward: 50.3860 sec
+  > [cuGraph Phase] Init: 0.1713 s, H2D+Build: 0.0004 s, BC: 72.4615 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 72.4615 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696186.07
+  > Elapse time [sec.] = 72.633581 
+  > GTEPS = 0.2337 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.3 GB, max_per_batch=22441, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22441)
+  > [cuGraph Phase] BFS: 22.0692 sec, Backward: 49.6599 sec
+  > [cuGraph Phase] Init: 0.1694 s, H2D+Build: 0.0007 s, BC: 71.9260 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 71.9260 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696186.07
+  > Elapse time [sec.] = 72.096616 
+  > GTEPS = 0.2355 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=22452, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22452)
+  > [cuGraph Phase] BFS: 21.9849 sec, Backward: 50.2263 sec
+  > [cuGraph Phase] Init: 0.1693 s, H2D+Build: 0.0007 s, BC: 72.4075 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 72.4075 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696282.94
+  > Elapse time [sec.] = 72.578019 
+  > GTEPS = 0.2339 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=22452, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22452)
+  > [cuGraph Phase] BFS: 21.2655 sec, Backward: 48.2010 sec
+  > [cuGraph Phase] Init: 0.1647 s, H2D+Build: 0.0007 s, BC: 69.6548 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 69.6548 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696282.94
+  > Elapse time [sec.] = 69.820698 
+  > GTEPS = 0.2431 (nodes=56438, edges=300801)
+Running: cuGraph_BC on 56438_300801...
+  > [cuGraph] free_mem=101.4 GB, max_per_batch=22452, num_sources=56438
+  > [cuGraph] num_batches=3 (max_per_batch=22452)
+  > [cuGraph Phase] BFS: 22.2410 sec, Backward: 50.5847 sec
+  > [cuGraph Phase] Init: 0.1682 s, H2D+Build: 0.0007 s, BC: 73.0238 s, D2H: 0.0001 s
+  > [cuGraph BC-only] 73.0238 s (純粋 BC 計算, CUDA init 等除く)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696282.94
+  > Elapse time [sec.] = 73.193176 
+  > GTEPS = 0.2319 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0102 s (cum=0.0203 s), Backward wall=0.0263 s (cum=0.0523 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.232126 
+  > GTEPS = 1.2502 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0103 s (cum=0.0204 s), Backward wall=0.0264 s (cum=0.0527 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.212204 
+  > GTEPS = 1.3676 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0101 s (cum=0.0201 s), Backward wall=0.0263 s (cum=0.0525 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.219121 
+  > GTEPS = 1.3244 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0101 s (cum=0.0201 s), Backward wall=0.0265 s (cum=0.0524 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.207344 
+  > GTEPS = 1.3997 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0107 s (cum=0.0207 s), Backward wall=0.0265 s (cum=0.0529 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.245796 
+  > GTEPS = 1.1807 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0101 s (cum=0.0200 s), Backward wall=0.0265 s (cum=0.0525 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.203373 
+  > GTEPS = 1.4270 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0105 s (cum=0.0205 s), Backward wall=0.0265 s (cum=0.0530 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.224714 
+  > GTEPS = 1.2915 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0105 s (cum=0.0204 s), Backward wall=0.0265 s (cum=0.0529 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.206181 
+  > GTEPS = 1.4076 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0106 s (cum=0.0205 s), Backward wall=0.0266 s (cum=0.0530 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.217012 
+  > GTEPS = 1.3373 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_7000_41459...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.23 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0101 s (cum=0.0202 s), Backward wall=0.0265 s (cum=0.0524 s)
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.228922 
+  > GTEPS = 1.2677 (nodes=7000, edges=41459)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0280 s (cum=0.0555 s), Backward wall=0.0377 s (cum=0.0739 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.249593 
+  > GTEPS = 2.7463 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0280 s (cum=0.0554 s), Backward wall=0.0375 s (cum=0.0738 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.248837 
+  > GTEPS = 2.7546 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0282 s (cum=0.0555 s), Backward wall=0.0377 s (cum=0.0740 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.242112 
+  > GTEPS = 2.8311 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0279 s (cum=0.0552 s), Backward wall=0.0375 s (cum=0.0735 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.244076 
+  > GTEPS = 2.8084 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0280 s (cum=0.0555 s), Backward wall=0.0373 s (cum=0.0740 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.250755 
+  > GTEPS = 2.7336 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0281 s (cum=0.0556 s), Backward wall=0.0375 s (cum=0.0738 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.245985 
+  > GTEPS = 2.7866 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0279 s (cum=0.0555 s), Backward wall=0.0374 s (cum=0.0738 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.236842 
+  > GTEPS = 2.8941 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0278 s (cum=0.0552 s), Backward wall=0.0375 s (cum=0.0737 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.248115 
+  > GTEPS = 2.7626 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0280 s (cum=0.0555 s), Backward wall=0.0378 s (cum=0.0744 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.248188 
+  > GTEPS = 2.7618 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on benchmark_11023_62184...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=0.36 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.0277 s (cum=0.0548 s), Backward wall=0.0373 s (cum=0.0737 s)
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.235916 
+  > GTEPS = 2.9055 (nodes=11023, edges=62184)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3793 s (cum=0.6999 s), Backward wall=0.3387 s (cum=0.6214 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.895765 
+  > GTEPS = 3.6609 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3805 s (cum=0.7003 s), Backward wall=0.3402 s (cum=0.6194 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.892900 
+  > GTEPS = 3.6727 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3735 s (cum=0.6919 s), Backward wall=0.3407 s (cum=0.6263 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.897957 
+  > GTEPS = 3.6520 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3767 s (cum=0.6975 s), Backward wall=0.3358 s (cum=0.6186 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.905676 
+  > GTEPS = 3.6209 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3656 s (cum=0.6842 s), Backward wall=0.3359 s (cum=0.6274 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.897423 
+  > GTEPS = 3.6542 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3806 s (cum=0.7010 s), Backward wall=0.3410 s (cum=0.6218 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.910679 
+  > GTEPS = 3.6010 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3756 s (cum=0.6951 s), Backward wall=0.3410 s (cum=0.6256 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.902019 
+  > GTEPS = 3.6356 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3797 s (cum=0.6999 s), Backward wall=0.3402 s (cum=0.6204 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.900368 
+  > GTEPS = 3.6422 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3810 s (cum=0.7008 s), Backward wall=0.3417 s (cum=0.6219 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.902590 
+  > GTEPS = 3.6333 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on random...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.06 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.3734 s (cum=0.6932 s), Backward wall=0.3386 s (cum=0.6260 s)
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.894427 
+  > GTEPS = 3.6664 (nodes=32212, edges=101805)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6483 s (cum=1.2956 s), Backward wall=1.0742 s (cum=2.1345 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.010590 
+  > GTEPS = 8.4436 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6726 s (cum=1.3292 s), Backward wall=1.0643 s (cum=2.1042 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.015324 
+  > GTEPS = 8.4238 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6588 s (cum=1.3014 s), Backward wall=1.0744 s (cum=2.1253 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.010821 
+  > GTEPS = 8.4426 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6511 s (cum=1.3008 s), Backward wall=1.0690 s (cum=2.1285 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.010453 
+  > GTEPS = 8.4442 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6718 s (cum=1.3283 s), Backward wall=1.0660 s (cum=2.1077 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.034075 
+  > GTEPS = 8.3461 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6729 s (cum=1.3279 s), Backward wall=1.0660 s (cum=2.1078 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.030572 
+  > GTEPS = 8.3605 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6655 s (cum=1.3148 s), Backward wall=1.0714 s (cum=2.1187 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.012725 
+  > GTEPS = 8.4346 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6458 s (cum=1.2859 s), Backward wall=1.0848 s (cum=2.1521 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.019012 
+  > GTEPS = 8.4084 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6621 s (cum=1.3100 s), Backward wall=1.0722 s (cum=2.1226 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.016096 
+  > GTEPS = 8.4205 (nodes=56438, edges=300801)
+Running: GPU_Opt_Pure on 56438_300801...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.00 GB, dynamic(GPU)=1.85 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=0.6456 s (cum=1.2898 s), Backward wall=1.0747 s (cum=2.1466 s)
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 2.017576 
+  > GTEPS = 8.4144 (nodes=56438, edges=300801)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1830 sec, Backward: 0.0645 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.445263 
+  > GTEPS = 0.6518 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1520 sec, Backward: 0.0646 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.397596 
+  > GTEPS = 0.7299 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1839 sec, Backward: 0.0647 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.418936 
+  > GTEPS = 0.6927 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1521 sec, Backward: 0.0643 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.393780 
+  > GTEPS = 0.7370 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1835 sec, Backward: 0.0648 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.421481 
+  > GTEPS = 0.6886 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1519 sec, Backward: 0.0645 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.395566 
+  > GTEPS = 0.7337 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1833 sec, Backward: 0.0648 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.417969 
+  > GTEPS = 0.6943 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1520 sec, Backward: 0.0644 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.394566 
+  > GTEPS = 0.7355 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1831 sec, Backward: 0.0648 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.418397 
+  > GTEPS = 0.6936 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_7000_41459...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=7000
+  > [PathMerge] num_batches=110
+  > [GPU Phase] BFS: 0.1524 sec, Backward: 0.0646 sec
+  > index : 4, Maximum Betweenness Centrality ==> 3935437.26
+  > Elapse time [sec.] = 0.395212 
+  > GTEPS = 0.7343 (nodes=7000, edges=41459)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.5655 sec, Backward: 0.2502 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.999078 
+  > GTEPS = 0.6861 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.6156 sec, Backward: 0.2496 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 1.044954 
+  > GTEPS = 0.6560 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.5663 sec, Backward: 0.2499 sec
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.983232 
+  > GTEPS = 0.6971 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.6167 sec, Backward: 0.2506 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 1.039742 
+  > GTEPS = 0.6593 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.5656 sec, Backward: 0.2504 sec
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.996076 
+  > GTEPS = 0.6882 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.6136 sec, Backward: 0.2507 sec
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 1.032108 
+  > GTEPS = 0.6641 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.5648 sec, Backward: 0.2500 sec
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.988884 
+  > GTEPS = 0.6932 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.6144 sec, Backward: 0.2529 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 1.035381 
+  > GTEPS = 0.6620 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.5670 sec, Backward: 0.2499 sec
+  > index : 11, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 0.991104 
+  > GTEPS = 0.6916 (nodes=11023, edges=62184)
+Running: PathMerge_BC on benchmark_11023_62184...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=11023
+  > [PathMerge] num_batches=173
+  > [GPU Phase] BFS: 0.6148 sec, Backward: 0.2493 sec
+  > index : 10, Maximum Betweenness Centrality ==> 11951000.93
+  > Elapse time [sec.] = 1.043777 
+  > GTEPS = 0.6567 (nodes=11023, edges=62184)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4544 sec, Backward: 0.2525 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.896768 
+  > GTEPS = 3.6568 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4491 sec, Backward: 0.2533 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.896529 
+  > GTEPS = 3.6578 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.4 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4524 sec, Backward: 0.2535 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.891022 
+  > GTEPS = 3.6804 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4496 sec, Backward: 0.2533 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.890440 
+  > GTEPS = 3.6828 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4553 sec, Backward: 0.2534 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.892868 
+  > GTEPS = 3.6728 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4634 sec, Backward: 0.2529 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.907309 
+  > GTEPS = 3.6144 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4521 sec, Backward: 0.2524 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.897407 
+  > GTEPS = 3.6542 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4516 sec, Backward: 0.2532 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.898715 
+  > GTEPS = 3.6489 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4525 sec, Backward: 0.2541 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.891664 
+  > GTEPS = 3.6778 (nodes=32212, edges=101805)
+Running: PathMerge_BC on random...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=32212
+  > [PathMerge] num_batches=504
+  > [GPU Phase] BFS: 0.4558 sec, Backward: 0.2516 sec
+  > index : 15869, Maximum Betweenness Centrality ==> 4029653.52
+  > Elapse time [sec.] = 0.893576 
+  > GTEPS = 3.6699 (nodes=32212, edges=101805)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2677 sec, Backward: 1.1893 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.663547 
+  > GTEPS = 3.6403 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2305 sec, Backward: 1.1923 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.622343 
+  > GTEPS = 3.6727 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2740 sec, Backward: 1.1898 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.660956 
+  > GTEPS = 3.6423 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2300 sec, Backward: 1.1906 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.627328 
+  > GTEPS = 3.6688 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2524 sec, Backward: 1.1902 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.646956 
+  > GTEPS = 3.6533 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2437 sec, Backward: 1.1911 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.631779 
+  > GTEPS = 3.6652 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2539 sec, Backward: 1.1891 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.648931 
+  > GTEPS = 3.6517 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2452 sec, Backward: 1.1903 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.640730 
+  > GTEPS = 3.6582 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2664 sec, Backward: 1.1908 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.657437 
+  > GTEPS = 3.6451 (nodes=56438, edges=300801)
+Running: PathMerge_BC on 56438_300801...
+  > [PathMerge] free_mem=101.3 GB, batch_size=64, num_sources=56438
+  > [PathMerge] num_batches=882
+  > [GPU Phase] BFS: 3.2490 sec, Backward: 1.1885 sec
+  > index : 25329, Maximum Betweenness Centrality ==> 6696305.50
+  > Elapse time [sec.] = 4.644445 
+  > GTEPS = 3.6552 (nodes=56438, edges=300801)

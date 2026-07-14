@@ -1,0 +1,99 @@
+=== Phase B: 増分ビルド ===
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.4s)
+-- Generating done (0.2s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_CUGRAPH_BC_MINI
+
+
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+[  4%] Building CXX object CMakeFiles/core.dir/src/core/graph.cpp.o
+[  8%] Building CXX object CMakeFiles/core.dir/src/core/runner.cpp.o
+[ 12%] Building CUDA object CMakeFiles/bandwidth_benchmark.dir/tools/bandwidth_benchmark.cu.o
+/work/gj17/j17000/m5291091/lab/thesis_bc_project/tools/bandwidth_benchmark.cu(87): warning #177-D: variable "LPDDR5X_PEAK_GBS" was declared but never referenced
+  static const double LPDDR5X_PEAK_GBS = 512.0;
+                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[ 16%] Linking CXX static library libcore.a
+[ 16%] Built target core
+[ 32%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/pathmerge.cu.o
+[ 32%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_um.cu.o
+[ 32%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_pure.cu.o
+[ 36%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot.cu.o
+[ 40%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot_kernels.cu.o
+[ 40%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_chunked.cu.o
+[ 44%] Linking CUDA executable bandwidth_benchmark
+[ 44%] Built target bandwidth_benchmark
+[ 48%] Building CXX object CMakeFiles/baseline.dir/src/baseline/sequential.cpp.o
+[ 52%] Building CUDA object CMakeFiles/baseline_cugraph.dir/src/baseline/cugraph_bc.cu.o
+[ 56%] Building CXX object CMakeFiles/baseline.dir/src/baseline/omp.cpp.o
+[ 60%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_ablation.cu.o
+[ 64%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/gpu_unopt.cu.o
+[ 68%] Linking CXX static library libbaseline.a
+[ 68%] Built target baseline
+[ 72%] Building CUDA object CMakeFiles/run_pathmerge_sweep.dir/experiments/run_pathmerge_sweep.cu.o
+[ 76%] Linking CXX static library libproposed.a
+[ 76%] Built target proposed
+[ 80%] Building CUDA object CMakeFiles/run_ablation.dir/experiments/run_ablation.cu.o
+[ 84%] Linking CXX executable run_pathmerge_sweep
+[ 84%] Built target run_pathmerge_sweep
+[ 88%] Linking CXX executable run_ablation
+[ 88%] Built target run_ablation
+[ 92%] Linking CXX static library libbaseline_cugraph.a
+[ 92%] Built target baseline_cugraph
+[ 96%] Building CUDA object CMakeFiles/run_benchmark.dir/experiments/run_benchmark.cu.o
+[100%] Linking CXX executable run_benchmark
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+=== ビルド完了 ===
+
+=== 正確性検証: benchmark_7000_41459 ===
+[RUN] auto(=block): /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 --dump-bc
+[RUN] forced shared: BC_FORCE_BFS_KERNEL=shared /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/benchmark_7000_41459 --dump-bc
+--- auto 側 BFS kernel ログ ---
+  > [BFS kernel] auto=block (avg_deg=11.85, heuristic=block)
+--- shared 側 BFS kernel ログ ---
+  > [BFS kernel] forced=shared (avg_deg=11.85, heuristic=block)
+[WARN] benchmark_7000_41459: 生 diff に差分あり → 数値許容比較を実施
+  頂点数 auto=7000 shared=7000 欠損=0
+  max_abs_diff=6.984919e-09  max_rel_diff=5.297622e-15
+[PASS] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/phaseB_verify_out/bc_auto_benchmark_7000_41459.txt: 数値許容 (max_rel<1e-6) で一致
+
+=== 正確性検証: email-EuAll ===
+[RUN] auto(=block): /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll --dump-bc
+[RUN] forced shared: BC_FORCE_BFS_KERNEL=shared /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll --dump-bc
+--- auto 側 BFS kernel ログ ---
+  > [BFS kernel] auto=block (avg_deg=2.75, heuristic=block)
+--- shared 側 BFS kernel ログ ---
+  > [BFS kernel] forced=shared (avg_deg=2.75, heuristic=block)
+[WARN] email-EuAll: 生 diff に差分あり → 数値許容比較を実施
+  頂点数 auto=265009 shared=265009 欠損=0
+  max_abs_diff=2.384186e-06  max_rel_diff=2.366637e-14
+[PASS] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/phaseB_verify_out/bc_auto_email-EuAll.txt: 数値許容 (max_rel<1e-6) で一致
+
+=== Phase B 検証完了 ===

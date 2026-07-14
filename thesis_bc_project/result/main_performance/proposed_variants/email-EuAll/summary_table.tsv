@@ -1,0 +1,11 @@
+# 実行時間 (秒)
+Method	email-EuAll
+GPU_Opt	30.811371
+GPU_Opt_Pure	30.712514
+GPU_Opt_Pure_Chunked	30.750943
+
+# GTEPS
+Method	email-EuAll
+GPU_Opt	3.1349
+GPU_Opt_Pure	3.1450
+GPU_Opt_Pure_Chunked	3.1410

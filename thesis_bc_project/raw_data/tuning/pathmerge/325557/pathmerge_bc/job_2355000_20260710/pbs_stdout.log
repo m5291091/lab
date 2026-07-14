@@ -1,0 +1,20 @@
+=== PathMerge Batch-Size Sweep ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep
+Graphs  : 325557_3216152
+Batches : 512,1024,2048   Trials: 3
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_pathmerge_sweep_20260710_183730_2355000
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 512,1024,2048  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 512,1024,2048  (trial 2)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152 512,1024,2048  (trial 3)
+=== PathMerge Sweep Complete ===
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b512	325557_3216152	1	240.304285	4.3571
+PathMerge_b1024	325557_3216152	1	194.879643	5.3728
+PathMerge_b2048	325557_3216152	1	174.291804	6.0074
+PathMerge_b512	325557_3216152	2	240.068205	4.3614
+PathMerge_b1024	325557_3216152	2	195.154679	5.3652
+PathMerge_b2048	325557_3216152	2	175.430535	5.9684
+PathMerge_b512	325557_3216152	3	239.368826	4.3742
+PathMerge_b1024	325557_3216152	3	196.762783	5.3213
+PathMerge_b2048	325557_3216152	3	176.324096	5.9382

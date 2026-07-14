@@ -1,0 +1,7 @@
+Kernel	Graph	Trial	Time_sec	GTEPS
+shared	roadNet-PA	1	1063.624042	1.5774
+shared	roadNet-PA	2	1063.737404	1.5772
+shared	roadNet-PA	3	1063.712326	1.5772
+block	roadNet-PA	1	702.092769	2.3896
+block	roadNet-PA	2	695.659103	2.4117
+block	roadNet-PA	3	701.573311	2.3914

@@ -1,0 +1,17 @@
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b8	roadNet-PA	1	2714.978259	0.6180
+PathMerge_b16	roadNet-PA	1	1573.869732	1.0660
+PathMerge_b32	roadNet-PA	1	1015.980496	1.6513
+PathMerge_b64	roadNet-PA	1	943.467356	1.7783
+PathMerge_b64	roadNet-PA	2	939.313473	1.7861
+PathMerge_b64	roadNet-PA	3	946.632125	1.7723
+PathMerge_b64	roadNet-PA	4	912.180815	1.8392
+PathMerge_b128	roadNet-PA	1	1097.682982	1.5284
+PathMerge_b128	roadNet-PA	2	1105.566512	1.5175
+PathMerge_b128	roadNet-PA	3	1106.721195	1.5159
+PathMerge_b256	roadNet-PA	1	1155.295821	1.4522
+PathMerge_b256	roadNet-PA	2	1155.547670	1.4519
+PathMerge_b256	roadNet-PA	3	1152.637307	1.4556
+PathMerge_b512	roadNet-PA	1	1206.022574	1.3911
+PathMerge_b512	roadNet-PA	2	1209.399142	1.3872
+PathMerge_b512	roadNet-PA	3	1207.414580	1.3895

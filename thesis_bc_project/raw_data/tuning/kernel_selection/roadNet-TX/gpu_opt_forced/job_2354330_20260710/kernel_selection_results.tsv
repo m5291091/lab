@@ -1,0 +1,7 @@
+Kernel	Graph	Trial	Time_sec	GTEPS
+shared	roadNet-TX	1	1639.455390	1.6174
+shared	roadNet-TX	2	1639.164633	1.6177
+shared	roadNet-TX	3	1638.887495	1.6180
+block	roadNet-TX	1	984.587390	2.6932
+block	roadNet-TX	2	977.082802	2.7139
+block	roadNet-TX	3	991.600864	2.6742

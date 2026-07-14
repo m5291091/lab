@@ -1,0 +1,25 @@
+checkpoint_sha=88faffa391026852a4440e5b9a063c08c29624f7 git_HEAD=88faffa391026852a4440e5b9a063c08c29624f7
+=== PathMerge Correctness (dump-bc) ===
+Project    : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner     : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep
+Graph      : /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll
+Batches    : 64 2048
+Result     : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/t1_correctness
+Checkpoint : 88faffa391026852a4440e5b9a063c08c29624f7
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll 64 --dump-bc  -> /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/t1_correctness/bc_b64.txt
+  -> dump lines=265009;   > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/email-EuAll 2048 --dump-bc  -> /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/t1_correctness/bc_b2048.txt
+  -> dump lines=265009;   > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+=== Correctness dump complete ===
+total 14820
+drwxr-s---  2 j17000 gj17    4096 Jul 11 13:23 .
+drwxr-s--- 40 j17000 gj17    4096 Jul 11 13:22 ..
+-rw-r-----  1 j17000 gj17     432 Jul 11 13:25 bc_b2048.stderr.log
+-rw-r-----  1 j17000 gj17 7574205 Jul 11 13:25 bc_b2048.txt
+-rw-r-----  1 j17000 gj17     428 Jul 11 13:23 bc_b64.stderr.log
+-rw-r-----  1 j17000 gj17 7574203 Jul 11 13:23 bc_b64.txt
+-rw-r-----  1 j17000 gj17     916 Jul 11 13:25 correctness.log
+
+次段の数値比較:
+  python3 /work/gj17/j17000/m5291091/lab/thesis_bc_project/scripts/compare_bc_vectors.py \
+    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/t1_correctness/bc_b64.txt /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/t1_correctness/bc_b2048.txt

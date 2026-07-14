@@ -1,0 +1,23 @@
+=== PathMerge Batch-Size Sweep ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep
+Graphs  : snap/roadNet-PA
+Batches : 64,128,256,512   Trials: 3
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_pathmerge_sweep_20260710_193014_2355001
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA 64,128,256,512  (trial 1)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA 64,128,256,512  (trial 2)
+[RUN] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-PA 64,128,256,512  (trial 3)
+=== PathMerge Sweep Complete ===
+Config	Graph	Trial	Time_sec	GTEPS
+PathMerge_b64	roadNet-PA	1	943.467356	1.7783
+PathMerge_b128	roadNet-PA	1	1097.682982	1.5284
+PathMerge_b256	roadNet-PA	1	1155.295821	1.4522
+PathMerge_b512	roadNet-PA	1	1206.022574	1.3911
+PathMerge_b64	roadNet-PA	2	939.313473	1.7861
+PathMerge_b128	roadNet-PA	2	1105.566512	1.5175
+PathMerge_b256	roadNet-PA	2	1155.547670	1.4519
+PathMerge_b512	roadNet-PA	2	1209.399142	1.3872
+PathMerge_b64	roadNet-PA	3	946.632125	1.7723
+PathMerge_b128	roadNet-PA	3	1106.721195	1.5159
+PathMerge_b256	roadNet-PA	3	1152.637307	1.4556
+PathMerge_b512	roadNet-PA	3	1207.414580	1.3895

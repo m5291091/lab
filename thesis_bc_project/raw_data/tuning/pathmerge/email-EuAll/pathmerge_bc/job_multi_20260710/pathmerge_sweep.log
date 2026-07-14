@@ -1,0 +1,117 @@
+=== graph=snap/email-EuAll trial=1 ===
+=== PathMerge batch_size=512 ===
+Running: PathMerge_b512 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=512, num_sources=265009, num_batches=518
+  > [GPU Phase] BFS: 89.1055 sec, Backward: 16.6001 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 106.434775 
+  > GTEPS = 0.9075 (nodes=265009, edges=364481)
+=== PathMerge batch_size=1024 ===
+Running: PathMerge_b1024 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=1024, num_sources=265009, num_batches=259
+  > [GPU Phase] BFS: 85.9052 sec, Backward: 13.6296 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 100.101618 
+  > GTEPS = 0.9649 (nodes=265009, edges=364481)
+=== PathMerge batch_size=2048 ===
+Running: PathMerge_b2048 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=2048, num_sources=265009, num_batches=130
+  > [GPU Phase] BFS: 84.4239 sec, Backward: 12.6053 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 97.798748 
+  > GTEPS = 0.9876 (nodes=265009, edges=364481)
+=== PathMerge batch_size=4096 ===
+Running: PathMerge_b4096 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=265009, num_batches=65
+  > [GPU Phase] BFS: 87.9274 sec, Backward: 12.0480 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 101.160326 
+  > GTEPS = 0.9548 (nodes=265009, edges=364481)
+=== PathMerge batch_size=8192 ===
+Running: PathMerge_b8192 on email-EuAll...
+  > [PathMerge] WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 7393 (free=101.4 GB, 11660396 B/source)
+  > [PathMerge] free_mem=101.4 GB, batch_size=7393, num_sources=265009, num_batches=36
+  > [GPU Phase] BFS: 89.2536 sec, Backward: 11.9237 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 103.013717 
+  > GTEPS = 0.9376 (nodes=265009, edges=364481)
+
+  > [PathMerge Sweep] BEST batch_size=2048, time=97.798748 s
+=== graph=snap/email-EuAll trial=2 ===
+=== PathMerge batch_size=512 ===
+Running: PathMerge_b512 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=512, num_sources=265009, num_batches=518
+  > [GPU Phase] BFS: 89.2844 sec, Backward: 16.6373 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 106.564268 
+  > GTEPS = 0.9064 (nodes=265009, edges=364481)
+=== PathMerge batch_size=1024 ===
+Running: PathMerge_b1024 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=1024, num_sources=265009, num_batches=259
+  > [GPU Phase] BFS: 85.5498 sec, Backward: 13.6738 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 99.797694 
+  > GTEPS = 0.9679 (nodes=265009, edges=364481)
+=== PathMerge batch_size=2048 ===
+Running: PathMerge_b2048 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=2048, num_sources=265009, num_batches=130
+  > [GPU Phase] BFS: 83.5589 sec, Backward: 12.6181 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 96.959824 
+  > GTEPS = 0.9962 (nodes=265009, edges=364481)
+=== PathMerge batch_size=4096 ===
+Running: PathMerge_b4096 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=265009, num_batches=65
+  > [GPU Phase] BFS: 88.4320 sec, Backward: 12.0549 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 101.691590 
+  > GTEPS = 0.9498 (nodes=265009, edges=364481)
+=== PathMerge batch_size=8192 ===
+Running: PathMerge_b8192 on email-EuAll...
+  > [PathMerge] WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 7393 (free=101.4 GB, 11660396 B/source)
+  > [PathMerge] free_mem=101.4 GB, batch_size=7393, num_sources=265009, num_batches=36
+  > [GPU Phase] BFS: 89.4617 sec, Backward: 11.9276 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 103.270797 
+  > GTEPS = 0.9353 (nodes=265009, edges=364481)
+
+  > [PathMerge Sweep] BEST batch_size=2048, time=96.959824 s
+=== graph=snap/email-EuAll trial=3 ===
+=== PathMerge batch_size=512 ===
+Running: PathMerge_b512 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=512, num_sources=265009, num_batches=518
+  > [GPU Phase] BFS: 88.6778 sec, Backward: 16.5916 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 105.908648 
+  > GTEPS = 0.9120 (nodes=265009, edges=364481)
+=== PathMerge batch_size=1024 ===
+Running: PathMerge_b1024 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=1024, num_sources=265009, num_batches=259
+  > [GPU Phase] BFS: 85.6787 sec, Backward: 13.6791 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 99.929143 
+  > GTEPS = 0.9666 (nodes=265009, edges=364481)
+=== PathMerge batch_size=2048 ===
+Running: PathMerge_b2048 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=2048, num_sources=265009, num_batches=130
+  > [GPU Phase] BFS: 85.5473 sec, Backward: 12.5987 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 98.928186 
+  > GTEPS = 0.9764 (nodes=265009, edges=364481)
+=== PathMerge batch_size=4096 ===
+Running: PathMerge_b4096 on email-EuAll...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=265009, num_batches=65
+  > [GPU Phase] BFS: 88.3396 sec, Backward: 12.0342 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 101.580514 
+  > GTEPS = 0.9509 (nodes=265009, edges=364481)
+=== PathMerge batch_size=8192 ===
+Running: PathMerge_b8192 on email-EuAll...
+  > [PathMerge] WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 7393 (free=101.4 GB, 11660396 B/source)
+  > [PathMerge] free_mem=101.4 GB, batch_size=7393, num_sources=265009, num_batches=36
+  > [GPU Phase] BFS: 90.3929 sec, Backward: 11.9263 sec
+  > index : 10, Maximum Betweenness Centrality ==> 2384894520.80
+  > Elapse time [sec.] = 104.200792 
+  > GTEPS = 0.9270 (nodes=265009, edges=364481)
+
+  > [PathMerge Sweep] BEST batch_size=2048, time=98.928186 s

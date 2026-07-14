@@ -1,0 +1,8 @@
+core_memory_path_status=FAIL
+pathmerge_cross_impl_status=DIFFERENCE_OBSERVED
+overall_status=CORE_FAIL
+exit_code=1
+configs_ok=6 configs_fail=0
+core_pass=3 core_fail=2 core_skip=0 (of 5 CORE_MEMORY_PATH)
+cross_pass=0 cross_fail=5 cross_skip=0 (of 5 PATHMERGE_CROSS_IMPL_DIAGNOSTIC)
+note=PathMerge is external comparator (NOT ground truth). CORE_PASS_CROSS_IMPL_DIFFERENCE is NOT a complete correctness proof; it separates memory-path-specific results from the unresolved PathMerge difference.

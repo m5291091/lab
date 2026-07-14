@@ -1,0 +1,255 @@
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.7440 s (cum=85.4988 s), Backward wall=33.9223 s (cum=64.3114 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 78.119381 
+  > GTEPS = 13.4031 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.3095 s (cum=85.1945 s), Backward wall=33.7557 s (cum=64.2049 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.632454 
+  > GTEPS = 13.4872 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.6691 s (cum=85.4101 s), Backward wall=34.1214 s (cum=64.3563 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.751069 
+  > GTEPS = 13.4666 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.3056 s (cum=84.9963 s), Backward wall=33.8862 s (cum=64.2782 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.704367 
+  > GTEPS = 13.4747 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=10.67 GB, batch_per_stream=512
+  > [GPU Phase] BFS wall=44.6782 s (cum=85.4270 s), Backward wall=33.8340 s (cum=64.0225 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 77.735816 
+  > GTEPS = 13.4692 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=21.34 GB, batch_per_stream=1024
+  > [GPU Phase] BFS wall=32.0161 s (cum=62.6080 s), Backward wall=30.5846 s (cum=60.0548 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.082884 
+  > GTEPS = 15.6082 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=21.34 GB, batch_per_stream=1024
+  > [GPU Phase] BFS wall=31.9157 s (cum=62.5516 s), Backward wall=30.6736 s (cum=60.1055 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.087237 
+  > GTEPS = 15.6072 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=21.34 GB, batch_per_stream=1024
+  > [GPU Phase] BFS wall=31.9703 s (cum=62.5302 s), Backward wall=30.6647 s (cum=60.1826 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.125601 
+  > GTEPS = 15.5982 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=21.34 GB, batch_per_stream=1024
+  > [GPU Phase] BFS wall=31.9932 s (cum=62.6107 s), Backward wall=30.6527 s (cum=60.1593 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.136799 
+  > GTEPS = 15.5956 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=21.34 GB, batch_per_stream=1024
+  > [GPU Phase] BFS wall=31.9957 s (cum=62.6109 s), Backward wall=30.5770 s (cum=60.0298 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.057181 
+  > GTEPS = 15.6141 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=2048 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=42.68 GB, batch_per_stream=2048
+  > [GPU Phase] BFS wall=24.3766 s (cum=48.4473 s), Backward wall=31.3991 s (cum=62.1918 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.629820 
+  > GTEPS = 15.4819 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=2048 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=42.68 GB, batch_per_stream=2048
+  > [GPU Phase] BFS wall=24.3535 s (cum=48.4177 s), Backward wall=31.4105 s (cum=62.2232 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.636387 
+  > GTEPS = 15.4804 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=2048 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=42.68 GB, batch_per_stream=2048
+  > [GPU Phase] BFS wall=24.3183 s (cum=48.4234 s), Backward wall=31.4841 s (cum=62.2838 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.668998 
+  > GTEPS = 15.4730 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=2048 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=42.68 GB, batch_per_stream=2048
+  > [GPU Phase] BFS wall=24.3455 s (cum=48.4244 s), Backward wall=31.4602 s (cum=62.2753 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.653692 
+  > GTEPS = 15.4765 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=2048 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=42.68 GB, batch_per_stream=2048
+  > [GPU Phase] BFS wall=24.3705 s (cum=48.4639 s), Backward wall=31.4033 s (cum=62.1745 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 67.631864 
+  > GTEPS = 15.4815 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=4096 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=85.35 GB, batch_per_stream=4096
+  > [GPU Phase] BFS wall=21.2382 s (cum=41.6800 s), Backward wall=32.2904 s (cum=63.1929 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.323128 
+  > GTEPS = 15.3248 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=4096 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=85.35 GB, batch_per_stream=4096
+  > [GPU Phase] BFS wall=21.2418 s (cum=41.6636 s), Backward wall=32.3155 s (cum=63.2203 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.311401 
+  > GTEPS = 15.3275 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=4096 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=85.35 GB, batch_per_stream=4096
+  > [GPU Phase] BFS wall=21.2656 s (cum=41.6856 s), Backward wall=32.3404 s (cum=63.2455 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.341247 
+  > GTEPS = 15.3208 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=4096 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=85.35 GB, batch_per_stream=4096
+  > [GPU Phase] BFS wall=21.2821 s (cum=41.7265 s), Backward wall=32.3077 s (cum=63.2058 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.358612 
+  > GTEPS = 15.3169 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=4096 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=85.35 GB, batch_per_stream=4096
+  > [GPU Phase] BFS wall=21.2729 s (cum=41.7151 s), Backward wall=32.3239 s (cum=63.2327 s)
+  > index : 272817, Maximum Betweenness Centrality ==> 39343001000.11
+  > Elapse time [sec.] = 68.359133 
+  > GTEPS = 15.3168 (nodes=325557, edges=3216152)
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=8192 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=170.70 GB, batch_per_stream=8192
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:601: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=8192 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=170.70 GB, batch_per_stream=8192
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:601: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=8192 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=170.70 GB, batch_per_stream=8192
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:601: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=8192 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=170.70 GB, batch_per_stream=8192
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:601: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=8192 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=170.70 GB, batch_per_stream=8192
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:601: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=10240 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=213.38 GB, batch_per_stream=10240
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=10240 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=213.38 GB, batch_per_stream=10240
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=10240 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=213.38 GB, batch_per_stream=10240
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=10240 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=213.38 GB, batch_per_stream=10240
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=10240 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=213.38 GB, batch_per_stream=10240
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=12288 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=256.05 GB, batch_per_stream=12288
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=12288 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=256.05 GB, batch_per_stream=12288
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=12288 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=256.05 GB, batch_per_stream=12288
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=12288 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=256.05 GB, batch_per_stream=12288
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=12288 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=256.05 GB, batch_per_stream=12288
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:611: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=16384 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=341.40 GB, batch_per_stream=16384
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:605: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=16384 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=341.40 GB, batch_per_stream=16384
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:605: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=16384 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=341.40 GB, batch_per_stream=16384
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:605: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=16384 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=341.40 GB, batch_per_stream=16384
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:605: out of memory
+Running: GPU_Opt_Pure on 325557_3216152...
+  > [Warn] BC_BATCH_OVERRIDE=16384 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=341.40 GB, batch_per_stream=16384
+CUDA error at /work/gj17/j17000/m5291091/lab/mylab/research/brandes_gpu_opt_pure.cu:605: out of memory

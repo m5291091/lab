@@ -1,0 +1,163 @@
+=== BFS Kernel Selection 2x2 Experiment ===
+Project : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+Runner  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark  (gpu_opt)
+Graphs  : snap/roadNet-TX
+Kernels : shared block   Trials: 3   Batch: 512
+Result  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354330
+[Build] build_miyabi_interactive.sh (Stage1+2)
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT: /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+║  JOBS   : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- Configuring done (0.3s)
+You have changed variables that require your cache to be deleted.
+Configure will be re-run and you may have to reset some variables.
+The following variables have changed:
+CMAKE_CXX_COMPILER= g++
+CMAKE_C_COMPILER= gcc
+
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (5.3s)
+-- Generating done (0.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_CUGRAPH_BC_MINI
+
+
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi
+[  4%] Building CUDA object CMakeFiles/bandwidth_benchmark.dir/tools/bandwidth_benchmark.cu.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/graph.cpp.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/runner.cpp.o
+/work/gj17/j17000/m5291091/lab/thesis_bc_project/tools/bandwidth_benchmark.cu(87): warning #177-D: variable "LPDDR5X_PEAK_GBS" was declared but never referenced
+  static const double LPDDR5X_PEAK_GBS = 512.0;
+                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[ 16%] Linking CXX static library libcore.a
+[ 20%] Linking CUDA executable bandwidth_benchmark
+[ 20%] Built target bandwidth_benchmark
+[ 20%] Built target core
+[ 36%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_pure.cu.o
+[ 36%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/pathmerge.cu.o
+[ 36%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_um.cu.o
+[ 44%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot.cu.o
+[ 48%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot_kernels.cu.o
+[ 48%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_chunked.cu.o
+[ 48%] Building CXX object CMakeFiles/baseline.dir/src/baseline/sequential.cpp.o
+[ 52%] Building CUDA object CMakeFiles/baseline_cugraph.dir/src/baseline/cugraph_bc.cu.o
+[ 56%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_ablation.cu.o
+[ 60%] Building CXX object CMakeFiles/baseline.dir/src/baseline/omp.cpp.o
+[ 64%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/gpu_unopt.cu.o
+[ 68%] Linking CXX static library libbaseline.a
+[ 68%] Built target baseline
+[ 72%] Building CUDA object CMakeFiles/run_pathmerge_sweep.dir/experiments/run_pathmerge_sweep.cu.o
+[ 76%] Linking CXX static library libproposed.a
+[ 76%] Built target proposed
+[ 80%] Building CUDA object CMakeFiles/run_ablation.dir/experiments/run_ablation.cu.o
+[ 84%] Linking CXX executable run_pathmerge_sweep
+[ 84%] Built target run_pathmerge_sweep
+[ 88%] Linking CXX executable run_ablation
+[ 88%] Built target run_ablation
+[ 92%] Linking CXX static library libbaseline_cugraph.a
+[ 92%] Built target baseline_cugraph
+[ 96%] Building CUDA object CMakeFiles/run_benchmark.dir/experiments/run_benchmark.cu.o
+[100%] Linking CXX executable run_benchmark
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+[RUN] BC_FORCE_BFS_KERNEL=shared BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX  (trial 1)
+  -> 1639.455390 sec (GTEPS=1.6174)
+[RUN] BC_FORCE_BFS_KERNEL=shared BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX  (trial 2)
+  -> 1639.164633 sec (GTEPS=1.6177)
+[RUN] BC_FORCE_BFS_KERNEL=shared BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX  (trial 3)
+  -> 1638.887495 sec (GTEPS=1.6180)
+[RUN] BC_FORCE_BFS_KERNEL=block BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX  (trial 1)
+  -> 984.587390 sec (GTEPS=2.6932)
+[RUN] BC_FORCE_BFS_KERNEL=block BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX  (trial 2)
+  -> 977.082802 sec (GTEPS=2.7139)
+[RUN] BC_FORCE_BFS_KERNEL=block BC_BATCH_OVERRIDE=512 /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/run_benchmark gpu_opt /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/snap/roadNet-TX  (trial 3)
+  -> 991.600864 sec (GTEPS=2.6742)
+=== Kernel Selection Complete ===
+Kernel	Graph	Trial	Time_sec	GTEPS
+shared	roadNet-TX	1	1639.455390	1.6174
+shared	roadNet-TX	2	1639.164633	1.6177
+shared	roadNet-TX	3	1638.887495	1.6180
+block	roadNet-TX	1	984.587390	2.6932
+block	roadNet-TX	2	977.082802	2.7139
+block	roadNet-TX	3	991.600864	2.6742
+
+=== 自動サマリ生成 ===
+  読み込み: 1 グラフ
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354330/kernel_selection_summary.md
+  → /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_kernel_selection_20260710_142239_2354330/kernel_selection_contributions.tsv
+
+# BFS カーネル選択 2×2 比較
+
+gpu_opt のヒューリスティクス: avg_deg < 5.0 → shared, それ以外 → block。
+
+| グラフ | avg_deg | shared (s) | block (s) | 速い側 | ヒューリスティクス | 正しい選択? | 選択機構の寄与 (遅/速) |
+|:-----|------:|------:|------:|:----:|:----:|:----:|------:|
+| roadNet-TX | 2.79 | 1639.2 | 984.6 | block | shared | ✗ 誤選択 | 1.66× |
+
+## まとめ
+
+- ヒューリスティクスが速い側を選べた: **0/1** グラフ
+- 誤選択したグラフ: roadNet-TX
+- 選択機構の寄与 (誤選択時に失う倍率) の範囲: 1.66× 〜 1.66×
+
+## 試行数と実行時間ばらつき (中央値 ± 標準偏差)
+
+| グラフ | kernel | 中央値 (s) | 標準偏差 | n |
+|:-----|:----:|------:|------:|--:|
+| roadNet-TX | shared | 1639.2 | 0.2319 | 3 |
+| roadNet-TX | block | 984.6 | 5.9281 | 3 |
+
+## 正確性 (shared vs block の Max BC 一致)
+
+| グラフ | shared Max BC | block Max BC | 一致? |
+|:-----|------:|------:|:----:|
+| roadNet-TX | 164495142042.4500 | 164495142042.4500 | ✓ |
