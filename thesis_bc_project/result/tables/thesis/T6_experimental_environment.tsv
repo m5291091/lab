@@ -1,0 +1,15 @@
+Component	Specification
+GPU	NVIDIA GH200 120GB
+GPU Memory (HBM3)	total ~102 GB (free ~101.4 GB)
+NVIDIA Driver	595.58.03
+CUDA Toolkit (nvcc)	release 13.0, V13.0.48
+Host C++ Compiler	g++ (GCC) 11.4.1
+CMake	4.3.4
+Nsight Systems (nsys)	2025.5.1.121
+Scheduler / Group	PBS (Miyabi-G), group gj17, queue small-g
+HBM3 Bandwidth (Device-to-Device)	1818.6 GB/s (45.2% of theoretical)
+Pinned Host-to-Device Bandwidth	424.1 GB/s (47.1% of theoretical)
+Pinned Device-to-Host Bandwidth	297.6 GB/s (33.1% of theoretical)
+NVLink-C2C Prefetch Bandwidth	177.7 GB/s (19.7% of theoretical)
+Main-Experiment Aggregation	Median of all recorded trials
+Main-Experiment Warmup	None; no recorded trial was discarded

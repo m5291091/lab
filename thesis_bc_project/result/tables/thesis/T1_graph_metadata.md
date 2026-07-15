@@ -1,0 +1,18 @@
+# T1  Graph Metadata
+
+| Graph | Nodes | Edges | Average Degree | Maximum Degree | Directed Input | Symmetrized |
+|---|---|---|---|---|---|---|
+| email-EuAll | 265009 | 364481 | 2.751 | 7636 | directed | yes |
+| roadNet-PA | 1088092 | 1541898 | 2.834 | 9 | undirected | no |
+| roadNet-TX | 1379917 | 1921660 | 2.785 | 12 | undirected | no |
+| roadNet-CA | 1965206 | 2766607 | 2.816 | 12 | undirected | no |
+| 325557_3216152 | 325557 | 3216152 | 19.758 | 18280 | unknown | unknown |
+| 56438_300801 | 56438 | 300801 | 10.660 | 604 | unknown | unknown |
+| benchmark_7000 | 7000 | 41459 | 11.845 | 589 | unknown | unknown |
+| benchmark_11023 | 11023 | 62184 | 11.283 | 2109 | unknown | unknown |
+| benchmark_85830 | 85830 | 241080 | 5.618 | 2207 | unknown | unknown |
+| chain_200 | 200 | 199 | 1.990 | 2 | unknown | unknown |
+| random | 32212 | 101805 | 6.321 | 22 | unknown | unknown |
+
+> Nodes / Edges / degrees from docs/graph_stats.tsv (undirected edge count m).
+> Directed Input / Symmetrized from result/datasets/graph_catalog.tsv ("unknown" = not recorded for generated graphs).

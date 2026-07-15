@@ -1,0 +1,16 @@
+# T5  Correctness Summary
+
+| Validation Scope | Reference | Candidate | Graph | Comparison Level | Mismatches | Missing Values | Non-Finite Values | Maximum Relative Error | Status | Limitation |
+|---|---|---|---|---|---|---|---|---|---|---|
+| Small full-vector | Sequential (CPU) | GPU_Opt | benchmark_7000_41459 | Full Vector | 0 | 0 | 0 | 4.56e-15 | Pass | Small graph; independent CPU reference; n=1 |
+| Small full-vector | Sequential (CPU) | GPU_Opt | benchmark_11023_62184 | Full Vector | 0 | 0 | 0 | 1.79e-14 | Pass | Small graph; independent CPU reference; n=1 |
+| Small full-vector | Sequential (CPU) | GPU_Opt | chain_200 | Full Vector | 0 | 0 | 0 | 0.00e+00 | Pass | Small graph; independent CPU reference; n=1 |
+| Memory-path same-batch/different-path | GPU_Opt (b1024) | GPU_Opt_Pure (b1024) | 325557_3216152 | Full Vector | 0 | 0 | 0 | 3.02e-14 | Pass | Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1 |
+| Memory-path same-batch/different-path | GPU_Opt (b1024) | GPU_Opt_Pure_Chunked (b1024) | 325557_3216152 | Full Vector | 0 | 0 | 0 | 2.87e-14 | Pass | Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1 |
+| Memory-path same-batch/different-path | GPU_Opt_Pure (b1024) | GPU_Opt_Pure_Chunked (b1024) | 325557_3216152 | Full Vector | 0 | 0 | 0 | 2.63e-14 | Pass | Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1 |
+| Memory-path stress (same-impl/different-batch) | GPU_Opt (b9792) | GPU_Opt (b1024) | 325557_3216152 | Full Vector | 6 | 0 | 0 | 2.23e-06 | Core Fail | Exceeds rel_tol 1e-6; cause not determined; not relabeled as Pass |
+| Memory-path stress (same-impl/different-batch) | GPU_Opt_Pure_Chunked (b16384) | GPU_Opt_Pure_Chunked (b1024) | 325557_3216152 | Full Vector | 6 | 0 | 0 | 2.85e-06 | Core Fail | Exceeds rel_tol 1e-6; cause not determined; not relabeled as Pass |
+| PathMerge cross-implementation diagnostic | PathMerge (b4096) | GPU_Opt (b1024) | 325557_3216152 | Full Vector | 11027 | 0 | 0 | 2.00e-03 | Supported with Limitations | Observed difference only: external comparator is not ground truth; correctness is undetermined |
+
+> abs_tol = 1e-3, rel_tol = 1e-6 (canonical; unchanged). Non-Finite Values = count of NaN/Inf (0 = all vectors finite/valid).
+> The canonical memory-path stress divergence is preserved as Core Fail and is not hidden or relabeled. Sources: result/correctness/small_full_vector/correctness_summary.tsv; result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv.
