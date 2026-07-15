@@ -7,10 +7,12 @@
 
 ## 14.1 性能 1.31〜3.17×（中心主張）
 - **使用可能**：「固定 b512 の block GPU_Opt は、評価した email-EuAll および roadNet-PA/TX/CA に
-  おいて、グラフごとに調整した PathMerge tuned より 1.31〜3.17 倍高速だった（median/median;
+  おいて、グラフごとに調整した「評価した第三者実装の PathMerge」（tuned; 上流
+  `gobardhanm/path-merging-bc`, 論文著者の公式実装ではない）より 1.31〜3.17 倍高速だった（median/median;
   email 3.17×, PA 1.31×, TX 1.51×, CA 1.45×）」。
 - **避ける**：「あらゆるグラフで高速」「常に PathMerge より速い」「一般に高速」「最速の BC 実装」。
-  既定 b64 比較の「7.15×/1.64×」を tuned 主張と混同する表現。
+  既定 b64 比較の「7.15×/1.64×」を tuned 主張と混同する表現。評価した第三者実装に対する結果を、
+  PathMerge/Galliot アルゴリズム一般や原著者の公式実装に対する優劣へ一般化する表現。
 - **根拠と制約**：`proposed_variants` / `tuning/pathmerge` / legacy b64（PA/TX）。4 グラフ限定、
   提案は固定 b512、PathMerge は tuned（保守的比較）。正確性は headline で `max_bc_only`。
 
@@ -66,11 +68,14 @@
   SUPPORTED_WITH_LIMITATIONS, stress は NOT_YET_SUPPORTED）。
 
 ## 14.9 PathMerge
-- **使用可能**：「PathMerge を tuned baseline かつ external comparator として用いた」。「PathMerge と
-  提案の差（325557, 約 11027 要素, max_rel≈0.2%）は正誤未決定」。
+- **使用可能**：「評価に使用した第三者実装の PathMerge を tuned baseline かつ external comparator と
+  して用いた」。「PathMerge と提案の差（325557, 約 11027 要素, max_rel≈0.2%）は正誤未決定」。
 - **避ける**：「PathMerge を ground truth として提案の正しさを証明」「PathMerge と一致＝提案が正しい」。
-  「PathMerge を固定設定にして提案だけ最適化」（誤り: PathMerge が tuned）。
-- **根拠と制約**：`pathmerge_cross`（5/5 DIFF, 未解決）。ground truth ではない。
+  「PathMerge を固定設定にして提案だけ最適化」（誤り: PathMerge が tuned）。「原著者の公式実装」や
+  「PathMerge アルゴリズム一般」と断定する表現。
+- **根拠と制約**：`pathmerge_cross`（5/5 DIFF, 未解決）。ground truth ではない。上流
+  `gobardhanm/path-merging-bc`（@ `9c231b46`）は論文著者の公式実装ではない第三者実装で、上流に
+  明示的ライセンス表記なし（§12.5 [R6]; 再配布可否は未確定でユーザー判断）。
 
 ## 14.10 cuGraph
 - **使用可能**：「cuGraph（exact, normalized=false, endpoints=false, undirected）を small 限定の

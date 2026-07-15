@@ -28,11 +28,22 @@
 | [09_results_correctness.md](09_results_correctness.md) | RQ4 数値整合性（5区分） |
 | [10_discussion.md](10_discussion.md) | 考察 |
 | [11_limitations.md](11_limitations.md) | 限界 |
-| [12_related_work_gap.md](12_related_work_gap.md) | 関連研究とギャップ（一次資料 [R1]–[R12] を Crossref 照合済） |
+| [12_related_work_gap.md](12_related_work_gap.md) | 関連研究とギャップ（一次資料 [R1]–[R20]。Stage L0 で全書誌を独立再検証・公式技術資料を追加） |
 | [13_tables_and_figures.md](13_tables_and_figures.md) | 論文掲載の表・図（必須/推奨/補助/付録） |
 | [14_claims_wording.md](14_claims_wording.md) | 各主張の使用可能/回避表現と根拠 |
 | [evidence_matrix.tsv](evidence_matrix.tsv) | 主張×根拠×支持状態の機械可読行列 |
 | [thesis_values.tsv](thesis_values.tsv) | 論文使用の全数値の一元台帳 |
+| [references.bib](references.bib) | 確定書誌の BibTeX（[R1]–[R20] + 付随ソフトウェア資料; Stage L0） |
+| [SOURCE_AUDIT.tsv](SOURCE_AUDIT.tsv) | 出典監査表（主張×出典×照合方法×検証状態; Stage L0） |
+
+### 出典の検証状態（Stage L0, 2026-07-15）
+`TODO_SOURCE` プレースホルダは 0 件（Stage I1 で解消済み）。Stage L0 では、(1) [R1]–[R12] の
+全 DOI・書誌を Crossref API と第二系統（出版社ページ・著者公開版・著者公式ページ・公式
+リポジトリ）で独立再照合（相違 0 件）、(2) GH200 / CUDA（UM・streams・warp shuffle・atomic）/
+OpenMP / SNAP / cuGraph の公式一次資料を [R13]–[R20] として追加、(3) 出典で支持できない記述
+2 点を訂正（[R9] の oversubscription 帰属除去、[06](06_results_performance.md) §6.4 の cuGraph
+per-level 計算量主張の削除）した。`SOURCE_AUDIT.tsv` の `TodoFile`/`TodoLine` 列は、
+TODO マーカーが存在しないため**出典を要する主張の所在**（ファイルと行）を指す。
 
 ## 正規入力（これ以外を数値源にしない）
 ```

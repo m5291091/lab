@@ -13,6 +13,7 @@
 | roadNet-CA | 2129.10 | 3079.72 (b32) | **1.45×** | `proposed_variants/roadNet-CA/` + `tuning/pathmerge/roadNet-CA/` |
 
 - 集計=中央値(median)、warmup=なし、checkpoint=`phase_def_block_20260710`。**tuned 基準**（既定 b64 比較の 7.15×/1.64× とは区別）。
+- 本表の「PathMerge」は**評価に使用した第三者実装**（上流 `gobardhanm/path-merging-bc`, 論文著者の公式実装ではない; 上流に明示的ライセンス表記なし）を指す。倍率はこの第三者実装（tuned）に対する実測であり、PathMerge/Galliot アルゴリズム一般や原著者公式実装への優劣ではない。external comparator であり ground truth ではない（Stage L0.1）。
 
 ## 支持状態
 

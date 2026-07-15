@@ -7,6 +7,13 @@
 ## 6.1 主性能表（T-PERF・必須）
 提案 = block GPU_Opt（UM, 固定 b512, in-capacity）。PathMerge = tuned（グラフごとに調整）。
 
+> **本章の「PathMerge」の範囲（初出限定, Stage L0.1）**：以降で比較対象とする「PathMerge」は
+> **評価に使用した第三者実装の PathMerge**（上流 `gobardhanm/path-merging-bc` @ `9c231b46`;
+> 論文著者の公式実装ではない第三者実装で、上流リポジトリに明示的ライセンス表記なし →
+> [12](12_related_work_gap.md) §12.5 [R6]）を指す。以下の速度向上はこの第三者実装（tuned）に対する
+> 実測であり、PathMerge/Galliot アルゴリズム一般や原著者の公式実装に対する優劣を主張するものではない。
+> PathMerge は external comparator であり ground truth ではない。
+
 | Graph | Nodes | Edges | GPU_Opt Req.Batch | GPU_Opt Eff.Batch | GPU_Opt Trials | GPU_Opt Median[s] | GPU_Opt Mean[s] | GPU_Opt SampleSD | GPU_Opt GTEPS | PathMerge Batch | PathMerge Trials | PathMerge Median[s] | PathMerge Mean[s] | PathMerge SampleSD | PathMerge GTEPS | Speedup | SupportingFiles |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|--:|:--:|--:|--:|--:|--:|--:|--:|:--|
 | email-EuAll | 265009 | 364481 | 512 | 512 | 5 | **30.81** | 30.81 | 0.061 | 3.14 | b2048 | 3 | **97.80** | 97.90 | 0.988 | 0.99 | **3.17×** | ①⑤ |
@@ -66,9 +73,10 @@
 Sequential は 56438 で欠（非現実的コストのため未測定 → `N/A`）。
 
 **この補助表から言えること/言えないこと**：
-- 言える：small では Sequential/OpenMP（CPU）に対し GPU 実装が桁で高速。cuGraph は
-  `sort_by_key + reduce_by_key` の per-level O(M log M) により提案系より低速（`CLAUDE.md` の
-  性能リファレンスと整合）。
+- 言える：small では Sequential/OpenMP（CPU）に対し GPU 実装が桁で高速。cuGraph は評価した
+  small グラフで提案系・PathMerge より低速だった（実測）。内部実装の per-level 計算量に基づく
+  説明（O(M log M) 等）は formal な一次資料を確認できないため主張しない
+  （[12](12_related_work_gap.md) §12.3 の方針と統一, Stage L0）。
 - 言えない：medium/large の統一 7 実装比較（Seq/OMP/cuGraph 欠 + 提案系が旧 shared →
   `NOT_YET_SUPPORTED`）。cuGraph の BC スケール整合は未確認（[05](05_experimental_setup.md)
   §5.9）なので cuGraph を正確性の基準にはしない。

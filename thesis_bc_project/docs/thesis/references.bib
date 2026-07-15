@@ -1,0 +1,263 @@
+% references.bib — 修士論文 関連研究・背景の確定書誌（Stage L0, 2026-07-15）
+% 全 DOI は Crossref API で照合し、可能な限り第二系統（出版社ページ・著者公開版・
+% 著者公式ページ・公式リポジトリ）でも照合した。照合記録は SOURCE_AUDIT.tsv を参照。
+% [R#] は 12_related_work_gap.md の参照番号に対応する。
+% 論文 PDF そのものは Git に追加しない。
+
+% ---------------------------------------------------------------------------
+% [R1] Brandes アルゴリズム（厳密 BC の基盤）
+@article{brandes2001,
+  author    = {Ulrik Brandes},
+  title     = {A faster algorithm for betweenness centrality},
+  journal   = {The Journal of Mathematical Sociology},
+  volume    = {25},
+  number    = {2},
+  pages     = {163--177},
+  year      = {2001},
+  doi       = {10.1080/0022250X.2001.9990249},
+  publisher = {Informa UK Limited},
+  url       = {https://doi.org/10.1080/0022250X.2001.9990249},
+  note      = {著者側公開記録: https://kops.uni-konstanz.de/handle/123456789/5739}
+}
+
+% [R2] Direction-Optimizing BFS（Hybrid BFS の設計根拠, alpha=14/beta=24）
+@inproceedings{beamer2012,
+  author    = {Scott Beamer and Krste Asanovi{\'c} and David Patterson},
+  title     = {Direction-optimizing Breadth-First Search},
+  booktitle = {2012 International Conference for High Performance Computing, Networking, Storage and Analysis (SC '12)},
+  year      = {2012},
+  pages     = {1--10},
+  doi       = {10.1109/SC.2012.50},
+  publisher = {IEEE},
+  note      = {著者公開版: https://scottbeamer.net/pubs/beamer-sc2012.pdf（本文に「we suggest $\alpha$ = 14 and $\beta$ = 24」）}
+}
+
+% [R3] GPU 上の高性能厳密 BC（work-efficient / edge-parallel）
+@inproceedings{mclaughlin2014,
+  author    = {Adam McLaughlin and David A. Bader},
+  title     = {Scalable and High Performance Betweenness Centrality on the GPU},
+  booktitle = {SC14: International Conference for High Performance Computing, Networking, Storage and Analysis},
+  year      = {2014},
+  pages     = {572--583},
+  doi       = {10.1109/SC.2014.52},
+  publisher = {IEEE},
+  note      = {著者公式ページ: https://davidbader.net/publication/2014-m-ba/; 実装: https://github.com/Adam27X/hybrid_BC}
+}
+
+% [R4] [R3] の CACM Research Highlight 版
+@article{mclaughlin2018,
+  author    = {Adam McLaughlin and David A. Bader},
+  title     = {Accelerating GPU betweenness centrality},
+  journal   = {Communications of the ACM},
+  volume    = {61},
+  number    = {8},
+  pages     = {85--92},
+  year      = {2018},
+  doi       = {10.1145/3230485},
+  publisher = {Association for Computing Machinery (ACM)},
+  note      = {著者公式ページ: https://davidbader.net/publication/2018-mb/}
+}
+
+% [R5] GPU/ヘテロ環境 BC（粗粒度=ソース単位並列, vertex virtualization）
+@inproceedings{sariyuce2013,
+  author    = {Ahmet Erdem Sar{\i}y{\"u}ce and Kamer Kaya and Erik Saule and {\"U}mit V. {\c{C}}ataly{\"u}rek},
+  title     = {Betweenness centrality on GPUs and heterogeneous architectures},
+  booktitle = {Proceedings of the 6th Workshop on General Purpose Processor Using Graphics Processing Units (GPGPU-6)},
+  year      = {2013},
+  pages     = {76--85},
+  doi       = {10.1145/2458523.2458531},
+  publisher = {ACM},
+  note      = {著者公開版: https://sariyuce.com/papers/gpgpu13.pdf}
+}
+
+% [R6] Galliot / path-merging BC（本研究の主要比較 baseline のアルゴリズム原著, 会議版）
+@inproceedings{zheng2023galliot,
+  author    = {Zhigao Zheng and Chen Zhao and Peichen Xie and Bo Du},
+  title     = {Galliot: Path Merging Based Betweenness Centrality Algorithm on GPU},
+  booktitle = {IEEE INFOCOM 2023 - IEEE Conference on Computer Communications},
+  year      = {2023},
+  pages     = {1--10},
+  doi       = {10.1109/INFOCOM53939.2023.10229018},
+  publisher = {IEEE},
+  note      = {著者公式ページ: https://whu-zhigao.github.io/publication/}
+}
+
+% [R7] path-merging BC の雑誌版（JSAC）
+@article{zheng2023jsac,
+  author    = {Zhigao Zheng and Bo Du and Chen Zhao and Peichen Xie},
+  title     = {Path Merging Based Betweenness Centrality Algorithm in Delay Tolerant Networks},
+  journal   = {IEEE Journal on Selected Areas in Communications},
+  volume    = {41},
+  number    = {10},
+  pages     = {3133--3145},
+  year      = {2023},
+  doi       = {10.1109/JSAC.2023.3310071},
+  publisher = {IEEE},
+  note      = {著者公式ページ: https://whu-zhigao.github.io/publication/}
+}
+
+% [R6] 付随: vendored PathMerge 実装の上流（第三者実装; 論文著者公式ではない）
+@misc{pathmergeRepo,
+  author       = {{gobardhanm (GitHub user)}},
+  title        = {path-merging-bc: Path merging based betweenness centrality calculation on GPU using CUDA},
+  howpublished = {\url{https://github.com/gobardhanm/path-merging-bc}},
+  urldate      = {2026-07-15},
+  note         = {第三者による Galliot 型実装（論文著者の公式実装ではない）。上流は単一 commit 9c231b46f7499380d4495262c1ec75a11cdaae7a（``Initial commit'', 2025-11-12; GitHub API で確認, Stage L0.1）。README は「Galloit algorithm: Path-merging-based betweenness centrality」と記すのみで正式な論文引用・ライセンス表記なし。リポジトリに LICENSE/COPYING は存在せず GitHub もライセンスを表示しない → 明示的な再配布・改変許諾は確認できず（再配布可否は未確定・ユーザー判断）。本研究の vendored baseline（src/baseline/galliot*.cu, pathmerge.cu）はこの上流を adapter/stub 化した派生で、取得元の厳密な commit/tag は取得時に未記録（2026-07-15 確認）}
+}
+
+% [R8] RAPIDS cuGraph（補助 baseline; 公式リポジトリ）
+@misc{rapidsCugraph,
+  author       = {{RAPIDS Development Team}},
+  title        = {RAPIDS cuGraph: GPU-accelerated graph analytics},
+  howpublished = {\url{https://github.com/rapidsai/cugraph}},
+  urldate      = {2026-07-15},
+  note         = {Apache-2.0。本研究は BC 関連サブセットを third\_party/cugraph に vendored（rapids-cmake v26.04.00 固定）}
+}
+
+% [R8] 付随: cuGraph betweenness_centrality 公式 API ドキュメント（exact/近似の定義）
+@misc{rapidsCugraphBcDocs,
+  author       = {{RAPIDS Development Team}},
+  title        = {cugraph.centrality.betweenness\_centrality --- cugraph-docs 26.06.00 documentation},
+  howpublished = {\url{https://docs.rapids.ai/api/cugraph/stable/api_docs/api/cugraph/cugraph.centrality.betweenness_centrality/}},
+  urldate      = {2026-07-15},
+  note         = {version 26.06.00。k=None（既定）で全頂点を用いる exact 計算、k 指定でサンプリング近似と明記}
+}
+
+% [R9] Unified Memory の初期評価（CUDA 6.x 世代; oversubscription は対象外）
+@inproceedings{li2015um,
+  author    = {Wenqiang Li and Guanghao Jin and Xuewen Cui and Simon See},
+  title     = {An Evaluation of Unified Memory Technology on NVIDIA GPUs},
+  booktitle = {2015 15th IEEE/ACM International Symposium on Cluster, Cloud and Grid Computing (CCGrid)},
+  year      = {2015},
+  pages     = {1092--1098},
+  doi       = {10.1109/CCGrid.2015.105},
+  publisher = {IEEE}
+}
+
+% [R10] UM の prefetching / oversubscription 評価（Pascal/Volta）
+@article{knap2019um,
+  author    = {Marcin Knap and Pawe{\l} Czarnul},
+  title     = {Performance evaluation of Unified Memory with prefetching and oversubscription for selected parallel CUDA applications on NVIDIA Pascal and Volta GPUs},
+  journal   = {The Journal of Supercomputing},
+  volume    = {75},
+  number    = {11},
+  pages     = {7625--7645},
+  year      = {2019},
+  doi       = {10.1007/s11227-019-02966-8},
+  publisher = {Springer},
+  url       = {https://link.springer.com/article/10.1007/s11227-019-02966-8}
+}
+
+% [R11] Subway: out-of-GPU-memory グラフ処理
+@inproceedings{nodehisabet2020subway,
+  author    = {Amir Hossein {Nodehi Sabet} and Zhijia Zhao and Rajiv Gupta},
+  title     = {Subway: minimizing data transfer during out-of-GPU-memory graph processing},
+  booktitle = {Proceedings of the Fifteenth European Conference on Computer Systems (EuroSys '20)},
+  year      = {2020},
+  pages     = {1--16},
+  doi       = {10.1145/3342195.3387537},
+  publisher = {ACM},
+  note      = {著者研究室公式実装: https://github.com/AutomataLab/Subway}
+}
+
+% [R12] out-of-core GPU メモリ管理によるグラフ処理
+@inproceedings{shirahata2014outofcore,
+  author    = {Koichi Shirahata and Hitoshi Sato and Satoshi Matsuoka},
+  title     = {Out-of-core GPU memory management for MapReduce-based large-scale graph processing},
+  booktitle = {2014 IEEE International Conference on Cluster Computing (CLUSTER)},
+  year      = {2014},
+  pages     = {221--229},
+  doi       = {10.1109/CLUSTER.2014.6968748},
+  publisher = {IEEE}
+}
+
+% ---------------------------------------------------------------------------
+% [R13]–[R20] 技術仕様・データセットの公式一次資料（Stage L0 追加）
+
+% [R13] GH200 製品ページ（NVLink-C2C 900 GB/s coherent, coherent memory model）
+@misc{nvidiaGh200Product,
+  author       = {{NVIDIA Corporation}},
+  title        = {NVIDIA GH200 Grace Hopper Superchip},
+  howpublished = {\url{https://www.nvidia.com/en-us/data-center/grace-hopper-superchip/}},
+  urldate      = {2026-07-15},
+  note         = {NVLink-C2C 900 GB/s coherent interface; CPU+GPU coherent memory model（単一 per-process ページテーブル）}
+}
+
+% [R14] Grace Hopper アーキテクチャ公式解説（HBM3 96GB, LPDDR5X, ATS, oversubscription）
+@misc{nvidiaGraceHopperInDepth,
+  author       = {Jonathon Evans and Michael Andersch and Vikram Sethi and Gonzalo Brito and Vishal Mehta},
+  title        = {NVIDIA Grace Hopper Superchip Architecture In-Depth},
+  howpublished = {NVIDIA Technical Blog, \url{https://developer.nvidia.com/blog/nvidia-grace-hopper-superchip-architecture-in-depth/}},
+  year         = {2022},
+  month        = nov,
+  urldate      = {2026-07-15},
+  note         = {2022-11-10 公開。HBM3（最大 96 GB）・LPDDR5X・ATS（単一 per-process ページテーブル）・GPU メモリ oversubscription による Grace CPU メモリの直接利用を記述}
+}
+
+% [R15] CUDA C++ Programming Guide（環境の CUDA 13.0 と同版のアーカイブ）
+@misc{nvidiaCudaProgrammingGuide,
+  author       = {{NVIDIA Corporation}},
+  title        = {CUDA C++ Programming Guide, Release 13.0},
+  howpublished = {\url{https://docs.nvidia.com/cuda/archive/13.0.0/cuda-c-programming-guide/}},
+  year         = {2025},
+  urldate      = {2026-07-15},
+  note         = {参照節: Unified Memory Programming（oversubscription / prefetch / memory advise）; Asynchronous Concurrent Execution（streams・転送とカーネル実行の重畳）; Warp Shuffle Functions; Atomic Functions}
+}
+
+% [R16] CUDA Runtime API リファレンス（v13.0.0）
+@misc{nvidiaCudaRuntimeApi,
+  author       = {{NVIDIA Corporation}},
+  title        = {CUDA Runtime API, v13.0.0},
+  howpublished = {\url{https://docs.nvidia.com/cuda/archive/13.0.0/cuda-runtime-api/}},
+  year         = {2025},
+  urldate      = {2026-07-15},
+  note         = {cudaMallocManaged / cudaMemPrefetchAsync / cudaMemAdvise（SetReadMostly, SetAccessedBy）/ cudaMemsetAsync / Stream Management の関数仕様}
+}
+
+% [R17] OpenMP 公式仕様
+@misc{openmp52,
+  author       = {{OpenMP Architecture Review Board}},
+  title        = {OpenMP Application Programming Interface, Version 5.2},
+  howpublished = {\url{https://www.openmp.org/wp-content/uploads/OpenMP-API-Specification-5-2.pdf}},
+  year         = {2021},
+  month        = nov,
+  urldate      = {2026-07-15},
+  note         = {本研究の CPU baseline が用いる parallel / for / atomic / reduction / omp\_get\_wtime は 2.x 系以降の中核構文であり版選択に依存しない}
+}
+
+% [R18] SNAP データセット集（公式が要請する引用形式に準拠）
+@misc{snapnets,
+  author       = {Jure Leskovec and Andrej Krevl},
+  title        = {{SNAP Datasets}: {Stanford} Large Network Dataset Collection},
+  howpublished = {\url{http://snap.stanford.edu/data}},
+  month        = jun,
+  year         = {2014},
+  urldate      = {2026-07-15},
+  note         = {email-EuAll / roadNet-PA / roadNet-TX / roadNet-CA の公式配布元。email-EuAll は原本 directed（公式ページで確認）}
+}
+
+% [R19] email-EuAll の原著論文（SNAP 公式ページの出典表示）
+@article{leskovec2007graphevolution,
+  author    = {Jure Leskovec and Jon Kleinberg and Christos Faloutsos},
+  title     = {Graph evolution: Densification and shrinking diameters},
+  journal   = {ACM Transactions on Knowledge Discovery from Data},
+  volume    = {1},
+  number    = {1},
+  pages     = {2},
+  year      = {2007},
+  doi       = {10.1145/1217299.1217301},
+  publisher = {Association for Computing Machinery (ACM)},
+  note      = {Article 2}
+}
+
+% [R20] roadNet-PA/TX/CA の原著論文（SNAP 公式ページの出典表示）
+@article{leskovec2009community,
+  author    = {Jure Leskovec and Kevin J. Lang and Anirban Dasgupta and Michael W. Mahoney},
+  title     = {Community Structure in Large Networks: Natural Cluster Sizes and the Absence of Large Well-Defined Clusters},
+  journal   = {Internet Mathematics},
+  volume    = {6},
+  number    = {1},
+  pages     = {29--123},
+  year      = {2009},
+  doi       = {10.1080/15427951.2009.10129177}
+}
