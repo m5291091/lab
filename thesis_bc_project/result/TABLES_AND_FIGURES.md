@@ -17,6 +17,7 @@
 | UM feasibility 表 | `memory_scalability/oversubscribe_results_*.tsv` | `summarize_oversubscribe.py`（**numpy 必要**） | 集計md（未生成; stdout 集計） | **REGENERATABLE** — raw_data入力から2026-07-14に再検証済み。2回生成で冪等。 |
 | 小規模 full-vector 正確性表 | `correctness/small_full_vector/{correctness_summary.tsv,*/comparison.md}` | `compare_bc_vectors.py`（実行済み出力を正式配置） | `correctness/small_full_vector/README.md` | **ARCHIVED_VERIFIED**（3グラフ、独立参照、全要素、mismatch/missing/NaN/Inf=0） |
 | memory-path 分析表（G2.2） | 外部 raw BC vectors（`EXTERNAL_ARTIFACTS.tsv` 登録; jobs 2368269/2368398/2368587）+ `data/325557_3216152` | `analyze_memory_correctness.py`（**標準ライブラリのみ**） | `correctness/memory_paths/analysis/{run_to_run_comparison.tsv,stress_direct_comparison.tsv,six_vertex_detail.tsv,tolerance_sensitivity.tsv,Gate_G2_2_analysis.md}` | **REGENERATABLE**（raw vector から byte-identical 再生成を確認。`Gate_G2_3_audit.md` は静的監査で対象外） |
+| T6 Experimental Environment | `result/environment/environment.md`; `raw_data/main_performance/proposed_variants/email-EuAll/_run/job_2357334_20260711/phase_timing.log`; `raw_data/profiling/job_2359175_20260711/bandwidth.log` | `generate_thesis_artifacts.py`（numpy+matplotlib） | `result/tables/thesis/T6_experimental_environment.{md,tsv}` | **REGENERATABLE**（Gate W1.3で同一コマンドを2回実行し、生成物の差分0を確認） |
 
 ## 図
 | 図 | 入力 | 生成 | 出力 | 再生成ステータス |
@@ -36,6 +37,7 @@ python3 scripts/summarize_kernel_selection.py raw_data/tuning/kernel_selection/r
 
 ## 依存パッケージ（numpy/scipy/matplotlib）を用いる再生成（2026-07-14 本環境で再検証済み）
 ```bash
+python3 scripts/generate_thesis_artifacts.py   # T6を含むthesis用全図表
 python3 scripts/generate_um_figures.py raw_data/memory_scalability result/figures   # numpy+matplotlib
 python3 scripts/summarize_oversubscribe.py raw_data/memory_scalability            # numpy
 python3 scripts/statistical_analysis.py --results raw_data/main_performance/proposed_variants/*/_run/*/results.tsv \

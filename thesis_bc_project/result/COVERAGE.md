@@ -16,9 +16,9 @@
 ## メモリ経路 correctness/diagnostic（memory_paths; Stage 4C, 325557 限定）
 - canonical（checkpoint `memory_correctness_20260712`, job `2368587`）: 325557 × {gpu_opt b1024/b9792, gpu_opt_pure b1024, gpu_opt_pure_chunked b1024/b16384, pathmerge b4096} を各 n=1・warmup なしで全実行し比較行列化。runner 6/6 成功、formal overall status=`CORE_FAIL`（隠さない）。
 - `same_batch_diff_path`（UM/Pure/Chunked b1024）は mismatch=0（`abs_tol=1e-3`, `rel_tol=1e-6`）だが**非 byte 一致**。`same_impl_diff_batch`（b9792 vs b1024, b16384 vs b1024）は厳格 `rel_tol=1e-6` を**和集合 8 頂点**で超過。`pathmerge_cross` は 5/5 DIFF（約 11027 要素, max_rel≈2.0e-3, 未解決; PathMerge は external comparator）。
-- UM `b9792` は 100 GiB queue 内で完走し oversubscription 経路証拠を満たす（migration byte 直接計測ではない）。Chunked `b16384` は `num_subs=3` で完走。
+- UM `b9792` はhost-memory-limited 100 GiB configurationで完走し oversubscription 経路証拠を満たす（migration byte 直接計測ではない）。Chunked `b16384` は `num_subs=3` で完走。
 - 診断（checkpoint `memory_diagnostic_20260713`, job `2369632`）: full memset 強制（T-RESET）・NS_eff=1 強制（T-NSEFF）とも b1024 CONTROL との差なし（`RESET/NS_EFF_NOT_DISTINGUISHED`, mismatch=0）。原因未特定。
-- 失敗: `b10240` UM は 100 GiB queue で OOM（job `2368269`, `failure/failed/oom/`）。job `2368398` は pure 比較不一致で fail-fast（`failure/early_terminated/`）。
+- 失敗: `b10240` UM はhost-memory-limited 100 GiB configurationでOOM（job `2368269`, `failure/failed/oom/`）。job `2368398` は pure 比較不一致で fail-fast（`failure/early_terminated/`）。
 - **制約**: 325557・各構成 n=1・warmup なし。他グラフ/他バッチ/最新 block へ一般化しない。stress full-vector 正確性は `NOT_YET_SUPPORTED`（`CLAIMS.md`）。分析 TSV/MD は `analyze_memory_correctness.py` で raw vector から byte-identical 再生成可。
 
 ## 副次(B): メモリスケーラビリティ（memory_scalability）

@@ -6,6 +6,13 @@
 Git 履歴を削除すると解決不能になるため、**監査目的の対応表**（下表 / `../../code_snapshots/_legacy_audit/LEGACY_COMMIT_TO_SNAPSHOT.tsv`）
 にのみ保持する。生データ・コードへのアクセスに commit SHA は不要。
 
+## Gate W1.3 — 実験環境記録の整合修正
+
+- 従来の正式文書にあったqueue `small-g`と、保存された18本の投入スクリプトにある`regular-g`は一致しない。保存済みジョブログから実使用queueを独立に確定できないため、現行の正式資料ではqueueを`Not independently verifiable from retained job logs`とし、性能差の原因または統制変数として扱わない。PBS systemがMiyabi-G、groupが`gj17`であることは維持する。
+- `GH200 120GB`の意味は保存情報から確定できないため、現行のGPU製品名・容量表記から除外した。GPU modelはNVIDIA GH200、公称HBM3は96 GB、記録されたデバイスメモリは97,871 MiB（約95.6 GiB、約102.6 decimal GB）、runtime照会は実行開始時total約102.0 GB・free約101.4 GBとして出典と意味を分離した。これらのtotal値は同一HBM3を異なる単位系または取得方法で示し、freeは総容量ではなくlaunch時の利用可能量とメモリ予算計算の基準である。
+- `100 GiB queue`という旧表現は、現行資料では`Host-memory-limited 100 GiB configuration`へ変更した。100 GiBがqueue名、submission resource limit、node configurationのいずれかは断定しない。
+- 原本性を保つため、`raw_data/`、`code_snapshots/`、保存ログ、PBS stdout/stderr、実験用shellのPBS directiveは変更していない。T6は`../../scripts/generate_thesis_artifacts.py`の生成元から更新する。
+
 ## SourceSnapshotID 対応表（正式参照）
 | 実験 | SourceSnapshotID | code_snapshots パス |
 |:--|:--|:--|

@@ -62,7 +62,7 @@ Comparison outcomes (see `canonical_job_2368587/comparison_matrix.tsv`):
   affected-index union across the two is **8 vertices**.
 - **`pathmerge_cross` (diagnostic, not required for core): all 5 FAIL** — PathMerge b4096 vs each
   proposed vector mismatch ≈ 11027–11030, max_rel ≈ 2.0e-3. **Unresolved; correctness undecided.**
-- UM `b9792` completed under the 100 GiB queue and satisfied the combined oversubscription route
+- UM `b9792` completed under the host-memory-limited 100 GiB configuration and satisfied the combined oversubscription route
   evidence (est=102.02 GB > free_before=101.4 GB, HBM3 streaming, NS_eff=1, num_subs=2,
   SUB_BATCH=6596<9792, prefetch_cum=33.18 s). **This is not a migration-byte measurement.**
 

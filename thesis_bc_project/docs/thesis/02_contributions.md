@@ -36,7 +36,7 @@ Hybrid BFS・warp 協調・2 ストリームを個別に ON/OFF する 2^3=8 構
 
 ## 貢献 4：UM/Pure/Chunked の容量特性と数値的限界の明確化
 共通計算基盤に対する 3 つのメモリ管理方式について、**(a) 実行可能バッチ範囲と OOM 境界
-（Pure は b8192+ で OOM、UM は b10240 まで到達し b12288/100 GiB queue で OOM、Chunked は
+（Pure は b8192+ で OOM、UM は旧 tree でb10240まで到達してb12288でOOM、host-memory-limited 100 GiB configurationではb9792完走・b10240 OOM、Chunked は
 b16384 まで到達）、(b) same-batch のメモリ経路一致（非 byte 一致）と (c) stress 条件で残る
 構成依存差（原因未特定）**を、一貫した許容基準（`abs_tol=1e-3`, `rel_tol=1e-6`）で明確化した。
 すなわち容量拡張の便益と、同時に露呈する数値的制約の**両方**を隠さず記述した点が貢献である。

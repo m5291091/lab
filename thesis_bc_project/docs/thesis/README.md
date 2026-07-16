@@ -73,5 +73,5 @@ legacy baseline として指定されたものだけを使う。
 - 許容値（`abs_tol=1e-3`, `rel_tol=1e-6`）を事後に変更して PASS 化しない。
 - **Hybrid BFS は BFS の top-down/bottom-up 方向切替であり、CPU–GPU hybrid ではない。**
 - メモリ2実験を混同しない：`memory_scalability`（checkpoint `oldtree_f05ec52_20260512`, feasibility のみ・
-  時間値非採用）と `correctness/memory_paths`（checkpoint `memory_correctness_20260712`/`memory_diagnostic_20260713`, 100 GiB queue,
+  時間値非採用）と `correctness/memory_paths`（checkpoint `memory_correctness_20260712`/`memory_diagnostic_20260713`, host-memory-limited 100 GiB configuration,
   正確性・診断）は別物。

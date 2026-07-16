@@ -3,13 +3,23 @@
 | 項目 | 値 |
 |:--|:--|
 | 実験時コード（提案 block・新規 PathMerge 測定） | SourceSnapshotID `phase_def_block_20260710`（`../../code_snapshots/phase_def_block_20260710/`；監査用元 commit は `../provenance/provenance.md`） |
-| GPU | NVIDIA GH200 120GB（HBM3 97871 MiB / total≈102 GB, free≈101.4 GB） |
+| GPU | NVIDIA GH200 |
+| 公称 HBM3 | 96 GB |
+| 記録されたデバイスメモリ | 97,871 MiB（約95.6 GiB、約102.6 decimal GB；公称96 GBと同一のHBM3） |
+| 実行開始時の runtime 照会 | total 約102.0 GB、free (`free_before`) 約101.4 GB（decimal GB；freeは総容量ではなくメモリ予算計算の基準） |
 | NVIDIA driver | 595.58.03 |
 | CUDA (nvcc) | release 13.0, V13.0.48 |
 | CMake | 4.3.4（`~/.local/bin/cmake`） |
 | C++ コンパイラ | g++ (GCC) 11.4.1 |
 | nsys | 2025.5.1.121 |
-| スケジューラ / group | PBS (Miyabi-G), group `gj17`, queue `small-g` |
+| PBS system | Miyabi-G PBS batch system |
+| Group | `gj17` |
+| Queue | Not independently verifiable from retained job logs |
+| memory-path実験の資源構成 | Host-memory-limited 100 GiB configuration |
+
+公称96 GB、記録値97,871 MiB（約95.6 GiB、約102.6 decimal GB）、runtime照会のtotal約102.0 GBは、同一のオンパッケージHBM3容量を異なる単位系または取得方法で示したものであり、別個のメモリ階層ではない。free約101.4 GBは実行開始時の利用可能量であり、総容量ではない。
+
+実験はMiyabi-G上のPBS batch systemを通じてgroup `gj17`で実行した。保存された従来の正式文書と投入スクリプトの間でqueue名の記録が一致せず、保存済みジョブログから実際のqueue名を独立に確定できないため、queue名は本評価の統制変数として扱わない。100 GiBはqueue名、submission resource limit、node configurationのいずれかとは断定せず、host-memory-limited configurationとしてのみ記録する。
 
 ## 出典（SourceSnapshotID 別）
 `result/` 全体が単一スナップショットではない。実験ごとに実験時コードが異なる（正式参照 = SourceSnapshotID）:

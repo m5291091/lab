@@ -172,7 +172,7 @@ def write_table(stem, header, rows, title, note_lines):
     """Write a presentation-ready Markdown table and a TSV with the same data."""
     tsv = TAB_DIR / (stem + ".tsv")
     with open(tsv, "w", newline="") as f:
-        w = csv.writer(f, delimiter="\t")
+        w = csv.writer(f, delimiter="\t", lineterminator="\n")
         w.writerow(header)
         w.writerows(rows)
     md = TAB_DIR / (stem + ".md")
@@ -510,18 +510,30 @@ def load_environment():
     """Parse bandwidth and verify normalized specs against the environment archive."""
     environment = read_text("result/environment/environment.md")
     required_tokens = {
-        "gpu": "NVIDIA GH200 120GB",
-        "memory": "HBM3 97871 MiB / total≈102 GB, free≈101.4 GB",
+        "gpu": "| GPU | NVIDIA GH200 |",
+        "nominal_hbm3": "| 公称 HBM3 | 96 GB |",
+        "recorded_memory": "97,871 MiB（約95.6 GiB、約102.6 decimal GB",
+        "runtime_memory": "total 約102.0 GB、free (`free_before`) 約101.4 GB",
         "driver": "595.58.03",
         "cuda": "release 13.0, V13.0.48",
         "cmake": "4.3.4",
         "compiler": "g++ (GCC) 11.4.1",
         "nsys": "2025.5.1.121",
-        "scheduler": "PBS (Miyabi-G), group `gj17`, queue `small-g`",
+        "pbs_system": "Miyabi-G PBS batch system",
+        "group": "| Group | `gj17` |",
+        "queue": "Not independently verifiable from retained job logs",
+        "memory_resource": "Host-memory-limited 100 GiB configuration",
     }
     for key, token in required_tokens.items():
         note(f"environment[{key}]", token in environment,
              f"archived specification contains {token!r}")
+
+    runtime_memory_log = read_text(
+        "raw_data/main_performance/proposed_variants/email-EuAll/_run/"
+        "job_2357334_20260711/phase_timing.log")
+    runtime_memory_token = "GPU HBM3: total=102.0 GB, free_before=101.4 GB"
+    note("runtime_memory_at_launch", runtime_memory_token in runtime_memory_log,
+         f"retained run log contains {runtime_memory_token!r}")
 
     p = input_path("raw_data/profiling/job_2359175_20260711/bandwidth.log")
     bw = {}
@@ -1041,14 +1053,22 @@ def table_T6(env):
     bw = env["bw"]
     header = ["Component", "Specification"]
     rows = [
-        ["GPU", "NVIDIA GH200 120GB"],
-        ["GPU Memory (HBM3)", "total ~102 GB (free ~101.4 GB)"],
+        ["GPU", "NVIDIA GH200"],
+        ["Nominal HBM3", "96 GB"],
+        ["Recorded Device Memory", "97,871 MiB (approximately 95.6 GiB or 102.6 GB)"],
+        ["Runtime-Reported Total Memory at Launch", "approximately 102.0 GB (decimal GB)"],
+        ["Runtime Free Memory at Launch",
+         "approximately 101.4 GB (decimal GB; memory-budget basis, not total capacity)"],
         ["NVIDIA Driver", "595.58.03"],
         ["CUDA Toolkit (nvcc)", "release 13.0, V13.0.48"],
         ["Host C++ Compiler", "g++ (GCC) 11.4.1"],
         ["CMake", "4.3.4"],
         ["Nsight Systems (nsys)", "2025.5.1.121"],
-        ["Scheduler / Group", "PBS (Miyabi-G), group gj17, queue small-g"],
+        ["PBS System", "Miyabi-G PBS batch system"],
+        ["Group", "gj17"],
+        ["Queue", "Not independently verifiable from retained job logs"],
+        ["Resource Configuration - Memory-Path Experiments",
+         "Host-memory-limited 100 GiB configuration"],
         ["HBM3 Bandwidth (Device-to-Device)", f"{bw['HBM3_DtoD']['gbs']} GB/s "
          f"({bw['HBM3_DtoD']['ratio']}% of theoretical)"],
         ["Pinned Host-to-Device Bandwidth", f"{bw['Pinned_HtoD']['gbs']} GB/s "
@@ -1060,8 +1080,18 @@ def table_T6(env):
         ["Main-Experiment Aggregation", "Median of all recorded trials"],
         ["Main-Experiment Warmup", "None; no recorded trial was discarded"],
     ]
-    notes = ["Software and hardware specifications from result/environment/environment.md.",
-             "Bandwidth from raw_data/profiling/job_2359175_20260711/bandwidth.log."]
+    notes = [
+        "GPU model, nominal HBM3, recorded device memory, software, PBS system, and group "
+        "from result/environment/environment.md.",
+        "The nominal 96 GB, recorded 97,871 MiB, and runtime-reported approximately 102.0 GB "
+        "refer to the same HBM3 through different units or query methods, not separate memory tiers.",
+        "Runtime total and free memory at launch from raw_data/main_performance/proposed_variants/"
+        "email-EuAll/_run/job_2357334_20260711/phase_timing.log; free memory is the launch-time "
+        "available amount used as the memory-budget basis, not total capacity.",
+        "The retained job logs do not independently verify the actual queue name; it is not an "
+        "evaluation control variable.",
+        "Bandwidth from raw_data/profiling/job_2359175_20260711/bandwidth.log.",
+    ]
     return write_table("T6_experimental_environment", header, rows,
                        "T6  Experimental Environment", notes)
 
@@ -1229,7 +1259,9 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
          tab_out["T5"]["md"], tab_out["T5"]["tsv"],
          "Core Fail not relabeled; PathMerge cross-implementation correctness undetermined"],
         ["T6", "Experimental Environment", "Hardware/software environment and bandwidth",
-         "result/environment/environment.md;raw_data/profiling/job_2359175_20260711/bandwidth.log",
+         "result/environment/environment.md;raw_data/main_performance/proposed_variants/email-EuAll/"
+         "_run/job_2357334_20260711/phase_timing.log;"
+         "raw_data/profiling/job_2359175_20260711/bandwidth.log",
          gs, "n/a for specifications; single bandwidth measurement", "1 bandwidth measurement",
          tab_out["T6"]["md"], tab_out["T6"]["tsv"], "Only archived, supported specifications"],
     ]
@@ -1241,7 +1273,7 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
 
 def write_raw_manifest(path, header, rows):
     with open(path, "w", newline="") as f:
-        w = csv.writer(f, delimiter="\t")
+        w = csv.writer(f, delimiter="\t", lineterminator="\n")
         w.writerow(header)
         w.writerows(rows)
 

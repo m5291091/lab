@@ -6,11 +6,18 @@
 ## 5.1 ハードウェア（T-ENV）
 | 項目 | 値 |
 |:--|:--|
-| GPU | NVIDIA GH200 120GB（Grace Hopper Superchip, sm_90） |
-| HBM3 | 97871 MiB（total≈102 GB, free≈101.4 GB） |
+| GPU | NVIDIA GH200（Grace Hopper Superchip, sm_90） |
+| 公称 HBM3 | 96 GB |
+| 記録されたデバイスメモリ | 97,871 MiB（約95.6 GiB、約102.6 decimal GB；公称96 GBと同一のHBM3） |
+| 実行開始時の runtime 照会 | total 約102.0 GB、free (`free_before`) 約101.4 GB（decimal GB；freeは総容量ではなくメモリ予算計算の基準） |
 | CPU メモリ | Grace LPDDR5X（NVLink-C2C 結合） |
 | 実測帯域 | HBM3 DtoD 1818.6 GB/s、Pinned HtoD 424.1 GB/s、Pinned DtoH 297.6 GB/s、NVLink-C2C Prefetch 177.7 GB/s（`raw_data/profiling/job_2359175_20260711/bandwidth.log`） |
-| スケジューラ / group / queue | PBS（Miyabi-G）, group `gj17`, queue `small-g`（memory-path は 100 GiB queue） |
+| PBS system | Miyabi-G PBS batch system |
+| Group | `gj17` |
+| Queue | Not independently verifiable from retained job logs |
+| memory-path実験の資源構成 | Host-memory-limited 100 GiB configuration |
+
+公称96 GB、記録値97,871 MiB、runtime照会のtotal約102.0 GBは、同一のオンパッケージHBM3を異なる単位系または取得方法で示したものであり、別個のメモリ階層ではない。実験はMiyabi-G上のPBS batch systemを通じて実行したが、保存された正式文書と投入スクリプトの間でqueue名の記録が一致せず、保存済みジョブログから実際のqueue名を独立に確定できないため、queue名は統制変数として扱わない。
 
 ## 5.2 ソフトウェア
 | 項目 | 値 |
@@ -30,8 +37,8 @@
 | ablation（synthetic/email） | `phase_def_block_20260710`（測定 2026-07-10） | build_miyabi から curate |
 | legacy baseline（seven_implementations, PathMerge 既定 b64 / 旧 shared 提案） | 旧 tree（oldtree_f05ec52_20260512-era, pre-consolidation） | 旧 mylab/research 由来 |
 | UM feasibility（memory_scalability） | `oldtree_f05ec52_20260512`（2026-05-12, 旧 tree） | **時間値非採用**, feasibility のみ |
-| memory-path canonical | `memory_correctness_20260712`（job 2368587） | 100 GiB queue |
-| memory-path diagnostic | `memory_diagnostic_20260713`（job 2369632） | 100 GiB queue |
+| memory-path canonical | `memory_correctness_20260712`（job 2368587） | Host-memory-limited 100 GiB configuration |
+| memory-path diagnostic | `memory_diagnostic_20260713`（job 2369632） | Host-memory-limited 100 GiB configuration |
 | memory-path OOM（failed） | `memory_correctness_oom_20260712`（job 2368269） | UM b10240 OOM |
 | memory-path fail-fast（early_terminated） | `memory_correctness_failfast_20260712`（job 2368398） | 比較不一致で打切り |
 
@@ -84,7 +91,7 @@
   「未達」を表すマーカーであり性能値ではない）。取得不能値は `N/A`。
 - `failed/{build,runtime,timeout}` は該当なし（`failure/README.md`）。PBS `.o` の
   `Timeout: 21600s` はジョブ設定行であり実タイムアウトではない。
-- UM b10240 の OOM は 100 GiB queue のホストメモリ上限に起因（runner_exit=137,
+- UM b10240 の OOM はhost-memory-limited 100 GiB configurationで発生（runner_exit=137,
   `failure/failed/oom/memory_correctness_2368269/`）。
 
 ## 5.8 バッチ選択方法

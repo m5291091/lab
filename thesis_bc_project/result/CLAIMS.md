@@ -37,7 +37,7 @@ memory-path 関連は主軸(A)・副次(B)の性能主張から分離する。ca
 
 | 主張 | 状態 | 根拠 / 検証範囲 |
 |:--|:--|:--|
-| **UM oversubscription 実行可能性** | `SUPPORTED_WITH_LIMITATIONS` | graph=325557、GPU_Opt `b9792`、checkpoint `memory_correctness_20260712`、100 GiB queue で完走し oversubscription 経路証拠あり（est>free_before, HBM3 streaming, NS_eff=1, num_subs=2, SUB_BATCH<batch, Prefetch cum>0）。**migration byte 量の直接計測ではない**。`b10240` は 100 GiB 制限で OOM（`failure/failed/oom/memory_correctness_2368269/`） |
+| **UM oversubscription 実行可能性** | `SUPPORTED_WITH_LIMITATIONS` | graph=325557、GPU_Opt `b9792`、checkpoint `memory_correctness_20260712`、host-memory-limited 100 GiB configurationで完走し oversubscription 経路証拠あり（est>free_before, HBM3 streaming, NS_eff=1, num_subs=2, SUB_BATCH<batch, Prefetch cum>0）。**migration byte 量の直接計測ではない**。`b10240` は同構成でOOM（`failure/failed/oom/memory_correctness_2368269/`） |
 | **Chunked 実行可能性** | `SUPPORTED_WITH_LIMITATIONS` | graph=325557、`b16384`、`num_subs=3` で試験範囲内で完走。**あらゆる条件で OOM 回避とは書かない** |
 | **Same-batch memory-path consistency** | `SUPPORTED_WITH_LIMITATIONS` | UM/Pure/Chunked `b1024` が `abs_tol=1e-3` `rel_tol=1e-6` で mismatch=0（`same_batch_diff_path`）。各1回。**非 byte（SHA256）一致**。325557 限定 |
 | **Stress full-vector correctness** | `NOT_YET_SUPPORTED` | 正式 `rel_tol=1e-6` を超える構成依存差（`same_impl_diff_batch`, 影響 index 集合の和=8）。原因未特定。full reset と NS_eff=1 の**単独変更では再現せず**（診断 `RESET/NS_EFF_NOT_DISTINGUISHED`）。許容値感度分析（`rel_tol=3e-6` で消失）は補助情報で**正式 FAIL を変更しない** |

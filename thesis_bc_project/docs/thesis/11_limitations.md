@@ -36,15 +36,15 @@
 11. **migration byte 直接測定なし**：oversubscription 経路証拠は est>free・SUB_BATCH<batch・
     prefetch cum>0 等の間接証拠。UM の HtoD/DtoH migration 総量は直接計測していない
     （um_prefetch は 25 秒部分トレースのみ）。
-12. **UM b10240 の 100 GiB queue OOM**：dynamic(UM)=213.38 GB で SIGKILL（runner_exit=137）。
-    OOM 境界は環境（ホストメモリ上限）依存であり、旧 tree（b12288 OOM）と 100 GiB queue
+12. **UM b10240 の host memoryを100 GiBに制限した構成での OOM**：dynamic(UM)=213.38 GB で SIGKILL（runner_exit=137）。
+    OOM 境界は環境（ホストメモリ上限）依存であり、旧 tree（b12288 OOM）と host memoryを100 GiBに制限した構成
     （b10240 OOM）で異なる。単一固定境界として述べない。「完全に OOM 回避」とは書かない。
 13. **legacy 結果の利用範囲**：memory_scalability の feasibility は `oldtree_f05ec52_20260512` 測定を限定的に再利用
     （メモリサイジングコードが `phase_def_block_20260710` と文字単位同一）。**時間値は headline 性能に採用しない**。
     `phase_def_block_20260710` で境界を再実測したものではない（`provenance/um_code_diff_audit.md`）。
 
 ## 11.5 プラットフォーム・一般化の限界
-14. **GH200 単一環境**：全測定は GH200 120GB 1 台。マルチ GPU・他アーキテクチャは未評価。
+14. **GH200 単一環境**：全測定は NVIDIA GH200 1 台。マルチ GPU・他アーキテクチャは未評価。
 15. **他 GPU への一般化不可**：性能・feasibility 境界は GH200 の HBM3 容量・NVLink-C2C 帯域・
     LPDDR5X に依存。他 GPU（HBM 容量やホスト結合が異なる）へ数値を外挿しない。
 16. **統計的検出力**：主要 road/PathMerge は各 n=3、memory-path は各 n=1。分散は小さい（SD は

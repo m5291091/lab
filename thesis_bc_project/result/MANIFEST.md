@@ -9,13 +9,19 @@
 | 項目 | 値 |
 |:--|:--|
 | checkpoint commit (実験コード確定) | `phase_def_block_20260710` |
-| GPU | NVIDIA GH200 120GB (HBM3 97871 MiB) |
+| GPU | NVIDIA GH200 |
+| 公称 HBM3 | 96 GB |
+| 記録されたデバイスメモリ | 97,871 MiB（約95.6 GiB、約102.6 decimal GB；公称96 GBと同一のHBM3） |
+| 実行開始時の runtime 照会 | total 約102.0 GB、free (`free_before`) 約101.4 GB（decimal GB；freeは総容量ではなくメモリ予算計算の基準） |
 | NVIDIA driver | 595.58.03 |
 | CUDA (nvcc) | release 13.0, V13.0.48 |
 | CMake | 4.3.4 (`~/.local/bin/cmake`) |
 | C++ コンパイラ | g++ (GCC) 11.4.1 |
 | nsys | 2025.5.1.121 |
-| スケジューラ / group | PBS (Miyabi-G), group `gj17`, queue `small-g` |
+| PBS system | Miyabi-G PBS batch system |
+| Group | `gj17` |
+| Queue | Not independently verifiable from retained job logs |
+| memory-path実験の資源構成 | Host-memory-limited 100 GiB configuration |
 | 実験時 git HEAD | checkpoint SHA と一致 (実験中に experiment 影響コードの commit なし) |
 
 ## 2. 投入ジョブ
@@ -33,7 +39,7 @@
 | Stage 3 small full-vector correctness | 2367583.opbs | benchmark_7000_41459; benchmark_11023_62184; chain_200 | Sequential vs GPU_Opt, requested/effective/SUB=512/512/512, num_subs=1, NS_eff=2 | 各1, warmupなし | **PASS** (length=n, missing=0, NaN/Inf=0, mixed mismatch=0) |
 | Stage 4C memory-path canonical | 2368587.opbs (ckpt memory_correctness_20260712) | 325557_3216152 | gpu_opt b1024/b9792, pure b1024, chunked b1024/b16384, pathmerge b4096（全6構成） | 各1, warmupなし | runner全PASS。formal `CORE_FAIL`: same_batch mismatch=0（非byte一致）、same_impl_diff_batch stress超過（和集合8頂点）、pathmerge_cross 5 DIFF（未解決） |
 | Stage 4C memory-path diagnostic | 2369632.opbs (ckpt memory_diagnostic_20260713) | 325557_3216152 | CONTROL/T-RESET/T-NSEFF（b1024, 一因子各） | 各1, warmupなし | `DIAGNOSTIC_COMPLETE`: full reset/NS_eff=1 単独では CONTROL と差なし（`RESET/NS_EFF_NOT_DISTINGUISHED`, mismatch=0） |
-| Stage 4C memory-path OOM (failed) | 2368269.opbs (ckpt memory_correctness_oom_20260712) | 325557_3216152 | gpu_opt b10240（UM oversubscribe）, pathmerge b4096 | 各1, warmupなし | UM b10240 が 100 GiB queue で OOM（runner_exit=137）。`failure/failed/oom/`。空vector=OOM証跡 |
+| Stage 4C memory-path OOM (failed) | 2368269.opbs (ckpt memory_correctness_oom_20260712) | 325557_3216152 | gpu_opt b10240（UM oversubscribe）, pathmerge b4096 | 各1, warmupなし | UM b10240 がhost-memory-limited 100 GiB configurationでOOM（runner_exit=137）。`failure/failed/oom/`。空vector=OOM証跡 |
 | Stage 4C memory-path fail-fast (early_terminated) | 2368398.opbs (ckpt memory_correctness_failfast_20260712) | 325557_3216152 | pathmerge b4096 → gpu_opt_pure b1024（以降未実行） | 各1, warmupなし | pure vs PathMerge 比較不一致で fail-fast（後続 chunked/UM 未実行）。`failure/early_terminated/` |
 
 - **確定した最適バッチ (n=3 中央値)**: roadNet-TX = **b64** (1491.13s), roadNet-CA = **b32** (3079.72s)。

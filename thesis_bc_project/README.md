@@ -202,8 +202,9 @@ stderr に報告します。
 
 ## 本番ジョブの実装方法 (PBS)
 
-本番実験は `scripts/` 以下の PBS ジョブを `qsub` で投入します
-（`#PBS -q regular-g`, `group_list=gj17`）。プロジェクトルートから投入してください。
+保存された投入用スクリプトは `scripts/` 以下にあり、PBS directiveとして`#PBS -q regular-g`と
+`group_list=gj17`を保持しています。このqueue指定はスクリプト記録であり、保存済みジョブログから
+過去の実使用queueを独立に確認する根拠には用いません。
 
 ```bash
 cd thesis_bc_project

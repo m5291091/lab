@@ -24,9 +24,9 @@ raw の正式索引は `../raw_data/RAW_DATA_INDEX.tsv`、旧→新対応は `..
 - 実行失敗（コンパイル失敗・実行時クラッシュ・タイムアウト）は検出されていない。
 - PBS `.o` の `Timeout: 21600s` はジョブ**設定行**であり、実タイムアウトではない。空のため Git 非保存。
 
-### failed/oom: memory_correctness_2368269（UM b10240 が 100 GiB queue でOOM）
+### failed/oom: memory_correctness_2368269（UM b10240 がhost-memory-limited 100 GiB configurationでOOM）
 - job `2368269`（`SourceSnapshotID=memory_correctness_oom_20260712`）: 325557 の正確性実行で `gpu_opt` UM `b10240`（dynamic(UM)=213.38 GB）がホスト常駐 >100 GiB で SIGKILL（runner_exit=137）。PathMerge b4096（reference）は成功。
-- **100 GiB queue のホストメモリ上限に起因する当該正確性実行の失敗**であり、`data/325557`・b10240 に限定。mem 上限のないノードでは legacy 実験で b10240 は SUCCESS（`raw_data/memory_scalability/`）。
+- **Host-memory-limited 100 GiB configurationで発生した当該正確性実行の失敗**であり、`data/325557`・b10240 に限定。異なるホストメモリ条件のlegacy実験ではb10240はSUCCESS（`raw_data/memory_scalability/`）。
 - raw（空ベクトル `gpu_opt_b10240.bc.tsv`＝OOM 証跡・stderr・run.log・MANIFEST.txt・pbs_stdout）は
   `raw_data/unsuccessful/oom/memory_paths/325557_3216152/` に保持。failure/ には `correctness_summary.tsv` のみ。
 

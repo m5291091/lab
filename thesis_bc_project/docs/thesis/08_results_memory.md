@@ -4,7 +4,7 @@
 
 - **実験 A：`result/memory_scalability/`**（checkpoint `oldtree_f05ec52_20260512`＝旧 tree, n=5）——
   feasibility（SUCCESS/OOM 境界）を限定的に採用。**時間値は headline block 性能値として非採用**。
-- **実験 B：`result/correctness/memory_paths/`**（checkpoint `memory_correctness_20260712`/`memory_diagnostic_20260713`, 100 GiB queue,
+- **実験 B：`result/correctness/memory_paths/`**（checkpoint `memory_correctness_20260712`/`memory_diagnostic_20260713`, host memoryを100 GiBに制限した構成,
   各構成 n=1）——正確性・診断が主目的。ここでは oversubscription 経路証拠と OOM を引用。
 
 グラフはいずれも 325557_3216152（合成, n=325,557, m=3,216,152, avg_deg 19.76, 人為的バッチ
@@ -33,18 +33,18 @@ Chunked は実確保を SUB_BATCH 単位に抑え常に HBM3 内。
 - 出典：`result/memory_scalability/oversubscribe_results_gpu_opt{,_pure,_pure_chunked}.tsv`。
 - 「UM は無制限」は**偽**。UM も b12288 で OOM する（実験 A）。
 
-## 8.3 容量拡張の経路証拠（実験 B, 100 GiB queue）
+## 8.3 容量拡張の経路証拠（実験 B, host memoryを100 GiBに制限した構成）
 `result/correctness/memory_paths/canonical_job_2368587/execution_summary.tsv` より：
 - **UM b9792 完走**：oversubscribed=true, free_before=101.4 GB, managed_alloc_estimate=102.02 GB
   （> free_before）, SUB_BATCH=6596, num_subs=2, NS_eff=1, Prefetch cum=33.18 s。
   → est>free_before・HBM3 streaming・NS_eff=1・num_subs=2・SUB_BATCH<batch・Prefetch cum>0 の
   oversubscription 経路証拠を満たす。**ただし migration byte 量の直接計測ではない**。
 - **Chunked b16384 完走**：num_subs=3（`gpu_opt_pure_chunked`）。
-- **UM b10240 は 100 GiB queue で OOM**：dynamic(UM)=213.38 GB, runner_exit=137（SIGKILL）。
+- **UM b10240 は host memoryを100 GiBに制限した構成で OOM**：dynamic(UM)=213.38 GB, runner_exit=137（SIGKILL）。
   PathMerge b4096（reference）は成功（`failure/failed/oom/memory_correctness_2368269/`）。
 
-> **環境差の注意**：実験 A（旧 tree）で UM は b10240 SUCCESS / b12288 OOM。実験 B（100 GiB
-> queue）で UM は b9792 SUCCESS / b10240 OOM。**OOM 境界は環境（ホストメモリ上限）依存**であり、
+> **環境差の注意**：実験 A（旧 tree）で UM は b10240 SUCCESS / b12288 OOM。実験 B（host memoryを
+> 100 GiBに制限した構成）で UM は b9792 SUCCESS / b10240 OOM。**OOM 境界は環境（ホストメモリ上限）依存**であり、
 > 単一の固定境界として述べない。共通して言えるのは「Pure < UM < Chunked の順に到達バッチが
 > 大きい」という feasibility の順序である。
 
