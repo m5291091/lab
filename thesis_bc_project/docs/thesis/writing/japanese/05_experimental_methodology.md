@@ -170,7 +170,7 @@ Ablation は、提案手法の 3 つの工夫、すなわち Hybrid BFS（H、to
 
 Kernel selection は、BFS カーネルの選択に関する直接比較である。`BC_FORCE_BFS_KERNEL=shared|block` によって shared-frontier カーネルと block カーネル（1 block = 1 source）を強制実行し、roadNet-PA と roadNet-TX で比較した。設定はバッチ 512、SUB_BATCH=512、num_subs=1、n=3、warmup なし、median 集計（標本標準偏差併記）であり、自動選択則に依存せず forced shared/block の実測のみを対象とする（`result/tuning/kernel_selection/SOURCE.md`）。旧実装には平均次数に基づく自動選択則（`avg_deg < 5 → shared`）が存在したが、現行方式では使用していない。したがって kernel selection の結論は roadNet-PA/TX の強制比較に限定され、他グラフへ一般化しない。
 
-Profiling は、325557_3216152 に対する GPU_Opt（H1W1A0 構成）の nsys トレースにより、BFS カーネルと Backward カーネルの実行時間比率を得るものである（トレース 1 回、`raw_data/profiling/job_2359175_20260711/`）。本評価では、フェーズ内訳から因果を断定せず、観測された時間配分の記述にとどめる。
+Profiling は、56438_300801 に対する ablation バイナリの `ablation_H1W1A0` nsys トレースにより、BFS カーネルと Backward カーネルの実行時間比率を得るものである（単一トレース、`raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt`）。このトレースの本測定は H1W1A0 構成であるが、同一 process 冒頭の untimed H1W1A1 warmup もtrace scopeに含むため、63.9% / 36.1% は本測定だけを分離した値ではなく、warmupを含む単一トレース全体の CUDA GPU カーネル時間構成比である。同じ PBS job 2359175 には、同じ 56438_300801 を対象とする `ablation_H1W1A1` の別トレースと、325557_3216152 を対象とする GPU_Opt の UM prefetch 別トレースも含まれるが、63.9% / 36.1% の構成比には用いない。本評価では、フェーズ内訳から因果を断定せず、この観測された配分を、当該 1 グラフ・1 トレースに限定して記述する。
 
 ## 5.9 Memory Scalability Protocol
 

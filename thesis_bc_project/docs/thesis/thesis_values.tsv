@@ -65,8 +65,8 @@ CORR-MAXBC-325557	9	appxC	325557_3216152	all_impls	max_bc_value	39343001000.108	
 ENV-BW-HBM3	5	T-BW	NA	bandwidth_benchmark	hbm3_dtod	1818.6	GB/s	single	1	NA	raw_data/profiling/job_2359175_20260711/bandwidth.log	HBM3_DtoD	理論比45.2%
 ENV-BW-C2C	5	T-BW	NA	bandwidth_benchmark	c2c_prefetch	177.7	GB/s	single	1	NA	raw_data/profiling/job_2359175_20260711/bandwidth.log	NVLink_C2C_Prefetch	理論比19.7%
 ENV-BW-HTOD	5	T-BW	NA	bandwidth_benchmark	pinned_htod	424.1	GB/s	single	1	NA	raw_data/profiling/job_2359175_20260711/bandwidth.log	Pinned_HtoD	理論比47.1%
-PROF-NSYS-BACKWARD	7	F-NSYS	325557_3216152	GPU_Opt(H1W1A0)	kernel_time_pct	63.9	percent	trace	1	NA	raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt	brandes_back_kernel_opt	backwardが支配的
-PROF-NSYS-BFS	7	F-NSYS	325557_3216152	GPU_Opt(H1W1A0)	kernel_time_pct	36.1	percent	trace	1	NA	raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt	brandes_bfs_kernel_opt	bfsフェーズ
+PROF-NSYS-BACKWARD	7	F-NSYS	56438_300801	Ablation_H1W1A0_trace	kernel_time_pct	63.9	percent	trace	1	NA	raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt	brandes_back_kernel_opt	単一trace;本測定H1W1A0+untimed H1W1A1 warmupを含む;CUDA GPU kernel timeのみ;特定graph/trace限定;全グラフへ一般化しない
+PROF-NSYS-BFS	7	F-NSYS	56438_300801	Ablation_H1W1A0_trace	kernel_time_pct	36.1	percent	trace	1	NA	raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt	brandes_bfs_kernel_opt	単一trace;本測定H1W1A0+untimed H1W1A1 warmupを含む;CUDA GPU kernel timeのみ;特定graph/trace限定;全グラフへ一般化しない
 GRAPH-EMAIL-N	5	T-GRAPH	email-EuAll	NA	nodes	265009	count	NA	NA	NA	docs/graph_stats.tsv	email-EuAll	avg_deg2.75 CV13.93
 GRAPH-EMAIL-M	5	T-GRAPH	email-EuAll	NA	edges	364481	count	NA	NA	NA	docs/graph_stats.tsv	email-EuAll	無向辺数m
 GRAPH-PA-N	5	T-GRAPH	roadNet-PA	NA	nodes	1088092	count	NA	NA	NA	docs/graph_stats.tsv	roadNet-PA	avg_deg2.83 CV0.36

@@ -12,7 +12,7 @@
 |:--|:--|:--|:--|:--|
 | 最終速度向上表 | `proposed_variants/<g>/results.tsv`; `seven_implementations/legacy_partial/{medium,large}/results_no_gpu_opt.tsv`; `tuning/pathmerge/<g>/*.tsv` | `merge_final_tables.py`（依存なし） | `result/tables/final_speedup_tables.md` | **REGENERATABLE**（Gate B2 で2回生成し冪等確認・値不変） |
 | 主軸比較表 | 上記 canonical link | 手動整形（元TSV） | `proposed_vs_pathmerge/{README.md,comparison.tsv}` | REGENERATABLE（元TSVから確認） |
-| ablation 寄与表 | `ablation/{synthetic_2354994,email_2354999}/ablation_results.tsv` | `summarize_ablation.py`（**numpy不要**） | `ablation_summary.md`, `ablation_contributions.tsv` | **REGENERATABLE**（Gate B2 で再生成し公式版と一致=冪等） |
+| ablation 寄与表 | `raw_data/ablation/{synthetic/job_2354994_20260710,email-EuAll/job_2354999_20260710}/ablation_results.tsv` | `summarize_ablation.py`（**numpy不要**、trial summary は Sample SD, ddof=1） | `result/ablation/{synthetic_2354994,email_2354999}/{ablation_summary.md,ablation_contributions.tsv}` | **REGENERATABLE**（Gate W3.1 で2回生成し冪等性を再確認） |
 | kernel選択表 | `tuning/kernel_selection/<g>/kernel_selection_results.tsv` + `kernel_selection_max_bc.tsv` | `summarize_kernel_selection.py`（**numpy不要・選択則非依存**） | `kernel_selection_summary.md`, `kernel_selection_contributions.tsv` | **REGENERATABLE**（選択則非依存の forced shared/block 比較。Gate B2.1 で PA/TX を再生成し2回実行で差分0=冪等確認済み） |
 | UM feasibility 表 | `memory_scalability/oversubscribe_results_*.tsv` | `summarize_oversubscribe.py`（**numpy 必要**） | 集計md（未生成; stdout 集計） | **REGENERATABLE** — raw_data入力から2026-07-14に再検証済み。2回生成で冪等。 |
 | 小規模 full-vector 正確性表 | `correctness/small_full_vector/{correctness_summary.tsv,*/comparison.md}` | `compare_bc_vectors.py`（実行済み出力を正式配置） | `correctness/small_full_vector/README.md` | **ARCHIVED_VERIFIED**（3グラフ、独立参照、全要素、mismatch/missing/NaN/Inf=0） |

@@ -27,7 +27,7 @@ import os
 import re
 import csv
 import math
-from statistics import median, pstdev
+from statistics import median, stdev
 from collections import defaultdict
 
 # H/W/A の 3 ビットで構成を表す。tuple(h, w, a) をキーに使う。
@@ -375,8 +375,10 @@ def generate_phase_attribution(phases, times, graphs):
 #  試行数・ばらつきメモ
 # ============================================================
 def generate_trial_note(times, graphs):
-    lines = ["", "# 試行数と実行時間ばらつき (中央値 ± 標準偏差)", ""]
-    lines.append("| 構成 | " + " | ".join(graphs) + " |")
+    lines = ["", "# 試行数と実行時間ばらつき (中央値 ± Sample SD, ddof=1)", ""]
+    lines.append("Sample SD は標本標準偏差 (ddof=1)。n<2 の場合は n/a とする。")
+    lines.append("")
+    lines.append("| 構成 | " + " | ".join(f"{g} Median ± Sample SD [s]" for g in graphs) + " |")
     lines.append("|:-----|" + "|".join("------:" for _ in graphs) + "|")
     for cfg in all_configs_sorted():
         cols = []
@@ -386,8 +388,9 @@ def generate_trial_note(times, graphs):
                 cols.append("—")
             else:
                 m = median(vals)
-                sd = pstdev(vals) if len(vals) > 1 else 0.0
-                cols.append(f"{fmt(m)}±{sd:.3f} (n={len(vals)})")
+                sd = stdev(vals) if len(vals) >= 2 else None
+                sd_str = f"{sd:.3f}" if sd is not None else "n/a"
+                cols.append(f"{fmt(m)}±{sd_str} (n={len(vals)})")
         lines.append(f"| {config_label(cfg)} | " + " | ".join(cols) + " |")
     return "\n".join(lines)
 

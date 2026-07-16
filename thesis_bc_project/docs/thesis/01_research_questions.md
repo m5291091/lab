@@ -39,7 +39,7 @@
   - 主効果（幾何平均）：synthetic で H≈1.655×、A≈1.396×、W≈1.065×；email で H≈1.429×、
     A≈1.720×、W≈0.970×（`ablation_contributions.tsv` / `ablation_summary.md`）。
   - フェーズ内訳（`ablation_summary.md`）：H は BFS cum を短縮、A は wall を短縮（2 stream 重畳）。
-  - プロファイル：`raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt`（backward 63.9% / bfs 36.1%）、
+  - プロファイル：`raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt`（56438_300801、本測定 H1W1A0 と untimed H1W1A1 warmupを含む単一トレースの CUDA GPU カーネル時間のみ：backward 63.9% / bfs 36.1%）、
     帯域 `bandwidth.log`。
 - **Answer**: 評価したアブレーション条件では、**Hybrid BFS と 2 ストリームが主要な性能寄与を
   示し、warp 協調の効果はグラフ依存だった**（W は email で 0.970×＝わずかに悪化、56438 で

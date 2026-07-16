@@ -11,7 +11,7 @@
 - **num_subs**: `not_recorded`
 - **試行数**: 5（各構成×グラフ）
 - **warmup**: なし
-- **集計方法**: median（寄与は `ablation_contributions.tsv` の MainEffect/InteractionRel）
+- **集計方法**: median（寄与は `ablation_contributions.tsv` の MainEffect/InteractionRel、trial summary のばらつきは Sample SD, ddof=1、n<2 は n/a）
 - **SourceSnapshotID**: `phase_def_block_20260710`（測定 2026-07-10, 常時 block 化後）
 - **PBS job ID**: 2354994
 - **入力**: `data/{benchmark_7000_41459,benchmark_11023_62184,56438_300801,325557_3216152}`

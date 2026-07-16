@@ -13,7 +13,7 @@ GenerationCommand / Status / Chapter`。再生成可否は `result/TABLES_AND_FI
 | ID | Title | Purpose | InputFiles | GenerationCommand | Status | Chapter |
 |:--|:--|:--|:--|:--|:--|:--|
 | T-PERF | 主性能表（提案 vs PathMerge tuned） | RQ1 の中心主張 1.31〜3.17× | `main_performance/proposed_variants/<g>/results.tsv`; `tuning/pathmerge/<g>/*`; `seven_implementations/legacy_partial/large/results_no_gpu_opt.tsv` | `scripts/merge_final_tables.py` | REGENERATABLE | 6 |
-| T-ABL | アブレーション寄与表（H/W/A 主効果） | RQ2 の要因分解 | `ablation/{synthetic_2354994,email_2354999}/ablation_results.tsv` | `scripts/summarize_ablation.py`（numpy 不要） | REGENERATABLE | 7 |
+| T-ABL | アブレーション寄与表（H/W/A 主効果） | RQ2 の要因分解 | `raw_data/ablation/{synthetic/job_2354994_20260710,email-EuAll/job_2354999_20260710}/ablation_results.tsv` | `scripts/summarize_ablation.py`（numpy 不要、trial summary は Sample SD, ddof=1） | REGENERATABLE | 7 |
 | T-MEM | メモリ feasibility 表（UM/Pure/Chunked × batch） | RQ3 の OOM 境界 | `memory_scalability/oversubscribe_results_*.tsv` | 手動整形（Status 行列, 逆算なし） | MANUAL_FROM_TSV | 8 |
 | T-CORR | 正確性区分表（5 区分） | RQ4 の支持範囲 | `correctness/small_full_vector/*`; `correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv` | 手動整形（元出力） | MANUAL_FROM_TSV | 9 |
 
@@ -24,7 +24,7 @@ GenerationCommand / Status / Chapter`。再生成可否は `result/TABLES_AND_FI
 | T-ENV | 実行環境表 | 再現性 | `result/environment/environment.md`; `result/MANIFEST.md` | 手動整形 | MANUAL_FROM_TSV | 5 |
 | T-KSEL | BFS カーネル選択表（forced shared/block） | H の block 優位 | `tuning/kernel_selection/<g>/kernel_selection_results.tsv` | `scripts/summarize_kernel_selection.py`（numpy 不要） | REGENERATABLE | 7 |
 | F-PHASE | phase breakdown 図 | BFS/backward 内訳 | `main_performance/proposed_variants/<g>/phase_timing.log` | `scripts/statistical_analysis.py`（scipy+numpy+matplotlib） | REGEN_DEP_MISSING（既存 PDF あり） | 6 |
-| F-NSYS | nsys カーネル要約 | backward 63.9%/bfs 36.1% | `profiling/ablation_H1W1A0.stats.txt` | `nsys stats`（既生成, .nsys-rep から） | ARCHIVED_VERIFIED | 7 |
+| F-NSYS | nsys カーネル要約 | 56438_300801・本測定H1W1A0+untimed H1W1A1 warmupを含む単一traceのCUDA GPU kernel time: backward 63.9%/bfs 36.1% | `raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt` | `nsys stats`（既生成, .nsys-rep から） | ARCHIVED_VERIFIED | 7 |
 
 ## 補助（small 限定・文脈提供）
 | ID | Title | Purpose | InputFiles | GenerationCommand | Status | Chapter |
@@ -38,7 +38,7 @@ GenerationCommand / Status / Chapter`。再生成可否は `result/TABLES_AND_FI
 | ID | Title | Purpose | InputFiles | GenerationCommand | Status | Chapter |
 |:--|:--|:--|:--|:--|:--|:--|
 | A-SWEEP | PathMerge 全バッチ掃引 | tuned 選定の透明性 | `tuning/pathmerge/*/pathmerge_sweep_results.tsv` | `scripts/merge_final_tables.py`（掃引詳細節） | REGENERATABLE | 付録A |
-| A-ABL8 | アブレーション全 8 構成 | 完全開示 | `ablation/*/ablation_summary.md` | `scripts/summarize_ablation.py` | REGENERATABLE | 付録B |
+| A-ABL8 | アブレーション全 8 構成 | 完全開示 | `result/ablation/*/ablation_summary.md` | `scripts/summarize_ablation.py`（Sample SD, ddof=1） | REGENERATABLE | 付録B |
 | A-MEMMTX | memory-path 比較行列 | 正確性の一次情報 | `correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv` | `scripts/analyze_memory_correctness.py` | REGENERATABLE | 付録C |
 | A-FAIL | 失敗・OOM 記録 | 透明性 | `failure/README.md`; `failure/MANIFEST.tsv` | 手動整形 | MANUAL_FROM_TSV | 付録E |
 

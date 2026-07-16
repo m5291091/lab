@@ -10,7 +10,7 @@
 - **SUB_BATCH**: `not_recorded` / **num_subs**: `not_recorded`
 - **試行数**: 3（各構成）
 - **warmup**: なし
-- **集計方法**: median
+- **集計方法**: median（trial summary のばらつきは Sample SD, ddof=1、n<2 は n/a）
 - **SourceSnapshotID**: `phase_def_block_20260710`（測定 2026-07-10, 常時block化後）
 - **PBS job ID**: 2354999
 - **入力**: `data/snap/email-EuAll`

@@ -57,8 +57,8 @@ full 構成から各工夫を OFF→ON した際の帰属（例）：
   gap=wall−(BFS+Backward) が負になり得る。これはバグではなく 2 ストリーム重畳の証拠（‡ 付き）。
 
 ## 7.6 観測事実：プロファイル（`result/profiling/`）
-- nsys（ablation_H1W1A0）：GPU カーネル時間の内訳は **backward 63.9%（3.36 s）/ bfs 36.1%
-  （1.90 s）**。memops は memset が 99.7%。
+- nsys（ablation_H1W1A0、56438_300801）：本測定 H1W1A0 と untimed H1W1A1 warmupを含む単一トレースの GPU カーネル時間の内訳は **backward 63.9%（3.36 s）/ bfs 36.1%
+  （1.90 s）**。memops は memset が 99.7%。当該グラフ・当該トレースに限定し、全グラフへ一般化しない。
 - 帯域：HBM3 DtoD 1818.6 GB/s、NVLink-C2C Prefetch 177.7 GB/s（A の重畳が効く物理的根拠）。
 - um_prefetch は `--duration=25` の **25 秒部分トレース**（HtoD 27.918 MB, CPU faults 85,
   GPU faults 9）。**総量主張には使えない**（部分値）。

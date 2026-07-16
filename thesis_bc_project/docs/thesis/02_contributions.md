@@ -29,7 +29,7 @@ CUDA カーネル）により、共通カーネル（`include/proposed/brandes_k
 Hybrid BFS・warp 協調・2 ストリームを個別に ON/OFF する 2^3=8 構成のアブレーションにより、
 **Hybrid BFS と 2 ストリームが主要な性能寄与を示し、warp 協調の効果はグラフ依存である**ことを、
 5 グラフ（synthetic 4 + email）で定量化した。フェーズ内訳（BFS/backward）とプロファイル
-（backward 63.9%/bfs 36.1%、帯域）で寄与の帰属を裏付けた。
+（56438_300801・本測定 H1W1A0 と untimed H1W1A1 warmupを含む単一トレースにおける CUDA GPU カーネル時間 backward 63.9%/bfs 36.1%、帯域）を補助資料とした。
 - 根拠：`result/ablation/{synthetic_2354994,email_2354999}/`, `result/profiling/`,
   `docs/kernel_selection_decision.md`。
 - 主張しないこと：因果を評価外グラフへ一般化しない。W が常に有効/有害とは書かない。

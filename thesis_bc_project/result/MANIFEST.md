@@ -82,6 +82,7 @@
 
 ## 4. プロファイリング
 
+- PBS job 2359175 内の nsys は、ablation H1W1A0/H1W1A1 が `56438_300801`、別の `um_prefetch_gpu_opt` が `325557_3216152` を対象とする。backward 63.9% / bfs 36.1% は `ablation_H1W1A0` の単一トレースにおける CUDA GPU カーネル時間のみの比率であり、本測定 H1W1A0 に加えて同一 process 冒頭の untimed H1W1A1 warmupを含む。
 - `.stats.txt` は `.nsys-rep` から再生成 (元 `.nsys-rep` は不変; md5 検証済み):
   `nsys stats --force-export=true --report cuda_gpu_kern_sum --report cuda_gpu_mem_time_sum
   --report cuda_api_sum <rep>` (H1W1A0/A1 同一レポート)。
