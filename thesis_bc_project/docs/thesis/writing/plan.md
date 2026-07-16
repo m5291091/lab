@@ -890,7 +890,7 @@ roadNet-TX block: 1.66x faster
 
 ```text
 GPU_Opt_Pure: success through b4096
-GPU_Opt: success through b10240; b12288 OOM
+GPU_Opt: success through b10240; b12288 OOM_OR_FAIL (exit 137)
 GPU_Opt_Pure_Chunked: success through tested b16384
 ```
 
