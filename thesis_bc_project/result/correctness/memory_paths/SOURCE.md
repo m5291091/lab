@@ -11,8 +11,11 @@
 - Criterion: `abs_diff <= abs_tol + rel_tol * max(abs(a), abs(b))`.
 - PathMerge is an **external comparator, not ground truth**.
 - All raw BC vectors are **archived (Git-tracked) under `../../raw_data/correctness/memory_paths/`**
+  (failure-series vectors under `../../raw_data/unsuccessful/{oom,early_terminated}/memory_paths/`)
   and verified by `../../raw_data/SHA256SUMS`; their `OriginalPath`→`RawPath`+SHA256 mapping is in
-  `../../raw_data/MANIFEST.tsv` (and `../../EXTERNAL_ARTIFACTS.tsv`, now the raw_data migration map).
+  `../../raw_data/MANIFEST.tsv`, and the canonical index is `../../raw_data/RAW_DATA_INDEX.tsv`.
+  `../../result/EXTERNAL_ARTIFACTS.tsv` lists only external-only artifacts (nsys .sqlite); it
+  contains no BC vectors.
   They were copied byte-identically from the Git-ignored `build_miyabi/` originals (retained, not moved).
   Copied `MANIFEST.txt` / `*_summary` / `run.log` / `*.md` / stderr are byte-identical from the source
   result directories, so the paths inside them still identify the external originals.
@@ -153,4 +156,4 @@ those originals and to `scripts/analyze_memory_correctness.py` output.
 - The PathMerge difference is unresolved; PathMerge is an external comparator, not ground truth.
 - `reset` and `NS_eff` single-factor changes were **not distinguished** (each mismatch=0 vs CONTROL);
   the cause is unspecified and not attributable to a single factor.
-- Raw BC vectors are archived under `../../raw_data/` (SHA256-verified; `raw_data/MANIFEST.tsv`; migration map `EXTERNAL_ARTIFACTS.tsv`).
+- Raw BC vectors are archived (Git-tracked) under `../../raw_data/` (SHA256-verified; index `raw_data/RAW_DATA_INDEX.tsv`; `OriginalPath`→`RawPath` mapping in `raw_data/MANIFEST.tsv`; old `result/` raw paths in `result/provenance/RAW_DATA_MIGRATION.tsv`).

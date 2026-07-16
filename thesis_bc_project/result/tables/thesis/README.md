@@ -18,6 +18,6 @@ python3 scripts/generate_thesis_artifacts.py
 
 ## Notes
 
-- Status vocabulary: Success, Out of Memory, Pass, Core Fail, Supported with Limitations.
+- Status vocabulary: Success, Out of Memory, Failed, Pass, Core Fail, Supported with Limitations.
 - The canonical memory-path stress result is preserved as **Core Fail** and is never relabeled as Pass.
-- OOM is reported as `N/A (OOM)`, never as 0 seconds.
+- Failures are reported as `N/A (OOM)` / `N/A (failed)`, never as 0 seconds; `OOM_OR_FAIL (exit 137)` without an independent OOM record is reported as Failed, not upgraded to confirmed Out of Memory.

@@ -49,5 +49,8 @@ PathMerge (external comparator) との差 (約 11027 要素、最大相対差約
 - 各構成 n=1・warmup なし。時間値は性能結果ではない。
 
 数値の一次情報は各 job ディレクトリの `comparison_matrix.tsv` / `execution_summary.tsv` /
-`FINAL_STATUS.txt`。raw BC ベクトルは Git 管理外で、`../../EXTERNAL_ARTIFACTS.tsv` に
-size/SHA256 を登録する。詳細は `SOURCE.md`。
+`FINAL_STATUS.txt`。raw BC ベクトルは **Git 追跡**で `raw_data/correctness/memory_paths/`
+（失敗系列は `raw_data/unsuccessful/{oom,early_terminated}/memory_paths/`）に保存され、
+正式索引は `raw_data/RAW_DATA_INDEX.tsv`、SHA256 検証は `raw_data/SHA256SUMS` /
+`raw_data/MANIFEST.tsv`。gitignore された `build_miyabi/` の原本は保持（対応は
+`raw_data/MANIFEST.tsv` の OriginalPath）。詳細は `SOURCE.md`。

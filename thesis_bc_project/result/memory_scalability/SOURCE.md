@@ -9,8 +9,8 @@
 - **要求バッチ / 実効バッチ**: 512–16384 / 動的（oversub 時 SUB_BATCH<Batch）。例: gpu_opt b8192 → SUB_BATCH=6596, num_subs=2, NS_eff=1（ログ確認）
 - **SUB_BATCH**: batch 依存（in-capacity は =Batch, oversub は動的縮小）。ログ `[Mem] SUB_BATCH=...` 参照
 - **num_subs**: batch 依存（in-capacity 1, oversub >1。例 b8192=2）
-- **試行数**: 5（各 batch）
-- **warmup**: なし
+- **試行数**: 5（各 batch。例外: gpu_opt b12288 は失敗 1 試行のみで掃引停止 → n=1、b16384 は gpu_opt では未試行）
+- **warmup**: 方式別（Gate W4.1 監査）。**gpu_opt / gpu_opt_pure_chunked = なし**（一次根拠 = 実験時 snapshot `code_snapshots/oldtree_f05ec52_20260512/scripts/run_um_oversubscribe*.sh`: warmup ループ無し・全 runner 実行を trial として TSV 記録。raw log の `=== <impl> batch= trial= rc= ===` header 形式が同スクリプトと一致し、log 実行数 = TSV 試行行数（gpu_opt 31/31, chunked 40/40））。**gpu_opt_pure = not_recorded**（raw log に trial header が無く、生成ドライバは snapshot 未収録のため実験時スクリプトから確認不能。log 40 実行 = TSV 40 試行で warmup なしと整合するが証明ではない）
 - **集計方法**: median（+ SUCCESS/OOM Status 行列）
 - **SourceSnapshotID**: **測定=`oldtree_f05ec52_20260512`（2026-05-12, 旧ツリー）**（phase_def_block_20260710 ではない）
 - **PBS job ID**: UMv2（旧ツリー; PBS job ID は当時ログに個別記録なし → `not_recorded`）
@@ -21,5 +21,5 @@
 - **制約（重要）**:
   - **時間値は最新 block 性能値として使用しない**（旧セッション未再検証; `../provenance/um_code_diff_audit.md`）。
   - **feasibility(SUCCESS/OOM)を限定的に採用**（メモリサイジングコードが checkpoint と文字単位同一のため再利用可。ただし phase_def_block_20260710 で境界を再実測したものではない）。
-  - feasibility: pure OOM@b8192+ / UM→b10240(b12288 OOM) / chunked→b16384 全SUCCESS。「UM 無制限」は偽。
+  - feasibility: pure OOM@b8192+（各 5 試行で `CUDA ... out of memory` をログ確認 = 明示的 CUDA OOM）/ UM→b10240 成功（**b12288 は `OOM_OR_FAIL` (exit 137, n=1)**。CUDA OOM・host OOM kill・scheduler OOM のいずれの独立記録も無く、OOM と断定しない）/ chunked→b16384 全SUCCESS。「UM 無制限」は偽。
   - Chunked の主効果は最高性能でなく**実行可能バッチの拡大**。GH200・325557・試験バッチ範囲に限定。

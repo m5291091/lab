@@ -16,7 +16,7 @@
 Chunked は実確保を SUB_BATCH 単位に抑え常に HBM3 内。
 
 ## 8.2 実行可能バッチ範囲と OOM 境界（T-MEM・必須, 実験 A）
-`Status` は SUCCESS/OOM。**OOM は 0 秒ではなく「未達」を表す**（`Time_sec=0` はマーカー）。
+`Status` は SUCCESS/OOM/OOM_OR_FAIL。**失敗は 0 秒ではなく「未達」を表す**（`Time_sec=0` はマーカー）。Pure の OOM は各 5 試行の `CUDA ... out of memory` ログで確認済み。GPU_Opt b12288 は exit 137 のみ記録され（n=1, 掃引停止）、CUDA/host/scheduler OOM の独立記録が無いため OOM_OR_FAIL とする。
 
 | BatchSize | GPU_Opt(UM) | GPU_Opt_Pure | GPU_Opt_Pure_Chunked |
 |:--|:--:|:--:|:--:|
@@ -26,12 +26,12 @@ Chunked は実確保を SUB_BATCH 単位に抑え常に HBM3 内。
 | 4096 | SUCCESS | SUCCESS | SUCCESS |
 | 8192 | SUCCESS | **OOM** | SUCCESS |
 | 10240 | SUCCESS | OOM | SUCCESS |
-| 12288 | **OOM** | OOM | SUCCESS |
+| 12288 | **OOM_OR_FAIL (exit 137)** | OOM | SUCCESS |
 | 16384 | （未測定/―） | OOM | SUCCESS |
 
-- **最大成功バッチ**：Pure = **b4096**、UM = **b10240**（b12288 で OOM）、Chunked = **b16384**（全成功）。
+- **最大成功バッチ**：Pure = **b4096**、UM = **b10240**（b12288 は OOM_OR_FAIL, exit 137）、Chunked = **b16384**（全成功）。
 - 出典：`result/memory_scalability/oversubscribe_results_gpu_opt{,_pure,_pure_chunked}.tsv`。
-- 「UM は無制限」は**偽**。UM も b12288 で OOM する（実験 A）。
+- 「UM は無制限」は**偽**。UM も b12288 で失敗する（OOM_OR_FAIL, exit 137, 原因独立未確認；実験 A）。
 
 ## 8.3 容量拡張の経路証拠（実験 B, host memoryを100 GiBに制限した構成）
 `result/correctness/memory_paths/canonical_job_2368587/execution_summary.tsv` より：
@@ -43,7 +43,7 @@ Chunked は実確保を SUB_BATCH 単位に抑え常に HBM3 内。
 - **UM b10240 は host memoryを100 GiBに制限した構成で OOM**：dynamic(UM)=213.38 GB, runner_exit=137（SIGKILL）。
   PathMerge b4096（reference）は成功（`failure/failed/oom/memory_correctness_2368269/`）。
 
-> **環境差の注意**：実験 A（旧 tree）で UM は b10240 SUCCESS / b12288 OOM。実験 B（host memoryを
+> **環境差の注意**：実験 A（旧 tree）で UM は b10240 SUCCESS / b12288 OOM_OR_FAIL(exit 137)。実験 B（host memoryを
 > 100 GiBに制限した構成）で UM は b9792 SUCCESS / b10240 OOM。**OOM 境界は環境（ホストメモリ上限）依存**であり、
 > 単一の固定境界として述べない。共通して言えるのは「Pure < UM < Chunked の順に到達バッチが
 > 大きい」という feasibility の順序である。

@@ -10,8 +10,9 @@ thesis_bc_project/{raw_data,result,docs}.
 Design rules (see result/figures/thesis/README.md for the full policy):
   * Every displayed value is recomputed from a canonical input file.
   * median = numpy.median; speedup = median(PathMerge_tuned) / median(GPU_Opt).
-  * OOM configurations are NEVER represented as zero seconds -- they are drawn
-    as a distinct out-of-memory marker, not on the runtime axis.
+  * Failed configurations are NEVER represented as zero seconds -- they are
+    drawn as distinct failure markers, not on the runtime axis. Log-confirmed
+    CUDA OOM is distinguished from OOM_OR_FAIL (exit 137, cause unconfirmed).
   * The canonical memory-path stress result stays visible as "Core Fail".
   * No estimation, interpolation, reverse-calculation, or fastest-trial cherry
     picking. Missing measurements are not connected as if they existed.
@@ -370,18 +371,29 @@ def load_memory_scalability():
         log_rel = (f"raw_data/memory_scalability/325557_3216152/{key}/"
                    f"job_notrecorded_20260512/um_experiment_{key}.log")
         meta = {}
+        cuda_oom = set()    # batches with an explicit "out of memory" log line
+        exit_codes = {}     # batch -> recorded runner exit codes (header logs)
         current_batch = None
         for line in read_text(log_rel).splitlines():
-            m = re.match(r"=== \S+ batch=(\d+) trial=\d+ rc=\d+ ===", line)
+            m = re.match(r"=== \S+ batch=(\d+) trial=\d+ rc=(\d+) ===", line)
             if m:
                 current_batch = int(m.group(1))
+                exit_codes.setdefault(current_batch, set()).add(int(m.group(2)))
                 continue
+            # The GPU_Opt_Pure log has no per-trial headers; its per-run batch
+            # is recoverable from the runner's own "[Mem] ... batch_per_stream"
+            # line (that pattern does not occur in the header-style logs).
+            m = re.search(r"batch_per_stream=(\d+)", line)
+            if m:
+                current_batch = int(m.group(1))
             m = re.search(r"BATCH=(\d+), SUB_BATCH=(\d+), num_subs=(\d+)", line)
             if m and current_batch is not None:
                 values = tuple(int(v) for v in m.groups())
                 if values[0] != current_batch:
                     raise ValueError(f"inconsistent memory metadata in {log_rel}: {line}")
                 meta.setdefault(current_batch, set()).add(values)
+            if "out of memory" in line and current_batch is not None:
+                cuda_oom.add(current_batch)
         by_batch = {}
         for r in rows:
             b = int(r["BatchSize"])
@@ -397,11 +409,22 @@ def load_memory_scalability():
             if len(observed_meta) > 1:
                 raise ValueError(f"inconsistent BATCH/SUB_BATCH metadata for {label} b{b}")
             recorded = next(iter(observed_meta)) if observed_meta else None
+            failed = ("OOM_OR_FAIL" in d["status"]) and not success
+            # Failure-cause classification: never upgrade the raw OOM_OR_FAIL
+            # status to a confirmed OOM without explicit log evidence.
+            if not failed:
+                fail_class = None
+            elif b in cuda_oom:
+                fail_class = "cuda_oom"                # CUDA OOM confirmed in log
+            elif 137 in exit_codes.get(b, set()):
+                fail_class = "exit_137_unconfirmed"    # SIGKILL, cause not confirmed
+            else:
+                fail_class = "failed_unspecified"
             pts[b] = dict(
                 success=success,
                 med=median(d["succ"]) if success else None,
                 sd=sample_sd(d["succ"]) if success and len(d["succ"]) >= 2 else None,
-                oom=("OOM_OR_FAIL" in d["status"]) and not success,
+                fail_class=fail_class,
                 n=len(d["succ"]),
                 trials=d["trials"],
                 effective=(recorded[0] if recorded else None),
@@ -757,11 +780,12 @@ def fig_F5(mem):
     fig, ax = plt.subplots(figsize=(8.6, 5.2))
     all_succ = [p["med"] for pts in mem.values() for p in pts.values() if p["med"]]
     ymax = max(all_succ)
-    oom_y = ymax * 1.25   # OOM band position -- NOT zero seconds
-    ax.axhspan(ymax * 1.12, oom_y * 1.10, color=OK["vermillion"], alpha=0.08, zorder=0)
+    fail_y = ymax * 1.25   # failure band position -- NOT zero seconds
+    ax.axhspan(ymax * 1.12, fail_y * 1.10, color=OK["vermillion"], alpha=0.08, zorder=0)
     ax.axhline(ymax * 1.12, color=OK["vermillion"], linestyle=":", linewidth=1.0)
-    ax.text(mem_min_batch(mem), oom_y, "Out of Memory band (run did not complete; "
+    ax.text(mem_min_batch(mem), fail_y, "Failure band (run did not complete; "
             "not a runtime value)", fontsize=8, color=OK["vermillion"], va="center")
+    seen_classes = set()
     for i, (label, pts) in enumerate(mem.items()):
         st = IMPL_STYLE[label]
         batches = sorted(pts.keys())
@@ -771,31 +795,45 @@ def fig_F5(mem):
         ax.errorbar(sb, sy, yerr=ssd, fmt=st["marker"] + "-", color=st["color"],
                     markerfacecolor=st["color"], markeredgecolor="black",
                     markersize=7, linewidth=1.4, capsize=3, label=label, zorder=3)
-        ob = [b for b in batches if pts[b]["oom"]]
-        if ob:
-            # multiplicative offset on the log2 axis so that OOM markers from
-            # different implementations at the same batch do not hide each other
-            off = 2.0 ** ((i - 1) * 0.05)
-            ax.scatter([b * off for b in ob], [oom_y] * len(ob), marker="X", s=110,
-                       color=st["color"], edgecolors="black", linewidths=0.8, zorder=4)
+        # multiplicative offset on the log2 axis so that failure markers from
+        # different implementations at the same batch do not hide each other
+        off = 2.0 ** ((i - 1) * 0.08)
+        # Marker shape distinguishes the audited failure cause: X = CUDA OOM
+        # confirmed in the log; P = OOM_OR_FAIL (exit 137), cause unconfirmed.
+        for fail_class, marker in [("cuda_oom", "X"), ("exit_137_unconfirmed", "P")]:
+            fb = [b for b in batches if pts[b]["fail_class"] == fail_class]
+            if fb:
+                seen_classes.add(fail_class)
+                ax.scatter([b * off for b in fb], [fail_y] * len(fb), marker=marker,
+                           s=110, color=st["color"], edgecolors="black",
+                           linewidths=0.8, zorder=4)
     ax.set_xscale("log", base=2)
     ax.set_xlabel("Requested Batch Size (log2)")
-    ax.set_ylabel("Median Runtime (s)  /  Out of Memory marker")
+    ax.set_ylabel("Median Runtime (s)  /  failure marker")
     ax.set_title("F5  Memory Scalability on 325557_3216152 (Legacy Feasibility)")
     all_batches = sorted({b for pts in mem.values() for b in pts.keys()})
     ax.set_xticks(all_batches)
     ax.set_xticklabels([str(b) for b in all_batches], rotation=45, fontsize=8)
     ax.get_xaxis().set_minor_locator(plt.NullLocator())
-    ax.set_ylim(0, oom_y * 1.12)
+    ax.set_ylim(0, fail_y * 1.12)
     succ_handles, labels = ax.get_legend_handles_labels()
-    succ_handles.append(Line2D([0], [0], marker="X", color="black", linestyle="None",
-                               markersize=9, label="Out of Memory (no runtime)"))
-    ax.legend(handles=succ_handles, loc="center right", fontsize=9)
+    if "cuda_oom" in seen_classes:
+        succ_handles.append(Line2D([0], [0], marker="X", color="black", linestyle="None",
+                                   markersize=9,
+                                   label="Out of Memory (CUDA OOM in log; no runtime)"))
+    if "exit_137_unconfirmed" in seen_classes:
+        succ_handles.append(Line2D([0], [0], marker="P", color="black", linestyle="None",
+                                   markersize=9,
+                                   label="OOM_OR_FAIL (exit 137; cause unconfirmed; no runtime)"))
+    ax.legend(handles=succ_handles, loc="center right", fontsize=8.5)
     ax.grid(axis="x", visible=False)
     bottom_caption(ax,
                    "Legacy feasibility result on 325557_3216152; not a current block-kernel "
                    "performance comparison.\nGPU_Opt and GPU_Opt_Pure_Chunked extend the "
-                   "observed feasible range but do not provide unlimited capacity.", y=-0.30)
+                   "observed feasible range but do not provide unlimited capacity.\n"
+                   "X = CUDA out-of-memory recorded in the log (GPU_Opt_Pure, n=5 per batch); "
+                   "P = OOM_OR_FAIL, exit 137, cause not independently confirmed "
+                   "(GPU_Opt b12288, n=1; sweep stopped).", y=-0.30)
     return save_fig(fig, "memory_scalability_325557")
 
 
@@ -950,7 +988,8 @@ def table_T3(abl):
 def table_T4(mem):
     """Memory feasibility table using only matching legacy TSVs and logs."""
     header = ["Implementation", "Batch Size", "Effective Batch", "Sub-Batch",
-              "Number of Sub-Batches", "Median Runtime (s)", "Status", "Limitation"]
+              "Number of Sub-Batches", "Median Runtime (s)", "Status",
+              "Failure Reason", "Limitation"]
     rows = []
     for label in ["GPU_Opt_Pure", "GPU_Opt", "GPU_Opt_Pure_Chunked"]:
         pts = mem[label]
@@ -967,17 +1006,28 @@ def table_T4(mem):
             else:
                 eff = sub = nsub = "Not Recorded"
             if p["success"]:
-                rt = f"{p['med']:.2f}"; status = "Success"
-            else:
+                rt = f"{p['med']:.2f}"; status = "Success"; reason = "None"
+            elif p["fail_class"] == "cuda_oom":
                 rt = "N/A (OOM)"; status = "Out of Memory"
+                reason = "CUDA out of memory recorded in log"
+            elif p["fail_class"] == "exit_137_unconfirmed":
+                rt = "N/A (failed)"; status = "Failed"
+                reason = "OOM_OR_FAIL (exit 137; cause not independently confirmed)"
+            else:
+                rt = "N/A (failed)"; status = "Failed"
+                reason = "Unspecified runtime failure"
             lim = ("Legacy feasibility only (oldtree_f05ec52_20260512); "
                    "not current block-kernel performance")
             if label == "GPU_Opt" and b == 12288:
-                lim += "; Out of Memory n=1 (sweep stopped)"
-            rows.append([label, b, eff, sub, nsub, rt, status, lim])
-    notes = ["Runtime and status are recomputed from the matching legacy feasibility TSVs. "
-             "Successful medians use n=5; Out of Memory uses n=5 except GPU_Opt b12288 "
-             "(n=1; sweep stopped). OOM is N/A, never 0 s.",
+                lim += "; n=1 (sweep stopped)"
+            rows.append([label, b, eff, sub, nsub, rt, status, reason, lim])
+    notes = ["Runtime, status, and failure reason are recomputed from the matching legacy "
+             "feasibility TSVs and logs. Successful medians use n=5. GPU_Opt_Pure failures "
+             "are CUDA out-of-memory errors recorded in the experiment log for all 5 trials "
+             "per batch. GPU_Opt b12288 is a single failed attempt (n=1; the sweep stopped) "
+             "recorded as OOM_OR_FAIL with exit 137; no CUDA OOM, host OOM-kill, or scheduler "
+             "OOM record exists for it, so it is not reported as confirmed Out of Memory. "
+             "Failed runs are N/A, never 0 s.",
              "Effective Batch, Sub-Batch, and Number of Sub-Batches come from the matching "
              "legacy experiment logs when recorded. GPU_Opt_Pure does not record those fields.",
              "Observed feasibility in the tested range: GPU_Opt_Pure (maximum successful "
@@ -1208,11 +1258,13 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
          "5 measured graphs; not generalized to roadNet"],
         ["F5", "Memory Scalability (325557_3216152)",
          "Observed feasible batch: GPU_Opt_Pure < GPU_Opt < GPU_Opt_Pure_Chunked",
-         rel_inputs(*memory_tsv_inputs), gs, "Median Runtime (s) and Out-of-Memory Status",
+         rel_inputs(*(memory_tsv_inputs + memory_log_inputs)), gs,
+         "Median Runtime (s) and Failure Status",
          "median; sample SD for successful runs",
-         "5/configuration except GPU_Opt b12288 Out of Memory n=1",
+         "5/configuration except GPU_Opt b12288 OOM_OR_FAIL (exit 137) n=1",
          fig_out["F5"]["pdf"], fig_out["F5"]["png"], fig_out["F5"]["svg"],
-         "Legacy feasibility only; 325557_3216152 only; no unlimited-capacity claim"],
+         "Legacy feasibility only; 325557_3216152 only; no unlimited-capacity claim; "
+         "log-confirmed CUDA OOM distinguished from OOM_OR_FAIL (exit 137, unconfirmed)"],
         ["F6", "Shared vs Block Kernel",
          "Block kernel is faster than shared: roadNet-PA 1.52x, roadNet-TX 1.66x",
          rel_inputs(*kernel_inputs), gs, "Median Runtime (s)", "median; sample SD", "3/kernel/graph",
@@ -1250,9 +1302,10 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
          "Observed feasible batch ordering GPU_Opt_Pure < GPU_Opt < GPU_Opt_Pure_Chunked",
          rel_inputs(*(memory_tsv_inputs + memory_log_inputs)), gs,
          "median runtime; recorded execution metadata",
-         "5/configuration except GPU_Opt b12288 Out of Memory n=1",
+         "5/configuration except GPU_Opt b12288 OOM_OR_FAIL (exit 137) n=1",
          tab_out["T4"]["md"], tab_out["T4"]["tsv"],
-         "Legacy feasibility; 325557 only; OOM shown as N/A not 0 s"],
+         "Legacy feasibility; 325557 only; failures shown as N/A not 0 s; "
+         "log-confirmed CUDA OOM distinguished from OOM_OR_FAIL (exit 137, unconfirmed)"],
         ["T5", "Correctness Summary",
          "Small full-vector Pass; memory-path stress Core Fail preserved",
          rel_inputs(*correctness_inputs), gs, "single-run full-vector comparison", "1/comparison",
@@ -1291,7 +1344,8 @@ def write_fig_readme(mp):
                  "trials, and limitations.\n")
     lines.append("## Policy\n")
     lines.append("- median = numpy.median; speedup = median(PathMerge tuned) / median(GPU_Opt).\n"
-                 "- OOM configurations are drawn as an explicit Out-of-Memory marker, never as 0 s.\n"
+                 "- Failed configurations are drawn as explicit failure markers, never as 0 s; "
+                 "log-confirmed CUDA OOM and OOM_OR_FAIL (exit 137, unconfirmed) use distinct markers.\n"
                  "- Missing / invalid measurements are not connected as if they existed.\n"
                  "- Colorblind-safe (Okabe-Ito) palette; series also distinguished by markers/hatching.\n"
                  "- Consistent graph order and implementation colors across figures.\n"
@@ -1302,7 +1356,8 @@ def write_fig_readme(mp):
         "F2": ("main_speedup_over_tuned_pathmerge", "Speedup bars with 1.0x parity line."),
         "F3": ("pathmerge_batch_sweep", "Per-graph sweep; screening/confirmation and clamping shown."),
         "F4": ("ablation_contributions", "Main effects + per-graph Warp-Cooperative dependence."),
-        "F5": ("memory_scalability_325557", "Feasibility on 325557; OOM band (not 0 s)."),
+        "F5": ("memory_scalability_325557", "Feasibility on 325557; failure band (not 0 s) "
+               "distinguishes CUDA OOM from OOM_OR_FAIL (exit 137)."),
         "F6": ("shared_vs_block_kernel", "Shared vs block kernel; block 1.52x / 1.66x faster."),
         "F7": ("phase_breakdown", "Stacked BFS / Backward / Other wall-clock time."),
     }
@@ -1341,11 +1396,13 @@ def write_tab_readme():
         lines.append(f"- **{tid}** `{tid}_*.md` / `.tsv` -- {desc}")
     lines.append("")
     lines.append("## Notes\n")
-    lines.append("- Status vocabulary: Success, Out of Memory, Pass, Core Fail, "
+    lines.append("- Status vocabulary: Success, Out of Memory, Failed, Pass, Core Fail, "
                  "Supported with Limitations.\n"
                  "- The canonical memory-path stress result is preserved as **Core Fail** "
                  "and is never relabeled as Pass.\n"
-                 "- OOM is reported as `N/A (OOM)`, never as 0 seconds.\n")
+                 "- Failures are reported as `N/A (OOM)` / `N/A (failed)`, never as 0 seconds; "
+                 "`OOM_OR_FAIL (exit 137)` without an independent OOM record is reported as "
+                 "Failed, not upgraded to confirmed Out of Memory.\n")
     with open(TAB_DIR / "README.md", "w") as f:
         f.write("\n".join(lines))
 
@@ -1393,9 +1450,20 @@ def main():
         note(f"gpu_opt_median[{g}]", cp == cc, f"recomputed={cp} canonical={cc}")
         mm = round(mp[g]["pm"]["time_med"], 2); mc = float(comp[g]["PathMerge_tuned_s"])
         note(f"pathmerge_median[{g}]", mm == mc, f"recomputed={mm} canonical={mc}")
-    # OOM never zero: assert every plotted memory point is a real success time
+    # Failures never zero: assert every plotted memory point is a real success time
     oom_ok = all((p["med"] is None) == (not p["success"]) for pts in mem.values() for p in pts.values())
-    note("oom_not_zero", oom_ok, "all OOM points have med=None (drawn as OOM marker, not 0 s)")
+    note("failure_not_zero", oom_ok,
+         "all failed points have med=None (drawn as failure marker, not 0 s)")
+    # Failure-cause classification must match the audited raw evidence:
+    # GPU_Opt_Pure b8192+ have explicit CUDA OOM log lines; GPU_Opt b12288 has
+    # only exit 137 with no independently recorded OOM cause.
+    fail_classes = {(label, b): p["fail_class"]
+                    for label, pts in mem.items() for b, p in pts.items() if p["fail_class"]}
+    expected_fail = {("GPU_Opt_Pure", 8192): "cuda_oom", ("GPU_Opt_Pure", 10240): "cuda_oom",
+                     ("GPU_Opt_Pure", 12288): "cuda_oom", ("GPU_Opt_Pure", 16384): "cuda_oom",
+                     ("GPU_Opt", 12288): "exit_137_unconfirmed"}
+    note("memory_failure_classes", fail_classes == expected_fail,
+         f"classified={sorted(fail_classes.items())}")
     # Core Fail present
     core_fail = any(r["comparison_subclass"] == "same_impl_diff_batch" and r["status"] == "FAIL"
                     for r in memc)
@@ -1415,7 +1483,7 @@ def main():
         p["trials"] == (1 if label == "GPU_Opt" and b == 12288 else 5)
         for label, pts in mem.items() for b, p in pts.items())
     note("memory_trials", memory_trial_counts_ok,
-         "n=5 except GPU_Opt b12288 Out of Memory n=1 (sweep stopped)")
+         "n=5 except GPU_Opt b12288 OOM_OR_FAIL (exit 137) n=1 (sweep stopped)")
 
     # Confirm that generation reads only canonical paths, never build_miyabi,
     # and that every recorded input is Git-tracked.

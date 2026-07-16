@@ -61,7 +61,7 @@
 - **AvailableEvidence**:
   - `result/memory_scalability/oversubscribe_results_gpu_opt{,_pure,_pure_chunked}.tsv`
     （325557_3216152, batch 512–16384, n=5, checkpoint `oldtree_f05ec52_20260512`＝旧 tree, **時間値非採用**）：
-    feasibility は Pure が **b8192 以上で OOM**、UM が **b10240 まで SUCCESS（b12288 で OOM）**、
+    feasibility は Pure が **b8192 以上で OOM**、UM が **b10240 まで SUCCESS（b12288 は OOM_OR_FAIL, exit 137, 原因独立未確認）**、
     Chunked が **b16384 まで全 SUCCESS**。
   - `result/correctness/memory_paths/canonical_job_2368587/`（325557, checkpoint `memory_correctness_20260712`,
     **Host-memory-limited 100 GiB configuration**）：UM **b9792 完走**（oversubscribed, SUB_BATCH=6596, num_subs=2, NS_eff=1,
@@ -69,7 +69,7 @@
   - `failure/failed/oom/memory_correctness_2368269/`：UM **b10240 がhost-memory-limited 100 GiB configurationでOOM**
     （dynamic(UM)=213.38 GB, runner_exit=137）。
 - **Answer**: UM は Pure がデバイスメモリ確保で OOM する領域（b8192+）でも oversubscription に
-  より実行を継続できるが、UM も無制限ではない（旧 tree で b12288 OOM、host-memory-limited 100 GiB configurationで
+  より実行を継続できるが、UM も無制限ではない（旧 tree で b12288 が OOM_OR_FAIL(exit 137)、host-memory-limited 100 GiB configurationで
   b10240 OOM）。Chunked は working set を SUB_BATCH 単位に分割することで、試験範囲で最大の
   実行可能バッチ（b16384, num_subs=3）に到達した。**メモリ方式の主な差は最高性能ではなく
   「実行可能バッチ範囲の拡大」にある**（`SUPPORTED_WITH_LIMITATIONS`）。

@@ -39,8 +39,9 @@
 
 ## 14.5 Unified Memory（UM）
 - **使用可能**：「UM（cudaMallocManaged）により、Pure が OOM する領域（325557, b8192+）でも
-  oversubscription で実行を継続できた。ただし UM も無制限ではなく、旧 tree で b12288、
-  host memoryを100 GiBに制限した構成で b10240 が OOM した」。
+  oversubscription で実行を継続できた。ただし UM も無制限ではなく、旧 tree で b12288 が
+  OOM_OR_FAIL（exit 137, 原因独立未確認）で失敗し、host memoryを100 GiBに制限した構成で
+  b10240 が OOM した」。
 - **避ける**：「UM が容量制約を完全に解消」「UM は無制限」「UM でどんな working set も扱える」。
 - **根拠と制約**：`memory_scalability`（feasibility, 時間値非採用）、`memory_paths`（b9792 完走）、
   `failure/.../2368269`（b10240 OOM）。境界は環境依存。

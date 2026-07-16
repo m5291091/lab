@@ -57,7 +57,7 @@ V に比例して増大し、大きなバッチでは HBM3 容量を容易に超
 以下は主張**しない**（根拠がない、または実験範囲外）：
 - Hybrid BFS / warp 協調 / 2 ストリーム / UM を個別の新発明として主張しない。
 - 「あらゆるグラフで高速」「常に PathMerge に勝つ」とは主張しない（評価は 4 グラフ限定）。
-- 「UM が容量制約を完全に解消する」とは主張しない（UM も `b12288`/`b10240` で OOM の事例あり）。
+- 「UM が容量制約を完全に解消する」とは主張しない（UM も旧 tree の `b12288` で失敗（OOM_OR_FAIL, exit 137）、host-memory 100 GiB 制限構成の `b10240` で OOM の事例あり）。
 - 提案実装を「厳密性が全条件で検証済み」とは主張しない（full-vector 独立参照は小規模3グラフ限定）。
 
 参照：`result/CLAIMS.md`, `result/COVERAGE.md`, `result/environment/environment.md`。

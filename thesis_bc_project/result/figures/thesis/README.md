@@ -13,7 +13,7 @@ Each figure is exported as PDF (embedded fonts), PNG (300 dpi), and SVG. See `FI
 ## Policy
 
 - median = numpy.median; speedup = median(PathMerge tuned) / median(GPU_Opt).
-- OOM configurations are drawn as an explicit Out-of-Memory marker, never as 0 s.
+- Failed configurations are drawn as explicit failure markers, never as 0 s; log-confirmed CUDA OOM and OOM_OR_FAIL (exit 137, unconfirmed) use distinct markers.
 - Missing / invalid measurements are not connected as if they existed.
 - Colorblind-safe (Okabe-Ito) palette; series also distinguished by markers/hatching.
 - Consistent graph order and implementation colors across figures.
@@ -25,7 +25,7 @@ Each figure is exported as PDF (embedded fonts), PNG (300 dpi), and SVG. See `FI
 - **F2** `main_speedup_over_tuned_pathmerge.{pdf,png,svg}` -- Speedup bars with 1.0x parity line.
 - **F3** `pathmerge_batch_sweep.{pdf,png,svg}` -- Per-graph sweep; screening/confirmation and clamping shown.
 - **F4** `ablation_contributions.{pdf,png,svg}` -- Main effects + per-graph Warp-Cooperative dependence.
-- **F5** `memory_scalability_325557.{pdf,png,svg}` -- Feasibility on 325557; OOM band (not 0 s).
+- **F5** `memory_scalability_325557.{pdf,png,svg}` -- Feasibility on 325557; failure band (not 0 s) distinguishes CUDA OOM from OOM_OR_FAIL (exit 137).
 - **F6** `shared_vs_block_kernel.{pdf,png,svg}` -- Shared vs block kernel; block 1.52x / 1.66x faster.
 - **F7** `phase_breakdown.{pdf,png,svg}` -- Stacked BFS / Backward / Other wall-clock time.
 

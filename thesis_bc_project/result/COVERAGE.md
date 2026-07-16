@@ -22,8 +22,8 @@
 - **制約**: 325557・各構成 n=1・warmup なし。他グラフ/他バッチ/最新 block へ一般化しない。stress full-vector 正確性は `NOT_YET_SUPPORTED`（`CLAIMS.md`）。分析 TSV/MD は `analyze_memory_correctness.py` で raw vector から byte-identical 再生成可。
 
 ## 副次(B): メモリスケーラビリティ（memory_scalability）
-- 325557_3216152（合成, 人為的バッチ強制）1グラフ × {gpu_opt(UM), gpu_opt_pure, gpu_opt_pure_chunked} × batch 512–16384, n=5。
-- feasibility: pure OOM@b8192+ / UM→b10240(b12288 OOM) / chunked→b16384 全SUCCESS。
+- 325557_3216152（合成, 人為的バッチ強制）1グラフ × {gpu_opt(UM), gpu_opt_pure, gpu_opt_pure_chunked} × batch 512–16384, n=5（例外: gpu_opt b12288 は失敗 1 試行で掃引停止 n=1、gpu_opt b16384 は未試行）。
+- feasibility: pure OOM@b8192+（CUDA OOM をログで確認） / UM→b10240（b12288 は OOM_OR_FAIL, exit 137, n=1, 原因の独立記録なし） / chunked→b16384 全SUCCESS。
 - **制約**: 旧ツリー(oldtree_f05ec52_20260512)測定・時間値非採用（`provenance/um_code_diff_audit.md` でメモリサイジングコード文字単位同一を確認し feasibility を限定的に再利用（phase_def_block_20260710 で再実測はしていない））。BC計算 feasibility は代表 full-vector（C1）後に SUPPORTED。自然大規模グラフ(V≥5M)は不在。
 
 ## ablation（提案内部）

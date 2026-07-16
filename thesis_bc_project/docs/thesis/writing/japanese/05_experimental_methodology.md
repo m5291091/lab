@@ -116,7 +116,7 @@ PathMerge tuned（RQ1 分母）は、グラフごとに候補バッチを測定�
 
 要求バッチと実効バッチの区別は本評価で重要である。要求バッチ（`BC_BATCH_OVERRIDE` または `PATHMERGE_BC_BATCH_SIZE` で指定）が HBM3 予算を超える場合、実効バッチは縮小される。GPU_Opt 系では、oversubscription 時に SUB_BATCH が動的に縮小して num_subs>1 となる。本評価では、要求バッチ・実効バッチ・SUB_BATCH・num_subs・NS_eff を区別し、clamp が生じた場合はその記録（各実行の stderr / `execution_summary`）に基づいて条件を記述する。具体的な clamp 値の観測結果は Chapter 6 および Chapter 8 で示す。
 
-warmup については、SourceSnapshotID `phase_def_block_20260710` の新規測定（proposed_variants、kernel_selection、PathMerge 掃引、correctness）では warmup を行わず、ベンチマークスクリプトは全試行を記録して discard しない。legacy baseline と旧ツリーの UM 実験では明示的な warmup 記録が無いため `not_recorded` として扱う。
+warmup については、SourceSnapshotID `phase_def_block_20260710` の新規測定（proposed_variants、kernel_selection、PathMerge 掃引、correctness）では warmup を行わず、ベンチマークスクリプトは全試行を記録して discard しない。legacy baseline では明示的な warmup 記録が無いため `not_recorded` として扱う。旧ツリーの UM feasibility sweep（Series A）は方式別であり、GPU_Opt と GPU_Opt_Pure_Chunked は warmup なし（実験時 snapshot `oldtree_f05ec52_20260512` の実行スクリプトに warmup ループが無く全実行を試行として記録し、保存ログの実行数と raw TSV の試行行数が 1:1 で一致する）、GPU_Opt_Pure はログに試行 header が無く生成ドライバが snapshot に未収録のため `not_recorded` とする。
 
 性能測定と correctness-only 実行は区別する。性能測定は median 集計のために複数試行を記録し、その時間値を性能主張に用いる。一方、correctness-only 実行（小規模正確性・メモリ経路正確性）は各構成 n=1、warmup なしで実施し、その時間値は性能評価に用いない。実行時の調整ノブ（`BC_BATCH_OVERRIDE`、`PATHMERGE_BC_BATCH_SIZE`、`CUGRAPH_BC_MAX_SOURCES_PER_BATCH`、`BC_FORCE_BFS_KERNEL`）は通常の実験手続きの一部であり、条件を人為的に指定する RQ3/RQ4 やカーネル比較で用いる。
 

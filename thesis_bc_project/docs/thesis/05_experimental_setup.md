@@ -71,7 +71,11 @@
 - **Warmup**：
   - 新規測定（proposed_variants / kernel_selection / PathMerge 掃引 / correctness, `phase_def_block_20260710`）＝
     **なし**（ベンチスクリプトは全 TRIALS を記録・discard なし）。
-  - legacy baseline・UM（旧 tree）＝当時ログ準拠（明示的 warmup 記録なし → `not_recorded`）。
+  - legacy baseline（旧 tree）＝当時ログ準拠（明示的 warmup 記録なし → `not_recorded`）。
+  - UM feasibility sweep（旧 tree, Series A）＝方式別（Gate W4.1 監査）：gpu_opt / gpu_opt_pure_chunked ＝
+    **なし**（実験時 snapshot `code_snapshots/oldtree_f05ec52_20260512/scripts/run_um_oversubscribe*.sh` に
+    warmup ループ無し・全実行を trial 記録、log/TSV 1:1 で確認）；gpu_opt_pure ＝ `not_recorded`
+    （log に trial header 無し・生成ドライバ未保存のため確認不能）。
 - **試行数（trials）**：proposed email n=5 / road n=3；PathMerge tuned n=3（掃引最良）；
   ablation synthetic n=5 / email n=3；memory_scalability n=5；memory-path 各構成 **n=1**；
   profiling n=1（トレース）。

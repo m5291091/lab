@@ -20,4 +20,4 @@
   - `.stats.txt` は `.nsys-rep` から `nsys stats` で再生成（H1W1A0/A1 同一レポート）。
   - `.sqlite`（再生成可）は Git 非追加（`../EXTERNAL_ARTIFACTS.tsv`）。
   - 帯域: HBM3 DtoD 1818.6 GB/s, NVLink-C2C Prefetch 177.7 GB/s。
-  - 不正 271B `ablation_H1W1A1.stats.txt`（旧出力）は `../../failure/incomplete/`。
+  - 不正 271B `ablation_H1W1A1.stats.txt`（旧出力）は `../../raw_data/unsuccessful/failed/profiling/ablation_H1W1A1_incomplete/job_2359175_20260711/`（Gate J1 で `failure/incomplete/` から移動; 要約は `../../failure/README.md`）。
