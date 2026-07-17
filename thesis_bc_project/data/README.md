@@ -16,7 +16,7 @@ Betweenness Centrality (BC) 実験に使用するすべてのグラフデータ�
 |---------|-------------|--------:|----------|
 | ① 初めての人 | `testdata5` | 6 | 頂点が 6 個だけなので、紙に描いて手で結果を確認できます |
 | ② 動作確認 | `benchmark_7000_41459` | 7,000 | 小さいけれど実用的。Sequential（逐次実行）でも数秒で終わり、正しい答えと比較できます |
-| ③ GPU 性能測定 | `325557_3216152` | 325,557 | 大規模グラフ。GPU の本領が発揮されるサイズです |
+| ③ GPU 性能測定 | `325557_3216152_corrected_v1` | 325,557 | 大規模グラフ。GPU の本領が発揮されるサイズです |
 
 > 💡 **まずは `testdata5` を使って、プログラムが正しく動くか確認しましょう。**
 > いきなり大きいグラフを使うと、バグがあっても原因の特定が難しくなります。
@@ -177,9 +177,30 @@ Line 3:  adj[0]  adj[1]  ...  adj[2*n_edges - 1]  (隣接リスト、両方向)
 | 📊 | `random` | 32,212 | 101,805 | random | GPU vs OpenMP 比較 |
 | 📊 | `56438_300801` | 56,438 | 300,801 | random | GPU 実装比較 |
 | 📊 | `benchmark_85830.data` | 85,830 | 241,080 | random | 中規模ベンチマーク |
-| 📊 | `325557_3216152` | 325,557 | 3,216,152 | random | 大規模 GPU ベンチマーク |
+| 📊 | `325557_3216152_corrected_v1` | 325,557 | 3,216,152 | 出所不明(修復版) | 大規模 GPU ベンチマーク（**新規実験はこちら**） |
+| ⚠️ | `325557_3216152` | 325,557 | 3,216,152 | 出所不明(不正入力) | **使用しない**（malformed。履歴実験の入力として保存） |
 
-> 💡 凡例：🔬 テスト・デバッグ向け ／ 📊 ベンチマーク向け
+> 💡 凡例：🔬 テスト・デバッグ向け ／ 📊 ベンチマーク向け ／ ⚠️ 不正入力（新規実験に使わない）
+
+> ⚠️ **`325557_3216152` は不正入力です。** 1-based の頂点番号を 0-based として格納しており、
+> 隣接要素が `2m` に 7 個不足し、範囲外の頂点 ID `325557` を 7 個含みます（頂点 0 は孤立、
+> 1-based の最終頂点の行が欠落）。**現行のランナーはこのファイルを実行前に拒否します。**
+>
+> 新規実験には決定的に修復した **`325557_3216152_corrected_v1`** を使ってください
+> （`n`/`m`・self-loop・duplicate は保存、範囲外 ID なし、対称、連結成分 1）。
+> 旧ファイルは既存実験の入力として保存しており、削除・上書きしません。
+> 詳細は `result/provenance/GRAPH_325557_INTEGRITY_AUDIT.md`、来歴は
+> `result/datasets/graph_metadata.md` を参照。
+>
+> グラフの検査:
+> ```bash
+> python3 tools/validate_graph_csr.py data/325557_3216152_corrected_v1   # PASS (exit 0)
+> python3 tools/validate_graph_csr.py data/325557_3216152                # FAIL (exit 1)
+> ```
+> 修復版の再生成（旧ファイルから決定的に byte-identical に再生成）:
+> ```bash
+> python3 tools/repair_325557_graph.py
+> ```
 
 ### 2. 🌐 SNAP 実世界グラフ (`data/snap/`)
 
@@ -247,9 +268,9 @@ bash tools/download_snap_graphs.sh --category xlarge
 | 正確性検証（`verify_correctness.sh`） | benchmark_7000_41459 | Sequential 参照実装との比較が高速 |
 | 全実装ベースライン（小規模） | benchmark_7000_41459, benchmark_11023_62184 | Sequential が現実的な時間で完了する |
 | GPU vs OpenMP 比較 | 56438_300801, benchmark_85830 | OpenMP が許容時間内に完了する |
-| アブレーション研究 | 7K / 11K / 56K / 325K グラフ | Method 1 と Method 2 の貢献が明確に見える |
+| アブレーション研究 | 7K / 11K / 56K / 325K(`_corrected_v1`) グラフ | Method 1 と Method 2 の貢献が明確に見える |
 | NVLink-C2C ボトルネック解析 | snap/web-Google, snap/roadNet-PA, snap/roadNet-TX | グラフが大きいほどメモリ転送の差が顕在化する |
-| バッチサイズ感度分析 | 325557_3216152, snap/roadNet-PA | メモリ使用量と実行時間のトレードオフ |
+| バッチサイズ感度分析 | 325557_3216152_corrected_v1, snap/roadNet-PA | メモリ使用量と実行時間のトレードオフ |
 
 ---
 
