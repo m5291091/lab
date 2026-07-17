@@ -10,7 +10,10 @@
 - **SUB_BATCH**: `not_recorded`（ablation.log に SUB_BATCH 出力なし。in-capacity）
 - **num_subs**: `not_recorded`
 - **試行数**: 5（各構成×グラフ）
-- **warmup**: なし
+- **warmup**: 各 `run_ablation <graph> all` invocation（=各 graph/trial の8構成セット）の先頭で、
+  **全8構成に対する global warmup H1W1A1 を1回**実行（計測外・TSV不収録）。job 2354994 は
+  4 graph × 5 trial の20 invocationなので raw log の `=== Warmup (untimed, H1W1A1) ===` は20件、
+  うち旧325557は5件。直後にH0W0A0〜H1W1A1の本試行8件が並び、TSVは8×4×5=160行。
 - **集計方法**: median（寄与は `ablation_contributions.tsv` の MainEffect/InteractionRel、trial summary のばらつきは Sample SD, ddof=1、n<2 は n/a）
 - **SourceSnapshotID**: `phase_def_block_20260710`（測定 2026-07-10, 常時 block 化後）
 - **PBS job ID**: 2354994
@@ -18,4 +21,8 @@
 - **出力**: `ablation_results.tsv`, `ablation_contributions.tsv`, `ablation_summary.md`, `ablation.log`
 - **正確性**: `none`（本 dir に max_bc ファイルなし。ablation.log 内に Max BC 出力はあるが未集計）
 - **再現コマンド**: `qsub scripts/run_ablation.sh`（`./run_ablation <graph> all`）
+- **warmup一次根拠**: 実験時script `code_snapshots/phase_def_block_20260710/scripts/run_ablation.sh:95-109`、
+  raw log `raw_data/ablation/synthetic/job_2354994_20260710/ablation.log`、本試行TSV
+  `raw_data/ablation/synthetic/job_2354994_20260710/ablation_results.tsv`、runner snapshot
+  `code_snapshots/phase_def_block_20260710/experiments/run_ablation.cu:111-120`。
 - **制約**: build_miyabi（gitignore）からコピー。原本 `build_miyabi/result_ablation_20260710_182735_2354994/`。H が最大寄与（MainEffect 1.40〜2.17×）。

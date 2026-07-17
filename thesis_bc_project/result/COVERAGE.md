@@ -49,3 +49,13 @@
 | memory-path stress full-vector（325557, 大batch/NS_eff=1/num_subs>1） | 構成依存差が厳格 rel_tol=1e-6 を和集合8頂点で超過、原因未特定 | Stress full-vector=NOT_YET_SUPPORTED |
 | memory-path vs PathMerge full-vector 一致（325557） | 約11027要素差(max_rel≈2.0e-3)、正誤未決定、PathMergeはexternal comparator | PathMerge cross=NOT_YET_SUPPORTED |
 | 自然 V≥5M oversubscribe | グラフ不在 | 任意強化 |
+
+## Gate W7.3A — 325557 入力不正と再検証準備（**案。再検証前の暫定状態**）
+- `data/325557_3216152` は **malformed**（1-based を 0-based として格納。`2m` に 7 要素不足、範囲外 ID `325557` × 7、頂点 0 孤立、1-based 最終頂点の行が欠落）。カタログ全 12 行のうち malformed はこの 1 本のみで、**他 10 グラフは PASS**（判定変化なし）。
+- 修復版 `data/325557_3216152_corrected_v1` を追加（`tools/repair_325557_graph.py`、決定的・byte-identical、`n`/`m`・self-loop 87,442 本・duplicate 866,924 を保存、範囲外 ID 0、対称、連結成分 1）。`ProvenanceStatus=internally_reconstructed_no_original_seed`。
+- **本 Gate では GPU 実行・qsub をしていない**。以下は再検証待ちで、カバレッジは**未充足として扱う**。
+  - Series A（正確性・memory-path）: UM/Pure/Chunked b1024、UM stress b9792、Chunked stress b16384、PathMerge b4096 の全 vector 生成後に比較。PathMerge は cross-implementation comparator（ground truth ではない）。
+  - Series B（容量境界の最小確認）: Pure b4096/b8192、UM b10240/b12288、Chunked b16384 を各 1 試行。feasibility confirmation であり性能測定ではない。**失敗を 0 秒として集計しない**。
+  - Series C（アブレーション）: 修復版 325557 × 8 構成 × n=5。job 2354994 の一次資料監査に合わせ、各 `run_ablation ... all` invocation（8構成セット）の先頭で global・untimed H1W1A1 warmup を1回実行し、40本試行には含めない。8構成集合、各trial 1〜5、合計40行、有限正のTime/GTEPS、runner exit 0、失敗markerなしを機械検証する。既存 3 グラフは再実行せず、325557 の値のみ差し替えて幾何平均を再集計できる構成にする。
+- 既存の 325557 由来の結果（`correctness/memory_paths/`、`memory_scalability/`、ablation synthetic の 325557 分、`CORE_FAIL`）は **malformed legacy input 上の履歴結果**として保存し、削除・置換しない。
+- **RQ1 main performance（email-EuAll / roadNet-PA/TX/CA）は 325557 を使用しないため影響を受けない。**

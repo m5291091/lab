@@ -116,7 +116,7 @@ PathMerge tuned（RQ1 分母）は、グラフごとに候補バッチを測定�
 
 要求バッチと実効バッチの区別は本評価で重要である。要求バッチ（`BC_BATCH_OVERRIDE` または `PATHMERGE_BC_BATCH_SIZE` で指定）が HBM3 予算を超える場合、実効バッチは縮小される。GPU_Opt 系では、oversubscription 時に SUB_BATCH が動的に縮小して num_subs>1 となる。本評価では、要求バッチ・実効バッチ・SUB_BATCH・num_subs・NS_eff を区別し、clamp が生じた場合はその記録（各実行の stderr / `execution_summary`）に基づいて条件を記述する。具体的な clamp 値の観測結果は Chapter 6 および Chapter 8 で示す。
 
-warmup については、SourceSnapshotID `phase_def_block_20260710` の新規測定（proposed_variants、kernel_selection、PathMerge 掃引、correctness）では warmup を行わず、ベンチマークスクリプトは全試行を記録して discard しない。legacy baseline では明示的な warmup 記録が無いため `not_recorded` として扱う。旧ツリーの UM feasibility sweep（Series A）は方式別であり、GPU_Opt と GPU_Opt_Pure_Chunked は warmup なし（実験時 snapshot `oldtree_f05ec52_20260512` の実行スクリプトに warmup ループが無く全実行を試行として記録し、保存ログの実行数と raw TSV の試行行数が 1:1 で一致する）、GPU_Opt_Pure はログに試行 header が無く生成ドライバが snapshot に未収録のため `not_recorded` とする。
+warmup については、SourceSnapshotID `phase_def_block_20260710` の新規測定（proposed_variants、kernel_selection、PathMerge 掃引、correctness）では warmup を行わず、ベンチマークスクリプトは全試行を記録して discard しない。ただし ablation synthetic（job 2354994）は例外で、各 `run_ablation <graph> all` invocation、すなわち各 graph/trial の8構成セットの先頭で、全構成に対する global・untimed H1W1A1 warmup を1回実行し、TSV本試行には含めない。これは実験時script、raw logの20 warmup marker、8構成×4 graph×5 trial=160行のraw TSV、runner snapshotから確認した。legacy baseline では明示的な warmup 記録が無いため `not_recorded` として扱う。旧ツリーの UM feasibility sweep（Series A）は方式別であり、GPU_Opt と GPU_Opt_Pure_Chunked は warmup なし（実験時 snapshot `oldtree_f05ec52_20260512` の実行スクリプトに warmup ループが無く全実行を試行として記録し、保存ログの実行数と raw TSV の試行行数が 1:1 で一致する）、GPU_Opt_Pure はログに試行 header が無く生成ドライバが snapshot に未収録のため `not_recorded` とする。
 
 性能測定と correctness-only 実行は区別する。性能測定は median 集計のために複数試行を記録し、その時間値を性能主張に用いる。一方、correctness-only 実行（小規模正確性・メモリ経路正確性）は各構成 n=1、warmup なしで実施し、その時間値は性能評価に用いない。実行時の調整ノブ（`BC_BATCH_OVERRIDE`、`PATHMERGE_BC_BATCH_SIZE`、`CUGRAPH_BC_MAX_SOURCES_PER_BATCH`、`BC_FORCE_BFS_KERNEL`）は通常の実験手続きの一部であり、条件を人為的に指定する RQ3/RQ4 やカーネル比較で用いる。
 
@@ -164,7 +164,7 @@ roadNet-PA/TX の分母には、注意すべき測定条件がある。両グラ
 
 RQ2 の要因分析は、ablation と kernel selection の 2 つの手続きからなる。
 
-Ablation は、提案手法の 3 つの工夫、すなわち Hybrid BFS（H、top-down/bottom-up の二方向 BFS [@beamer2012]）、Warp-Cooperative Accumulation（W、Backward phase の warp 協調累積）、Dual-Stream Execution（A、2 ストリームによる非同期初期化と計算の重畳）の寄与を測定する。これらを compile-time テンプレートで有効・無効に切り替えた 8 構成（$\mathrm{H}\{0,1\}\mathrm{W}\{0,1\}\mathrm{A}\{0,1\}$）を、固定バッチ b512、warmup なし、median 集計で測定した。対象は合成グラフ 4 種（benchmark_7000_41459、benchmark_11023_62184、56438_300801、325557_3216152）で各構成 n=5、および email-EuAll で n=3 である（`result/ablation/{synthetic_2354994,email_2354999}/SOURCE.md`）。
+Ablation は、提案手法の 3 つの工夫、すなわち Hybrid BFS（H、top-down/bottom-up の二方向 BFS [@beamer2012]）、Warp-Cooperative Accumulation（W、Backward phase の warp 協調累積）、Dual-Stream Execution（A、2 ストリームによる非同期初期化と計算の重畳）の寄与を測定する。これらを compile-time テンプレートで有効・無効に切り替えた 8 構成（$\mathrm{H}\{0,1\}\mathrm{W}\{0,1\}\mathrm{A}\{0,1\}$）を固定バッチ b512、median 集計で測定した。合成4グラフのjob 2354994では各8構成セットの前にglobal・untimed H1W1A1 warmupを1回行い、TSV本試行から除外した。対象は合成グラフ 4 種（benchmark_7000_41459、benchmark_11023_62184、56438_300801、325557_3216152）で各構成 n=5、および email-EuAll で n=3 である（`result/ablation/{synthetic_2354994,email_2354999}/SOURCE.md`）。
 
 各工夫の寄与は主効果（main effect）で評価する。ある工夫 $F$ の主効果は、他の 2 軸の全水準にわたって平均した、$F$ を無効にした場合と有効にした場合の実行時間比 $T(F{=}0)/T(F{=}1)$ の幾何平均として計算する。合成グラフの主効果は 4 グラフの幾何平均で要約し、email-EuAll は個別に扱う。本評価では、要因分析の主効果を roadNet などの未測定グラフへ一般化しない。特に、Warp 協調累積の効果はグラフ依存であり、email-EuAll では中立的または僅かに不利となり得るため、この点を限定条件として扱う。具体的な主効果値は Chapter 7 で示す。
 

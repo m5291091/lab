@@ -50,3 +50,26 @@ memory-path 関連は主軸(A)・副次(B)の性能主張から分離する。ca
 `full_vector_independent_reference` > `full_vector_same_implementation` > `max_bc_only` > `structural_only` > `none`
 - 小規模3グラフの Sequential vs GPU_Opt: `full_vector_independent_reference`。headline 4グラフ: `max_bc_only`（cross-impl）。PathMerge tuned/default の別設定間比較は email（b64 vs b2048）と roadNet-CA（b32 vs b64）だけが `full_vector_same_implementation`。roadNet-PA/TX は tuned/default とも b64 で別 full-vector artifact がないため `max_bc_only`。
 - email/CA の `full_vector_same_implementation` は**実験時の比較 summary に基づく**判定であり（email=PASS, CA=PASS with absolute-only warning）、この水準を維持する。比較に用いた BC ベクトル 4 本は現在 `currently_unavailable`（`EXTERNAL_ARTIFACTS.tsv`）で、archive-time に vector を再解析していないため NaN/Inf/duplicate index は `not_recorded`。**vector が現存しないことを理由に当時の比較 summary を無効化しない**。
+
+---
+
+## Gate W7.3A — 325557 入力不正の影響（**案。再検証前の暫定状態**）
+
+`data/325557_3216152` が **malformed**（1-based を 0-based として格納。隣接要素が `2m` に 7 個不足、
+範囲外頂点 ID `325557` を 7 個含む）と確定した（`provenance/GRAPH_325557_INTEGRITY_AUDIT.md`）。
+修復版 `data/325557_3216152_corrected_v1` を追加したが、**本 Gate では GPU 実行をしていない**。
+したがって以下は**再検証待ちの暫定状態**であり、本 Gate で正式 status を `SUPPORTED` へ戻さない。
+
+| 主張群 | 影響 | 暫定状態 |
+|:--|:--|:--|
+| **RQ1 main performance**（email-EuAll / roadNet-PA/TX/CA） | **影響なし**。325557 を使用しない。当該 4 グラフは `ValidationStatus=valid` | 現行 status を維持 |
+| **RQ2 synthetic aggregate**（ablation 合成 4 グラフ幾何平均） | 4 グラフ中 1 つ（325557）が malformed | **corrected input で再検証待ち**（Series C）。既存 3 グラフは再実行しない |
+| **RQ3 memory feasibility**（UM/Pure/Chunked の容量境界） | 325557 限定のため全面的に影響 | **corrected input で境界確認待ち**（Series B） |
+| **RQ4 same-batch / stress / cross**（memory-path 正確性） | 325557 限定のため全面的に影響 | **corrected input で再検証待ち**（Series A） |
+
+- 既存の `CORE_FAIL`・raw 結果・vector・SHA256 は**削除も置換もしない**。
+  **malformed legacy input 上の履歴結果**として保存する（`UsedForHistoricalExperiments=yes`）。
+- **stress 差の原因を GPU 数値計算へ帰属しない**。旧入力には範囲外添字アクセス（source 間の状態への
+  書き込みを含む）が存在したが（監査 §2.3）、本 Gate では**それが原因であるとも断定しない**。
+  因果は corrected input での再検証後に判断する。
+- `RQ1` を除き、325557 を根拠に含む主張は、修復版での再測定が済むまで**格上げしない**。

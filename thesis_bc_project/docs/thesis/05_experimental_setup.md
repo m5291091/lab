@@ -71,6 +71,9 @@
 - **Warmup**：
   - 新規測定（proposed_variants / kernel_selection / PathMerge 掃引 / correctness, `phase_def_block_20260710`）＝
     **なし**（ベンチスクリプトは全 TRIALS を記録・discard なし）。
+  - ablation synthetic（job 2354994）＝各 `run_ablation <graph> all` invocation（各graph/trialの
+    8構成セット）の先頭で global・untimed H1W1A1 warmupを1回。warmupはTSV本試行に含めない
+    （実験時script、raw log、160行TSV、runner snapshotで確認）。
   - legacy baseline（旧 tree）＝当時ログ準拠（明示的 warmup 記録なし → `not_recorded`）。
   - UM feasibility sweep（旧 tree, Series A）＝方式別（Gate W4.1 監査）：gpu_opt / gpu_opt_pure_chunked ＝
     **なし**（実験時 snapshot `code_snapshots/oldtree_f05ec52_20260512/scripts/run_um_oversubscribe*.sh` に
