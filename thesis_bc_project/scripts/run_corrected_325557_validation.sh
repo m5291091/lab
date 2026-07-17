@@ -21,7 +21,17 @@ else
     cd "${PROJECT_DIR}" || exit 2
 fi
 
-BUILD_DIR="${BUILD_DIR:-${PROJECT_DIR}/build_miyabi}"
+source "${PROJECT_DIR}/scripts/build_dir_guard.sh"
+
+# root と cugraph_bc_mini は別の CMake binary directory を使う (Gate W7.3B1.1)。
+# root 側は job 固有の新規 directory とし、古い binary へ fallback しない。
+# 結果は従来どおり build_miyabi/ 配下に置き、既存 result_* は一切触らない。
+TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
+JOB_ID="${PBS_JOBID:-not_pbs}"
+RESULT_ROOT="${RESULT_ROOT:-${PROJECT_DIR}/build_miyabi}"
+BUILD_DIR="${BUILD_DIR:-${PROJECT_DIR}/build_corrected_325557/${TIMESTAMP}_${JOB_ID}}"
+CUGRAPH_BC_MINI_SRC_DIR="${PROJECT_DIR}/cugraph_bc_mini"
+CUGRAPH_BC_MINI_BUILD_DIR="${CUGRAPH_BC_MINI_BUILD_DIR:-${CUGRAPH_BC_MINI_SRC_DIR}/build}"
 RUNNER="${BUILD_DIR}/run_benchmark"
 COMPARE="${PROJECT_DIR}/scripts/compare_bc_vectors.py"
 VECTOR_VALIDATOR="${PROJECT_DIR}/scripts/validate_bc_vector.py"
@@ -78,10 +88,13 @@ if [ "${DRY_RUN}" = "1" ]; then
     printf '%s\n' \
         "DRY RUN: no build, runner, GPU access, qsub, result update, or BC dump" \
         "Project    : ${PROJECT_DIR}" \
+        "Root build : ${BUILD_DIR}" \
+        "Mini build : ${CUGRAPH_BC_MINI_BUILD_DIR}" \
         "Runner     : ${RUNNER}" \
         "Graph      : ${GRAPH_REL} (n=${EXPECTED_N}, m=${EXPECTED_M}, sha=${EXPECTED_GRAPH_SHA})" \
         "Series     : ${SERIES}" \
-        "Output     : fresh result_corrected_325557_<timestamp>_<PBS_JOBID>; collision is fatal"
+        "Output     : fresh result_corrected_325557_<timestamp>_<PBS_JOBID> under ${RESULT_ROOT}; collision is fatal" \
+        "Build dirs : root and mini are distinct and job-specific; collision or foreign CMake cache aborts before configure"
     echo "Series A (first failure is recorded, then the job exits nonzero):"
     for i in "${!A_NAMES[@]}"; do
         printf '  %d. %-30s impl=%-22s batch=%-6s path=%s\n' \
@@ -140,9 +153,7 @@ GRAPH_SHA="$(sha256_file "${GRAPH_PATH}")" || abort "cannot hash graph"
 [ "${GRAPH_SHA}" != "${LEGACY_GRAPH_SHA}" ] || abort "legacy malformed graph selected (${LEGACY_GRAPH_REL})"
 [ "${GRAPH_SHA}" = "${EXPECTED_GRAPH_SHA}" ] || abort "graph sha256 mismatch (${GRAPH_SHA} != ${EXPECTED_GRAPH_SHA})"
 
-TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
-JOB_ID="${PBS_JOBID:-not_pbs}"
-RESULT_DIR="${RESULT_DIR:-${BUILD_DIR}/result_corrected_325557_${TIMESTAMP}_${JOB_ID}}"
+RESULT_DIR="${RESULT_DIR:-${RESULT_ROOT}/result_corrected_325557_${TIMESTAMP}_${JOB_ID}}"
 [ ! -e "${RESULT_DIR}" ] || abort "output collision: ${RESULT_DIR} already exists"
 mkdir -p "$(dirname "${RESULT_DIR}")" || abort "cannot create output parent"
 mkdir "${RESULT_DIR}" || abort "cannot create fresh result directory: ${RESULT_DIR}"
@@ -189,13 +200,39 @@ printf '%s\n' $'Config\tImplementation\tVectorPath\tSHA256\tExpectedLength\tStat
 printf '%s\n' $'ComparisonClass\tLabelA\tLabelB\tComparisonExit\tMismatchedElements\tMaxAbsError\tMaxRelError\tSHA256A\tSHA256B\tStatus\tSummaryJSON' > "${CMP_MATRIX}"
 printf '%s\n' $'Config\tImplementation\tRequestedBatch\tExpectation\tObserved\tOutcomeClass\tRuntimeSec\tRunnerExit\tFailureReason' > "${FEASIBILITY}"
 
+bcguard_assert_separate \
+    "${PROJECT_DIR}" "${BUILD_DIR}" \
+    "${CUGRAPH_BC_MINI_SRC_DIR}" "${CUGRAPH_BC_MINI_BUILD_DIR}" \
+    || abort "build directory collision or foreign CMake cache"
+
+BUILD_STATUS=skipped
 if [ "${SKIP_BUILD}" != "1" ]; then
     log "[BUILD] scripts/build_miyabi_interactive.sh"
-    if ! JOBS="${JOBS}" BUILD_DIR="${BUILD_DIR}" bash "${PROJECT_DIR}/scripts/build_miyabi_interactive.sh" 2>&1 | tee -a "${RUN_LOG}"; then
+    log "  root build directory=${BUILD_DIR}"
+    log "  mini build directory=${CUGRAPH_BC_MINI_BUILD_DIR}"
+    if ! JOBS="${JOBS}" BUILD_DIR="${BUILD_DIR}" \
+        CUGRAPH_BC_MINI_BUILD_DIR="${CUGRAPH_BC_MINI_BUILD_DIR}" \
+        bash "${PROJECT_DIR}/scripts/build_miyabi_interactive.sh" 2>&1 | tee -a "${RUN_LOG}"; then
         abort "build failed"
     fi
+    BUILD_STATUS=built
+    bcguard_write_provenance "${BUILD_DIR}" "${ACTUAL_SHA}"
 fi
 [ -x "${RUNNER}" ] || abort "runner not found/executable: ${RUNNER}"
+bcguard_assert_provenance "${BUILD_DIR}" "${ACTUAL_SHA}" \
+    || abort "runner is not verifiably built from checkpoint ${ACTUAL_SHA}"
+
+RUNNER_SHA="$(sha256_file "${RUNNER}")" || abort "cannot hash runner binary"
+{
+    printf 'root_build_dir=%s\n' "${BUILD_DIR}"
+    printf 'mini_build_dir=%s\n' "${CUGRAPH_BC_MINI_BUILD_DIR}"
+    printf 'runner_path=%s\n' "${RUNNER}"
+    printf 'runner_sha256=%s\n' "${RUNNER_SHA}"
+    printf 'cmake_source_dir=%s\n' "${PROJECT_DIR}"
+    printf 'cmake_cache_home_directory=%s\n' "$(bcguard_cache_home "${BUILD_DIR}")"
+    printf 'mini_cmake_cache_home_directory=%s\n' "$(bcguard_cache_home "${CUGRAPH_BC_MINI_BUILD_DIR}")"
+    printf 'build_status=%s\n' "${BUILD_STATUS}"
+} >> "${MANIFEST}" || abort "cannot record build manifest"
 
 assert_integrity() {
     local head_now graph_now

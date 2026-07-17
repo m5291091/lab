@@ -2,6 +2,8 @@
 build/
 build_miyabi/
 cugraph_bc_mini/build/
+# 修正版 325557 再検証の job 固有 root build directory（Gate W7.3B1.1）
+build_corrected_325557/
 result_benchmark_*/
 result_um_oversubscribe*/
 

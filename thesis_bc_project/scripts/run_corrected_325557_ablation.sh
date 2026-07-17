@@ -20,7 +20,17 @@ else
     cd "${PROJECT_DIR}" || exit 2
 fi
 
-BUILD_DIR="${BUILD_DIR:-${PROJECT_DIR}/build_miyabi}"
+source "${PROJECT_DIR}/scripts/build_dir_guard.sh"
+
+# root と cugraph_bc_mini は別の CMake binary directory を使う (Gate W7.3B1.1)。
+# run_ablation は cuGraph 非依存だが、build_miyabi/ の cache 汚染を避けるため
+# Series A/B と同じ job 固有の root build directory を使う。
+TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
+JOB_ID="${PBS_JOBID:-not_pbs}"
+RESULT_ROOT="${RESULT_ROOT:-${PROJECT_DIR}/build_miyabi}"
+BUILD_DIR="${BUILD_DIR:-${PROJECT_DIR}/build_corrected_325557/${TIMESTAMP}_${JOB_ID}}"
+CUGRAPH_BC_MINI_SRC_DIR="${PROJECT_DIR}/cugraph_bc_mini"
+CUGRAPH_BC_MINI_BUILD_DIR="${CUGRAPH_BC_MINI_BUILD_DIR:-${CUGRAPH_BC_MINI_SRC_DIR}/build}"
 RUNNER="${BUILD_DIR}/run_ablation"
 GRAPH_VALIDATOR="${PROJECT_DIR}/tools/validate_graph_csr.py"
 RESULT_VALIDATOR="${PROJECT_DIR}/scripts/validate_ablation_results.py"
@@ -41,6 +51,8 @@ if [ "${DRY_RUN}" = "1" ]; then
     printf '%s\n' \
         "DRY RUN: no build, runner, GPU access, qsub, or result update" \
         "Project    : ${PROJECT_DIR}" \
+        "Root build : ${BUILD_DIR}" \
+        "Mini build : ${CUGRAPH_BC_MINI_BUILD_DIR}" \
         "Runner     : ${RUNNER}" \
         "Graph      : ${GRAPH_REL} (n=${EXPECTED_N}, m=${EXPECTED_M}, sha=${EXPECTED_GRAPH_SHA})" \
         "Trials     : ${TRIALS}" \
@@ -48,8 +60,9 @@ if [ "${DRY_RUN}" = "1" ]; then
         "Formal rows: 8 * ${TRIALS} = $((8 * TRIALS)); exact set/trials, finite positive Time/GTEPS, RunnerExit=0" \
         "Warmup     : one global untimed H1W1A1 before each runner invocation/config set; excluded from formal rows" \
         "Warmup evidence: job 2354994 script+raw log+TSV show one marker before each 8-row graph/trial set" \
-        "Output     : fresh result_corrected_325557_ablation_<timestamp>_<PBS_JOBID>; collision is fatal" \
+        "Output     : fresh result_corrected_325557_ablation_<timestamp>_<PBS_JOBID> under ${RESULT_ROOT}; collision is fatal" \
         "CMake      : configure and build checked separately; configure failure never continues with an old binary" \
+        "Build dirs : root and mini are distinct and job-specific; collision or foreign CMake cache aborts before configure" \
         "Not rerun  : ${EXISTING_GRAPHS}" \
         "Future submission command (display only; DO NOT run in DRY_RUN):" \
         "cd /work/gj17/j17000/m5291091/lab/thesis_bc_project" \
@@ -91,9 +104,7 @@ GRAPH_SHA="$(sha256_file "${GRAPH_PATH}")" || abort "cannot hash graph"
 [ "${GRAPH_SHA}" != "${LEGACY_GRAPH_SHA}" ] || abort "legacy malformed graph selected"
 [ "${GRAPH_SHA}" = "${EXPECTED_GRAPH_SHA}" ] || abort "graph sha256 mismatch (${GRAPH_SHA} != ${EXPECTED_GRAPH_SHA})"
 
-TIMESTAMP="$(date +%Y%m%d_%H%M%S)"
-JOB_ID="${PBS_JOBID:-not_pbs}"
-RESULT_DIR="${RESULT_DIR:-${BUILD_DIR}/result_corrected_325557_ablation_${TIMESTAMP}_${JOB_ID}}"
+RESULT_DIR="${RESULT_DIR:-${RESULT_ROOT}/result_corrected_325557_ablation_${TIMESTAMP}_${JOB_ID}}"
 [ ! -e "${RESULT_DIR}" ] || abort "output collision: ${RESULT_DIR} already exists"
 mkdir -p "$(dirname "${RESULT_DIR}")" || abort "cannot create output parent"
 mkdir "${RESULT_DIR}" || abort "cannot create fresh result directory: ${RESULT_DIR}"
@@ -131,6 +142,12 @@ GRAPH_SIZE="$(stat -c '%s' "${GRAPH_PATH}")"
     printf 'aggregation=median,mean,sample_sd,min,max\n'
 } > "${MANIFEST}" || abort "cannot write manifest"
 
+bcguard_assert_separate \
+    "${PROJECT_DIR}" "${BUILD_DIR}" \
+    "${CUGRAPH_BC_MINI_SRC_DIR}" "${CUGRAPH_BC_MINI_BUILD_DIR}" \
+    || abort "build directory collision or foreign CMake cache"
+
+BUILD_STATUS=skipped
 if [ "${SKIP_BUILD}" != "1" ]; then
     CMAKE_BIN="${CMAKE_BIN:-}"
     if [ -z "${CMAKE_BIN}" ]; then
@@ -153,10 +170,23 @@ if [ "${SKIP_BUILD}" != "1" ]; then
         2>&1 | tee -a "${RUN_LOG}"; then
         abort "CMake build failed; refusing to continue with any existing binary"
     fi
+    BUILD_STATUS=built
+    bcguard_write_provenance "${BUILD_DIR}" "${ACTUAL_SHA}"
 fi
 [ -x "${RUNNER}" ] || abort "runner not found/executable: ${RUNNER}"
+bcguard_assert_provenance "${BUILD_DIR}" "${ACTUAL_SHA}" \
+    || abort "runner is not verifiably built from checkpoint ${ACTUAL_SHA}"
 BINARY_SHA="$(sha256_file "${RUNNER}")" || abort "cannot hash runner binary"
-printf 'binary_path=%s\nbinary_sha256=%s\n' "${RUNNER}" "${BINARY_SHA}" >> "${MANIFEST}"
+{
+    printf 'root_build_dir=%s\n' "${BUILD_DIR}"
+    printf 'mini_build_dir=%s\n' "${CUGRAPH_BC_MINI_BUILD_DIR}"
+    printf 'runner_path=%s\n' "${RUNNER}"
+    printf 'runner_sha256=%s\n' "${BINARY_SHA}"
+    printf 'cmake_source_dir=%s\n' "${PROJECT_DIR}"
+    printf 'cmake_cache_home_directory=%s\n' "$(bcguard_cache_home "${BUILD_DIR}")"
+    printf 'mini_cmake_cache_home_directory=%s\n' "$(bcguard_cache_home "${CUGRAPH_BC_MINI_BUILD_DIR}")"
+    printf 'build_status=%s\n' "${BUILD_STATUS}"
+} >> "${MANIFEST}" || abort "cannot record build manifest"
 
 assert_integrity() {
     local head_now graph_now
@@ -234,5 +264,5 @@ printf 'formal_tsv=%s\ncompleteness_json=%s\nfinal_status=SUCCESS_COMPLETE_40\n'
     "${FORMAL_TSV}" "${FINAL_JSON}" >> "${MANIFEST}"
 log "=== Series C complete: exact 8 configs x 5 trials = 40 formal rows ==="
 log "manifest=${MANIFEST}"
-log "binary_sha256=${BINARY_SHA}; checkpoint_sha=${ACTUAL_SHA}"
+log "runner_sha256=${BINARY_SHA}; checkpoint_sha=${ACTUAL_SHA}"
 exit 0

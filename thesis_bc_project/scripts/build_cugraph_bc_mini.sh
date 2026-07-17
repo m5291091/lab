@@ -9,7 +9,11 @@
 #   bash scripts/build_cugraph_bc_mini.sh
 #
 # 環境変数:
+#   CUGRAPH_BC_MINI_BUILD_DIR  mini 専用ビルドディレクトリ (BUILD_DIR より優先)
 #   BUILD_DIR          ビルドディレクトリ (default: cugraph_bc_mini/build)
+#                      ※ root project の BUILD_DIR が env 経由で流入すると
+#                        binary directory が衝突するため、呼び出し側は
+#                        CUGRAPH_BC_MINI_BUILD_DIR を明示すること。
 #   JOBS               並列ジョブ数 (default: 8)
 #   CLEAN_CACHE        1 にすると build dir を再作成 (default: 0)
 #   CMAKE_GENERATOR    CMake generator (default: Ninja)
@@ -20,7 +24,9 @@
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "$0")/.." && pwd)"
-BUILD_DIR="${BUILD_DIR:-${SCRIPT_DIR}/cugraph_bc_mini/build}"
+source "${SCRIPT_DIR}/scripts/build_dir_guard.sh"
+MINI_SRC_DIR="${SCRIPT_DIR}/cugraph_bc_mini"
+BUILD_DIR="${CUGRAPH_BC_MINI_BUILD_DIR:-${BUILD_DIR:-${MINI_SRC_DIR}/build}}"
 BUILD_TYPE="${BUILD_TYPE:-Release}"
 JOBS="${JOBS:-8}"
 CLEAN_CACHE="${CLEAN_CACHE:-0}"
@@ -107,7 +113,7 @@ fi
 
 echo "========================================"
 echo "  cugraph_bc_mini Build (BC-only)"
-echo "  SRC  : ${SCRIPT_DIR}/cugraph_bc_mini"
+echo "  SRC  : ${MINI_SRC_DIR}"
 echo "  BUILD: ${BUILD_DIR}"
 echo "  TYPE : ${BUILD_TYPE}"
 echo "  JOBS : ${JOBS}"
@@ -122,12 +128,26 @@ fi
 
 mkdir -p "${BUILD_DIR}"
 
+# root project の binary directory を誤って受け取っていないか確認する。
+MINI_CACHE_HOME="$(bcguard_cache_home "${BUILD_DIR}")"
+if [ -n "${MINI_CACHE_HOME}" ] && \
+   [ "$(bcguard_canon "${MINI_CACHE_HOME}")" != "$(bcguard_canon "${MINI_SRC_DIR}")" ]; then
+    echo "FOREIGN CMAKE CACHE: cugraph_bc_mini binary directory belongs to another source tree" >&2
+    printf '  mini source=%s\n  mini binary=%s\n  cache CMAKE_HOME_DIRECTORY=%s\n' \
+        "${MINI_SRC_DIR}" "${BUILD_DIR}" "${MINI_CACHE_HOME}" >&2
+    printf '  checkpoint_sha=%s\n  pbs_job_id=%s\n' \
+        "${EXPECTED_SHA:-$(git -C "${SCRIPT_DIR}" rev-parse HEAD 2>/dev/null || echo not_recorded)}" \
+        "${PBS_JOBID:-not_pbs}" >&2
+    echo "Fix: pass CUGRAPH_BC_MINI_BUILD_DIR, or use CLEAN_CACHE=1 to regenerate." >&2
+    exit 1
+fi
+
 # NVHPC は GCC 由来の -Wno-error フラグをサポートしないため GCC を使用
 CC_FOR_BUILD="${CC_FOR_CUGRAPH:-gcc}"
 CXX_FOR_BUILD="${CXX_FOR_CUGRAPH:-g++}"
 
 "${CMAKE_BIN}" -G "${CMAKE_GENERATOR}" \
-    -S "${SCRIPT_DIR}/cugraph_bc_mini" \
+    -S "${MINI_SRC_DIR}" \
     -B "${BUILD_DIR}" \
     -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" \
     -DCMAKE_C_COMPILER="${CC_FOR_BUILD}" \
