@@ -21,7 +21,10 @@ else
     cd "${PROJECT_DIR}" || exit 2
 fi
 
-source "${PROJECT_DIR}/scripts/build_dir_guard.sh"
+for lib in build_dir_guard.sh oom_evidence.sh; do
+    [ -r "${PROJECT_DIR}/scripts/${lib}" ] || { echo "ABORTED: required library missing: scripts/${lib}" >&2; exit 2; }
+    source "${PROJECT_DIR}/scripts/${lib}"
+done
 
 # root と cugraph_bc_mini は別の CMake binary directory を使う (Gate W7.3B1.1)。
 # root 側は job 固有の新規 directory とし、古い binary へ fallback しない。
@@ -109,9 +112,13 @@ if [ "${DRY_RUN}" = "1" ]; then
             "$((i + 1))" "${B_NAMES[$i]}" "${B_IMPLS[$i]}" "${B_BATCH[$i]}" "${B_EXPECT_TEXT[$i]}"
     done
     printf '%s\n' \
-        "Series A failures: runner nonzero, OOM, TIMEOUT, CUDA error, SIGKILL, FAIL marker, missing/incomplete vector" \
+        "Series A failures: runner nonzero (RUNTIME_FAILED / OOM_CONFIRMED), exit0 with strong OOM evidence" \
+        "  (RUNNER_SWALLOWED_OOM), or missing/incomplete vector (VECTOR_INVALID)" \
+        "OOM requires strong evidence (${BCOOM_CLASSES[*]}); a warning that merely mentions OOM is not evidence" \
+        "  and is recorded in oom_evidence.tsv as OOMEvidenceClass=none, never as a failure" \
         "Structural aborts: checkpoint mismatch, graph SHA/n/m mismatch, graph validation failure, build failure, output collision" \
         "Series B: expected failure and unexpected failure are distinct; failed RuntimeSec=not_recorded (never 0)" \
+        "Series B expected CUDA OOM (pure_b8192) requires OOMEvidenceClass=cuda_oom; um_b12288 failure is never assumed OOM" \
         "Comparison: abs_diff <= ${ABS_TOL} + ${REL_TOL} * max(|a|,|b|) (unchanged)" \
         "Future submission command (display only; DO NOT run in DRY_RUN):" \
         "cd /work/gj17/j17000/m5291091/lab/thesis_bc_project" \
@@ -164,6 +171,7 @@ IMPL_MANIFEST="${RESULT_DIR}/implementation_manifest.tsv"
 VECTOR_INVENTORY="${RESULT_DIR}/vector_inventory.tsv"
 CMP_MATRIX="${RESULT_DIR}/comparison_matrix.tsv"
 FEASIBILITY="${RESULT_DIR}/feasibility_results.tsv"
+OOM_EVIDENCE="${RESULT_DIR}/oom_evidence.tsv"
 : > "${RUN_LOG}" || abort "cannot write run.log"
 log() { printf '%s\n' "$*" | tee -a "${RUN_LOG}"; }
 
@@ -193,12 +201,18 @@ MAX_DEPTH_ESTIMATE="$(awk -v n="${N}" -v m="${M}" 'BEGIN { d=2.0*m/n; print (d<5
     printf 'allocation_values=recorded_log_values_or_code_derived_estimated_values_only\n'
     printf 'unknown_policy=not_recorded;inapplicable_policy=not_applicable\n'
     printf 'pathmerge_formula_policy=PathMerge_specific_only;GPU_Opt_formula_not_applied\n'
+    printf 'oom_policy=strong_evidence_only;word_mention_or_advisory_warning_is_not_evidence\n'
+    printf 'oom_evidence_classes=%s;none\n' "$(IFS=,; printf '%s' "${BCOOM_CLASSES[*]}")"
+    printf 'oom_evidence_line_encoding=exact_line_with_tab_cr_lf_normalized_to_space\n'
 } > "${MANIFEST}" || abort "cannot write manifest"
 
 printf '%s\n' $'Implementation\tRequestedBatch\tEffectiveBatch\tRequestedNS\tEffectiveNS\tSubBatch\tNumSubs\tHBMCapacityBytes\tFreeHBMBeforeBytes\tPerSourceStateBytes\tCodeDerivedAllocationBytes\tAllocationFormula\tMemoryMode\tPrefetchMode\tExitCode\tStatus\tFailureReason\tValueSource' > "${IMPL_MANIFEST}"
 printf '%s\n' $'Config\tImplementation\tVectorPath\tSHA256\tExpectedLength\tStatus\tValidationJSON' > "${VECTOR_INVENTORY}"
 printf '%s\n' $'ComparisonClass\tLabelA\tLabelB\tComparisonExit\tMismatchedElements\tMaxAbsError\tMaxRelError\tSHA256A\tSHA256B\tStatus\tSummaryJSON' > "${CMP_MATRIX}"
 printf '%s\n' $'Config\tImplementation\tRequestedBatch\tExpectation\tObserved\tOutcomeClass\tRuntimeSec\tRunnerExit\tFailureReason' > "${FEASIBILITY}"
+# RunnerLevelStatus は exit code と OOM 証拠だけで決まる中間判定であり、
+# vector 完全性を含む最終 status は implementation_manifest.tsv 側に載る。
+printf '%s\n' $'Config\tImplementation\tRunnerExit\tRunnerLevelStatus\tOOMEvidenceClass\tMatchedFile\tLineNumber\tExactMatchedLine' > "${OOM_EVIDENCE}"
 
 bcguard_assert_separate \
     "${PROJECT_DIR}" "${BUILD_DIR}" \
@@ -242,30 +256,26 @@ assert_integrity() {
     [ "${graph_now}" = "${EXPECTED_GRAPH_SHA}" ] || abort "graph SHA changed during run (${graph_now})"
 }
 
+# 判定順序 (Gate W7.3B2.2): runner exit code → 強い OOM 証拠 → vector 存在 →
+# vector 完全性 → status。OOM は scripts/oom_evidence.sh の強い証拠のみで成立し、
+# 「OOM」という語の言及 (助言的警告など) では成立しない。text marker は判定材料では
+# なく記録対象であり、runner exit が 0 でない限り失敗にはしない。
 classify_observed() {
-    local rc="$1" stderr_file="$2" output_file="$3"
-    if grep -Eiq 'out of memory|cudaErrorMemoryAllocation|\bOOM\b' "${stderr_file}" "${output_file}" 2>/dev/null; then
-        OBSERVED=OOM
-        OBSERVED_REASON="oom_marker;runner_exit=${rc}"
-    elif [ "${rc}" -eq 124 ]; then
-        OBSERVED=TIMEOUT
-        OBSERVED_REASON="timeout_exit_124"
-    elif [ "${rc}" -eq 137 ]; then
-        OBSERVED=SIGKILL
-        OBSERVED_REASON="sigkill_or_timeout_kill_exit_137"
-    elif grep -Eiq 'CUDA[ _-]*error|cudaError' "${stderr_file}" "${output_file}" 2>/dev/null; then
-        OBSERVED=CUDA_ERROR
-        OBSERVED_REASON="cuda_error_marker;runner_exit=${rc}"
-    elif grep -Eiq '\bFAIL(ED)?\b|\bFATAL\b' "${stderr_file}" "${output_file}" 2>/dev/null; then
-        OBSERVED=FAIL_MARKER
-        OBSERVED_REASON="fail_marker;runner_exit=${rc}"
-    elif [ "${rc}" -ne 0 ]; then
-        OBSERVED=RUNNER_NONZERO
-        OBSERVED_REASON="runner_exit=${rc}"
-    else
-        OBSERVED=SUCCESS
-        OBSERVED_REASON=not_applicable
-    fi
+    local rc="$1" vector_state="$2"
+    shift 2
+    bcoom_scan "$@" || true
+    OBSERVED="$(bcoom_decide_status "${rc}" "${BCOOM_EVIDENCE_CLASS}" "${vector_state}")"
+    OBSERVED_REASON="$(bcoom_reason "${rc}" "${OBSERVED}")"
+}
+
+# 各構成の OOM 証拠を、判定に使ったか否かに関わらず記録する。
+# 証拠なしの構成も OOMEvidenceClass=none の行として必ず残す。
+record_oom_evidence() {
+    local name="$1" implementation="$2" rc="$3" status="$4"
+    printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\t%s\n' \
+        "${name}" "${implementation}" "${rc}" "${status}" \
+        "${BCOOM_EVIDENCE_CLASS}" "${BCOOM_MATCHED_FILE}" "${BCOOM_LINE_NUMBER}" \
+        "$(bcoom_tsv_safe "${BCOOM_EXACT_LINE}")" >> "${OOM_EVIDENCE}"
 }
 
 execute_config() {
@@ -283,7 +293,8 @@ execute_config() {
     CFG_RC=0
     env "${batch_env}=${batch}" timeout -k 30 "${TIMEOUT_SEC}" \
         "${RUNNER}" "${args[@]}" > "${CFG_OUTPUT}" 2> "${CFG_STDERR}" || CFG_RC=$?
-    classify_observed "${CFG_RC}" "${CFG_STDERR}" "${CFG_OUTPUT}"
+    # vector 完全性はこの時点では未検査 (Series A が採取後に再判定する)。
+    classify_observed "${CFG_RC}" not_applicable "${CFG_STDERR}" "${CFG_OUTPUT}"
     RUNTIME_SEC=not_recorded
     if [ "${dump}" != "yes" ] && [ "${OBSERVED}" = "SUCCESS" ]; then
         RUNTIME_SEC="$(awk -F '\t' 'NF==4 {print $3; exit}' "${CFG_OUTPUT}")"
@@ -310,6 +321,9 @@ if [ "${SERIES}" = "A" ] || [ "${SERIES}" = "AB" ]; then
         name="${A_NAMES[$i]}"
         log "[A $((i + 1))/6] ${name}: ${A_IMPLS[$i]} batch=${A_BATCH[$i]}"
         execute_config "${name}" "${A_IMPLS[$i]}" "${A_BATCHENV[$i]}" "${A_BATCH[$i]}" yes
+        record_oom_evidence "${name}" "${A_LABELS[$i]}" "${CFG_RC}" "${OBSERVED}"
+        log "  runner_exit=${CFG_RC}; oom_evidence=${BCOOM_EVIDENCE_CLASS}"
+        # ここで停止するのは runner 非0 か、exit0 で強い OOM 証拠がある場合のみ。
         if [ "${OBSERVED}" != "SUCCESS" ]; then
             record_implementation "${A_LABELS[$i]}" "${A_BATCH[$i]}" "SERIES_A_FAILED_${OBSERVED}" "${OBSERVED_REASON}"
             fail_run "Series A ${name}: ${OBSERVED_REASON}"
@@ -319,12 +333,14 @@ if [ "${SERIES}" = "A" ] || [ "${SERIES}" = "AB" ]; then
         vector_sha=not_recorded
         [ -f "${CFG_OUTPUT}" ] && vector_sha="$(sha256_file "${CFG_OUTPUT}")"
         if [ ! -s "${CFG_OUTPUT}" ]; then
-            record_implementation "${A_LABELS[$i]}" "${A_BATCH[$i]}" SERIES_A_MISSING_VECTOR missing_or_empty_vector
+            classify_observed "${CFG_RC}" missing "${CFG_STDERR}" "${CFG_OUTPUT}"
+            record_implementation "${A_LABELS[$i]}" "${A_BATCH[$i]}" "SERIES_A_FAILED_${OBSERVED}" missing_or_empty_vector
             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${name}" "${A_LABELS[$i]}" "${CFG_OUTPUT}" "${vector_sha}" "${EXPECTED_N}" FAIL not_created >> "${VECTOR_INVENTORY}"
             fail_run "Series A ${name}: missing vector"
         fi
         if ! python3 "${VECTOR_VALIDATOR}" "${CFG_OUTPUT}" --expected-length "${EXPECTED_N}" --json "${vector_json}" >> "${RUN_LOG}" 2>&1; then
-            record_implementation "${A_LABELS[$i]}" "${A_BATCH[$i]}" SERIES_A_INCOMPLETE_VECTOR "vector_validation_failed:${vector_json}"
+            classify_observed "${CFG_RC}" invalid "${CFG_STDERR}" "${CFG_OUTPUT}"
+            record_implementation "${A_LABELS[$i]}" "${A_BATCH[$i]}" "SERIES_A_FAILED_${OBSERVED}" "vector_validation_failed:${vector_json}"
             printf '%s\t%s\t%s\t%s\t%s\t%s\t%s\n' "${name}" "${A_LABELS[$i]}" "${CFG_OUTPUT}" "${vector_sha}" "${EXPECTED_N}" FAIL "${vector_json}" >> "${VECTOR_INVENTORY}"
             fail_run "Series A ${name}: incomplete vector (see ${vector_json})"
         fi
@@ -378,14 +394,23 @@ if [ "${SERIES}" = "B" ] || [ "${SERIES}" = "AB" ]; then
         name="${B_NAMES[$i]}"
         log "[B $((i + 1))/5] ${name}: ${B_IMPLS[$i]} batch=${B_BATCH[$i]} expectation=${B_EXPECT_TEXT[$i]}"
         execute_config "${name}" "${B_IMPLS[$i]}" BC_BATCH_OVERRIDE "${B_BATCH[$i]}" no
+        record_oom_evidence "${name}" "${B_LABELS[$i]}" "${CFG_RC}" "${OBSERVED}"
         outcome_class=not_recorded
         case "${B_EXPECT[$i]}:${OBSERVED}" in
             success:SUCCESS) outcome_class=EXPECTED_SUCCESS ;;
             success:*) outcome_class=UNEXPECTED_FAILURE; series_b_unexpected=1 ;;
-            cuda_oom:OOM) outcome_class=EXPECTED_CUDA_OOM ;;
+            # 期待 OOM も強い証拠でのみ成立し、CUDA 由来であることまで要求する。
+            cuda_oom:OOM_CONFIRMED)
+                if [ "${BCOOM_EVIDENCE_CLASS}" = cuda_oom ]; then
+                    outcome_class=EXPECTED_CUDA_OOM
+                else
+                    outcome_class=UNEXPECTED_FAILURE_NOT_CUDA_OOM; series_b_unexpected=1
+                fi
+                ;;
             cuda_oom:SUCCESS) outcome_class=UNEXPECTED_SUCCESS; series_b_unexpected=1 ;;
             cuda_oom:*) outcome_class=UNEXPECTED_FAILURE_NOT_CUDA_OOM; series_b_unexpected=1 ;;
             failure:SUCCESS) outcome_class=UNEXPECTED_SUCCESS; series_b_unexpected=1 ;;
+            # um_b12288 の失敗は強い証拠がない限り OOM と断定しない。
             failure:*) outcome_class=EXPECTED_FAILURE_STATUS ;;
         esac
         record_implementation "${B_LABELS[$i]}" "${B_BATCH[$i]}" "${outcome_class}" "${OBSERVED_REASON}"
