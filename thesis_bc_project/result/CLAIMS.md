@@ -48,4 +48,5 @@ memory-path 関連は主軸(A)・副次(B)の性能主張から分離する。ca
 
 ## 正確性レベルの凡例
 `full_vector_independent_reference` > `full_vector_same_implementation` > `max_bc_only` > `structural_only` > `none`
-- 小規模3グラフの Sequential vs GPU_Opt: `full_vector_independent_reference`。headline 4グラフ: `max_bc_only`（cross-impl）。PathMerge tuned batch 間: `full_vector_same_implementation`。
+- 小規模3グラフの Sequential vs GPU_Opt: `full_vector_independent_reference`。headline 4グラフ: `max_bc_only`（cross-impl）。PathMerge tuned/default の別設定間比較は email（b64 vs b2048）と roadNet-CA（b32 vs b64）だけが `full_vector_same_implementation`。roadNet-PA/TX は tuned/default とも b64 で別 full-vector artifact がないため `max_bc_only`。
+- email/CA の `full_vector_same_implementation` は**実験時の比較 summary に基づく**判定であり（email=PASS, CA=PASS with absolute-only warning）、この水準を維持する。比較に用いた BC ベクトル 4 本は現在 `currently_unavailable`（`EXTERNAL_ARTIFACTS.tsv`）で、archive-time に vector を再解析していないため NaN/Inf/duplicate index は `not_recorded`。**vector が現存しないことを理由に当時の比較 summary を無効化しない**。

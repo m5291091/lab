@@ -33,7 +33,7 @@ Gate B 整理で、`results_miyabi/`（checkpoint `phase_def_block_20260710`）�
 - `COVERAGE.md` / `coverage_matrix.tsv` カバレッジ（`SourceSnapshotID` 列で実験時コードを特定）
 - `TABLES_AND_FIGURES.md` 表・図の入力(新パス)・再生成コマンド
 - `MIGRATION_MAP.tsv` 移行表（Original/New SHA256 + HashMatch、`SourceSnapshotID` 列で commit 非依存）
-- `EXTERNAL_ARTIFACTS.tsv` **Git外に残す最小台帳**（Gate J1.1 でスリム化, 4 件）: 再生成可能 `.sqlite` 3 + ビルド成果物ディレクトリ補助記録 1。全件監査は `provenance/EXTERNAL_ARTIFACTS_AUDIT.tsv`（42 件×11 列, Decision 付）、`.sqlite` 再生成は `provenance/SQLITE_REGENERATION.tsv`
+- `EXTERNAL_ARTIFACTS.tsv` **Git 管理下に本体を置かない成果物の台帳**（Gate J1.1 でスリム化 4 件 → Gate W5.2 で 8 件, 12 列）: 再生成可能 `.sqlite` 3（`Availability=regeneratable_from_tracked_nsys_rep`）+ ビルド成果物ディレクトリ補助記録 1（`not_applicable`）+ PathMerge tuned 比較の BC ベクトル 4（`RetentionStatus=not_retained`, `Availability=currently_unavailable`; 比較 summary のみ保存, 復元・再生成・推定なし）。`OriginalPath` は実験時の original runtime path（historical build output path）であり現在の保存場所ではない。`Note` 列が Notes に相当する。全件監査は `provenance/EXTERNAL_ARTIFACTS_AUDIT.tsv`（42 件×11 列, Decision 付）、`.sqlite` 再生成は `provenance/SQLITE_REGENERATION.tsv`
 - **Git 履歴非依存化**: 生データは `../raw_data/`（`MANIFEST.tsv`/`SHA256SUMS`, Gate J1.1 で 164 件）、実験時コードは `../code_snapshots/<SourceSnapshotID>/` に凍結保存。commit SHA は `../code_snapshots/_legacy_audit/LEGACY_COMMIT_TO_SNAPSHOT.tsv`（監査用）にのみ保持し、データ/コードアクセスに不要。
 - 非正常データは `../failure/`（要約）+ `../raw_data/unsuccessful/`（生データ本体）
 

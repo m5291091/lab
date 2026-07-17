@@ -15,4 +15,6 @@
 - **出力**: `email-EuAll_b64_vs_b2048.md`, `roadNet-CA_b32_vs_b64.md`, `README.md`
 - **正確性**: `full_vector_same_implementation`（email: len 265009, max_rel_err 4.9e-14; CA: max_rel_err 3.9e-13, Max BC 同一 index 1584888, 混合許容不一致 0）
 - **再現コマンド**: `scripts/run_pathmerge_correctness.sh` + `scripts/compare_bc_vectors.py`
-- **制約**: 同一実装の batch 間比較（独立参照ではない）。巨大 BC ベクトルは SHA256 のみ保存（再現可）。
+- **制約**: 同一実装の batch 間比較（独立参照ではない）。巨大 BC ベクトル本体は保持せず、SHA256 のみを記録。
+- **archive-time vector 状態 (Gate W5.1 / W5.2, 2026-07-17)**: email/CA の 4 vector 本体は `currently_unavailable`。original runtime path（historical build output path = `build_miyabi/t1_correctness/`, `build_miyabi/t1_ca_correctness/`）、Git、`raw_data/` のいずれにも存在しない。保存されているのは比較 summary のみで、archive-time に vector を再解析していない。追加 parse は実施不能のため NaN/+Inf/-Inf/duplicate index は `not_recorded`。台帳登録は `result/EXTERNAL_ARTIFACTS.tsv`（`RetentionStatus=not_retained`, `Availability=currently_unavailable`, PBSJobID 2360074/2362965）。
+- **PA/TX の範囲**: tuned/default とも b64 で別 full-vector comparison artifact がないため対象外。正式水準は `max_bc_only`。

@@ -15,3 +15,13 @@
 b128=1105.57, b256=1155.30, b512=1207.41 [秒]。
 最適バッチは b64。PathMerge 既定 (legacy result_paper b64) の中央値 918.67s と比較し、
 tuned は速い方 (918.67s, b64) を採用する。
+
+## 正確性証拠の範囲
+
+tuned と default はともに b64 で、最終表の tuned 値には default と同じ legacy b64 測定を採用する。
+掃引には別の timing 実行が含まれるが、PA 用の `--dump-bc` full vector、vector A/B の path・SHA256、
+全 index の comparison summary は保存されていない。したがって b64 を自分自身と比較したものとして
+full-vector 検証へ格上げせず、正式な `CorrectnessLevel` は、legacy の PathMerge と GPU_Opt_Pure の
+Max BC index/value 一致記録に基づく `max_bc_only` とする。
+
+Tuned and default configurations both use b64; no distinct full-vector comparison artifact is available.

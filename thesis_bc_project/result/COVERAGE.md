@@ -5,6 +5,8 @@
 ## 主軸(A): 提案 block vs PathMerge tuned
 - **proposed_variants**（checkpoint phase_def_block_20260710, block）: email-EuAll / roadNet-PA/TX/CA × {GPU_Opt, GPU_Opt_Pure, GPU_Opt_Pure_Chunked}。in-capacity（BATCH=512, SUB_BATCH=512, num_subs=1, NS_eff=2）。email n=5, road n=3。**充足**。
 - **tuning/pathmerge**（tuned 分母）: PA/TX/CA/email/325557 の掃引。tuned = PA/TX b64 / CA b32 / email b2048。**充足**。
+- **PathMerge tuning の正確性水準**: email（b64 vs b2048）と CA（b32 vs b64）だけが別設定の全ベクトル比較を持つ。PA/TX は tuned と default がともに b64 で、別の full-vector comparison artifact が存在しないため、両方 **max_bc_only** とする。b64 の自己比較を全ベクトル証拠には数えない。
+- **email/CA の vector 保存状態（Gate W5.2）**: 上記 2 比較に用いた BC ベクトル 4 本は `currently_unavailable`（original runtime path = `build_miyabi/{t1_correctness,t1_ca_correctness}/bc_b*.txt`, 台帳 `EXTERNAL_ARTIFACTS.tsv`）。保存されているのは実験時の比較 summary のみで、archive-time に vector を再解析していない。当時の summary に基づく PASS 判定と `full_vector_same_implementation` は維持し、NaN/Inf/duplicate index は `not_recorded` とする。
 - **tuning/kernel_selection**（forced shared/block 比較, 選択則非依存）: roadNet-PA/TX のみ（2グラフ）。強制比較で block が shared より PA 1.52×/TX 1.66× 高速・Max BC 一致を確認。未測定グラフへの一般化はしない。旧 avg_deg 選択則は現在不使用。
 - 正確性: headline 4グラフは **max_bc_only**（提案3実装間 + 独立参照 PathMerge の Max BC 一致）。独立参照 full-vector は未実施 → `CLAIMS.md`。
 

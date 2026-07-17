@@ -28,3 +28,13 @@ b64 vs b32 の差 8.7% (>3%) のため保守ルール適用外。
 (`merge_final_tables.py` は掃引最良と既定 b64 の速い方を採用 → 1482.68s)。掃引の 1491.13s は
 「最適設定が b64 である」ことを確認した別測定であり、最終表の tuned 値そのものではない。
 どちらも b64 のため、この選択は tuned を悪化させない。
+
+## 正確性証拠の範囲
+
+screening/confirmation と legacy baseline は別の timing 実行だが、TX 用の `--dump-bc` full vector、
+vector A/B の path・SHA256、全 index の comparison summary は保存されていない。最終表の tuned 値には
+default と同じ legacy b64 測定を採用するため、b64 の自己比較を full-vector 検証へ格上げしない。
+正式な `CorrectnessLevel` は、legacy の PathMerge と GPU_Opt_Pure の Max BC index/value 一致記録に
+基づく `max_bc_only` とする。
+
+Tuned and default configurations both use b64; no distinct full-vector comparison artifact is available.

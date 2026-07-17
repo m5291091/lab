@@ -21,7 +21,32 @@ WARN として分離し、単独の失敗判定にはしない。最大絶対/�
 
 ## 一時ベクトルの扱い
 巨大 dump は `build_miyabi/`(gitignore) に生成し、比較サマリに **入力 SHA256** を記録した後に
-削除してよい (サマリとハッシュを先に保存)。ハッシュにより後日の同一性確認が可能。
+削除してよい (サマリとハッシュを先に保存)。同じ vector 本体を再取得できた場合に限り、記録済み
+ハッシュとの同一性確認が可能である。
+
+## Archive-time supplemental audit (2026-07-17, Gate W5.1 / W5.2)
+
+比較に用いた 4 本の BC ベクトルの **original runtime path**（実験時に runner が出力した
+**historical build output path**）は、email が `build_miyabi/t1_correctness/{bc_b64.txt,bc_b2048.txt}`、
+roadNet-CA が `build_miyabi/t1_ca_correctness/{bc_b32.txt,bc_b64.txt}` である。これらは実験時の
+出力先を指す記録であり、現在のアーカイブ内の保存場所ではない。4 本とも **currently unavailable**
+であり、その path、Git 追跡下、`raw_data/` のいずれにも vector 本体は存在しない。台帳登録は
+`result/EXTERNAL_ARTIFACTS.tsv`（`RetentionStatus=not_retained`, `Availability=currently_unavailable`）
+に置く。
+
+保存されているのは **比較 summary のみ** である。したがって archive-time の読み取り専用 parse は
+実施できず、NaN、+Inf、-Inf、duplicate index は `not_recorded` のままである。既存サマリの
+vector length、missing index、mismatch、error metrics、PASS 判定は当時記録された混合許容比較の
+範囲に限定し、この追加監査で再検証した値として扱わない（**archive-time に vector を再解析していない**）。
+
+各 vector の OriginalPath と SizeBytes は Git 追跡下の PBS stdout log
+(`raw_data/tuning/pathmerge/{email-EuAll,roadNet-CA}/pathmerge_bc/job_{2360074,2362965}_20260711/pbs_stdout.log`
+の `ls -l` 記録)、SHA256 は本ディレクトリの比較 summary の記録に基づく。Gate W5.2 では vector の
+復元・再生成・推定を行っていない。
+
+roadNet-PA/TX は tuned/default とも b64 であり、別の full-vector comparison artifact がないため、
+このディレクトリの `full_vector_same_implementation` 対象には含めない。両グラフの正式水準は
+既存の Max BC 記録に限定した `max_bc_only` である。
 
 ## 再現コマンド (GPU ノード, checkpoint phase_def_block_20260710, SKIP_BUILD=1)
 ```bash

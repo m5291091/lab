@@ -31,8 +31,8 @@
 | T0.3 クリーンビルド+block smoke test | 2360062 | benchmark_7000_41459 | gpu_opt (非強制) | 1 | auto=block 確認 (OK) |
 | T1 TX screening | 2360072 | roadNet-TX | PathMerge b32/b64/b128 | 1 | b32=1620.96 b64=1493.69 b128=1668.68 |
 | T1 CA screening | 2360073 | roadNet-CA | PathMerge b32/b64/b128 | 1 | b32=3111.18 b64=3588.39 b128=3830.86 |
-| T1.7 correctness (email) | 2360074 | email-EuAll | PathMerge b64 vs b2048 --dump-bc | 1 | **PASS** (max_rel_err 4.9e-14, 混合許容不一致0) |
-| T1.7 correctness (CA) | 2362965 | roadNet-CA | PathMerge b32 (最適) vs b64 (既定) --dump-bc | 1 | **PASS (absolute-only warning)** (max_rel_err 3.9e-13, 混合許容不一致0) |
+| T1.7 correctness (email) | 2360074 | email-EuAll | PathMerge b64 vs b2048 --dump-bc | 1 | 当時の比較 summary に基づく **PASS** (max_rel_err 4.9e-14, 混合許容不一致0)。vector 本体は `currently_unavailable`（比較 summary のみ保存, archive-time 再検証なし）→ NaN/Inf=`not_recorded` |
+| T1.7 correctness (CA) | 2362965 | roadNet-CA | PathMerge b32 (最適) vs b64 (既定) --dump-bc | 1 | 当時の比較 summary に基づく **PASS (absolute-only warning)** (max_rel_err 3.9e-13, 混合許容不一致0)。vector 本体は `currently_unavailable`（比較 summary のみ保存, archive-time 再検証なし）→ NaN/Inf=`not_recorded` |
 | T1 TX confirmation | 2361040 | roadNet-TX | b32 + b64 | 各 +2 (計 n=3) | b32=1620.96 **b64=1491.13(最適)** |
 | T1 CA b16 内部最小確認 | 2361041 | roadNet-CA | b16 | 1 | b16=3609.95 (> b32 → b32 内部最小) |
 | T1 CA confirmation | 2362006 | roadNet-CA | b32 + b64 | 各 +2 (計 n=3) | **b32=3079.72(最適)** b64=3491.64 |
@@ -46,6 +46,12 @@
   TX は PA と同じ b64 が内部最小。CA は実測で b32 が最速 (PA/TX から推定した b64 は CA に一般化せず)。
 - confirmation は「異なる 2 候補 (片方は必ず b64)」を各 n=3: TX={b64, b32}, CA={b32, b64}。
   差はいずれも 3% 超 (TX 8.7% / CA 13.4%) のため b64 優先の保守ルールは適用外。
+- **T1.7 の PathMerge BC ベクトル 4 本 (Gate W5.2)**: original runtime path は
+  `build_miyabi/{t1_correctness,t1_ca_correctness}/bc_b*.txt`（historical build output path）。
+  4 本とも `currently_unavailable` で、`result/EXTERNAL_ARTIFACTS.tsv` に
+  `RetentionStatus=not_retained` / `Availability=currently_unavailable` として登録済み。
+  保存されているのは比較 summary のみであり、archive-time に vector を再解析していない。
+  PA/TX は tuned/default とも b64 で別の full-vector comparison artifact がなく、`max_bc_only`。
 
 ### Stage 3 小規模 full-vector 正確性
 
