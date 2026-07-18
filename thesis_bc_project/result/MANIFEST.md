@@ -29,6 +29,12 @@
 | 用途 | PBS job ID | グラフ | 実装/バッチ | 試行 | 結果 |
 |:--|:--|:--|:--|:--:|:--|
 | T0.3 クリーンビルド+block smoke test | 2360062 | benchmark_7000_41459 | gpu_opt (非強制) | 1 | auto=block 確認 (OK) |
+| T1 325557 screening (historical) | 2355000 | 325557_3216152 (旧 malformed) | PathMerge b512/b1024/b2048 | 3 | b512=240.07 b1024=195.15 b2048=175.43 (historical invalid-input evidence) |
+| T1 PA confirmation | 2355001 | roadNet-PA | PathMerge b64/b128/b256/b512 | 3 | 当 job のみ (n=3): b64=943.47 b128=1105.57 b256=1155.30 b512=1207.41。b64 は別 job の追加 1 試行 (job `Not recorded`, 912.18) を含む **pooled n=4 で 941.39(最適)** |
+| T1 PA screening (early terminated) | 2359080 | roadNet-PA | PathMerge b8/b16/b32 | 3 投入 / trial1 のみ完了 | b8=2714.98 b16=1573.87 b32=1015.98。trial2 の b8 実行中に終了、trial2/3 の記録なし。`failure/early_terminated/` |
+| T1 325557 confirmation (historical) | 2359081 | 325557_3216152 (旧 malformed) | PathMerge b4096/b8192 | 3 | b4096=167.57(最小) b8192(実効6018)=168.27。要求 b8192 → **実効 6018 にクランプ** |
+| T1 email screening (early terminated) | 2359096 | email-EuAll | PathMerge b8/b16/b64/b256/b1024 | 3 投入 / trial1 のみ完了 | b8=786.91 b16=491.01 b64=226.05 b256=125.91 b1024=97.69。trial2 の b8 実行中に終了、trial2/3 の記録なし。`failure/early_terminated/` |
+| T1 email confirmation | 2359169 | email-EuAll | PathMerge b512/b1024/b2048/b4096/b8192 | 3 | **b2048=97.80(最適)** b512=106.43 b1024=99.93 b4096=101.58 b8192(実効7393)=103.27。要求 b8192 → **実効 7393 にクランプ** |
 | T1 TX screening | 2360072 | roadNet-TX | PathMerge b32/b64/b128 | 1 | b32=1620.96 b64=1493.69 b128=1668.68 |
 | T1 CA screening | 2360073 | roadNet-CA | PathMerge b32/b64/b128 | 1 | b32=3111.18 b64=3588.39 b128=3830.86 |
 | T1.7 correctness (email) | 2360074 | email-EuAll | PathMerge b64 vs b2048 --dump-bc | 1 | 当時の比較 summary に基づく **PASS** (max_rel_err 4.9e-14, 混合許容不一致0)。vector 本体は `currently_unavailable`（比較 summary のみ保存, archive-time 再検証なし）→ NaN/Inf=`not_recorded` |
@@ -46,6 +52,9 @@
 | build 失敗 (failed/build) | 2403658.opbs (ckpt 193eb21) | 325557_3216152_corrected_v1 | — (Stage2 CMake binary-dir 衝突) | — | `BUILD_FAILED_CMAKE_BINARY_DIR_COLLISION`: runner=0/vector=0。W7.3B1.1で修正。`failure/failed/build/` |
 | validation 誤判定 (failed/validation) | 2404249.opbs (ckpt b677d6c) | 325557_3216152_corrected_v1 | gpu_opt_pure b1024 (runner exit0) | — | `VALIDATION_FALSE_POSITIVE_OOM_MARKER`: 助言警告の"OOM"語を素朴検査が誤検出(実際は成功)。W7.3B2.2で修正。`failure/failed/validation/` |
 
+- **PathMerge batch sweep の既知 job は上表に 11 件すべて収録**: email-EuAll = 2359096(screening, 早期打切り) / 2359169(confirmation)、roadNet-PA = 2359080(screening, 早期打切り) / 2355001(confirmation)、roadNet-TX = 2360072(screening) / 2361040(confirmation)、roadNet-CA = 2360073(screening) / 2361041(extension b16) / 2362006(confirmation)、historical 325557 = 2355000(screening) / 2359081(confirmation)。
+  次の 2 件は PBS Job ID が保存記録に存在せず **`Not recorded`** とする（推定補完しない）: roadNet-PA b64 の追加 1 試行、historical 325557 の初期実行 (b32/b64/b256/b512)。
+  **2360074 と 2362965 は `--dump-bc` の正確性確認 job であり、batch sweep job ではない**（上表でも別行として区別）。stage 別 job 対応の正本は `tuning/pathmerge/SOURCE.md`。
 - **確定した最適バッチ (n=3 中央値)**: roadNet-TX = **b64** (1491.13s), roadNet-CA = **b32** (3079.72s)。
   TX は PA と同じ b64 が内部最小。CA は実測で b32 が最速 (PA/TX から推定した b64 は CA に一般化せず)。
 - confirmation は「異なる 2 候補 (片方は必ず b64)」を各 n=3: TX={b64, b32}, CA={b32, b64}。
@@ -79,8 +88,15 @@
 | PathMerge tuned [s] | `raw_data/tuning/pathmerge/<graph>/pathmerge_bc/job_multi_20260710/*.tsv` | 掃引最良バッチ vs 既定 b64 の速い方 | median |
 | 旧提案 shared [s] | `raw_data/main_performance/seven_implementations/legacy_partial/{medium,large}/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv` | `GPU_Opt_Pure` (旧 shared 経路) | median |
 
+- **email 掃引 (b8-b8192)**: screening = `raw_data/tuning/pathmerge/email-EuAll/pathmerge_bc/job_multi_20260710/email_smallbatch_trial1.tsv`
+  (job 2359096, 早期打切りの trial1 のみ), confirmation = 同 dir `pathmerge_sweep_results.tsv` (job 2359169, 各 n=3)。
+  中央値 **b2048=97.80s (最小)**。tuned=b2048。要求 b8192 は**実効 7393 にクランプ**。
+  b1024 は screening 1 + confirmation 3 の pooled 4 (`final_speedup_tables.md` の n=4 はこの pooled)。
+  vs tuned=**3.17×** (既定 b64 の 7.15× とは区別)。詳細は `tuning/pathmerge/email-EuAll/SOURCE.md`。
 - **PA 掃引 (b8-b512)**: `raw_data/tuning/pathmerge/roadNet-PA/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`
   (`SOURCE.md` に build_miyabi 出典・n を記録)。中央値 b64=941.4s (最小)。
+  screening (b8/b16/b32) = job 2359080 の早期打切り trial1、confirmation (b64-b512) = job 2355001。
+  b64 の追加 1 試行は PBS Job ID が保存されておらず `Not recorded`。
 - **325557 掃引**: `raw_data/tuning/pathmerge/325557/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`
   中央値 b4096=167.574s (最小), b8192(実効6018)=168.266s (約 0.41% 悪化)。
 - **TX 掃引**: `raw_data/tuning/pathmerge/roadNet-TX/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`
