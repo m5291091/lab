@@ -18,7 +18,7 @@ RQ2 は `SUPPORTED_WITH_LIMITATIONS` である。修正版 325557 の main effec
 
 RQ3 は `SUPPORTED_WITH_LIMITATIONS` である。修正版 325557 の targeted boundary validation では、Pure b4096 は成功し b8192 は CUDA device-memory OOM、UM b10240 は成功し b12288 は cgroup host-memory OOM kill、Chunked b16384 は `SUB_BATCH=6596`・`num_subs=3` で成功した。各条件 1 試行であり、runtime は方式間の正式な性能比較ではない。
 
-容量問題は 45.35 MB の input graph file ではなく、10,418,856 bytes の per-source state を同時 source 数だけ保持する `EffectiveNS × EffectiveBatch × PerSourceStateBytes` の working set から生じる。UM は managed allocation による容量拡張、Chunked は resident working-set control を目的とする。UM も無制限ではなく、Chunked が未測定条件で OOM を回避する保証もない。
+容量問題は 45.35 MB の input graph file ではなく、10,418,856 bytes の per-source state $M_{\mathrm{source}}$ を同時 source 数だけ保持する $NS_{\mathrm{eff}}\times \mathrm{EffectiveBatch}\times M_{\mathrm{source}}$ の working set から生じる。UM は managed allocation による容量拡張、Chunked は resident working-set control を目的とする。UM も無制限ではなく、Chunked が未測定条件で OOM を回避する保証もない。
 
 ### 11.2.4 RQ4 Correctness and Numerical Behavior
 

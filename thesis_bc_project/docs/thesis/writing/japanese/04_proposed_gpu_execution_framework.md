@@ -52,10 +52,10 @@ flowchart LR
 source $q$ ごとに保持する主な状態は、距離 `d_d`、最短経路数 `d_sigma`、依存度 `d_delta`、現在・次 frontier の `d_Q_curr` と `d_Q_next`、探索順 `d_S`、level 境界 `d_S_ends`、最終 depth `d_depth` である。`d_d`、2 本の frontier、`d_S` は $n$ 要素の `int`、`d_sigma` と `d_delta` は $n$ 要素の `double` である。depth 上限の推定値を $D_{est}$ とすると、1 source 当たりの code-derived state size は
 
 $$
-M_{source}=32n+4D_{est}+8 \quad \mathrm{bytes}
+M_{\mathrm{source}}=32n+4D_{est}+8 \quad \mathrm{bytes}
 $$
 
-となる。この値は配列寸法から得た allocation size であり、実測した process RSS、physical HBM residency、host residency、migration bytes ではない。
+となる。この値は配列寸法から得た allocation size であり、実測した process RSS、physical HBM residency、host residency、migration bytes ではない。保存 manifest の記録列 `PerSourceStateBytes` は、本論文の $M_{\mathrm{source}}$ に対応する。
 
 本論文では、batch と容量に関する用語を次のように区別する。
 
@@ -68,7 +68,7 @@ $$
 | Effective Batch | Source count actually used by the outer batch loop after implementation-side decisions |
 | `SUB_BATCH` | Maximum source count processed by one sub-launch when a batch is split |
 | `num_subs` | Number of sub-launches, $\lceil EffectiveBatch/SUB\_BATCH\rceil$ |
-| `NS_eff` | Effective number of simultaneously active stream buffers |
+| `NS_eff` | Effective number of simultaneously active stream buffers; written $NS_{\mathrm{eff}}$ in this thesis |
 | HBM Capacity | Finite on-package GPU memory capacity |
 | Host Memory | Finite CPU-side physical memory, also subject to resource and cgroup limits |
 | Unified Memory | Managed allocation and placement mechanism spanning CPU/GPU access; not additional physical capacity |
@@ -78,7 +78,7 @@ requested batch は、既定 policy が選ぶ値または実行時指定値で�
 GPU_Opt の主要性能条件は、1 stream 当たり requested batch 512、effective batch 512、2 streams、`SUB_BATCH=512`、`num_subs=1`、`NS_eff=2` である。したがって、b512 は 2 streams 全体を合わせた source 数ではなく、1 stream が受け持つ batch size を表す。2 組の buffer を考慮した batch-dependent allocation の基本形は、UM と Pure では
 
 $$
-M_{work}\approx NS_{eff}\times EffectiveBatch\times M_{source}
+M_{\mathrm{work}}\approx NS_{\mathrm{eff}}\times \mathrm{EffectiveBatch}\times M_{\mathrm{source}}
 $$
 
 である。Chunked の同時 resident estimate では `EffectiveBatch` の代わりに `SUB_BATCH` を用いる。いずれの式にも、CSR topology、$CB$ vector、runtime overhead などの static または補助領域が別途加わる。
@@ -269,7 +269,7 @@ $$
 SUB\_BATCH \le \left\lfloor\frac{INT\_MAX}{n}\right\rfloor
 $$
 
-という上限を考慮して決める。要求 batch に対する full working set が容量超過と判定された場合は `NS_eff=1` とし、同時 resident estimate を概ね `SUB_BATCH × M_source` に抑える。batch を分割しても全 source を順に処理するため、graph partition、source sampling、近似 BC にはならない。
+という上限を考慮して決める。要求 batch に対する full working set が容量超過と判定された場合は `NS_eff=1` とし、同時 resident estimate を概ね $\texttt{SUB\_BATCH}\times M_{\mathrm{source}}$ に抑える。batch を分割しても全 source を順に処理するため、graph partition、source sampling、近似 BC にはならない。
 
 Chunked の目的は、resident working set を明示的に制御し、試験可能な batch range を拡張することである。実行可能性は、`SUB_BATCH` buffer 自体、static storage、index range、device runtime、実行時間、その他の有限資源に依存する。したがって、requested batch を無制限に扱える、またはあらゆる条件で OOM を回避できるとは主張しない。
 

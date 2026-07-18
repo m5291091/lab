@@ -73,11 +73,13 @@ $$
 | $C_B^{\mathrm{dir}}(v)$ | Unnormalized directed betweenness centrality based on ordered pairs |
 | $C_B^{\mathrm{undir}}(v)$ | Unnormalized undirected betweenness centrality with the $1/2$ correction |
 | $\widehat{C}_B^{\mathrm{dir}}(v),\ \widehat{C}_B^{\mathrm{undir}}(v)$ | Normalized directed and undirected betweenness centrality |
-| $S$ | Stack of vertices in nondecreasing BFS distance order |
+| $S$ | Stack of vertices in nondecreasing BFS distance order (traversal stack; $S_s$ denotes the stack of source $s$) |
 | $M_{\mathrm{work}}$ | Conceptual batch-dependent working-set size |
 | $NS_{\mathrm{eff}}$ | Effective number of simultaneously active stream buffers |
 | $\mathrm{EffectiveBatch}$ | Number of sources provisioned per effective stream buffer |
 | $M_{\mathrm{source}}$ | Source-local state size |
+
+speedup には $\mathrm{Speedup}$ を用い、traversal stack $S$ と記号を共有しない（5.6 節）。
 
 ## 2.2 Brandes Algorithm
 
@@ -203,7 +205,7 @@ device memory allocation と managed memory allocation も区別する必要が�
 
 migration は、managed data の page を CPU-side memory と GPU memory の間で移動させる動作である。page fault による on-demand movement が生じる場合もあれば、program が `cudaMemPrefetchAsync` で将来の access location へ prefetch を要求する場合もある。prefetch は data placement と latency を制御する手段であり、全 page が要求どおり恒久的に resident になる保証ではない。allocation、access pattern、同時実行、available memory によって挙動は変化する。
 
-oversubscription は、GPU で利用しようとする managed working set が、その時点で利用可能な device memory を上回る状態を指す。GH200 では NVLink-C2C と coherent memory model を通じ、Grace CPU memory を含む placement を利用できる [@nvidiaGraceHopperInDepth]。しかし UM は追加の無制限な物理容量ではない。HBM3、CPU-side physical memory、page-management overhead、runtime resource のいずれも有限である。さらに、process が使用可能な host memory は、job resource configuration や cgroup limit により物理搭載量より小さく制限され得る。したがって UM を使用しても、device allocation failure、host-memory pressure、cgroup OOM kill、または実行時間上の制約は残る。
+oversubscription は、GPU で利用しようとする managed working set が、その時点で利用可能な device memory を上回る状態を指す。GH200 では NVLink-C2C と coherent memory model を通じ、Grace CPU memory を含む placement を利用できる [@nvidiaGraceHopperInDepth]。しかし UM は追加の無制限な物理容量ではない。HBM3、CPU-side physical memory、page-management overhead、runtime resource のいずれも有限である。さらに、process が使用可能な host memory は、job resource configuration や cgroup limit により物理搭載量より小さく制限され得る。したがって UM を使用しても、device allocation failure、host-memory pressure、cgroup OOM（Out of Memory）kill、または実行時間上の制約は残る。
 
 本研究で中心となる容量は、graph file size ではなく batch-dependent working set である。on-disk graph file、in-memory CSR topology、最終 BC vector は static graph storage であり、source batch size に比例しない。一方、distance、$\sigma$、$\delta$、frontier、traversal stack、level metadata などは source ごとに必要である。1 source 当たりの状態量を $M_{\mathrm{source}}$、同時に用意する有効 stream buffer 数を $NS_{\mathrm{eff}}$、各 buffer の source 数を $\mathrm{EffectiveBatch}$ とすると、概念的な working set は次式で表される。
 

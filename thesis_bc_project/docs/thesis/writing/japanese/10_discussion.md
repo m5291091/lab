@@ -20,10 +20,10 @@ Warp-Cooperative Accumulation は email-EuAll で 0.970、56438 で 0.992、benc
 
 ## 10.3 The Capacity Problem Is Batch-Dependent State
 
-修正版 325557 の input graph file は 45,348,105 bytes、CSR topology は 27,031,448 bytes、BC output vector は 2,604,456 bytes である。これらは HBM3 容量を超えない。容量問題を作るのは、1 source あたり 10,418,856 bytes の state を同時 source 数だけ複製する code-derived working set である。
+修正版 325557 の input graph file は 45,348,105 bytes、CSR topology は 27,031,448 bytes、BC output vector は 2,604,456 bytes である。これらは HBM3 容量を超えない。容量問題を作るのは、1 source あたり 10,418,856 bytes の state（$M_{\mathrm{source}}$）を同時 source 数だけ複製する code-derived working set である。
 
 $$
-M_{work}=EffectiveNS\times EffectiveBatch\times PerSourceStateBytes.
+M_{\mathrm{work}}=NS_{\mathrm{eff}}\times \mathrm{EffectiveBatch}\times M_{\mathrm{source}}.
 $$
 
 この関係は設計上重要である。入力 graph file を小さくしても batch-dependent state が支配的なら容量問題は残る。逆に、source grouping と同時 resident 数を制御すれば、graph topology を partition した近似計算に変えずに容量を調整できる。batch/sub-batch は全 source を反復処理する exact execution unit であり、graph partition や source sampling ではない。

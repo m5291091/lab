@@ -77,6 +77,18 @@ thesis_bc_project/docs/thesis/writing/
 
 最初は`japanese/`のみを執筆する。`english/`は日本語版の内容と数値が確定するまで翻訳を開始しない。
 
+### Front Matter Lists
+
+前置き部分の略語一覧・記号一覧は次のパスへ作成する。
+
+```text
+thesis_bc_project/docs/thesis/writing/japanese/front_matter/
+├── list_of_abbreviations.md
+└── list_of_symbols.md
+```
+
+これらは Appendix ではなく、参考文献より前に置く前置き資料である。タイトル、見出し、表の列名は英語、説明本文は日本語とする。本文で実際に使用している略語・記号のみを収録し、本文に存在しない項目を追加しない。英語版へ翻訳する際は`english/front_matter/`へ同一構成で配置する。
+
 ---
 
 ## 4. Authoritative Sources

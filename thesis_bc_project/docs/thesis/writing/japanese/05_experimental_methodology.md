@@ -35,7 +35,7 @@
 
 GPU のメモリ容量については、根拠と単位系の異なる値を区別して扱う。オンパッケージ HBM3 の公称容量は 96 GB である [@nvidiaGraceHopperInDepth]。実行環境の記録に残るデバイスメモリ容量は 97871 MiB であり、これは約 95.6 GiB、10 進表記では約 102.6 GB に相当する。公称 96 GB と記録された 97871 MiB は、同一のオンパッケージ HBM3 を異なる単位系・取得方法で示したものであり、別個のメモリ領域や異なるメモリ階層を表すものではない。これとは別に、runner 自身のメモリ照会は実行開始時に総量約 102.0 GB、空き（`free_before`）約 101.4 GB（いずれも 10 進 GB）を報告した。総量約 102.0 GB と 97871 MiB（約 102.6 GB）の差は取得方法の違いによるものであり、対象とする HBM3 は同一である。約 101.4 GB は総容量ではなく実行開始時点の利用可能量であり、本評価では実効バッチのクランプ判定に用いるメモリ予算の基準（推定作業集合量との比較）としてのみ扱う。実行環境の一次記録は `result/environment/environment.md`、実行開始時のメモリ照会値は各実行の保存ログである。
 
-ソフトウェア環境は、NVIDIA driver 595.58.03、CUDA Toolkit（nvcc）release 13.0（V13.0.48）[@nvidiaCudaProgrammingGuide]、ホスト C++ コンパイラ g++（GCC）11.4.1、CMake 4.3.4、Nsight Systems（nsys）2025.5.1.121 である。主実験は Miyabi-G 上の PBS batch system（group `gj17`）を通じて実行した。RQ3・RQ4 のメモリ経路実験は、ホストメモリ容量を明示的に制限した 100 GiB 資源構成で実行した。この構成はホストメモリ上限が legacy 容量評価と異なるため、両者の OOM 境界は一致しない（5.9 節）。したがって、本研究の全実験が単一の資源指定で実行されたわけではない。なお、実際の queue 名は保存ログから独立に確定できないため、本評価の正式な実験条件には含めない（5.12 節）。
+ソフトウェア環境は、NVIDIA driver 595.58.03、CUDA Toolkit（nvcc）release 13.0（V13.0.48）[@nvidiaCudaProgrammingGuide]、ホスト C++ コンパイラ g++（GCC）11.4.1、CMake 4.3.4、Nsight Systems（nsys）2025.5.1.121 である。主実験は Miyabi-G 上の PBS（Portable Batch System、group `gj17`）を通じて実行した。RQ3・RQ4 のメモリ経路実験は、ホストメモリ容量を明示的に制限した 100 GiB 資源構成で実行した。この構成はホストメモリ上限が legacy 容量評価と異なるため、両者の OOM 境界は一致しない（5.9 節）。したがって、本研究の全実験が単一の資源指定で実行されたわけではない。なお、実際の queue 名は保存ログから独立に確定できないため、本評価の正式な実験条件には含めない（5.12 節）。
 
 GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、NVLink-C2C prefetch）の実効帯域は、bandwidth ベンチマークで別途測定した（`raw_data/profiling/job_2359175_20260711/bandwidth.log`）。測定された帯域値は platform の性能特性であるため本章では示さず、メモリ経路の議論（Chapter 8）で扱う。実験群と checkpoint（SourceSnapshotID）の対応は 5.11 節で述べる。`result/` 全体は単一 checkpoint に対応しない。
 
@@ -63,7 +63,7 @@ GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、N
 
 本評価で用いたグラフの属性を Table 5.3 に示す。数値は `result/datasets/graph_catalog.tsv` および `docs/graph_stats.tsv` の正式記録から取得したものであり、丸め値からの逆算や推定は行っていない。すべてのグラフは無向・非重みの CSR 形式で保持し、入力の同一性は `graph_catalog.tsv` に記録された graph SHA256 で管理する。
 
-グラフは実データと合成グラフに大別される。実データは SNAP から取得した 4 グラフである [@snapnets]。email-EuAll は原本が directed の電子メール通信網であり [@leskovec2007graphevolution]、本評価では無向化して用いた（`Symmetrized=yes`）。roadNet-PA/TX/CA は原本が undirected の道路網であり [@leskovec2009community]、対称化せずそのまま用いた（`Symmetrized=no`）。これら 4 グラフが RQ1 の対象である。合成グラフは要因分析・容量評価・正確性検証に用いた。旧 `325557_3216152` は 1-based を 0-based として格納した malformed input であり、現行実験では `tools/repair_325557_graph.py` により決定的に再構成した `325557_3216152_corrected_v1` のみを使用する。旧入力とその結果は historical provenance として保持する。
+グラフは実データと合成グラフに大別される。実データは Stanford Network Analysis Project（SNAP）から取得した 4 グラフである [@snapnets]。email-EuAll は原本が directed の電子メール通信網であり [@leskovec2007graphevolution]、本評価では無向化して用いた（`Symmetrized=yes`）。roadNet-PA/TX/CA は原本が undirected の道路網であり [@leskovec2009community]、対称化せずそのまま用いた（`Symmetrized=no`）。これら 4 グラフが RQ1 の対象である。合成グラフは要因分析・容量評価・正確性検証に用いた。旧 `325557_3216152` は 1-based を 0-based として格納した malformed input であり、現行実験では `tools/repair_325557_graph.py` により決定的に再構成した `325557_3216152_corrected_v1` のみを使用する。旧入力とその結果は historical provenance として保持する。
 
 各グラフの選択目的は次のとおりである。RQ1 の 4 グラフは対照的な 2 種の構造を含む。email-EuAll は変動係数の大きいハブ構造をもち BFS 深さが浅く、roadNet-PA/TX/CA は次数が均質で BFS 深さが深い。この対照により、次数分布と探索深さの異なる領域で RQ1 を評価する。修正版 325557 は入力ファイルが大きいからではなく、バッチ内の多数 source に対して per-source state を同時保持する条件を構成できるため、RQ2 の ablation、RQ3 の容量境界、RQ4 の実装間整合に用いた。RQ1 の主性能比較には用いない。benchmark_7000_41459、benchmark_11023_62184、chain_200 は独立 CPU 参照との全ベクトル検証に用いた。
 
@@ -90,16 +90,16 @@ GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、N
 Input File、CSR topology、BC output vector は static storage であり、GPU working set ではない。修正版 325557 では順に 45,348,105 bytes、27,031,448 bytes、2,604,456 bytes である。平均次数 19.758 から実装が選ぶ $D_{est}=256$ に対し、1 source の状態量は
 
 $$
-M_{state}=32n+4D_{est}+8=10{,}418{,}856\ \mathrm{bytes}
+M_{\mathrm{source}}=32n+4D_{est}+8=10{,}418{,}856\ \mathrm{bytes}
 $$
 
 であり、code-derived working-set estimate は
 
 $$
-M_{work}=EffectiveNS\times EffectiveBatch\times M_{state}
+M_{\mathrm{work}}=NS_{\mathrm{eff}}\times \mathrm{EffectiveBatch}\times M_{\mathrm{source}}
 $$
 
-で定義する。Chunked は `EffectiveBatch` の代わりに同時 resident な `SUB_BATCH` を用いる。これらは allocation estimate であり、process RSS、物理 HBM residency、migration bytes の実測値ではない。batch は graph partition ではなく source の grouping である。outer batch と sub-batch を反復して全 source を処理するため、BC の近似や source の省略は行わない。
+で定義する。Chunked は $\mathrm{EffectiveBatch}$ の代わりに同時 resident な `SUB_BATCH` を用いる。保存 manifest の記録列 `PerSourceStateBytes` と `EffectiveNS` は、本論文ではそれぞれ $M_{\mathrm{source}}$ と $NS_{\mathrm{eff}}$ と表す。これらは allocation estimate であり、process RSS、物理 HBM residency、migration bytes の実測値ではない。batch は graph partition ではなく source の grouping である。outer batch と sub-batch を反復して全 source を処理するため、BC の近似や source の省略は行わない。
 
 ## 5.4 Evaluated Implementations
 
@@ -121,7 +121,7 @@ $$
 | GPU_Opt_Pure_Chunked | Proposed framework (block kernel) | Chunked working set (sub-batch) | Capacity-extension variant | `src/proposed/host_chunked.cu` |
 | Sequential | Brandes (CPU serial) | Host | Supplementary baseline (small only) | `src/baseline/sequential.cpp` |
 | OpenMP | Brandes (CPU parallel) | Host | Supplementary baseline (small only) | `src/baseline/omp.cpp` |
-| cuGraph | RAPIDS primitives (exact) | Managed (RMM) | Supplementary baseline (small only) | `src/baseline/cugraph_bc.cu` |
+| cuGraph | RAPIDS primitives (exact) | Managed (RAPIDS Memory Manager) | Supplementary baseline (small only) | `src/baseline/cugraph_bc.cu` |
 
 ## 5.5 Parameter Settings
 
@@ -143,18 +143,18 @@ warmup については、SourceSnapshotID `phase_def_block_20260710` の propose
 
 試行数（trials）は実験群ごとに異なり、その一覧は Table 5.1 に示す。RQ1 の GPU_Opt は email-EuAll で n=5・roadNet で n=3、PathMerge tuned は n=3、ablation は各 synthetic configuration n=5・email n=3、kernel selection は n=3 である。修正版 325557 の targeted boundary と各 correctness comparison は n=1、profiling は単一 trace である。旧 malformed input の legacy capacity n=5 は historical 記録であり current RQ3 の trial count ではない。
 
-主値には median（中央値）を用いる。補助値として mean、標本標準偏差（sample standard deviation）、min、max を扱う。標本標準偏差は次式で定義される不偏推定量（ddof=1）である。
+主値には median（中央値）を用いる。補助値として mean、標本標準偏差（sample standard deviation）、min、max を扱う。試行数は $N_{\mathrm{trials}}$ で表し、頂点数 $n=|V|$ と区別する。表・図中の `n=3`、`n=5` などの表記は $N_{\mathrm{trials}}$ を示す慣用ラベルである。runtime の標本標準偏差は $s_T$ で表し、source 頂点 $s$ と区別する。$s_T$ は次式で定義される不偏推定量（ddof=1）である。
 
 $$
-s = \sqrt{\frac{1}{n-1}\sum_{i=1}^{n}\left(t_i - \bar{t}\right)^2}
+s_T = \sqrt{\frac{1}{N_{\mathrm{trials}}-1}\sum_{i=1}^{N_{\mathrm{trials}}}\left(t_i - \bar{t}\right)^2}
 $$
 
-ここで $t_i$ は各試行の実行時間、$\bar{t}$ は標本平均、$n$ は試行数である。単一の最速試行を代表値としない。
+ここで $t_i$ は各試行の実行時間、$\bar{t}$ は標本平均である。単一の最速試行を代表値としない。
 
-speedup は median 同士の比として計算する。baseline と提案手法の median 実行時間 $T^{\mathrm{med}}_{\mathrm{baseline}}$、$T^{\mathrm{med}}_{\mathrm{proposed}}$ に対して次式で定義する。
+speedup は median 同士の比として計算する。baseline と提案手法の median 実行時間 $T^{\mathrm{med}}_{\mathrm{baseline}}$、$T^{\mathrm{med}}_{\mathrm{proposed}}$ に対して次式で定義する。記号 $S$ は Chapter 2 の traversal stack に用いるため、speedup には $\mathrm{Speedup}$ を用いる。
 
 $$
-S = \frac{T^{\mathrm{med}}_{\mathrm{baseline}}}{T^{\mathrm{med}}_{\mathrm{proposed}}}
+\mathrm{Speedup} = \frac{T^{\mathrm{med}}_{\mathrm{baseline}}}{T^{\mathrm{med}}_{\mathrm{proposed}}}
 $$
 
 median と mean を混在させて speedup を計算しない。

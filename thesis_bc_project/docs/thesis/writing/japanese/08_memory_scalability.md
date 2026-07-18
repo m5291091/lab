@@ -15,7 +15,7 @@
 | Input graph file | On-disk text CSR measured by `stat` | 45,348,105 | 45.35 MB | 43.25 MiB |
 | CSR topology | $((n+1)+2m)\times4$ | 27,031,448 | 27.03 MB | 25.78 MiB |
 | BC output vector | $n\times8$ | 2,604,456 | 2.60 MB | 2.48 MiB |
-| Per-source state | $32n+4D_{est}+8$, $D_{est}=256$ | 10,418,856 | 10.42 MB | 9.94 MiB |
+| Per-source state $M_{\mathrm{source}}$ | $32n+4D_{est}+8$, $D_{est}=256$ | 10,418,856 | 10.42 MB | 9.94 MiB |
 
 > Source: `result/datasets/graph_catalog.tsv`, `raw_data/corrected_325557/job_2404743/implementation_manifest.tsv`, and `src/proposed/host_pure.cu:141-157`.
 
@@ -26,10 +26,10 @@
 実装と保存 manifest に従い、code-derived allocation estimate を次で定義する。
 
 $$
-M_{work}=EffectiveNS\times EffectiveBatch\times PerSourceStateBytes.
+M_{\mathrm{work}}=NS_{\mathrm{eff}}\times \mathrm{EffectiveBatch}\times M_{\mathrm{source}}.
 $$
 
-Chunked の同時 resident estimate では `EffectiveBatch` の代わりに `SUB_BATCH` を用いる。この値はコードの配列寸法から導いた estimate であり、measured process RSS、measured physical HBM residency、measured migration bytes ではない。これら 3 量は本実験では取得していない。
+保存 manifest の記録列 `EffectiveNS` と `PerSourceStateBytes` は、本論文ではそれぞれ $NS_{\mathrm{eff}}$ と $M_{\mathrm{source}}$ と表す。Chunked の同時 resident estimate では $\mathrm{EffectiveBatch}$ の代わりに `SUB_BATCH` を用いる。この値はコードの配列寸法から導いた estimate であり、measured process RSS、measured physical HBM residency、measured migration bytes ではない。これら 3 量は本実験では取得していない。
 
 batch は graph partition ではない。各 batch は全 source 集合の一部を grouping する実行単位であり、outer loop が全 batch を処理する。Chunked ではさらに各 source batch を sub-batch に分けるが、`num_subs` 回の反復により batch 内の全 source を処理する。したがって、batch/sub-batch は BC を近似せず、source を省略しない。
 
@@ -73,7 +73,7 @@ Table 8.3 と Figure 8.1 に job 2404743 の 5 条件を示す。failure は 0 �
 
 Pure b8192 では `host_pure.cu:144` の `cudaMalloc` が `out of memory` を返し、`oom_evidence=cuda_oom`、runner exit 1 が保存されている。これは CUDA device-memory OOM である。
 
-UM b10240 は `EffectiveNS=1` の estimate 106.69 GB が run-start `free_before` 約 101.4 GB を上回る条件で成功した。これは入力ファイルが大きいためではなく、batch-dependent managed allocation が free HBM を超え得る領域に達した条件での成功である。UM のコードは managed placement と migration を使用するが、本研究は物理 residency や migration bytes を測定していないため、成功時の物理配置量を断定しない。
+UM b10240 は $NS_{\mathrm{eff}}=1$ の estimate 106.69 GB が run-start `free_before` 約 101.4 GB を上回る条件で成功した。これは入力ファイルが大きいためではなく、batch-dependent managed allocation が free HBM を超え得る領域に達した条件での成功である。UM のコードは managed placement と migration を使用するが、本研究は物理 residency や migration bytes を測定していないため、成功時の物理配置量を断定しない。
 
 UM b12288 は runner exit 137、SIGKILL として記録され、cgroup host-memory OOM kill に分類される。CUDA OOM 文字列はなく、`oom_evidence=none` である。したがって、これを CUDA/HBM OOM と記述しない。UM はこの条件で無制限ではなかった。
 
@@ -81,7 +81,7 @@ UM b12288 は runner exit 137、SIGKILL として記録され、cgroup host-memo
 
 ## 8.4 Chunked Source Sub-Batches
 
-Chunked b16384 は `SUB_BATCH=6596`、`num_subs=3`、`EffectiveNS=1` で成功した。同時 resident estimate は
+Chunked b16384 は `SUB_BATCH=6596`、`num_subs=3`、$NS_{\mathrm{eff}}=1$ で成功した。同時 resident estimate は
 
 $$
 6596\times10{,}418{,}856=68{,}722{,}774{,}176\ \mathrm{bytes}

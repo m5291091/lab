@@ -6,11 +6,11 @@
 
 一方、厳密な all-sources BC の計算コストは大きい。非重みグラフに対する Brandes algorithm は、各 source から Breadth-First Search（BFS）を実行し、distance と shortest-path count を求める。続いて、BFS level の逆順に dependency を累積し、その source の寄与を BC vector へ加える。この Forward BFS と Backward Dependency Accumulation を全 vertex について反復するため、一般的な時間計算量は $O(|V|(|V|+|E|))$ となる [@brandes2001]。1 source の処理を効率化するだけでなく、source 間と source 内の並列性を同時に利用する必要がある。
 
-GPU は、多数の source、frontier vertex、および edge を並列に処理できるため、この計算を高速化する有力な基盤である。先行研究は、source-level parallelism と、BFS・dependency accumulation 内の vertex-level または edge-level parallelism を組み合わせた exact GPU BC を示している [@sariyuce2013; @mclaughlin2014]。しかし、graph workload は規則的な密行列計算とは異なる。frontier size は source と BFS level によって変動し、degree distribution は thread や warp 間の workload imbalance を生む。Backward phase も shortest-path DAG の深さと successor 数に依存する。したがって、固定した並列化粒度だけで各 phase を効率よく処理できるとは限らない。
+GPU は、多数の source、frontier vertex、および edge を並列に処理できるため、この計算を高速化する有力な基盤である。先行研究は、source-level parallelism と、BFS・dependency accumulation 内の vertex-level または edge-level parallelism を組み合わせた exact GPU BC を示している [@sariyuce2013; @mclaughlin2014]。しかし、graph workload は規則的な密行列計算とは異なる。frontier size は source と BFS level によって変動し、degree distribution は thread や warp 間の workload imbalance を生む。Backward phase も shortest-path DAG（Directed Acyclic Graph; 有向非巡回グラフ）の深さと successor 数に依存する。したがって、固定した並列化粒度だけで各 phase を効率よく処理できるとは限らない。
 
 さらに、source-level parallelism を増やすとメモリ容量の問題が顕在化する。複数 source を同時に処理するには、distance、shortest-path count、dependency、frontier、および traversal order などの source-local state を source ごとに保持しなければならない。この状態量は batch size にほぼ比例する。大きな batch は並列性を増やし得る一方、初期化量と working set を増加させ、GPU memory capacity を制約する。
 
-本研究が対象とする NVIDIA GH200 Grace Hopper Superchip は、Hopper GPU の HBM3 と Grace CPU の LPDDR5X memory を coherent NVLink-C2C で接続する。対象構成の HBM3 は公称最大 96 GB であり、CPU と GPU は coherent memory model を利用できる [@nvidiaGh200Product; @nvidiaGraceHopperInDepth]。CUDA Unified Memory（UM）は、managed allocation、page migration、および prefetch により、GPU と CPU から同じ allocation を扱う仕組みを提供する [@nvidiaCudaProgrammingGuide; @nvidiaCudaRuntimeApi]。この構成は、GPU に近い有限の HBM3 と CPU-side memory を組み合わせ、batch-dependent working set の配置を検討する機会を与える。ただし、UM は追加の無制限な物理容量ではなく、移動や配置の cost も伴う。
+本研究が対象とする NVIDIA GH200 Grace Hopper Superchip は、Hopper GPU の HBM3（High Bandwidth Memory 3）と Grace CPU の LPDDR5X（Low-Power Double Data Rate 5X）memory を coherent NVLink-C2C で接続する。対象構成の HBM3 は公称最大 96 GB であり、CPU と GPU は coherent memory model を利用できる [@nvidiaGh200Product; @nvidiaGraceHopperInDepth]。CUDA（Compute Unified Device Architecture）の Unified Memory（UM）は、managed allocation、page migration、および prefetch により、GPU と CPU から同じ allocation を扱う仕組みを提供する [@nvidiaCudaProgrammingGuide; @nvidiaCudaRuntimeApi]。この構成は、GPU に近い有限の HBM3 と CPU-side memory を組み合わせ、batch-dependent working set の配置を検討する機会を与える。ただし、UM は追加の無制限な物理容量ではなく、移動や配置の cost も伴う。
 
 以上から、GH200 上の exact BC 実行基盤は、実行時間だけで評価できない。高い並列性を得る計算方式、有限メモリ内で実行可能な batch range、および異なる並列・メモリ経路が生成する BC vector の正確性を併せて検証する必要がある。本研究は、この三者を性能、最適化要因、memory scalability、correctness and numerical behavior の四つの評価観点として統合的に扱う。
 
@@ -22,7 +22,7 @@ GPU は、多数の source、frontier vertex、および edge を並列に処理
 
 複数 source を batch として同時処理すると、source-level parallelism を明示的に利用できる。一方、source-local state は source batch に比例して増えるため、batch size と GPU memory capacity の間に trade-off が生じる。また、各 batch の状態初期化、BFS level と Backward level の同期、global BC accumulation、および buffer 再利用の同期は、主要計算以外の overhead となる。batch size を増やせばこれらの相対 cost が必ず減るわけではなく、容量超過や競合によって別の cost が生じ得る。
 
-容量を議論するときは、graph file と実行時 working set を区別する必要がある。本研究は、入力 graph file 自体が公称 96 GB の HBM3 を超えたため UM を用いたのではない。on-disk input graph file、in-memory CSR graph storage、および最終 BC vector は、source batch size に比例しない。これに対し、distance、shortest-path count、dependency、frontier、および traversal order は source-local state であり、同時に用意する source 数とともに増える。容量問題の中心は、この batch-dependent working set である。batch と sub-batch は source 集合の grouping であり、graph partition ではない。各 grouping を順に処理して全 source を計算するため、graph topology も BC の厳密性も維持される。
+容量を議論するときは、graph file と実行時 working set を区別する必要がある。本研究は、入力 graph file 自体が公称 96 GB の HBM3 を超えたため UM を用いたのではない。on-disk input graph file、in-memory CSR（Compressed Sparse Row）graph storage、および最終 BC vector は、source batch size に比例しない。これに対し、distance、shortest-path count、dependency、frontier、および traversal order は source-local state であり、同時に用意する source 数とともに増える。容量問題の中心は、この batch-dependent working set である。batch と sub-batch は source 集合の grouping であり、graph partition ではない。各 grouping を順に処理して全 source を計算するため、graph topology も BC の厳密性も維持される。
 
 本研究の問題を、次の四つの観点に整理する。
 
