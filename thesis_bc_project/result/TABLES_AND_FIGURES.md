@@ -2,6 +2,36 @@
 
 すべて **canonical raw（新パス）** を入力とし `scripts/` で再生成する。主要値は元 TSV から再生成し変更しない。
 
+## Gate W7.4.1 — 修正版 325557 を反映した表・図（T3/F4, T4/F5, T5）
+
+`scripts/generate_thesis_artifacts.py` の T3/F4（ablation）, T4/F5（memory feasibility）, T5（correctness）を
+**修正版 325557**（`data/325557_3216152_corrected_v1`, SHA256 `8373244f…4eeaa22`, checkpoint `45352a3`）の
+正式入力へ切り替えた。旧 malformed 325557 の値・旧 CORE_FAIL は **historical としてのみ保持**（現行主値ではない）。
+生成コマンド:
+
+```bash
+THESIS_FIGS=F4,F5 python3 scripts/generate_thesis_artifacts.py
+```
+
+`THESIS_FIGS` で再生成する図を選択する。matplotlib の binary 出力は toolchain 間で byte 再現しないため、
+本 Gate では **corrected データの F4/F5 のみ再生成**し、F1/F2/F3/F6/F7 は既存 byte を保持する。表（T1–T6）は
+決定論的テキストで、T1/T2/T6 は byte 不変、T3/T4/T5 のみ更新される。artifact SHA256 等の来歴は
+`result/CORRECTED_325557_ARTIFACT_PROVENANCE.tsv`、および `result/tables/thesis/TABLE_MANIFEST.tsv` /
+`result/figures/thesis/FIGURE_MANIFEST.tsv` に記録する。
+
+| 更新 artifact | 正式入力（canonical, W7.4 pending-commit を含む） | PBS job | 主な値 / 分類 |
+|:--|:--|:--|:--|
+| **T3 / F4**（ablation） | `raw_data/corrected_325557/job_2406254/ablation_results.tsv`; `raw_data/ablation/synthetic/job_2354994_20260710/ablation_results.tsv`; `result/ablation/corrected_325557/{ablation_contributions,synthetic4_aggregate}.tsv` | 2406254 (+2354994) | 修正版325557 H=1.4767x W=1.1012x A=1.5563x; 合成4 mixed 集約 H=1.679x W=1.066x A=1.391x（**mixed-checkpoint**, n=5, warmupは40行から除外） |
+| **T4 / F5**（memory feasibility） | `result/memory_scalability/corrected_325557/feasibility_boundary.tsv`; `raw_data/corrected_325557/job_2404743/{feasibility_results,oom_evidence}.tsv` | 2404743 | Pure b4096 SUCCESS(65.89s); Pure b8192 **CUDA OOM**; UM b10240 SUCCESS(238.67s); UM b12288 **cgroup host-memory OOM kill (exit137)**; Chunked b16384 SUCCESS(66.60s)（n=1, targeted boundary, runtimeは性能比較でない） |
+| **T5**（correctness） | `result/correctness/small_full_vector/correctness_summary.tsv`（Tier A）; `result/correctness/corrected_325557/{comparison_summary,vector_summary}.tsv`; `raw_data/corrected_325557/job_2404743/comparisons/*.json`（Tier B） | 2367583 / 2404743 | **Tier A（独立CPU参照）**: 3 小規模グラフ Sequential vs GPU_Opt 全 PASS（missing/mismatch 0）; **Tier B（実装間整合）**: 修正版325557 で 6 vector 全 PASS・10 比較すべて MismatchedElements=0; 計 13 行すべて MissingIndices=0, ToleranceResult=PASS, **ByteIdentical=No**（混合許容 abs_tol1e-3/rel_tol1e-6; PathMerge は external comparator、ground truth ではない） |
+
+> **注記**: 合成4集約は mixed-checkpoint（他3グラフ=job2354994、325557=job2406254）であり同一checkpoint全再測ではない。
+> memory feasibility は **CUDA OOM（GPU device, exit1）** と **cgroup host-memory OOM kill（exit137）** を別分類・別 marker とし、
+> failure を 0 秒として描かない・未測定バッチを線で補間しない。Chunked b16384 は試験上限であり無制限容量を意味しない。
+> T5 は 2 種類の証拠（Tier A=独立 Sequential CPU 参照、Tier B=修正版325557 の実装間整合）で構成する。PASS は混合許容下で mismatch=0 の意味であり byte-identical を含意しない。
+> Tier B/PathMerge を独立参照・ground truth とは書かない。旧 malformed 325557 の CORE_FAIL は現行 T5 から除外し、
+> `result/correctness/memory_paths/canonical_job_2368587/` に historical invalid-input result（provenance）として保持する。
+
 ## 再生成ステータスの凡例
 - **REGENERATABLE**: スクリプト+入力が揃い再生成可能。依存不要な表は Gate B2、依存（numpy/scipy/matplotlib）を要する図表は **2026-07-14 (Gate J2) に本環境で実行確認・冪等検証済み**。
 - **（履歴注記）REGENERATABLE_NOT_REVALIDATED_IN_GATE_B2**: Gate B2 当時は本環境に numpy/scipy/matplotlib が無く未再検証だった**過去状態**。**2026-07-14 (Gate J2) に該当図表を本環境で再検証し全て REGENERATABLE へ更新済み**（現在この状態のエントリは無い）。

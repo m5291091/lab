@@ -1,12 +1,13 @@
-Graph	Nodes	Edges	Average Degree	Maximum Degree	Directed Input	Symmetrized
-email-EuAll	265009	364481	2.751	7636	directed	yes
-roadNet-PA	1088092	1541898	2.834	9	undirected	no
-roadNet-TX	1379917	1921660	2.785	12	undirected	no
-roadNet-CA	1965206	2766607	2.816	12	undirected	no
-325557_3216152	325557	3216152	19.758	18280	unknown	unknown
-56438_300801	56438	300801	10.660	604	unknown	unknown
-benchmark_7000	7000	41459	11.845	589	unknown	unknown
-benchmark_11023	11023	62184	11.283	2109	unknown	unknown
-benchmark_85830	85830	241080	5.618	2207	unknown	unknown
-chain_200	200	199	1.990	2	unknown	unknown
-random	32212	101805	6.321	22	unknown	unknown
+Graph	Nodes	Edges	Average Degree	Input File [MiB]	CSR [MiB]	Used For
+email-EuAll	265009	364481	2.751	5.59	3.79	Main performance (RQ1); Ablation
+roadNet-PA	1088092	1541898	2.834	28.43	15.91	Main performance (RQ1); Kernel selection
+roadNet-TX	1379917	1921660	2.785	36.53	19.93	Main performance (RQ1); Kernel selection
+roadNet-CA	1965206	2766607	2.816	53.83	28.60	Main performance (RQ1)
+325557_3216152_corrected_v1	325557	3216152	19.758	43.25	25.78	Ablation; Memory scalability; Correctness
+56438_300801	56438	300801	10.660	3.72	2.51	Ablation
+benchmark_7000	7000	41459	11.845	0.39	0.34	Ablation; Correctness
+benchmark_11023	11023	62184	11.283	0.61	0.52	Ablation; Correctness
+benchmark_85830	85830	241080	5.618	3.18	2.17	Auxiliary
+chain_200	200	199	1.990	0.00	0.00	Correctness
+random	32212	101805	6.321	1.30	0.90	Auxiliary
+325557_3216152	325557	3216152	19.758	43.25	25.78	Historical (superseded by corrected_v1)

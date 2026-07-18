@@ -1,10 +1,14 @@
-Validation Scope	Reference	Candidate	Graph	Comparison Level	Mismatches	Missing Values	Non-Finite Values	Maximum Relative Error	Status	Limitation
-Small full-vector	Sequential (CPU)	GPU_Opt	benchmark_7000_41459	Full Vector	0	0	0	4.56e-15	Pass	Small graph; independent CPU reference; n=1
-Small full-vector	Sequential (CPU)	GPU_Opt	benchmark_11023_62184	Full Vector	0	0	0	1.79e-14	Pass	Small graph; independent CPU reference; n=1
-Small full-vector	Sequential (CPU)	GPU_Opt	chain_200	Full Vector	0	0	0	0.00e+00	Pass	Small graph; independent CPU reference; n=1
-Memory-path same-batch/different-path	GPU_Opt (b1024)	GPU_Opt_Pure (b1024)	325557_3216152	Full Vector	0	0	0	3.02e-14	Pass	Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1
-Memory-path same-batch/different-path	GPU_Opt (b1024)	GPU_Opt_Pure_Chunked (b1024)	325557_3216152	Full Vector	0	0	0	2.87e-14	Pass	Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1
-Memory-path same-batch/different-path	GPU_Opt_Pure (b1024)	GPU_Opt_Pure_Chunked (b1024)	325557_3216152	Full Vector	0	0	0	2.63e-14	Pass	Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1
-Memory-path stress (same-impl/different-batch)	GPU_Opt (b9792)	GPU_Opt (b1024)	325557_3216152	Full Vector	6	0	0	2.23e-06	Core Fail	Exceeds rel_tol 1e-6; cause not determined; not relabeled as Pass
-Memory-path stress (same-impl/different-batch)	GPU_Opt_Pure_Chunked (b16384)	GPU_Opt_Pure_Chunked (b1024)	325557_3216152	Full Vector	6	0	0	2.85e-06	Core Fail	Exceeds rel_tol 1e-6; cause not determined; not relabeled as Pass
-PathMerge cross-implementation diagnostic	PathMerge (b4096)	GPU_Opt (b1024)	325557_3216152	Full Vector	11027	0	0	2.00e-03	Supported with Limitations	Observed difference only: external comparator is not ground truth; correctness is undetermined
+EvidenceTier	Graph	Reference	Candidate	ReferenceBatch	CandidateBatch	VectorLength	MissingIndices	MismatchedElements	MaxAbsoluteError	MaxRelativeError	ByteIdentical	ToleranceResult	CorrectnessScope
+Independent CPU reference	benchmark_7000_41459	Sequential	GPU_Opt	N/A	512	7000	0	0	6.054e-09	4.563e-15	No	PASS	Full-vector comparison against independent Sequential CPU reference
+Independent CPU reference	benchmark_11023_62184	Sequential	GPU_Opt	N/A	512	11023	0	0	2.980e-08	1.790e-14	No	PASS	Full-vector comparison against independent Sequential CPU reference
+Independent CPU reference	chain_200	Sequential	GPU_Opt	N/A	512	200	0	0	0.000e+00	0.000e+00	No	PASS	Full-vector comparison against independent Sequential CPU reference
+Cross-implementation consistency	325557_3216152_corrected_v1	GPU_Opt	GPU_Opt	9792	1024	325557	0	0	3.052e-05	5.316e-14	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	GPU_Opt_Pure_Chunked	GPU_Opt_Pure_Chunked	16384	1024	325557	0	0	3.052e-05	4.752e-14	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	GPU_Opt	GPU_Opt_Pure	1024	1024	325557	0	0	1.907e-06	1.010e-14	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	GPU_Opt	GPU_Opt_Pure_Chunked	1024	1024	325557	0	0	7.629e-06	1.080e-14	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	GPU_Opt_Pure	GPU_Opt_Pure_Chunked	1024	1024	325557	0	0	7.629e-06	1.033e-14	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	PathMerge	GPU_Opt	4096	1024	325557	0	0	1.222e-03	5.089e-13	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	PathMerge	GPU_Opt	4096	9792	325557	0	0	1.236e-03	5.089e-13	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	PathMerge	GPU_Opt_Pure	4096	1024	325557	0	0	1.222e-03	5.089e-13	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	PathMerge	GPU_Opt_Pure_Chunked	4096	1024	325557	0	0	1.222e-03	5.089e-13	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph
+Cross-implementation consistency	325557_3216152_corrected_v1	PathMerge	GPU_Opt_Pure_Chunked	4096	16384	325557	0	0	1.228e-03	5.089e-13	No	PASS	Full-vector cross-implementation comparison on corrected 325557 graph

@@ -1,24 +1,6 @@
-Implementation	Batch Size	Effective Batch	Sub-Batch	Number of Sub-Batches	Median Runtime (s)	Status	Failure Reason	Limitation
-GPU_Opt_Pure	512	Not Recorded	Not Applicable	Not Applicable	77.74	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	1024	Not Recorded	Not Applicable	Not Applicable	67.09	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	2048	Not Recorded	Not Applicable	Not Applicable	67.64	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	4096	Not Recorded	Not Applicable	Not Applicable	68.34	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	8192	Not Recorded	Not Applicable	Not Applicable	N/A (OOM)	Out of Memory	CUDA out of memory recorded in log	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	10240	Not Recorded	Not Applicable	Not Applicable	N/A (OOM)	Out of Memory	CUDA out of memory recorded in log	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	12288	Not Recorded	Not Applicable	Not Applicable	N/A (OOM)	Out of Memory	CUDA out of memory recorded in log	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure	16384	Not Recorded	Not Applicable	Not Applicable	N/A (OOM)	Out of Memory	CUDA out of memory recorded in log	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	512	512	512	1	76.87	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	1024	1024	1024	1	66.37	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	2048	2048	2048	1	66.83	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	4096	4096	4096	1	67.65	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	8192	8192	6596	2	109.82	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	10240	10240	6596	2	324.22	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt	12288	12288	6596	2	N/A (failed)	Failed	OOM_OR_FAIL (exit 137; cause not independently confirmed)	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance; n=1 (sweep stopped)
-GPU_Opt_Pure_Chunked	512	512	512	1	77.87	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	1024	1024	1024	1	67.09	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	2048	2048	2048	1	67.62	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	4096	4096	4096	1	68.30	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	8192	8192	6596	2	70.65	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	10240	10240	6596	2	69.14	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	12288	12288	6596	2	68.55	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
-GPU_Opt_Pure_Chunked	16384	16384	6596	3	69.32	Success	None	Legacy feasibility only (oldtree_f05ec52_20260512); not current block-kernel performance
+Implementation	Requested Batch	Observed Outcome	Failure Class	Runtime (s)	Runner Exit	OOM Evidence	Note
+GPU_Opt_Pure	4096	Success	None	65.89	0	none	Feasibility run (n=1)
+GPU_Opt_Pure	8192	CUDA out-of-memory	CUDA OOM	N/A (CUDA OOM)	1	cuda_oom (host_pure.cu:144: out of memory)	Confirmed CUDA out-of-memory (host_pure.cu:144)
+GPU_Opt	10240	Success	None	238.67	0	none	Feasibility run (n=1); UM oversubscription spill over NVLink-C2C
+GPU_Opt	12288	Cgroup host-memory OOM kill	Cgroup host-memory OOM kill	N/A (cgroup host-memory OOM kill)	137	none (SIGKILL, exit 137)	Host/cgroup memory limit exceeded; not a CUDA or HBM out-of-memory
+GPU_Opt_Pure_Chunked	16384	Success	None	66.60	0	none	Tested upper limit (no unlimited-capacity claim)

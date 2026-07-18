@@ -1,27 +1,38 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-generate_thesis_artifacts.py -- Gate K0
+generate_thesis_artifacts.py -- Gate K0 / Gate W7.4.1
 
 Generate a reproducible, English-only set of figures and tables for the
-master's thesis and presentation, using ONLY canonical Git-tracked data under
+master's thesis and presentation, using ONLY canonical data under
 thesis_bc_project/{raw_data,result,docs}.
 
+Gate W7.4.1 switches T3/F4 (ablation), T4/F5 (memory feasibility), and T5
+(correctness) to the corrected-325557 official inputs (jobs 2404743 / 2406254,
+checkpoint 45352a3). The old malformed-325557 values are retained only as
+historical and are never the current main value.
+
 Design rules (see result/figures/thesis/README.md for the full policy):
-  * Every displayed value is recomputed from a canonical input file.
+  * Every displayed value is recomputed from a canonical input file and
+    cross-checked against the audited derived TSVs / thesis_values index; no
+    fallback to stored, rounded, interpolated, or reverse-computed values.
   * median = numpy.median; speedup = median(PathMerge_tuned) / median(GPU_Opt).
   * Failed configurations are NEVER represented as zero seconds -- they are
-    drawn as distinct failure markers, not on the runtime axis. Log-confirmed
-    CUDA OOM is distinguished from OOM_OR_FAIL (exit 137, cause unconfirmed).
-  * The canonical memory-path stress result stays visible as "Core Fail".
-  * No estimation, interpolation, reverse-calculation, or fastest-trial cherry
-    picking. Missing measurements are not connected as if they existed.
-  * All in-figure / in-table text is English. Graph names and implementation
-    names are kept verbatim (not translated).
+    drawn as distinct failure markers. In the corrected memory feasibility
+    boundary, a CUDA (GPU-device) out-of-memory and a cgroup host-memory OOM
+    kill (SIGKILL, exit 137) are separate classes with separate markers and are
+    never conflated.
+  * Corrected-325557 correctness comparisons are numerically consistent within
+    the mixed tolerance (abs_tol 1e-3, rel_tol 1e-6) with mismatch 0, but are
+    NOT byte-identical; PathMerge is an external comparator, not ground truth.
+  * All in-figure / in-table text is English. Graph and implementation names
+    are kept verbatim (not translated).
   * No dependency on build_miyabi/. Deterministic output (fixed SOURCE_DATE_EPOCH,
-    no embedded timestamps, fixed SVG hash salt).
+    no embedded timestamps, fixed SVG hash salt). Matplotlib binaries are only
+    reproducible run-to-run within one toolchain, so THESIS_FIGS selects which
+    figures to (re)render; this gate regenerates only the corrected F4 and F5.
 
-Run:  python3 scripts/generate_thesis_artifacts.py
+Run:  THESIS_FIGS=F4,F5 python3 scripts/generate_thesis_artifacts.py
 """
 
 import os
@@ -107,6 +118,52 @@ HEADLINE_ORDER = ["email-EuAll", "roadNet-PA", "roadNet-TX", "roadNet-CA"]
 SNAP_BLOCK = "phase_def_block_20260710"
 SNAP_LEGACY = "oldtree_f05ec52_20260512"
 
+# --------------------------------------------------------------------------- #
+# Corrected 325557 (Gate W7.4) OFFICIAL inputs for T3/F4, T4/F5, T5.
+# These supersede the old malformed 325557 as the CURRENT thesis values.
+# --------------------------------------------------------------------------- #
+CORRECTED_GRAPH = "325557_3216152_corrected_v1"
+CORRECTED_GRAPH_SHA256 = \
+    "8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22"
+CORRECTED_CHECKPOINT = "45352a344aaac463283a647467b790be9b45bfb8"
+CORRECTED_JOB_CORRECTNESS_MEM = "2404743"   # Series A/B: correctness + feasibility
+CORRECTED_JOB_ABLATION = "2406254"          # Series C: ablation
+CORRECTNESS_ABS_TOL = "1e-3"
+CORRECTNESS_REL_TOL = "1e-6"
+GEN_COMMAND = "THESIS_FIGS=F4,F5 python3 scripts/generate_thesis_artifacts.py"
+
+# Directories whose files are Gate-W7.4 corrected-input artifacts that are
+# legitimately still pending commit at gate time (Gate W7.4.1 does not commit).
+# They are canonical (under result/ or raw_data/) but not yet Git-tracked, so
+# the "all inputs Git tracked" audit treats them as a known pending-commit set.
+PENDING_COMMIT_INPUT_PREFIXES = (
+    "raw_data/corrected_325557/",
+    "result/ablation/corrected_325557/",
+    "result/memory_scalability/corrected_325557/",
+    "result/correctness/corrected_325557/",
+)
+
+# Stable figure file stems (used so the manifest can reference figures whose
+# binaries are NOT regenerated in this run -- see FIGURES_TO_GENERATE).
+FIG_STEMS = {
+    "F1": "main_runtime_comparison",
+    "F2": "main_speedup_over_tuned_pathmerge",
+    "F3": "pathmerge_batch_sweep",
+    "F4": "ablation_contributions",
+    "F5": "memory_scalability_325557",
+    "F6": "shared_vs_block_kernel",
+    "F7": "phase_breakdown",
+}
+# Matplotlib binary output is only reproducible run-to-run WITHIN one toolchain
+# environment, not byte-identically across matplotlib builds. The committed
+# F1/F2/F3/F6/F7 came from the original toolchain, so this gate regenerates ONLY
+# the corrected-data figures (F4, F5) and leaves the others byte-invariant.
+# THESIS_FIGS (comma-separated IDs) selects which figures to (re)render; unset
+# means "all" (full from-scratch regeneration in the original toolchain).
+_ENV_FIGS = os.environ.get("THESIS_FIGS", "").strip()
+FIGURES_TO_GENERATE = (set(FIG_STEMS) if not _ENV_FIGS
+                       else {f.strip() for f in _ENV_FIGS.split(",") if f.strip()})
+
 # Accumulators for validation + manifest.
 INPUTS_USED = set()
 VALIDATION = []   # list of (name, ok, detail)
@@ -148,6 +205,28 @@ def sample_sd(vals):
     return float(statistics.stdev(vals)) if len(vals) >= 2 else None
 
 
+def _normalize_svg(path):
+    """Deterministically normalize an SVG *in place*, touching ONLY line-terminal
+    whitespace:
+
+      * strip trailing spaces / tabs / CRs from the end of every line,
+      * force LF line endings,
+      * end the file with exactly one trailing newline.
+
+    matplotlib emits multi-line ``<path d="...">`` data where each coordinate line
+    ends with a space before the newline; removing that trailing space leaves the
+    newline as a valid SVG token separator, so no number, command, element, or
+    attribute value changes meaning. XML structure, path data, numeric values,
+    element order, and attribute values are preserved verbatim otherwise.
+    """
+    with open(path, "r", encoding="utf-8", newline="") as f:
+        text = f.read()
+    lines = text.replace("\r\n", "\n").replace("\r", "\n").split("\n")
+    normalized = "\n".join(ln.rstrip(" \t") for ln in lines).rstrip("\n") + "\n"
+    with open(path, "w", encoding="utf-8", newline="\n") as f:
+        f.write(normalized)
+
+
 def save_fig(fig, stem):
     """Save PDF + PNG(300dpi) + SVG deterministically (no timestamps)."""
     base = FIG_DIR / stem
@@ -156,8 +235,10 @@ def save_fig(fig, stem):
                           "Producer": "matplotlib"})
     fig.savefig(str(base) + ".png", dpi=300,
                 metadata={"Software": "generate_thesis_artifacts.py"})
-    fig.savefig(str(base) + ".svg",
+    svg_path = str(base) + ".svg"
+    fig.savefig(svg_path,
                 metadata={"Creator": "generate_thesis_artifacts.py", "Date": None})
+    _normalize_svg(svg_path)   # strip line-terminal whitespace only (git diff --check clean)
     plt.close(fig)
     return {"pdf": stem + ".pdf", "png": stem + ".png", "svg": stem + ".svg"}
 
@@ -289,149 +370,168 @@ def load_pathmerge_sweep(graph):
     return out
 
 
+FACTOR_KEY = {"H": "Hybrid BFS", "W": "Warp-Cooperative Accumulation",
+              "A": "Dual Streams"}
+FACTOR_POS = {"H": 0, "W": 1, "A": 2}
+
+
+def _config_medians(rows):
+    """Group per-trial ablation rows into per-configuration medians."""
+    by_cfg = {}
+    for r in rows:
+        m = re.fullmatch(r"Ablation_H([01])_W([01])_A([01])", r["Config"])
+        if not m:
+            raise ValueError(f"unexpected ablation config: {r['Config']}")
+        by_cfg.setdefault(tuple(int(v) for v in m.groups()), []).append(
+            float(r["Time_sec"]))
+    counts = {len(ts) for ts in by_cfg.values()}
+    if len(by_cfg) != 8 or len(counts) != 1:
+        raise ValueError(f"incomplete/ragged 2^3 ablation: {sorted(by_cfg)} counts={counts}")
+    return {cfg: median(ts) for cfg, ts in by_cfg.items()}, counts.pop()
+
+
+def _main_effects(config_medians):
+    """Per-factor main effect = geomean of T(F=0)/T(F=1) over the 4 pairings."""
+    eff = {}
+    for factor, label in FACTOR_KEY.items():
+        pos = FACTOR_POS[factor]
+        ratios = []
+        for cfg0 in sorted(c for c in config_medians if c[pos] == 0):
+            cfg1 = list(cfg0)
+            cfg1[pos] = 1
+            ratios.append(config_medians[cfg0] / config_medians[tuple(cfg1)])
+        eff[label] = float(np.exp(np.mean(np.log(ratios))))
+    return eff
+
+
 def load_ablation():
-    """Recompute factorial main effects from canonical per-trial TSV files.
+    """Recompute the CORRECTED-325557 ablation and the updated synthetic-4
+    aggregate from canonical per-trial TSVs.
 
-    For each factor, pair configurations that differ only in that factor,
-    compute T(F=0)/T(F=1) from per-configuration medians, then take the
-    geometric mean across the four pairs.  The archived contribution TSVs are
-    used only as independent cross-checks.
+    The synthetic-4 aggregate is a MIXED-CHECKPOINT geometric mean: the three
+    non-325557 synthetic graphs come from job 2354994 (unchanged raw), and the
+    old malformed 325557 is replaced by the corrected-325557 re-measurement
+    (job 2406254, checkpoint 45352a3). Each per-graph main effect is recomputed
+    from raw and cross-checked against the audited result TSVs; nothing falls
+    back to a stored/rounded value.
     """
-    sources = [
-        ("synthetic",
-         "raw_data/ablation/synthetic/job_2354994_20260710/ablation_results.tsv",
-         "result/ablation/synthetic_2354994/ablation_contributions.tsv"),
-        ("email",
-         "raw_data/ablation/email-EuAll/job_2354999_20260710/ablation_results.tsv",
-         "result/ablation/email_2354999/ablation_contributions.tsv"),
-    ]
-    factor_key = {"H": "Hybrid BFS", "W": "Warp-Cooperative Accumulation",
-                  "A": "Dual Streams"}
-    factor_pos = {"H": 0, "W": 1, "A": 2}
+    # --- 3 synthetic graphs (exclude the OLD malformed 325557_3216152) -------
+    syn_rows = read_tsv(
+        "raw_data/ablation/synthetic/job_2354994_20260710/ablation_results.tsv")
+    other3 = ["benchmark_7000_41459", "benchmark_11023_62184", "56438_300801"]
+    by_graph = {g: [] for g in other3}
+    for r in syn_rows:
+        if r["Graph"] in by_graph:
+            by_graph[r["Graph"]].append(r)
     per_graph = {}
-    trial_counts = {}
-    syn_graphs = []
-    for group, raw_rel, archived_rel in sources:
-        raw_rows = read_tsv(raw_rel)
-        by_graph = {}
-        for r in raw_rows:
-            match = re.fullmatch(r"Ablation_H([01])_W([01])_A([01])", r["Config"])
-            if not match:
-                raise ValueError(f"unexpected ablation config: {r['Config']}")
-            config = tuple(int(v) for v in match.groups())
-            by_graph.setdefault(r["Graph"], {}).setdefault(config, []).append(
-                float(r["Time_sec"]))
-        if group == "synthetic":
-            syn_graphs = list(by_graph)
-        counts = {len(ts) for cfgs in by_graph.values() for ts in cfgs.values()}
-        if len(counts) != 1:
-            raise ValueError(f"inconsistent ablation trial counts in {raw_rel}: {counts}")
-        trial_counts[group] = counts.pop()
-        for graph, configs in by_graph.items():
-            medians = {cfg: median(ts) for cfg, ts in configs.items()}
-            if len(medians) != 8:
-                raise ValueError(f"incomplete 2^3 ablation for {graph}")
-            effects = {}
-            for factor, label in factor_key.items():
-                pos = factor_pos[factor]
-                ratios = []
-                for cfg0 in sorted(c for c in medians if c[pos] == 0):
-                    cfg1 = list(cfg0)
-                    cfg1[pos] = 1
-                    ratios.append(medians[cfg0] / medians[tuple(cfg1)])
-                effects[label] = float(np.exp(np.mean(np.log(ratios))))
-            per_graph[graph] = effects
+    trial_set = set()
+    for g in other3:
+        medians, n = _config_medians(by_graph[g])
+        per_graph[g] = _main_effects(medians)
+        trial_set.add(n)
 
-        archived = read_tsv(archived_rel)
-        for row in archived:
-            got = per_graph[row["Graph"]][factor_key[row["Factor"]]]
-            expected = float(row["MainEffect"])
-            note(f"ablation_main_effect[{row['Graph']},{row['Factor']}]",
-                 round(got, 4) == round(expected, 4),
-                 f"recomputed={got:.4f} archived={expected:.4f}")
+    # --- corrected 325557 (job 2406254) --------------------------------------
+    cor_rows = read_tsv(
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_ABLATION}/ablation_results.tsv")
+    if {r["Graph"] for r in cor_rows} != {CORRECTED_GRAPH}:
+        raise ValueError("corrected ablation raw contains unexpected graph name")
+    cor_medians, cor_n = _config_medians(cor_rows)
+    trial_set.add(cor_n)
+    per_graph[CORRECTED_GRAPH] = _main_effects(cor_medians)
+    if len(trial_set) != 1:
+        raise ValueError(f"inconsistent ablation trial counts across graphs: {trial_set}")
+    trials = trial_set.pop()
 
-    geo = {}
-    for fk in factor_key.values():
-        vals = [per_graph[g][fk] for g in syn_graphs]
-        geo[fk] = float(np.exp(np.mean(np.log(vals))))
-    email_eff = per_graph["email-EuAll"]
-    return dict(per_graph=per_graph, syn_graphs=syn_graphs, syn_geo=geo,
-                email=email_eff, factor_key=factor_key, trials=trial_counts)
+    order = other3 + [CORRECTED_GRAPH]
+    mixed_geo = {label: float(np.exp(np.mean(np.log([per_graph[g][label] for g in order]))))
+                 for label in FACTOR_KEY.values()}
+    base_full = {"H0W0A0": cor_medians[(0, 0, 0)], "H1W1A1": cor_medians[(1, 1, 1)]}
+
+    # --- cross-checks against the audited derived TSVs (hard fail on drift) ---
+    agg = {r["Factor"]: r for r in read_tsv(
+        "result/ablation/corrected_325557/synthetic4_aggregate.tsv")}
+    per_graph_expected = {}       # (graph, factor) -> audited MainEffect
+    for factor, row in agg.items():
+        label = FACTOR_KEY[factor]
+        note(f"ablation_mixed_geomean[{factor}]",
+             round(mixed_geo[label], 4) == round(float(row["NewGeomean_mixed_checkpoint"]), 4),
+             f"recomputed={mixed_geo[label]:.4f} audited={row['NewGeomean_mixed_checkpoint']}")
+        for item in row["PerGraphMainEffects"].split(";"):
+            gname, val = item.split("=")
+            gkey = CORRECTED_GRAPH if gname == "325557_corrected" else gname
+            per_graph_expected[(gkey, factor)] = float(val)
+    for g in order:
+        for factor, label in FACTOR_KEY.items():
+            exp = per_graph_expected[(g, factor)]
+            note(f"ablation_main_effect[{g},{factor}]",
+                 round(per_graph[g][label], 4) == round(exp, 4),
+                 f"recomputed={per_graph[g][label]:.4f} audited={exp:.4f}")
+    contrib = {r["Factor"]: float(r["MainEffect"]) for r in read_tsv(
+        "result/ablation/corrected_325557/ablation_contributions.tsv")}
+    for factor, label in FACTOR_KEY.items():
+        note(f"ablation_corrected325557[{factor}]",
+             round(per_graph[CORRECTED_GRAPH][label], 4) == round(contrib[factor], 4),
+             f"recomputed={per_graph[CORRECTED_GRAPH][label]:.4f} audited={contrib[factor]:.4f}")
+
+    return dict(per_graph=per_graph, order=order, mixed_geo=mixed_geo,
+                corrected=per_graph[CORRECTED_GRAPH], base_full=base_full,
+                trials=trials, factor_key=FACTOR_KEY)
 
 
 def load_memory_scalability():
-    impls = [("gpu_opt", "GPU_Opt"),
-             ("gpu_opt_pure", "GPU_Opt_Pure"),
-             ("gpu_opt_pure_chunked", "GPU_Opt_Pure_Chunked")]
-    out = {}
-    for key, label in impls:
-        rel = (f"raw_data/memory_scalability/325557_3216152/{key}/"
-               f"job_notrecorded_20260512/oversubscribe_results_{key}.tsv")
-        rows = read_tsv(rel)
-        log_rel = (f"raw_data/memory_scalability/325557_3216152/{key}/"
-                   f"job_notrecorded_20260512/um_experiment_{key}.log")
-        meta = {}
-        cuda_oom = set()    # batches with an explicit "out of memory" log line
-        exit_codes = {}     # batch -> recorded runner exit codes (header logs)
-        current_batch = None
-        for line in read_text(log_rel).splitlines():
-            m = re.match(r"=== \S+ batch=(\d+) trial=\d+ rc=(\d+) ===", line)
-            if m:
-                current_batch = int(m.group(1))
-                exit_codes.setdefault(current_batch, set()).add(int(m.group(2)))
-                continue
-            # The GPU_Opt_Pure log has no per-trial headers; its per-run batch
-            # is recoverable from the runner's own "[Mem] ... batch_per_stream"
-            # line (that pattern does not occur in the header-style logs).
-            m = re.search(r"batch_per_stream=(\d+)", line)
-            if m:
-                current_batch = int(m.group(1))
-            m = re.search(r"BATCH=(\d+), SUB_BATCH=(\d+), num_subs=(\d+)", line)
-            if m and current_batch is not None:
-                values = tuple(int(v) for v in m.groups())
-                if values[0] != current_batch:
-                    raise ValueError(f"inconsistent memory metadata in {log_rel}: {line}")
-                meta.setdefault(current_batch, set()).add(values)
-            if "out of memory" in line and current_batch is not None:
-                cuda_oom.add(current_batch)
-        by_batch = {}
-        for r in rows:
-            b = int(r["BatchSize"])
-            by_batch.setdefault(b, {"succ": [], "status": set(), "trials": 0})
-            by_batch[b]["status"].add(r["Status"])
-            by_batch[b]["trials"] += 1
-            if r["Status"] == "SUCCESS":
-                by_batch[b]["succ"].append(float(r["Time_sec"]))
-        pts = {}
-        for b, d in by_batch.items():
-            success = "SUCCESS" in d["status"] and len(d["succ"]) > 0
-            observed_meta = meta.get(b, set())
-            if len(observed_meta) > 1:
-                raise ValueError(f"inconsistent BATCH/SUB_BATCH metadata for {label} b{b}")
-            recorded = next(iter(observed_meta)) if observed_meta else None
-            failed = ("OOM_OR_FAIL" in d["status"]) and not success
-            # Failure-cause classification: never upgrade the raw OOM_OR_FAIL
-            # status to a confirmed OOM without explicit log evidence.
-            if not failed:
-                fail_class = None
-            elif b in cuda_oom:
-                fail_class = "cuda_oom"                # CUDA OOM confirmed in log
-            elif 137 in exit_codes.get(b, set()):
-                fail_class = "exit_137_unconfirmed"    # SIGKILL, cause not confirmed
-            else:
-                fail_class = "failed_unspecified"
-            pts[b] = dict(
-                success=success,
-                med=median(d["succ"]) if success else None,
-                sd=sample_sd(d["succ"]) if success and len(d["succ"]) >= 2 else None,
-                fail_class=fail_class,
-                n=len(d["succ"]),
-                trials=d["trials"],
-                effective=(recorded[0] if recorded else None),
-                sub_batch=(recorded[1] if recorded else None),
-                num_subs=(recorded[2] if recorded else None),
-            )
-        out[label] = pts
+    """Load the CORRECTED-325557 targeted feasibility-boundary validation.
+
+    This is a targeted 5-point boundary confirmation (each configuration n=1),
+    NOT a batch sweep and NOT a performance comparison. Successful wall-clock
+    times are reported verbatim; failures carry a distinct, evidence-backed
+    class -- CUDA (GPU-device) out-of-memory vs a host/cgroup memory OOM kill
+    (SIGKILL, exit 137) -- and are NEVER represented as a runtime.
+    """
+    boundary = read_tsv(
+        "result/memory_scalability/corrected_325557/feasibility_boundary.tsv")
+    # Independent raw cross-checks (same job 2404743).
+    raw_feas = {r["Config"]: r for r in read_tsv(
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/feasibility_results.tsv")}
+    raw_oom = {r["Config"]: r for r in read_tsv(
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/oom_evidence.tsv")}
+
+    order = ["pure_b4096", "pure_b8192", "um_b10240", "um_b12288", "chunked_b16384"]
+    out = []
+    for row in boundary:
+        cfg = row["Config"]
+        impl = row["Implementation"]
+        batch = int(row["RequestedBatch"])
+        observed = row["Observed"]
+        exit_code = int(row["RunnerExit"])
+        evid_class = row["OOMEvidenceClass"]
+        runtime = None if row["RuntimeSec"] == "not_recorded" else float(row["RuntimeSec"])
+
+        # Classify the outcome into the three current-thesis categories.
+        if observed == "SUCCESS":
+            outcome, fail_class = "SUCCESS", None
+        elif observed == "OOM_CONFIRMED" and evid_class == "cuda_oom" and exit_code == 1:
+            outcome, fail_class = "CUDA_OOM", "cuda_oom"
+        elif observed == "RUNTIME_FAILED" and exit_code == 137 and evid_class == "none":
+            outcome, fail_class = "CGROUP_OOM_KILL", "cgroup_host_oom_kill"
+        else:
+            raise ValueError(f"unclassifiable feasibility outcome for {cfg}: {row}")
+
+        # Cross-check against the raw feasibility + OOM-evidence tables.
+        rf, ro = raw_feas[cfg], raw_oom[cfg]
+        note(f"memory_boundary[{cfg}]",
+             (rf["Observed"] == observed and int(rf["RunnerExit"]) == exit_code
+              and ro["OOMEvidenceClass"] == evid_class),
+             f"boundary vs raw feasibility/oom_evidence agree ({observed}, exit {exit_code}, {evid_class})")
+
+        out.append(dict(
+            config=cfg, impl=impl, batch=batch, outcome=outcome,
+            fail_class=fail_class, runtime=runtime, exit=exit_code,
+            evidence_class=evid_class,
+            evidence_line=(ro["ExactMatchedLine"] if fail_class == "cuda_oom" else None),
+            success=(outcome == "SUCCESS"), trials=1))
+    got_order = [d["config"] for d in out]
+    if got_order != order:
+        raise ValueError(f"unexpected feasibility-boundary ordering: {got_order}")
     return out
 
 
@@ -497,36 +597,111 @@ def load_phase_breakdown():
     return out
 
 
-def comparison_nonfinite(relpath):
-    """Extract the two archived non-finite counts from a comparison report."""
-    counts = [int(v) for v in re.findall(r"\| 非有限値数 [AB] \| (\d+) \|",
-                                         read_text(relpath))]
-    if len(counts) != 2:
-        raise ValueError(f"could not parse non-finite counts from {relpath}")
-    return sum(counts)
+import json
+
+
+def _parse_impl_batch(label):
+    """gpu_opt_pure_chunked_b16384 -> ('GPU_Opt_Pure_Chunked', 16384)."""
+    m = re.fullmatch(r"(gpu_opt_pure_chunked|gpu_opt_pure|gpu_opt|pathmerge)_b(\d+)", label)
+    if not m:
+        raise ValueError(f"unrecognized comparison label: {label}")
+    impl = {"gpu_opt": "GPU_Opt", "gpu_opt_pure": "GPU_Opt_Pure",
+            "gpu_opt_pure_chunked": "GPU_Opt_Pure_Chunked",
+            "pathmerge": "PathMerge"}[m.group(1)]
+    return impl, int(m.group(2))
+
+
+def load_small_correctness():
+    """Tier A -- Independent CPU reference. Load the Sequential-vs-GPU_Opt
+    full-vector correctness for the three small graphs from the AUDITED canonical
+    summary (result/correctness/small_full_vector/correctness_summary.tsv; PBS job
+    2367583; abs_tol 1e-3, rel_tol 1e-6). Every displayed value is read from that
+    TSV, never transcribed from prose. This is a comparison against an INDEPENDENT
+    Sequential CPU reference (unlike the corrected-325557 cross-implementation
+    consistency check)."""
+    rows = read_tsv("result/correctness/small_full_vector/correctness_summary.tsv")
+    graph_order = ["benchmark_7000_41459", "benchmark_11023_62184", "chain_200"]
+    by_graph = {Path(r["graph_path"]).name: r for r in rows}
+    if set(by_graph) != set(graph_order):
+        raise ValueError(f"unexpected small-correctness graphs: {sorted(by_graph)}")
+    out = []
+    for g in graph_order:
+        r = by_graph[g]
+        missing = int(r["missing_reference_only"]) + int(r["missing_candidate_only"])
+        mismatch = int(r["mismatched_elements"])
+        byte_identical = (r["sequential_vector_sha256"] == r["gpu_opt_vector_sha256"])
+        vec_ok = int(r["reference_vector_length"]) == int(r["candidate_vector_length"])
+        checks = (missing == 0 and mismatch == 0 and r["status"] == "PASS"
+                  and int(r["sequential_exit"]) == 0 and int(r["gpu_opt_exit"]) == 0
+                  and int(r["comparison_exit"]) == 0 and vec_ok and not byte_identical)
+        note(f"small_correctness[{g}]", checks,
+             f"missing={missing} mismatch={mismatch} status={r['status']} "
+             f"byte_identical={byte_identical}")
+        out.append(dict(
+            graph=g, ref_impl="Sequential", cand_impl="GPU_Opt",
+            ref_batch="N/A", cand_batch=int(r["effective_batch"]),
+            vec_len=int(r["reference_vector_length"]),
+            missing=missing, mismatch=mismatch,
+            max_abs=float(r["max_abs_error"]), max_rel=float(r["max_rel_error"]),
+            byte_identical=byte_identical, tol_result=r["status"]))
+    if len(out) != 3:
+        raise ValueError(f"expected 3 small-correctness rows, got {len(out)}")
+    return out
 
 
 def load_correctness():
-    small = read_tsv("result/correctness/small_full_vector/correctness_summary.tsv")
-    mem = read_tsv("result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv")
-    small_nf = {}
-    for graph in ("benchmark_7000_41459", "benchmark_11023_62184", "chain_200"):
-        small_nf[graph] = comparison_nonfinite(
-            f"result/correctness/small_full_vector/{graph}/comparison.md")
-    mem_pairs = [
-        ("gpu_opt_b1024", "gpu_opt_pure_b1024"),
-        ("gpu_opt_b1024", "gpu_opt_pure_chunked_b1024"),
-        ("gpu_opt_pure_b1024", "gpu_opt_pure_chunked_b1024"),
-        ("gpu_opt_b9792", "gpu_opt_b1024"),
-        ("gpu_opt_pure_chunked_b16384", "gpu_opt_pure_chunked_b1024"),
-        ("pathmerge_b4096", "gpu_opt_b1024"),
-    ]
-    mem_nf = {}
-    for a, b in mem_pairs:
-        rel = ("result/correctness/memory_paths/canonical_job_2368587/"
-               f"{a}__vs__{b}.md")
-        mem_nf[(a, b)] = comparison_nonfinite(rel)
-    return small, mem, small_nf, mem_nf
+    """Load the CORRECTED-325557 full-vector correctness: 6 validated vectors
+    and all 10 cross-implementation comparisons (job 2404743).
+
+    Every displayed value is recomputed from the per-comparison raw JSON and
+    cross-checked against the audited comparison_summary / vector_summary TSVs.
+    All 10 comparisons are numerically consistent within the mixed tolerance
+    (abs_tol 1e-3, rel_tol 1e-6) with mismatched_elements == 0, but the vectors
+    are NOT byte-identical (per-implementation SHA256 differ). PathMerge is an
+    external comparator, not an independent ground truth.
+    """
+    summary = read_tsv("result/correctness/corrected_325557/comparison_summary.tsv")
+    vecs = {r["Config"]: r for r in read_tsv(
+        "result/correctness/corrected_325557/vector_summary.tsv")}
+    if any(v["Status"] != "PASS" for v in vecs.values()) or len(vecs) != 6:
+        raise ValueError("corrected-325557 vector_summary is not 6 PASS vectors")
+    if len({v["SHA256"] for v in vecs.values()}) != 6:
+        raise ValueError("expected 6 distinct per-implementation SHA256 (non-byte-identical)")
+
+    comps = []
+    for r in summary:
+        a, b = r["LabelA"], r["LabelB"]
+        jpath = (f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/"
+                 f"comparisons/{a}__vs__{b}.json")
+        with open(input_path(jpath)) as f:
+            j = json.load(f)
+        # Recompute-and-verify against the audited summary row.
+        checks = (
+            j["mismatched_elements"] == int(r["MismatchedElements"])
+            and j["status"] == r["Status"]
+            and j["length_a"] == j["length_b"] == j["expected_length"]
+            and j["sha256_a"] != j["sha256_b"])
+        note(f"correctness_comparison[{a}__vs__{b}]", checks,
+             f"mismatch={j['mismatched_elements']} status={j['status']} "
+             f"len={j['expected_length']} byte_identical={j['sha256_a'] == j['sha256_b']}")
+        ra = j["vector_a"]; rb = j["vector_b"]
+        nonfinite = sum(v[k] for v in (ra, rb)
+                        for k in ("nan_values", "positive_inf_values", "negative_inf_values"))
+        ref_impl, ref_batch = _parse_impl_batch(a)
+        cand_impl, cand_batch = _parse_impl_batch(b)
+        comps.append(dict(
+            klass=r["ComparisonClass"], ref_label=a, cand_label=b,
+            ref_impl=ref_impl, ref_batch=ref_batch,
+            cand_impl=cand_impl, cand_batch=cand_batch,
+            vec_len=j["expected_length"],
+            missing=j["missing_a"] + j["missing_b"],
+            mismatch=j["mismatched_elements"], nonfinite=nonfinite,
+            max_abs=j["max_abs_error"], max_rel=j["max_rel_error"],
+            byte_identical=(j["sha256_a"] == j["sha256_b"]),
+            tol_result=("PASS" if j["status"] == "PASS" else j["status"])))
+    if len(comps) != 10:
+        raise ValueError(f"expected 10 corrected-325557 comparisons, got {len(comps)}")
+    return dict(comparisons=comps, vectors=vecs)
 
 
 def load_environment():
@@ -723,122 +898,150 @@ def fig_F3(sweeps, tuned_batch):
     return save_fig(fig, "pathmerge_batch_sweep")
 
 
+GRAPH_DISPLAY = {
+    "benchmark_7000_41459": "benchmark_7000_41459",
+    "benchmark_11023_62184": "benchmark_11023_62184",
+    "56438_300801": "56438_300801",
+    CORRECTED_GRAPH: "325557_3216152\n(corrected)",
+}
+
+
 def fig_F4(abl):
-    fig, (axA, axB) = plt.subplots(1, 2, figsize=(11.0, 4.8))
-    # Panel A: main effects (synthetic geomean vs email) for the three factors
     factors = ["Hybrid BFS", "Warp-Cooperative Accumulation", "Dual Streams"]
-    groups = [("Synthetic (geomean, 4 graphs)", abl["syn_geo"]),
-              ("email-EuAll (hub)", abl["email"])]
-    x = np.arange(len(factors)); w = 0.38
-    for gi, (glabel, eff) in enumerate(groups):
-        vals = [eff[f] for f in factors]
-        color = OK["blue"] if gi == 0 else OK["orange"]
-        hatch = "//" if gi == 0 else "\\\\"
-        axA.bar(x + (gi - 0.5) * w, vals, w, label=glabel, color=color,
-                hatch=hatch, edgecolor="black", linewidth=0.6)
-        for xi, v in zip(x + (gi - 0.5) * w, vals):
-            axA.text(xi, v + 0.02, f"{v:.3f}", ha="center", va="bottom", fontsize=8)
+    short = {"Hybrid BFS": "Hybrid BFS",
+             "Warp-Cooperative Accumulation": "Warp-Cooperative\nAccumulation",
+             "Dual Streams": "Dual Streams"}
+    fig, (axA, axB) = plt.subplots(1, 2, figsize=(12.0, 5.0),
+                                   gridspec_kw={"width_ratios": [1, 1.5]})
+
+    # Panel (a): synthetic-4 mixed-checkpoint aggregate main effects.
+    x = np.arange(len(factors)); w = 0.6
+    for xi, f in zip(x, factors):
+        v = abl["mixed_geo"][f]
+        st = FACTOR_STYLE[f]
+        axA.bar(xi, v, w, color=st["color"], hatch=st["hatch"],
+                edgecolor="black", linewidth=0.6)
+        axA.text(xi, v + 0.02, f"{v:.3f}x", ha="center", va="bottom", fontsize=9)
     axA.axhline(1.0, color=OK["vermillion"], linestyle="--", linewidth=1.3,
                 label="No effect (1.0x)")
-    axA.set_xticks(x)
-    axA.set_xticklabels(["Hybrid BFS", "Warp-Cooperative\nAccumulation", "Dual Streams"])
-    axA.set_ylabel("Main Effect (geomean speedup)")
-    axA.set_title("(a) Ablation main effects")
-    axA.set_ylim(0, 2.35)
-    # place legend above the short center (Warp) group so it never overlaps the
-    # tall Hybrid / Dual-Stream bars or their value labels
-    axA.legend(loc="upper center", fontsize=8, ncol=1, framealpha=0.95)
+    axA.set_xticks(x); axA.set_xticklabels([short[f] for f in factors], fontsize=9)
+    axA.set_ylabel("Main Effect (geometric-mean speedup)")
+    axA.set_title("(a) Synthetic-4 aggregate (mixed-checkpoint)")
+    axA.set_ylim(0, 2.05)
+    axA.legend(loc="upper right", fontsize=8.5, framealpha=0.95)
     axA.grid(axis="x", visible=False)
-    # Panel B: per-graph Warp-Cooperative effect (shows graph dependence)
-    order = ["benchmark_7000_41459", "benchmark_11023_62184", "56438_300801",
-             "325557_3216152", "email-EuAll"]
-    order = [g for g in order if g in abl["per_graph"]]
-    wvals = [abl["per_graph"][g]["Warp-Cooperative Accumulation"] for g in order]
-    colors = [OK["green"] if v >= 1.0 else OK["vermillion"] for v in wvals]
-    xb = np.arange(len(order))
-    axB.bar(xb, wvals, 0.6, color=colors, hatch="xx", edgecolor="black", linewidth=0.6)
-    axB.axhline(1.0, color=OK["black"], linestyle="--", linewidth=1.3)
-    for xi, v in zip(xb, wvals):
-        axB.text(xi, v + 0.005, f"{v:.3f}", ha="center", va="bottom", fontsize=8)
-    axB.set_xticks(xb); axB.set_xticklabels(order, rotation=30, ha="right", fontsize=8.5)
-    axB.set_ylabel("Warp-Cooperative Main Effect")
-    axB.set_title("(b) Warp-Cooperative Accumulation is graph-dependent")
-    axB.set_ylim(0.9, 1.25)
-    axB.legend(handles=[Patch(facecolor=OK["green"], hatch="xx", edgecolor="black",
-                              label="Beneficial (>= 1.0x)"),
-                        Patch(facecolor=OK["vermillion"], hatch="xx", edgecolor="black",
-                              label="Harmful (< 1.0x)")],
-               loc="upper right", fontsize=8)
+
+    # Panel (b): per-graph main effects (4 synthetic graphs; corrected 325557).
+    order = abl["order"]
+    xb = np.arange(len(order)); bw = 0.26
+    for fi, f in enumerate(factors):
+        st = FACTOR_STYLE[f]
+        vals = [abl["per_graph"][g][f] for g in order]
+        pos = xb + (fi - 1) * bw
+        axB.bar(pos, vals, bw, color=st["color"], hatch=st["hatch"],
+                edgecolor="black", linewidth=0.6,
+                label=f.replace(" Accumulation", ""))
+        for xi, v in zip(pos, vals):
+            axB.text(xi, v + 0.015, f"{v:.2f}", ha="center", va="bottom", fontsize=6.8)
+    axB.axhline(1.0, color=OK["vermillion"], linestyle="--", linewidth=1.3)
+    axB.set_xticks(xb)
+    axB.set_xticklabels([GRAPH_DISPLAY[g] for g in order], rotation=20, ha="right",
+                        fontsize=7.8)
+    axB.set_ylabel("Per-Graph Main Effect (speedup)")
+    axB.set_title("(b) Per-graph main effects (4 synthetic graphs)")
+    axB.set_ylim(0, 2.35)
+    axB.legend(loc="upper left", fontsize=8, ncol=1, framealpha=0.95)
     axB.grid(axis="x", visible=False)
-    fig.suptitle("F4  Ablation Contributions (5 measured graphs; not generalized to roadNet)",
+
+    fig.suptitle("F4  Ablation Contributions (4 synthetic graphs; mixed-checkpoint aggregate)",
                  fontsize=12)
-    fig.tight_layout(rect=[0, 0, 1, 0.95])
+    fig.text(0.5, 0.02,
+             "Aggregate (a) is a MIXED-CHECKPOINT geometric mean: 3 graphs from job 2354994; "
+             "corrected 325557 from job 2406254 (checkpoint 45352a3).\n"
+             "Per-graph values (b) and the aggregate are distinct and not interchangeable. "
+             "n=5 per configuration; the per-invocation untimed H1W1A1 warm-up is excluded from the "
+             "40 formal rows.\n"
+             "Warp-Cooperative Accumulation is graph-dependent (56438_300801 < 1.0x). "
+             "Not generalized to roadNet.",
+             fontsize=7.5, ha="center", va="bottom")
+    fig.tight_layout(rect=[0, 0.14, 1, 0.95])
     return save_fig(fig, "ablation_contributions")
 
 
 def fig_F5(mem):
-    fig, ax = plt.subplots(figsize=(8.6, 5.2))
-    all_succ = [p["med"] for pts in mem.values() for p in pts.values() if p["med"]]
-    ymax = max(all_succ)
-    fail_y = ymax * 1.25   # failure band position -- NOT zero seconds
-    ax.axhspan(ymax * 1.12, fail_y * 1.10, color=OK["vermillion"], alpha=0.08, zorder=0)
-    ax.axhline(ymax * 1.12, color=OK["vermillion"], linestyle=":", linewidth=1.0)
-    ax.text(mem_min_batch(mem), fail_y, "Failure band (run did not complete; "
-            "not a runtime value)", fontsize=8, color=OK["vermillion"], va="center")
-    seen_classes = set()
-    for i, (label, pts) in enumerate(mem.items()):
-        st = IMPL_STYLE[label]
-        batches = sorted(pts.keys())
-        sb = [b for b in batches if pts[b]["success"]]
-        sy = [pts[b]["med"] for b in sb]
-        ssd = [pts[b]["sd"] for b in sb]
-        ax.errorbar(sb, sy, yerr=ssd, fmt=st["marker"] + "-", color=st["color"],
-                    markerfacecolor=st["color"], markeredgecolor="black",
-                    markersize=7, linewidth=1.4, capsize=3, label=label, zorder=3)
-        # multiplicative offset on the log2 axis so that failure markers from
-        # different implementations at the same batch do not hide each other
-        off = 2.0 ** ((i - 1) * 0.08)
-        # Marker shape distinguishes the audited failure cause: X = CUDA OOM
-        # confirmed in the log; P = OOM_OR_FAIL (exit 137), cause unconfirmed.
-        for fail_class, marker in [("cuda_oom", "X"), ("exit_137_unconfirmed", "P")]:
-            fb = [b for b in batches if pts[b]["fail_class"] == fail_class]
-            if fb:
-                seen_classes.add(fail_class)
-                ax.scatter([b * off for b in fb], [fail_y] * len(fb), marker=marker,
-                           s=110, color=st["color"], edgecolors="black",
-                           linewidths=0.8, zorder=4)
+    """Targeted feasibility-boundary validation on the corrected 325557 graph.
+
+    Not a sweep: each point is a single tested (implementation, requested-batch)
+    configuration (n=1). Successful runs are placed at their wall-clock time;
+    the two failures sit in a distinct failure band (never at 0 s) with separate
+    markers for a GPU-device CUDA OOM vs a host/cgroup memory OOM kill. Points
+    are never connected, because unmeasured batches were not measured.
+    """
+    succ = [d for d in mem if d["success"]]
+    ymax = max(d["runtime"] for d in succ)
+    fail_y = ymax * 1.25            # failure band position -- NOT zero seconds
+    band_lo = ymax * 1.12
+    ax = plt.subplots(figsize=(9.2, 5.6))[1]
+    fig = ax.figure
+    ax.axhspan(band_lo, fail_y * 1.10, color=OK["vermillion"], alpha=0.08, zorder=0)
+    ax.axhline(band_lo, color=OK["vermillion"], linestyle=":", linewidth=1.0)
+    batches = [d["batch"] for d in mem]
+    ax.text(min(batches), fail_y * 1.05,
+            "Failure band (run did not complete; not a runtime value)",
+            fontsize=8, color=OK["vermillion"], va="bottom")
+
+    impl_seen = set()
+    fail_markers = {"cuda_oom": "X", "cgroup_host_oom_kill": "P"}
+    seen_fail = set()
+    for d in mem:
+        st = IMPL_STYLE[d["impl"]]
+        lbl = d["impl"] if d["impl"] not in impl_seen else None
+        impl_seen.add(d["impl"])
+        if d["success"]:
+            ax.scatter([d["batch"]], [d["runtime"]], marker=st["marker"], s=115,
+                       color=st["color"], edgecolors="black", linewidths=0.8,
+                       label=lbl, zorder=3)
+            ax.annotate(f"{d['runtime']:.1f}s", xy=(d["batch"], d["runtime"]),
+                        xytext=(0, 8), textcoords="offset points", ha="center",
+                        fontsize=8)
+        else:
+            if lbl:   # ensure the implementation appears in the legend
+                ax.scatter([], [], marker=st["marker"], s=115, color=st["color"],
+                           edgecolors="black", linewidths=0.8, label=lbl)
+            seen_fail.add(d["fail_class"])
+            ax.scatter([d["batch"]], [fail_y], marker=fail_markers[d["fail_class"]],
+                       s=150, color=st["color"], edgecolors="black", linewidths=1.0,
+                       zorder=4)
     ax.set_xscale("log", base=2)
-    ax.set_xlabel("Requested Batch Size (log2)")
-    ax.set_ylabel("Median Runtime (s)  /  failure marker")
-    ax.set_title("F5  Memory Scalability on 325557_3216152 (Legacy Feasibility)")
-    all_batches = sorted({b for pts in mem.values() for b in pts.keys()})
-    ax.set_xticks(all_batches)
-    ax.set_xticklabels([str(b) for b in all_batches], rotation=45, fontsize=8)
+    ax.set_xlabel("Requested Batch Size (log2; targeted boundary points only)")
+    ax.set_ylabel("Single-run wall-clock time (s)  /  failure marker")
+    ax.set_title("F5  Memory Feasibility Boundary Validation (corrected 325557)")
+    ax.set_xticks(batches)
+    ax.set_xticklabels([str(b) for b in batches], rotation=45, fontsize=8.5)
     ax.get_xaxis().set_minor_locator(plt.NullLocator())
-    ax.set_ylim(0, fail_y * 1.12)
-    succ_handles, labels = ax.get_legend_handles_labels()
-    if "cuda_oom" in seen_classes:
-        succ_handles.append(Line2D([0], [0], marker="X", color="black", linestyle="None",
-                                   markersize=9,
-                                   label="Out of Memory (CUDA OOM in log; no runtime)"))
-    if "exit_137_unconfirmed" in seen_classes:
-        succ_handles.append(Line2D([0], [0], marker="P", color="black", linestyle="None",
-                                   markersize=9,
-                                   label="OOM_OR_FAIL (exit 137; cause unconfirmed; no runtime)"))
-    ax.legend(handles=succ_handles, loc="center right", fontsize=8.5)
+    ax.set_xlim(2 ** (np.log2(min(batches)) - 0.4), 2 ** (np.log2(max(batches)) + 0.4))
+    ax.set_ylim(0, fail_y * 1.14)
+
+    handles, _ = ax.get_legend_handles_labels()
+    if "cuda_oom" in seen_fail:
+        handles.append(Line2D([0], [0], marker="X", color="black", linestyle="None",
+                              markersize=10,
+                              label="CUDA out-of-memory (GPU device; exit 1; no runtime)"))
+    if "cgroup_host_oom_kill" in seen_fail:
+        handles.append(Line2D([0], [0], marker="P", color="black", linestyle="None",
+                              markersize=10,
+                              label="Cgroup host-memory OOM kill (SIGKILL exit 137; not CUDA/HBM)"))
+    ax.legend(handles=handles, loc="center left", fontsize=8.3, framealpha=0.95)
     ax.grid(axis="x", visible=False)
     bottom_caption(ax,
-                   "Legacy feasibility result on 325557_3216152; not a current block-kernel "
-                   "performance comparison.\nGPU_Opt and GPU_Opt_Pure_Chunked extend the "
-                   "observed feasible range but do not provide unlimited capacity.\n"
-                   "X = CUDA out-of-memory recorded in the log (GPU_Opt_Pure, n=5 per batch); "
-                   "P = OOM_OR_FAIL, exit 137, cause not independently confirmed "
-                   "(GPU_Opt b12288, n=1; sweep stopped).", y=-0.30)
+                   "Targeted feasibility boundary on the corrected 325557 graph (job 2404743); "
+                   "each configuration n=1. Wall-clock times are single-run feasibility values at "
+                   "different requested batches and are NOT a performance comparison.\n"
+                   "Max successful requested batch is within the tested range only "
+                   "(Pure 4096 < UM 10240 < Chunked 16384); Chunked was tested to 16384 and this is "
+                   "no unlimited-capacity claim. Points are not connected (unmeasured batches were "
+                   "not measured).", y=-0.30)
     return save_fig(fig, "memory_scalability_325557")
-
-
-def mem_min_batch(mem):
-    return min(b for pts in mem.values() for b in pts.keys())
 
 
 def fig_F6(ks):
@@ -930,19 +1133,49 @@ def fig_F7(ph):
 # Tables.
 # --------------------------------------------------------------------------- #
 def table_T1(stats, cat):
+    # Graph -> presentation role. The corrected 325557 graph is used ONLY for
+    # ablation (RQ2), memory scalability (RQ3), and correctness (RQ4); it is NOT
+    # part of the RQ1 main-performance comparison. The old malformed 325557 input
+    # is retained only as a historical, superseded input.
+    used_for = {
+        "email-EuAll": "Main performance (RQ1); Ablation",
+        "roadNet-PA": "Main performance (RQ1); Kernel selection",
+        "roadNet-TX": "Main performance (RQ1); Kernel selection",
+        "roadNet-CA": "Main performance (RQ1)",
+        "325557_3216152_corrected_v1": "Ablation; Memory scalability; Correctness",
+        "56438_300801": "Ablation",
+        "benchmark_7000": "Ablation; Correctness",
+        "benchmark_11023": "Ablation; Correctness",
+        "benchmark_85830": "Auxiliary",
+        "chain_200": "Correctness",
+        "random": "Auxiliary",
+        "325557_3216152": "Historical (superseded by corrected_v1)",
+    }
     order = ["email-EuAll", "roadNet-PA", "roadNet-TX", "roadNet-CA",
-             "325557_3216152", "56438_300801", "benchmark_7000", "benchmark_11023",
-             "benchmark_85830", "chain_200", "random"]
-    header = ["Graph", "Nodes", "Edges", "Average Degree", "Maximum Degree",
-              "Directed Input", "Symmetrized"]
+             "325557_3216152_corrected_v1", "56438_300801", "benchmark_7000",
+             "benchmark_11023", "benchmark_85830", "chain_200", "random",
+             "325557_3216152"]
+    header = ["Graph", "Nodes", "Edges", "Average Degree",
+              "Input File [MiB]", "CSR [MiB]", "Used For"]
     rows = []
     for g in order:
-        s = stats[g]; c = cat[g]
-        rows.append([g, s["n"], s["m"], s["avg_deg"], s["max_deg"],
-                     c["DirectedOriginal"], c["Symmetrized"]])
-    notes = ["Nodes / Edges / degrees from docs/graph_stats.tsv (undirected edge count m).",
-             "Directed Input / Symmetrized from result/datasets/graph_catalog.tsv "
-             "(\"unknown\" = not recorded for generated graphs)."]
+        c = cat[g]
+        csr_mib = int(c["CSRBytes"]) / 1_048_576
+        rows.append([g, c["n"], c["m"], c["avg_deg"],
+                     c["FileSizeMiB"], f"{csr_mib:.2f}", used_for[g]])
+    notes = [
+        "Nodes / Edges (undirected edge count m) / Average Degree and file sizes from "
+        "result/datasets/graph_catalog.tsv. Input File [MiB] is the on-disk CSR text input "
+        "file (FileSizeBytes / 1,048,576); CSR [MiB] is the in-memory CSR array "
+        "((n + 1) + 2m) x 4 bytes / 1,048,576.",
+        "Input File [MiB] and CSR [MiB] are the STATIC graph representation on disk / in "
+        "host memory; they are NOT the GPU working set. The GPU working set is the "
+        "batch-dependent per-source state (Chapter 8), not the graph file size.",
+        "The corrected 325557 graph (325557_3216152_corrected_v1, SHA256 8373244f..., "
+        "checkpoint 45352a3) is used for Ablation / Memory scalability / Correctness only, "
+        "NOT for the RQ1 main-performance comparison. The old malformed 325557_3216152 "
+        "(SHA256 a095b2e7...) is retained only as a historical, superseded input.",
+    ]
     return write_table("T1_graph_metadata", header, rows, "T1  Graph Metadata", notes)
 
 
@@ -965,138 +1198,157 @@ def table_T2(mp):
 
 
 def table_T3(abl):
-    header = ["Graph Group", "Hybrid BFS Effect", "Warp-Cooperative Effect",
-              "Dual-Stream Effect", "Trials", "Limitation"]
-    g = abl["syn_geo"]; e = abl["email"]
-    rows = [
-        ["Synthetic (geomean, 4 graphs)", f"{g['Hybrid BFS']:.3f}x",
-         f"{g['Warp-Cooperative Accumulation']:.3f}x", f"{g['Dual Streams']:.3f}x",
-         f"{abl['trials']['synthetic']} per configuration",
-         "4 synthetic graphs; not generalized to roadNet"],
-        ["email-EuAll (hub, real)", f"{e['Hybrid BFS']:.3f}x",
-         f"{e['Warp-Cooperative Accumulation']:.3f}x", f"{e['Dual Streams']:.3f}x",
-         f"{abl['trials']['email']} per configuration",
-         "Single hub graph; Warp-Cooperative < 1.0x (harmful here)"],
+    header = ["Row", "Hybrid BFS Effect", "Warp-Cooperative Effect",
+              "Dual-Stream Effect", "Trials", "Note"]
+
+    def cells(eff):
+        return [f"{eff['Hybrid BFS']:.4f}x",
+                f"{eff['Warp-Cooperative Accumulation']:.4f}x",
+                f"{eff['Dual Streams']:.4f}x"]
+
+    trials = f"{abl['trials']} per configuration"
+    rows = [["Synthetic-4 aggregate (mixed-checkpoint)"] + cells(abl["mixed_geo"]) +
+            [trials, "Geometric mean of the 4 per-graph effects; mixed checkpoints (see notes)"]]
+    for g in abl["order"]:
+        if g == CORRECTED_GRAPH:
+            label = "325557_3216152_corrected_v1"
+            gnote = f"Corrected re-measurement (job {CORRECTED_JOB_ABLATION}, checkpoint 45352a3); supersedes old malformed 325557"
+        else:
+            label = g
+            gnote = "job 2354994 (unchanged raw)"
+        rows.append([label] + cells(abl["per_graph"][g]) + [trials, gnote])
+    notes = [
+        "The synthetic-4 aggregate is a MIXED-CHECKPOINT geometric mean: three graphs from "
+        "job 2354994 and the corrected 325557 from job 2406254 (checkpoint 45352a3). It is not "
+        "a single-checkpoint re-measurement of all four graphs.",
+        "Per-graph and aggregate effects are distinct. Prose rounding of the aggregate is "
+        "H = 1.679x, W = 1.066x, A = 1.391x. The old malformed-325557 headline "
+        "(H = 1.655, W = 1.065, A = 1.396) is retained only as a historical value and is not the "
+        "current main value.",
+        f"n=5 per configuration; the per-invocation untimed H1W1A1 warm-up is excluded from the "
+        f"40 formal rows (corrected 325557: H0W0A0 median {abl['base_full']['H0W0A0']:.2f} s, "
+        f"H1W1A1 median {abl['base_full']['H1W1A1']:.2f} s). Warp-Cooperative Accumulation is "
+        "graph-dependent (56438_300801 = 0.9916x < 1.0). Not generalized to roadNet.",
     ]
-    notes = ["Per-factor main effects are recomputed from configuration medians in the "
-             "canonical raw ablation TSVs and checked against the archived contribution TSVs.",
-             "Warp-Cooperative Accumulation is graph-dependent (range ~0.970x-1.175x across "
-             "the 5 measured graphs)."]
-    return write_table("T3_ablation_summary", header, rows, "T3  Ablation Summary", notes)
+    return write_table("T3_ablation_summary", header, rows,
+                       "T3  Ablation Summary (corrected 325557; mixed-checkpoint aggregate)", notes)
+
+
+def _cuda_oom_snippet(evidence_line):
+    """host_pure.cu:144: out of memory  (strip the absolute source prefix)."""
+    if not evidence_line:
+        return ""
+    m = re.search(r"([^/\s]+\.cu:\d+:.*)$", evidence_line)
+    return m.group(1) if m else evidence_line
 
 
 def table_T4(mem):
-    """Memory feasibility table using only matching legacy TSVs and logs."""
-    header = ["Implementation", "Batch Size", "Effective Batch", "Sub-Batch",
-              "Number of Sub-Batches", "Median Runtime (s)", "Status",
-              "Failure Reason", "Limitation"]
+    """Corrected-325557 targeted feasibility-boundary validation (n=1 each)."""
+    header = ["Implementation", "Requested Batch", "Observed Outcome",
+              "Failure Class", "Runtime (s)", "Runner Exit", "OOM Evidence", "Note"]
+    outcome_label = {"SUCCESS": "Success",
+                     "CUDA_OOM": "CUDA out-of-memory",
+                     "CGROUP_OOM_KILL": "Cgroup host-memory OOM kill"}
+    fail_label = {None: "None", "cuda_oom": "CUDA OOM",
+                  "cgroup_host_oom_kill": "Cgroup host-memory OOM kill"}
+    runtime_cell = {"SUCCESS": None, "CUDA_OOM": "N/A (CUDA OOM)",
+                    "CGROUP_OOM_KILL": "N/A (cgroup host-memory OOM kill)"}
+    per_note = {
+        "pure_b4096": "Feasibility run (n=1)",
+        "pure_b8192": "Confirmed CUDA out-of-memory (host_pure.cu:144)",
+        "um_b10240": "Feasibility run (n=1); UM oversubscription spill over NVLink-C2C",
+        "um_b12288": "Host/cgroup memory limit exceeded; not a CUDA or HBM out-of-memory",
+        "chunked_b16384": "Tested upper limit (no unlimited-capacity claim)",
+    }
     rows = []
-    for label in ["GPU_Opt_Pure", "GPU_Opt", "GPU_Opt_Pure_Chunked"]:
-        pts = mem[label]
-        for b in sorted(pts.keys()):
-            p = pts[b]
-            if p["effective"] is not None:
-                eff = str(p["effective"])
-                sub = str(p["sub_batch"])
-                nsub = str(p["num_subs"])
-            elif label == "GPU_Opt_Pure":
-                eff = "Not Recorded"
-                sub = "Not Applicable"
-                nsub = "Not Applicable"
-            else:
-                eff = sub = nsub = "Not Recorded"
-            if p["success"]:
-                rt = f"{p['med']:.2f}"; status = "Success"; reason = "None"
-            elif p["fail_class"] == "cuda_oom":
-                rt = "N/A (OOM)"; status = "Out of Memory"
-                reason = "CUDA out of memory recorded in log"
-            elif p["fail_class"] == "exit_137_unconfirmed":
-                rt = "N/A (failed)"; status = "Failed"
-                reason = "OOM_OR_FAIL (exit 137; cause not independently confirmed)"
-            else:
-                rt = "N/A (failed)"; status = "Failed"
-                reason = "Unspecified runtime failure"
-            lim = ("Legacy feasibility only (oldtree_f05ec52_20260512); "
-                   "not current block-kernel performance")
-            if label == "GPU_Opt" and b == 12288:
-                lim += "; n=1 (sweep stopped)"
-            rows.append([label, b, eff, sub, nsub, rt, status, reason, lim])
-    notes = ["Runtime, status, and failure reason are recomputed from the matching legacy "
-             "feasibility TSVs and logs. Successful medians use n=5. GPU_Opt_Pure failures "
-             "are CUDA out-of-memory errors recorded in the experiment log for all 5 trials "
-             "per batch. GPU_Opt b12288 is a single failed attempt (n=1; the sweep stopped) "
-             "recorded as OOM_OR_FAIL with exit 137; no CUDA OOM, host OOM-kill, or scheduler "
-             "OOM record exists for it, so it is not reported as confirmed Out of Memory. "
-             "Failed runs are N/A, never 0 s.",
-             "Effective Batch, Sub-Batch, and Number of Sub-Batches come from the matching "
-             "legacy experiment logs when recorded. GPU_Opt_Pure does not record those fields.",
-             "Observed feasibility in the tested range: GPU_Opt_Pure (maximum successful "
-             "requested batch 4096) < GPU_Opt (10240) < GPU_Opt_Pure_Chunked (16384). "
-             "This does not imply unlimited capacity."]
-    return write_table("T4_memory_scalability", header, rows, "T4  Memory Scalability", notes)
+    for d in mem:
+        if d["success"]:
+            rt = f"{d['runtime']:.2f}"
+            evidence = "none"
+        else:
+            rt = runtime_cell[d["outcome"]]
+            evidence = (f"cuda_oom ({_cuda_oom_snippet(d['evidence_line'])})"
+                        if d["fail_class"] == "cuda_oom" else "none (SIGKILL, exit 137)")
+        rows.append([d["impl"], d["batch"], outcome_label[d["outcome"]],
+                     fail_label[d["fail_class"]], rt, d["exit"], evidence,
+                     per_note[d["config"]]])
+    notes = [
+        f"Targeted feasibility-boundary validation on the corrected 325557 graph "
+        f"(job {CORRECTED_JOB_CORRECTNESS_MEM}, checkpoint 45352a3); each configuration n=1. "
+        "This confirms feasibility ordering, not performance. Runtimes are single-run wall-clock "
+        "values at different requested batches and are not a performance comparison. Failures are "
+        "shown as N/A, never 0 s.",
+        "Two failure classes are kept distinct: GPU_Opt_Pure b8192 is a confirmed CUDA "
+        "(GPU-device) out-of-memory (runner exit 1, host_pure.cu:144: out of memory); GPU_Opt "
+        "b12288 is a host/cgroup memory OOM kill (SIGKILL, exit 137) with CUDA-level "
+        "oom_evidence=none, so it is NOT a CUDA or HBM out-of-memory.",
+        "Observed feasible ordering within the tested range only: GPU_Opt_Pure (maximum "
+        "successful requested batch 4096) < GPU_Opt (10240) < GPU_Opt_Pure_Chunked (16384). "
+        "Chunked was tested to 16384; this is no unlimited-capacity claim. The input file is "
+        "about 43.25 MiB; capacity pressure is the batch-dependent working set, not the input "
+        "graph. Corrected 325557 only; not generalized to other graphs or GPUs.",
+    ]
+    return write_table("T4_memory_scalability", header, rows,
+                       "T4  Memory Feasibility Boundary Validation (corrected 325557)", notes)
 
 
-def table_T5(small, mem, small_nf, mem_nf):
-    header = ["Validation Scope", "Reference", "Candidate", "Graph", "Comparison Level",
-              "Mismatches", "Missing Values", "Non-Finite Values",
-              "Maximum Relative Error", "Status", "Limitation"]
+def table_T5(corr, small):
+    """Full-vector correctness assembled from TWO distinct kinds of evidence:
+
+      * Panel A -- Independent CPU reference (Tier A): 3 small graphs validated
+        against an independent Sequential CPU reference (job 2367583).
+      * Panel B -- Cross-implementation consistency (Tier B): all 10 corrected-
+        325557 cross-implementation comparisons (job 2404743).
+
+    Tier A is a comparison against an independent ground-truth reference; Tier B is
+    an implementation-consistency check on the same corrected input, NOT a
+    comparison against an independent ground truth. Every value is read from
+    audited canonical artifacts. Total = 13 rows."""
+    header = ["EvidenceTier", "Graph", "Reference", "Candidate", "ReferenceBatch",
+              "CandidateBatch", "VectorLength", "MissingIndices", "MismatchedElements",
+              "MaxAbsoluteError", "MaxRelativeError", "ByteIdentical",
+              "ToleranceResult", "CorrectnessScope"]
+    tier_a = "Independent CPU reference"
+    tier_b = "Cross-implementation consistency"
+    scope_a = "Full-vector comparison against independent Sequential CPU reference"
+    scope_b = "Full-vector cross-implementation comparison on corrected 325557 graph"
     rows = []
-    gmap = {"data/benchmark_7000_41459": "benchmark_7000_41459",
-            "data/benchmark_11023_62184": "benchmark_11023_62184",
-            "data/chain_200": "chain_200"}
-    for r in small:
-        graph = gmap[r["graph_path"]]
+    # Panel A -- independent CPU reference (Sequential vs GPU_Opt) on 3 small graphs.
+    for s in small:
         rows.append([
-            "Small full-vector", "Sequential (CPU)", "GPU_Opt", graph,
-            "Full Vector", r["mismatched_elements"],
-            str(int(r["missing_reference_only"]) + int(r["missing_candidate_only"])),
-            str(small_nf[graph]), f"{float(r['max_rel_error']):.2e}",
-            ("Pass" if r["status"] == "PASS" else "Core Fail"),
-            "Small graph; independent CPU reference; n=1"])
-    # memory-path comparison matrix
-    def find(subclass, a, b):
-        for r in mem:
-            if r["comparison_subclass"] == subclass and r["label_a"] == a and r["label_b"] == b:
-                return r
-        return None
-    same_path = [("gpu_opt_b1024", "gpu_opt_pure_b1024", "GPU_Opt (b1024)", "GPU_Opt_Pure (b1024)"),
-                 ("gpu_opt_b1024", "gpu_opt_pure_chunked_b1024", "GPU_Opt (b1024)", "GPU_Opt_Pure_Chunked (b1024)"),
-                 ("gpu_opt_pure_b1024", "gpu_opt_pure_chunked_b1024", "GPU_Opt_Pure (b1024)", "GPU_Opt_Pure_Chunked (b1024)")]
-    for a, b, la, lb in same_path:
-        r = find("same_batch_diff_path", a, b)
-        rows.append(["Memory-path same-batch/different-path", la, lb, "325557_3216152",
-                     "Full Vector", r["mismatched_elements"],
-                     str(int(r["missing_a"]) + int(r["missing_b"])),
-                     str(mem_nf[(a, b)]), f"{float(r['max_rel_error']):.2e}",
-                     ("Pass" if r["status"] == "PASS" else "Core Fail"),
-                     "Non-byte-identical (SHA256 differ) but within mixed tolerance; n=1"])
-    stress = [("gpu_opt_b9792", "gpu_opt_b1024", "GPU_Opt (b9792)", "GPU_Opt (b1024)"),
-              ("gpu_opt_pure_chunked_b16384", "gpu_opt_pure_chunked_b1024",
-               "GPU_Opt_Pure_Chunked (b16384)", "GPU_Opt_Pure_Chunked (b1024)")]
-    for a, b, la, lb in stress:
-        r = find("same_impl_diff_batch", a, b)
-        rows.append(["Memory-path stress (same-impl/different-batch)", la, lb, "325557_3216152",
-                     "Full Vector", r["mismatched_elements"],
-                     str(int(r["missing_a"]) + int(r["missing_b"])),
-                     str(mem_nf[(a, b)]),
-                     f"{float(r['max_rel_error']):.2e}", "Core Fail",
-                     "Exceeds rel_tol 1e-6; cause not determined; not relabeled as Pass"])
-    r = find("pathmerge_cross", "pathmerge_b4096", "gpu_opt_b1024")
-    rows.append(["PathMerge cross-implementation diagnostic",
-                 "PathMerge (b4096)", "GPU_Opt (b1024)",
-                 "325557_3216152", "Full Vector", r["mismatched_elements"],
-                 str(int(r["missing_a"]) + int(r["missing_b"])),
-                 str(mem_nf[("pathmerge_b4096", "gpu_opt_b1024")]),
-                 f"{float(r['max_rel_error']):.2e}", "Supported with Limitations",
-                 "Observed difference only: external comparator is not ground truth; "
-                 "correctness is undetermined"])
-    notes = ["abs_tol = 1e-3, rel_tol = 1e-6 (canonical; unchanged). "
-             "Non-Finite Values = count of NaN/Inf (0 = all vectors finite/valid).",
-             "The canonical memory-path stress divergence is preserved as Core Fail and is "
-             "not hidden or relabeled. Sources: result/correctness/small_full_vector/"
-             "correctness_summary.tsv; result/correctness/memory_paths/canonical_job_2368587/"
-             "comparison_matrix.tsv."]
-    return write_table("T5_correctness_summary", header, rows, "T5  Correctness Summary", notes)
+            tier_a, s["graph"], s["ref_impl"], s["cand_impl"],
+            s["ref_batch"], s["cand_batch"], s["vec_len"], s["missing"], s["mismatch"],
+            f"{s['max_abs']:.3e}", f"{s['max_rel']:.3e}",
+            "No" if not s["byte_identical"] else "Yes",
+            s["tol_result"], scope_a])
+    # Panel B -- cross-implementation consistency on the corrected 325557 graph.
+    for c in corr["comparisons"]:
+        rows.append([
+            tier_b, CORRECTED_GRAPH, c["ref_impl"], c["cand_impl"],
+            c["ref_batch"], c["cand_batch"], c["vec_len"], c["missing"], c["mismatch"],
+            f"{c['max_abs']:.3e}", f"{c['max_rel']:.3e}",
+            "No" if not c["byte_identical"] else "Yes",
+            c["tol_result"], scope_b])
+    notes = [
+        "Panel A (EvidenceTier = Independent CPU reference): the three small graphs are validated "
+        "full-vector against an INDEPENDENT Sequential CPU reference (Reference = Sequential, "
+        "Candidate = GPU_Opt; PBS job 2367583). Panel B (EvidenceTier = Cross-implementation "
+        f"consistency): the corrected {CORRECTED_GRAPH} graph is checked for full-vector agreement "
+        "across the six per-implementation BC vectors (job 2404743); this is an implementation-"
+        "consistency check, NOT a comparison against an independent ground truth.",
+        f"abs_tol = {CORRECTNESS_ABS_TOL}, rel_tol = {CORRECTNESS_REL_TOL}. PASS means zero "
+        "mismatched elements under the predefined mixed tolerance; PASS does NOT imply byte-identical "
+        "output (per-implementation SHA256 differ, so ByteIdentical = No). All 13 rows have "
+        "MissingIndices = 0, MismatchedElements = 0, and ToleranceResult = PASS.",
+        "PathMerge is an external comparator, not a ground-truth implementation; the PathMerge rows "
+        "are a numerical-agreement check, not an exact-match claim. Maximum betweenness centrality "
+        "agrees across all corrected-325557 implementations at vertex index 272816.",
+        "Historical results obtained from the malformed-325557 input (former Core Fail, "
+        "canonical_job_2368587) are EXCLUDED from this active correctness table and retained only as "
+        f"provenance (superseded by job {CORRECTED_JOB_CORRECTNESS_MEM}).",
+    ]
+    return write_table("T5_correctness_summary", header, rows,
+                       "T5  Correctness and Numerical Behavior", notes)
 
 
 def table_T6(env):
@@ -1153,7 +1405,7 @@ def rel_inputs(*paths):
     return ";".join(paths)
 
 
-def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
+def write_manifests_and_readmes(fig_out, tab_out, mp, corr, small):
     # ---- FIGURE_MANIFEST.tsv -------------------------------------------------
     fm_header = ["FigureID", "Title", "Claim", "InputFiles", "GenerationScript",
                  "Metric", "Aggregation", "Trials", "PDF", "PNG", "SVG", "Limitations"]
@@ -1180,25 +1432,14 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
     ]
     ablation_inputs = [
         "raw_data/ablation/synthetic/job_2354994_20260710/ablation_results.tsv",
-        "raw_data/ablation/email-EuAll/job_2354999_20260710/ablation_results.tsv",
-        "result/ablation/synthetic_2354994/ablation_contributions.tsv",
-        "result/ablation/email_2354999/ablation_contributions.tsv",
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_ABLATION}/ablation_results.tsv",
+        "result/ablation/corrected_325557/ablation_contributions.tsv",
+        "result/ablation/corrected_325557/synthetic4_aggregate.tsv",
     ]
-    memory_tsv_inputs = [
-        "raw_data/memory_scalability/325557_3216152/gpu_opt/"
-        "job_notrecorded_20260512/oversubscribe_results_gpu_opt.tsv",
-        "raw_data/memory_scalability/325557_3216152/gpu_opt_pure/"
-        "job_notrecorded_20260512/oversubscribe_results_gpu_opt_pure.tsv",
-        "raw_data/memory_scalability/325557_3216152/gpu_opt_pure_chunked/"
-        "job_notrecorded_20260512/oversubscribe_results_gpu_opt_pure_chunked.tsv",
-    ]
-    memory_log_inputs = [
-        "raw_data/memory_scalability/325557_3216152/gpu_opt/"
-        "job_notrecorded_20260512/um_experiment_gpu_opt.log",
-        "raw_data/memory_scalability/325557_3216152/gpu_opt_pure/"
-        "job_notrecorded_20260512/um_experiment_gpu_opt_pure.log",
-        "raw_data/memory_scalability/325557_3216152/gpu_opt_pure_chunked/"
-        "job_notrecorded_20260512/um_experiment_gpu_opt_pure_chunked.log",
+    memory_inputs = [
+        "result/memory_scalability/corrected_325557/feasibility_boundary.tsv",
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/feasibility_results.tsv",
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/oom_evidence.tsv",
     ]
     kernel_inputs = [
         "raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/"
@@ -1212,22 +1453,12 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
     ]
     correctness_inputs = [
         "result/correctness/small_full_vector/correctness_summary.tsv",
-        "result/correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv",
-        "result/correctness/small_full_vector/benchmark_7000_41459/comparison.md",
-        "result/correctness/small_full_vector/benchmark_11023_62184/comparison.md",
-        "result/correctness/small_full_vector/chain_200/comparison.md",
-        "result/correctness/memory_paths/canonical_job_2368587/"
-        "gpu_opt_b1024__vs__gpu_opt_pure_b1024.md",
-        "result/correctness/memory_paths/canonical_job_2368587/"
-        "gpu_opt_b1024__vs__gpu_opt_pure_chunked_b1024.md",
-        "result/correctness/memory_paths/canonical_job_2368587/"
-        "gpu_opt_pure_b1024__vs__gpu_opt_pure_chunked_b1024.md",
-        "result/correctness/memory_paths/canonical_job_2368587/"
-        "gpu_opt_b9792__vs__gpu_opt_b1024.md",
-        "result/correctness/memory_paths/canonical_job_2368587/"
-        "gpu_opt_pure_chunked_b16384__vs__gpu_opt_pure_chunked_b1024.md",
-        "result/correctness/memory_paths/canonical_job_2368587/"
-        "pathmerge_b4096__vs__gpu_opt_b1024.md",
+        "result/correctness/corrected_325557/comparison_summary.tsv",
+        "result/correctness/corrected_325557/vector_summary.tsv",
+    ] + [
+        f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/comparisons/"
+        f"{c['ref_label']}__vs__{c['cand_label']}.json"
+        for c in corr["comparisons"]
     ]
     fm = [
         ["F1", "Main Runtime Comparison",
@@ -1249,22 +1480,28 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
          "median; sample SD where n>=2", "per batch n=1-4",
          fig_out["F3"]["pdf"], fig_out["F3"]["png"], fig_out["F3"]["svg"],
          "Clamped: email-EuAll 8192->7393; 325557_3216152 8192->6018; gaps not connected"],
-        ["F4", "Ablation Contributions",
-         "Hybrid BFS and Dual Streams help; Warp-Cooperative Accumulation is graph-dependent",
+        ["F4", "Ablation Contributions (corrected 325557; mixed-checkpoint aggregate)",
+         "Hybrid BFS and Dual Streams help; Warp-Cooperative Accumulation is graph-dependent "
+         "(corrected 325557 H=1.4767x W=1.1012x A=1.5563x; synthetic-4 mixed aggregate "
+         "H=1.679x W=1.066x A=1.391x)",
          rel_inputs(*ablation_inputs), gs, "Factor Main-Effect Speedup",
-         "configuration medians; factorial and graph geometric means",
-         "synthetic 5/configuration; email 3/configuration",
+         "configuration medians; factorial and graph geometric means (mixed-checkpoint aggregate)",
+         "5 per configuration (corrected 325557 job 2406254; other 3 job 2354994)",
          fig_out["F4"]["pdf"], fig_out["F4"]["png"], fig_out["F4"]["svg"],
-         "5 measured graphs; not generalized to roadNet"],
-        ["F5", "Memory Scalability (325557_3216152)",
-         "Observed feasible batch: GPU_Opt_Pure < GPU_Opt < GPU_Opt_Pure_Chunked",
-         rel_inputs(*(memory_tsv_inputs + memory_log_inputs)), gs,
-         "Median Runtime (s) and Failure Status",
-         "median; sample SD for successful runs",
-         "5/configuration except GPU_Opt b12288 OOM_OR_FAIL (exit 137) n=1",
+         "4 synthetic graphs; mixed checkpoints (325557 corrected via job 2406254 / checkpoint "
+         "45352a3; others job 2354994); per-graph and aggregate distinct; warm-up excluded from "
+         "40 formal rows; not generalized to roadNet"],
+        ["F5", "Memory Feasibility Boundary Validation (corrected 325557)",
+         "Feasible batch within tested range: GPU_Opt_Pure 4096 < GPU_Opt 10240 < "
+         "GPU_Opt_Pure_Chunked 16384 (Pure b8192 CUDA OOM; UM b12288 cgroup host-memory OOM kill)",
+         rel_inputs(*memory_inputs), gs,
+         "Single-run wall-clock time and failure class",
+         "single run per configuration (no cross-trial aggregation)",
+         "n=1 per configuration (targeted boundary validation)",
          fig_out["F5"]["pdf"], fig_out["F5"]["png"], fig_out["F5"]["svg"],
-         "Legacy feasibility only; 325557_3216152 only; no unlimited-capacity claim; "
-         "log-confirmed CUDA OOM distinguished from OOM_OR_FAIL (exit 137, unconfirmed)"],
+         "Corrected 325557 only (job 2404743 / checkpoint 45352a3); targeted boundary not a sweep; "
+         "runtimes not a performance comparison; CUDA OOM (device) vs cgroup host-memory OOM kill "
+         "(exit 137) distinct; failures shown as markers not 0 s; no unlimited-capacity claim"],
         ["F6", "Shared vs Block Kernel",
          "Block kernel is faster than shared: roadNet-PA 1.52x, roadNet-TX 1.66x",
          rel_inputs(*kernel_inputs), gs, "Median Runtime (s)", "median; sample SD", "3/kernel/graph",
@@ -1292,25 +1529,40 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, meta):
          rel_inputs(*main_inputs), gs, "median (speedup = median/median)",
          "email-EuAll 5/3; roadNet-PA/TX/CA 3/3 (GPU_Opt/PathMerge)",
          tab_out["T2"]["md"], tab_out["T2"]["tsv"], "Four graphs only"],
-        ["T3", "Ablation Summary", "Per-factor main effects; Warp-Cooperative is graph-dependent",
+        ["T3", "Ablation Summary (corrected 325557; mixed-checkpoint aggregate)",
+         "Corrected 325557 H=1.4767x W=1.1012x A=1.5563x; synthetic-4 mixed aggregate "
+         "H=1.679x W=1.066x A=1.391x; Warp-Cooperative is graph-dependent",
          rel_inputs(*ablation_inputs), gs,
-         "configuration medians; factorial and graph geometric means",
-         "synthetic 5/configuration; email 3/configuration",
+         "configuration medians; factorial and graph geometric means (mixed-checkpoint aggregate)",
+         "5 per configuration (corrected 325557 job 2406254; other 3 job 2354994)",
          tab_out["T3"]["md"], tab_out["T3"]["tsv"],
-         "5 graphs; not generalized to roadNet"],
-        ["T4", "Memory Scalability",
-         "Observed feasible batch ordering GPU_Opt_Pure < GPU_Opt < GPU_Opt_Pure_Chunked",
-         rel_inputs(*(memory_tsv_inputs + memory_log_inputs)), gs,
-         "median runtime; recorded execution metadata",
-         "5/configuration except GPU_Opt b12288 OOM_OR_FAIL (exit 137) n=1",
+         "4 synthetic graphs; mixed checkpoints; per-graph and aggregate distinct; warm-up "
+         "excluded from 40 formal rows; old malformed-325557 values retained only as historical; "
+         "not generalized to roadNet"],
+        ["T4", "Memory Feasibility Boundary Validation (corrected 325557)",
+         "Feasible batch within tested range: GPU_Opt_Pure 4096 < GPU_Opt 10240 < "
+         "GPU_Opt_Pure_Chunked 16384 (Pure b8192 CUDA OOM; UM b12288 cgroup host-memory OOM kill)",
+         rel_inputs(*memory_inputs), gs,
+         "single-run wall-clock time; evidence-backed failure class",
+         "n=1 per configuration (targeted boundary validation)",
          tab_out["T4"]["md"], tab_out["T4"]["tsv"],
-         "Legacy feasibility; 325557 only; failures shown as N/A not 0 s; "
-         "log-confirmed CUDA OOM distinguished from OOM_OR_FAIL (exit 137, unconfirmed)"],
-        ["T5", "Correctness Summary",
-         "Small full-vector Pass; memory-path stress Core Fail preserved",
-         rel_inputs(*correctness_inputs), gs, "single-run full-vector comparison", "1/comparison",
+         "Corrected 325557 only (job 2404743 / checkpoint 45352a3); failures shown as N/A not 0 s; "
+         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137) distinct; runtimes not "
+         "a performance comparison; no unlimited-capacity claim"],
+        ["T5", "Correctness and Numerical Behavior",
+         "3 independent Sequential-CPU-reference small-graph checks (Tier A) + 10 cross-"
+         "implementation comparisons on corrected 325557 (Tier B); all 13 have MissingIndices=0, "
+         "MismatchedElements=0, PASS within mixed tolerance, ByteIdentical=No",
+         rel_inputs(*correctness_inputs), gs,
+         "single-run full-vector comparison (abs_tol 1e-3, rel_tol 1e-6)",
+         "1 per comparison (3 independent CPU-reference + 10 cross-implementation = 13; "
+         "jobs 2367583 / 2404743)",
          tab_out["T5"]["md"], tab_out["T5"]["tsv"],
-         "Core Fail not relabeled; PathMerge cross-implementation correctness undetermined"],
+         "Tier A is a comparison against an independent Sequential CPU reference; Tier B is a cross-"
+         "implementation consistency check on the corrected 325557 graph (not an independent ground "
+         "truth). Numerically consistent within mixed tolerance but not byte-identical (SHA256 "
+         "differ); PathMerge is an external comparator, not ground truth; old malformed-input Core "
+         "Fail retained only as historical provenance (superseded by job 2404743)"],
         ["T6", "Experimental Environment", "Hardware/software environment and bandwidth",
          "result/environment/environment.md;raw_data/main_performance/proposed_variants/email-EuAll/"
          "_run/job_2357334_20260711/phase_timing.log;"
@@ -1337,16 +1589,19 @@ def write_fig_readme(mp):
     lines.append("Generated by `scripts/generate_thesis_artifacts.py` from canonical, "
                  "Git-tracked data only. **All in-figure text is English.** Graph and "
                  "implementation names are kept verbatim.\n")
-    lines.append("Regenerate:\n")
-    lines.append("```bash\npython3 scripts/generate_thesis_artifacts.py\n```\n")
-    lines.append("Each figure is exported as PDF (embedded fonts), PNG (300 dpi), and SVG. "
-                 "See `FIGURE_MANIFEST.tsv` for per-figure inputs, metric, aggregation, "
-                 "trials, and limitations.\n")
+    lines.append("Regenerate the corrected-data figures (F4, F5) for Gate W7.4.1:\n")
+    lines.append(f"```bash\n{GEN_COMMAND}\n```\n")
+    lines.append("`THESIS_FIGS` selects which figures to (re)render. F1/F2/F3/F6/F7 are preserved "
+                 "byte-for-byte from their original toolchain (matplotlib binary output is only "
+                 "reproducible run-to-run within one toolchain), so this gate regenerates ONLY F4 "
+                 "and F5 (corrected 325557). Each figure is exported as PDF (embedded fonts), "
+                 "PNG (300 dpi), and SVG. See `FIGURE_MANIFEST.tsv` for per-figure provenance.\n")
     lines.append("## Policy\n")
     lines.append("- median = numpy.median; speedup = median(PathMerge tuned) / median(GPU_Opt).\n"
-                 "- Failed configurations are drawn as explicit failure markers, never as 0 s; "
-                 "log-confirmed CUDA OOM and OOM_OR_FAIL (exit 137, unconfirmed) use distinct markers.\n"
-                 "- Missing / invalid measurements are not connected as if they existed.\n"
+                 "- Failed configurations are drawn as explicit failure markers, never as 0 s. In F5, "
+                 "a CUDA (GPU-device) out-of-memory and a cgroup host-memory OOM kill (exit 137) use "
+                 "distinct markers and are never conflated.\n"
+                 "- Missing / unmeasured points are not connected as if they existed.\n"
                  "- Colorblind-safe (Okabe-Ito) palette; series also distinguished by markers/hatching.\n"
                  "- Consistent graph order and implementation colors across figures.\n"
                  "- Deterministic output (fixed SOURCE_DATE_EPOCH, no embedded timestamps).\n")
@@ -1355,9 +1610,10 @@ def write_fig_readme(mp):
         "F1": ("main_runtime_comparison", "Grouped bars (log y): GPU_Opt b512 vs tuned PathMerge."),
         "F2": ("main_speedup_over_tuned_pathmerge", "Speedup bars with 1.0x parity line."),
         "F3": ("pathmerge_batch_sweep", "Per-graph sweep; screening/confirmation and clamping shown."),
-        "F4": ("ablation_contributions", "Main effects + per-graph Warp-Cooperative dependence."),
-        "F5": ("memory_scalability_325557", "Feasibility on 325557; failure band (not 0 s) "
-               "distinguishes CUDA OOM from OOM_OR_FAIL (exit 137)."),
+        "F4": ("ablation_contributions", "Corrected 325557: synthetic-4 mixed-checkpoint aggregate "
+               "main effects + per-graph main effects (Warp-Cooperative graph-dependence)."),
+        "F5": ("memory_scalability_325557", "Corrected 325557 targeted feasibility boundary; failure "
+               "band (not 0 s) distinguishes CUDA OOM (device) from cgroup host-memory OOM kill (exit 137)."),
         "F6": ("shared_vs_block_kernel", "Shared vs block kernel; block 1.52x / 1.66x faster."),
         "F7": ("phase_breakdown", "Stacked BFS / Backward / Other wall-clock time."),
     }
@@ -1382,29 +1638,114 @@ def write_tab_readme():
     lines.append("Generated by `scripts/generate_thesis_artifacts.py`. Each table is written "
                  "as presentation-ready Markdown (`.md`) and machine-readable `.tsv`. "
                  "**All table text is English.** See `TABLE_MANIFEST.tsv` for provenance.\n")
-    lines.append("Regenerate:\n```bash\npython3 scripts/generate_thesis_artifacts.py\n```\n")
+    lines.append(f"Regenerate:\n```bash\n{GEN_COMMAND}\n```\n")
     lines.append("## Tables\n")
     td = {
         "T1": "Graph Metadata (nodes, edges, degrees, directedness).",
         "T2": "Main Performance (GPU_Opt vs tuned PathMerge, speedup, GTEPS, trials).",
-        "T3": "Ablation Summary (Hybrid BFS / Warp-Cooperative / Dual-Stream effects).",
-        "T4": "Memory Scalability (feasible batch, effective/sub-batch, status).",
-        "T5": "Correctness Summary (small Pass; memory-path stress Core Fail preserved).",
+        "T3": "Ablation Summary (corrected 325557 H/W/A + synthetic-4 mixed-checkpoint aggregate).",
+        "T4": "Memory Feasibility Boundary Validation (corrected 325557; 5 boundary points, n=1).",
+        "T5": "Correctness and Numerical Behavior (Tier A: independent Sequential-CPU-reference on "
+              "3 small graphs; Tier B: cross-implementation consistency on corrected 325557; "
+              "13 comparisons, mismatch 0).",
         "T6": "Experimental Environment (hardware, software, bandwidth).",
     }
     for tid, desc in td.items():
         lines.append(f"- **{tid}** `{tid}_*.md` / `.tsv` -- {desc}")
     lines.append("")
     lines.append("## Notes\n")
-    lines.append("- Status vocabulary: Success, Out of Memory, Failed, Pass, Core Fail, "
-                 "Supported with Limitations.\n"
-                 "- The canonical memory-path stress result is preserved as **Core Fail** "
-                 "and is never relabeled as Pass.\n"
-                 "- Failures are reported as `N/A (OOM)` / `N/A (failed)`, never as 0 seconds; "
-                 "`OOM_OR_FAIL (exit 137)` without an independent OOM record is reported as "
-                 "Failed, not upgraded to confirmed Out of Memory.\n")
+    lines.append("- Status vocabulary: Success, CUDA out-of-memory, Cgroup host-memory OOM kill, "
+                 "PASS, No (byte-identical).\n"
+                 "- T3/T4/T5 use the corrected 325557 official inputs (jobs 2404743 / 2406254, "
+                 "checkpoint 45352a3). The old malformed-325557 Core Fail and legacy values are "
+                 "retained only as historical and are not the current judgment.\n"
+                 "- T4 failures are reported as `N/A (CUDA OOM)` / `N/A (cgroup host-memory OOM kill)`, "
+                 "never as 0 seconds; a CUDA (device) OOM and a cgroup host-memory OOM kill (exit 137) "
+                 "are kept distinct.\n"
+                 "- T5 carries two evidence tiers: Tier A (Independent CPU reference) validates 3 "
+                 "small graphs against an independent Sequential CPU reference; Tier B (Cross-"
+                 "implementation consistency) checks the corrected 325557 graph across 6 per-"
+                 "implementation vectors. All 13 comparisons are numerically consistent within the "
+                 "mixed tolerance (abs_tol 1e-3, rel_tol 1e-6) with MissingIndices = 0 and "
+                 "MismatchedElements = 0, but ByteIdentical = No; PathMerge is an external "
+                 "comparator, not ground truth.\n")
     with open(TAB_DIR / "README.md", "w") as f:
         f.write("\n".join(lines))
+
+
+# --------------------------------------------------------------------------- #
+# Corrected-325557 artifact provenance manifest (Gate W7.4.1).
+# --------------------------------------------------------------------------- #
+import hashlib
+
+
+def _sha256_file(path):
+    h = hashlib.sha256()
+    with open(path, "rb") as f:
+        for chunk in iter(lambda: f.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def write_corrected_provenance():
+    """Record, for each artifact updated with corrected-325557 data, the full
+    provenance the gate requires (canonical inputs, corrected graph SHA256,
+    checkpoint, PBS job, generation command, artifact SHA256, mixed-checkpoint
+    flag, memory failure class, correctness tolerance, limitation)."""
+    abl_inputs = ("raw_data/corrected_325557/job_2406254/ablation_results.tsv;"
+                  "raw_data/ablation/synthetic/job_2354994_20260710/ablation_results.tsv;"
+                  "result/ablation/corrected_325557/ablation_contributions.tsv;"
+                  "result/ablation/corrected_325557/synthetic4_aggregate.tsv")
+    mem_inputs = ("result/memory_scalability/corrected_325557/feasibility_boundary.tsv;"
+                  "raw_data/corrected_325557/job_2404743/feasibility_results.tsv;"
+                  "raw_data/corrected_325557/job_2404743/oom_evidence.tsv")
+    corr_inputs = ("result/correctness/small_full_vector/correctness_summary.tsv;"
+                   "result/correctness/corrected_325557/comparison_summary.tsv;"
+                   "result/correctness/corrected_325557/vector_summary.tsv;"
+                   "raw_data/corrected_325557/job_2404743/comparisons/*.json")
+    tol = f"abs_tol={CORRECTNESS_ABS_TOL}, rel_tol={CORRECTNESS_REL_TOL}"
+    specs = [
+        ("T3", ["result/tables/thesis/T3_ablation_summary.md",
+                "result/tables/thesis/T3_ablation_summary.tsv"], abl_inputs,
+         CORRECTED_JOB_ABLATION, "Yes", "not_applicable", "not_applicable",
+         "4 synthetic graphs; per-graph and aggregate distinct; warm-up excluded from 40 formal rows"),
+        ("F4", ["result/figures/thesis/ablation_contributions.pdf",
+                "result/figures/thesis/ablation_contributions.png",
+                "result/figures/thesis/ablation_contributions.svg"], abl_inputs,
+         CORRECTED_JOB_ABLATION, "Yes", "not_applicable", "not_applicable",
+         "4 synthetic graphs; mixed-checkpoint aggregate; not generalized to roadNet"),
+        ("T4", ["result/tables/thesis/T4_memory_scalability.md",
+                "result/tables/thesis/T4_memory_scalability.tsv"], mem_inputs,
+         CORRECTED_JOB_CORRECTNESS_MEM, "No",
+         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137)", "not_applicable",
+         "targeted boundary n=1; runtimes not a performance comparison; no unlimited-capacity claim"),
+        ("F5", ["result/figures/thesis/memory_scalability_325557.pdf",
+                "result/figures/thesis/memory_scalability_325557.png",
+                "result/figures/thesis/memory_scalability_325557.svg"], mem_inputs,
+         CORRECTED_JOB_CORRECTNESS_MEM, "No",
+         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137)", "not_applicable",
+         "targeted boundary n=1; failures as markers not 0 s; points not connected"),
+        ("T5", ["result/tables/thesis/T5_correctness_summary.md",
+                "result/tables/thesis/T5_correctness_summary.tsv"], corr_inputs,
+         CORRECTED_JOB_CORRECTNESS_MEM, "No", "not_applicable", tol,
+         "13 comparisons (3 Tier A independent CPU reference + 10 Tier B cross-implementation) "
+         "mismatch 0; ByteIdentical No; PathMerge is an external comparator, not ground truth"),
+    ]
+    header = ["ArtifactID", "ArtifactPath", "ArtifactSHA256", "CanonicalInputPaths",
+              "CorrectedGraphSHA256", "CheckpointSHA", "PBSJobID", "GenerationCommand",
+              "MixedCheckpoint", "MemoryFailureClass", "CorrectnessTolerance", "Limitation"]
+    rows = []
+    for aid, paths, inputs, job, mixed, failclass, ctol, lim in specs:
+        for rel in paths:
+            rows.append([aid, rel, _sha256_file(ROOT / rel), inputs,
+                         CORRECTED_GRAPH_SHA256, CORRECTED_CHECKPOINT, job, GEN_COMMAND,
+                         mixed, failclass, ctol, lim])
+    out = RES / "CORRECTED_325557_ARTIFACT_PROVENANCE.tsv"
+    with open(out, "w", newline="") as f:
+        w = csv.writer(f, delimiter="\t", lineterminator="\n")
+        w.writerow(header)
+        w.writerows(rows)
+    return out
 
 
 # --------------------------------------------------------------------------- #
@@ -1424,12 +1765,13 @@ def main():
     mem = load_memory_scalability()
     ks = load_kernel_selection()
     ph = load_phase_breakdown()
-    small, memc, small_nf, mem_nf = load_correctness()
+    corr = load_correctness()
+    small = load_small_correctness()
     env = load_environment()
     thesis_values = {r["ValueID"]: r for r in read_tsv("docs/thesis/thesis_values.tsv")}
     evidence = {r["ClaimID"]: r for r in read_tsv("docs/thesis/evidence_matrix.tsv")}
 
-    # ---- validation checks ----
+    # ---- validation: UNCHANGED headline performance (T1/T2/F1/F2/F7) --------
     expected_speedup = {"email-EuAll": 3.17, "roadNet-PA": 1.31,
                         "roadNet-TX": 1.51, "roadNet-CA": 1.45}
     for g, exp in expected_speedup.items():
@@ -1450,27 +1792,6 @@ def main():
         note(f"gpu_opt_median[{g}]", cp == cc, f"recomputed={cp} canonical={cc}")
         mm = round(mp[g]["pm"]["time_med"], 2); mc = float(comp[g]["PathMerge_tuned_s"])
         note(f"pathmerge_median[{g}]", mm == mc, f"recomputed={mm} canonical={mc}")
-    # Failures never zero: assert every plotted memory point is a real success time
-    oom_ok = all((p["med"] is None) == (not p["success"]) for pts in mem.values() for p in pts.values())
-    note("failure_not_zero", oom_ok,
-         "all failed points have med=None (drawn as failure marker, not 0 s)")
-    # Failure-cause classification must match the audited raw evidence:
-    # GPU_Opt_Pure b8192+ have explicit CUDA OOM log lines; GPU_Opt b12288 has
-    # only exit 137 with no independently recorded OOM cause.
-    fail_classes = {(label, b): p["fail_class"]
-                    for label, pts in mem.items() for b, p in pts.items() if p["fail_class"]}
-    expected_fail = {("GPU_Opt_Pure", 8192): "cuda_oom", ("GPU_Opt_Pure", 10240): "cuda_oom",
-                     ("GPU_Opt_Pure", 12288): "cuda_oom", ("GPU_Opt_Pure", 16384): "cuda_oom",
-                     ("GPU_Opt", 12288): "exit_137_unconfirmed"}
-    note("memory_failure_classes", fail_classes == expected_fail,
-         f"classified={sorted(fail_classes.items())}")
-    # Core Fail present
-    core_fail = any(r["comparison_subclass"] == "same_impl_diff_batch" and r["status"] == "FAIL"
-                    for r in memc)
-    note("core_fail_present", core_fail, "same_impl_diff_batch FAIL present in comparison_matrix")
-    note("core_fail_evidence_status",
-         evidence["C-CORR-STRESS"]["Status"] == "NOT_YET_SUPPORTED",
-         f"evidence status={evidence['C-CORR-STRESS']['Status']}")
     note("clamp[email-EuAll,b8192]",
          sweeps["email-EuAll"][8192]["effective"] == 7393,
          f"effective={sweeps['email-EuAll'][8192]['effective']}")
@@ -1479,14 +1800,90 @@ def main():
          f"effective={sweeps['325557_3216152'][8192]['effective']}")
     note("phase_other_nonnegative", all(d["other"] >= 0 for d in ph.values()),
          "per-trial Other medians are non-negative")
-    memory_trial_counts_ok = all(
-        p["trials"] == (1 if label == "GPU_Opt" and b == 12288 else 5)
-        for label, pts in mem.items() for b, p in pts.items())
-    note("memory_trials", memory_trial_counts_ok,
-         "n=5 except GPU_Opt b12288 OOM_OR_FAIL (exit 137) n=1 (sweep stopped)")
 
-    # Confirm that generation reads only canonical paths, never build_miyabi,
-    # and that every recorded input is Git-tracked.
+    # ---- validation: CORRECTED ablation (T3/F4) vs the audited index --------
+    for factor, vid in {"H": "ABL-H-325557-CORR", "W": "ABL-W-325557-CORR",
+                        "A": "ABL-A-325557-CORR"}.items():
+        got = round(abl["corrected"][FACTOR_KEY[factor]], 4)
+        exp = round(float(thesis_values[vid]["Value"]), 4)
+        note(f"thesis_index_ablation_corrected[{factor}]", got == exp,
+             f"recomputed={got:.4f} indexed={exp:.4f}")
+    for factor, vid in {"H": "ABL-H-SYNTH-CORR", "W": "ABL-W-SYNTH-CORR",
+                        "A": "ABL-A-SYNTH-CORR"}.items():
+        got = round(abl["mixed_geo"][FACTOR_KEY[factor]], 3)
+        exp = round(float(thesis_values[vid]["Value"]), 3)
+        note(f"thesis_index_ablation_aggregate[{factor}]", got == exp,
+             f"recomputed(3dp)={got:.3f} indexed={exp:.3f}")
+    note("thesis_index_ablation_base_full",
+         round(abl["base_full"]["H0W0A0"], 2) == round(float(thesis_values["ABL-BASE-325557-CORR"]["Value"]), 2)
+         and round(abl["base_full"]["H1W1A1"], 2) == round(float(thesis_values["ABL-FULL-325557-CORR"]["Value"]), 2),
+         f"H0W0A0={abl['base_full']['H0W0A0']:.2f} H1W1A1={abl['base_full']['H1W1A1']:.2f}")
+    note("ablation_evidence_status",
+         evidence["C-ABL-SYNTH-CORR"]["Status"] == "SUPPORTED_WITH_LIMITATIONS",
+         f"C-ABL-SYNTH-CORR={evidence['C-ABL-SYNTH-CORR']['Status']}")
+
+    # ---- validation: CORRECTED memory feasibility (T4/F5) -------------------
+    note("failure_not_zero", all((d["runtime"] is None) == (not d["success"]) for d in mem),
+         "every failed boundary point has runtime=None (drawn as failure marker, not 0 s)")
+    fail_classes = {(d["impl"], d["batch"]): d["fail_class"] for d in mem if d["fail_class"]}
+    expected_fail = {("GPU_Opt_Pure", 8192): "cuda_oom",
+                     ("GPU_Opt", 12288): "cgroup_host_oom_kill"}
+    note("memory_failure_classes", fail_classes == expected_fail,
+         f"CUDA OOM vs cgroup host-memory OOM kill kept distinct: {sorted(fail_classes.items())}")
+    note("memory_trials_n1", all(d["trials"] == 1 for d in mem),
+         "each feasibility boundary configuration is n=1 (targeted validation, not a sweep)")
+    thesis_mem_ok = (
+        thesis_values["MEM-PURE-B8192-OOM-CORR"]["Metric"] == "cuda_oom"
+        and thesis_values["MEM-UM-B12288-OOMKILL-CORR"]["Metric"] == "host_cgroup_oom_kill"
+        and thesis_values["MEM-UM-B10240-OK-CORR"]["Metric"] == "success"
+        and thesis_values["MEM-CHUNK-B16384-OK-CORR"]["Metric"] == "success")
+    note("thesis_index_memory_classes", thesis_mem_ok,
+         "MEM-*-CORR index agrees: Pure b8192 cuda_oom; UM b12288 host_cgroup_oom_kill; UM b10240 / Chunked b16384 success")
+    note("memory_evidence_status",
+         evidence["C-MEM-FEAS-CORR"]["Status"] == "SUPPORTED_WITH_LIMITATIONS",
+         f"C-MEM-FEAS-CORR={evidence['C-MEM-FEAS-CORR']['Status']}")
+
+    # ---- validation: CORRECTED correctness (T5) -----------------------------
+    comps = corr["comparisons"]
+    # Tier A -- independent CPU reference (3 small graphs).
+    note("small_correctness_all_pass",
+         len(small) == 3 and all(
+             s["missing"] == 0 and s["mismatch"] == 0 and s["tol_result"] == "PASS"
+             for s in small),
+         "3 independent Sequential-CPU-reference small-graph comparisons: "
+         "MissingIndices/MismatchedElements 0, ToleranceResult PASS")
+    note("small_correctness_not_byte_identical",
+         all(not s["byte_identical"] for s in small),
+         "independent CPU-reference comparisons ByteIdentical = No (per-vector SHA256 differ)")
+    note("t5_total_rows_13", len(small) + len(comps) == 13,
+         f"T5 = {len(small)} Tier A (independent CPU reference) + {len(comps)} Tier B "
+         f"(cross-implementation) = {len(small) + len(comps)} rows")
+    # Tier B -- corrected-325557 cross-implementation consistency (10 comparisons).
+    note("correctness_all_mismatch_zero", all(c["mismatch"] == 0 for c in comps),
+         "all 10 corrected-325557 comparisons have MismatchedElements = 0")
+    note("correctness_not_byte_identical", all(not c["byte_identical"] for c in comps),
+         "all 10 comparisons ByteIdentical = No (per-implementation SHA256 differ)")
+    note("correctness_tolerance_pass", all(c["tol_result"] == "PASS" for c in comps),
+         "all 10 comparisons ToleranceResult = PASS")
+    note("correctness_vectors_finite",
+         all(c["nonfinite"] == 0 and c["missing"] == 0 for c in comps),
+         "no missing or non-finite values in any compared vector")
+    note("thesis_index_correctness_mismatch0",
+         int(float(thesis_values["CORR-ALLPAIRS-MISMATCH0-CORR"]["Value"])) == 0,
+         f"CORR-ALLPAIRS-MISMATCH0-CORR={thesis_values['CORR-ALLPAIRS-MISMATCH0-CORR']['Value']}")
+    note("thesis_index_correctness_maxbc",
+         thesis_values["CORR-MAXBC-325557-CORR"]["Value"] == "272816",
+         f"max BC agreement index={thesis_values['CORR-MAXBC-325557-CORR']['Value']}")
+    note("correctness_evidence_status",
+         evidence["C-CORR-CORR-325557"]["Status"] == "SUPPORTED_WITH_LIMITATIONS",
+         f"C-CORR-CORR-325557={evidence['C-CORR-CORR-325557']['Status']}")
+    # Historical preservation: the OLD malformed-input Core Fail must still exist
+    # (as historical), never relabeled as the current judgment.
+    note("historical_core_fail_preserved",
+         evidence["C-CORR-STRESS"]["Status"] == "NOT_YET_SUPPORTED",
+         f"old malformed stress C-CORR-STRESS retained historically={evidence['C-CORR-STRESS']['Status']}")
+
+    # ---- validation: canonical scope / no build_miyabi / tracked-or-pending -
     allowed_inputs = all(
         rel.startswith("raw_data/") or rel.startswith("result/") or
         rel in {"docs/graph_stats.tsv", "docs/thesis/evidence_matrix.tsv",
@@ -1497,44 +1894,58 @@ def main():
     no_build_input = all("build_miyabi" not in rel for rel in INPUTS_USED)
     note("no_build_miyabi_dependency", no_build_input,
          "no recorded input path contains build_miyabi")
-    untracked_inputs = []
+    untracked_inputs, pending_commit_inputs = [], []
     for rel in sorted(INPUTS_USED):
         repo_rel = str(Path(ROOT.name) / rel)
         proc = subprocess.run(
             ["git", "-C", str(ROOT.parent), "ls-files", "--error-unmatch", "--", repo_rel],
             stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=False)
         if proc.returncode != 0:
-            untracked_inputs.append(rel)
-    note("all_inputs_git_tracked", not untracked_inputs,
-         "all inputs tracked" if not untracked_inputs else f"untracked={untracked_inputs}")
+            if rel.startswith(PENDING_COMMIT_INPUT_PREFIXES):
+                pending_commit_inputs.append(rel)     # W7.4 corrected inputs, pending commit
+            else:
+                untracked_inputs.append(rel)
+    note("all_inputs_git_tracked_or_pending", not untracked_inputs,
+         "all inputs tracked or pending-commit corrected inputs"
+         if not untracked_inputs else f"unexpected untracked={untracked_inputs}")
+    note("corrected_inputs_pending_commit", True,
+         f"{len(pending_commit_inputs)} corrected-325557 inputs are canonical but pending commit (Gate W7.4)")
 
-    # ---- figures ----
-    fig_out = {
-        "F1": fig_F1(mp), "F2": fig_F2(mp), "F3": fig_F3(sweeps, tuned_batch),
-        "F4": fig_F4(abl), "F5": fig_F5(mem), "F6": fig_F6(ks), "F7": fig_F7(ph),
+    # ---- figures: regenerate ONLY the selected set (default all) ------------
+    fig_funcs = {
+        "F1": lambda: fig_F1(mp), "F2": lambda: fig_F2(mp),
+        "F3": lambda: fig_F3(sweeps, tuned_batch), "F4": lambda: fig_F4(abl),
+        "F5": lambda: fig_F5(mem), "F6": lambda: fig_F6(ks), "F7": lambda: fig_F7(ph),
     }
-    # ---- tables ----
+    fig_out, regenerated = {}, []
+    for fid, stem in FIG_STEMS.items():
+        if fid in FIGURES_TO_GENERATE:
+            fig_out[fid] = fig_funcs[fid]()
+            regenerated.append(fid)
+        else:   # reference the existing (byte-preserved) figure files
+            fig_out[fid] = {"pdf": stem + ".pdf", "png": stem + ".png", "svg": stem + ".svg"}
+    # ---- tables (all; T1/T2/T6 are deterministic no-ops, T3/T4/T5 updated) --
     tab_out = {
         "T1": table_T1(stats, cat), "T2": table_T2(mp), "T3": table_T3(abl),
-        "T4": table_T4(mem),
-        "T5": table_T5(small, memc, small_nf, mem_nf), "T6": table_T6(env),
+        "T4": table_T4(mem), "T5": table_T5(corr, small), "T6": table_T6(env),
     }
-    write_manifests_and_readmes(fig_out, tab_out, mp, dict())
-    core_fail_rows = sum(1 for line in (TAB_DIR / "T5_correctness_summary.tsv").read_text().splitlines()
-                         if "\tCore Fail\t" in line)
-    note("core_fail_table_rows", core_fail_rows == 2,
-         f"T5 contains {core_fail_rows} Core Fail rows")
+    write_manifests_and_readmes(fig_out, tab_out, mp, corr, small)
+    prov = write_corrected_provenance()
 
     # ---- report ----
-    print("=== Gate K0 generation: validation ===")
+    print("=== Gate W7.4.1 generation: validation ===")
     all_ok = True
     for name, ok, detail in VALIDATION:
         flag = "OK " if ok else "FAIL"
         if not ok:
             all_ok = False
         print(f"  [{flag}] {name}: {detail}")
-    print(f"\nFigures: {sorted(fig_out)}  Tables: {sorted(tab_out)}")
-    print(f"Distinct canonical inputs used: {len(INPUTS_USED)}")
+    print(f"\nFigures regenerated this run: {sorted(regenerated)} "
+          f"(preserved: {sorted(set(FIG_STEMS) - set(regenerated))})")
+    print(f"Tables written: {sorted(tab_out)}")
+    print(f"Corrected-artifact provenance: {prov.relative_to(ROOT)}")
+    print(f"Distinct canonical inputs used: {len(INPUTS_USED)} "
+          f"({len(pending_commit_inputs)} pending-commit corrected inputs)")
     print("ALL_VALIDATION_OK" if all_ok else "VALIDATION_FAILURES_PRESENT")
     return 0 if all_ok else 1
 
