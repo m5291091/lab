@@ -109,7 +109,7 @@ A=1 の phase log を保持する評価条件では、gap（wall time から BFS
 
 本節では、観測された実行時間のフェーズ内訳を記述する。2 種の資料を用いる。第 1 は、Chapter 6 の主性能測定（GPU_Opt、固定 b512、job 2357334）と同一実行の `phase_timing.log` から得た、headline 4 グラフの成分内訳である（Figure 7.3）。第 2 は、単一の nsys トレースによる GPU カーネル時間の構成比である。いずれも観測された時間配分の記述であり、フェーズ構成比を H/W/A の main effect の寄与率と同一視せず、性能差の因果の証拠としても扱わない。
 
-Figure 7.3 の成分は、runner が計測する BFS wall と Backward wall、および Other である。Other は各試行の全体実行時間から BFS と Backward を引いた残差として定義され、初期化・CSR ロード・結果回収・ホスト側オーバヘッドを含む。GPU_Opt（Unified Memory 版）は H2D/D2H 転送や初期化を個別計測しないため、この内訳は計測成分に基づく分解であって、転送量まで含めた完全な内訳ではない。集計は成分ごとの試行 median（email-EuAll n=5、roadNet 各 n=3）である。
+Figure 7.3 の成分は、runner が計測する BFS wall と Backward wall、および Other である。Other は各試行の全体実行時間から BFS と Backward を引いた残差として定義され、初期化・CSR ロード・結果回収・ホスト側オーバヘッドを含む。GPU_Opt（Unified Memory 版）は host-to-device / device-to-host 転送や初期化を個別計測しないため、この内訳は計測成分に基づく分解であって、転送量まで含めた完全な内訳ではない。集計は成分ごとの試行 median（email-EuAll n=5、roadNet 各 n=3）である。
 
 ![Figure 7.3: Phase breakdown of GPU_Opt](../../../../result/figures/thesis/phase_breakdown.png)
 
