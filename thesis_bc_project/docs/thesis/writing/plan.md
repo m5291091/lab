@@ -189,7 +189,7 @@ PathMergeの初出では必ず次を明記する。
 - 小規模3グラフのSequential independent full-vector比較は`Pass`
 - same-batch comparisonとindependent reference comparisonを区別する
 - byte-identicalでない結果を「完全一致」と書かない
-- memory-pathの`Core Fail`を隠さない
+- 旧 malformed input の `Core Fail` を historical evidence として保持し、current corrected conclusion と分離する
 - toleranceを変更して`Pass`へ変更しない
 - 原因未確定の差を浮動小数点誤差と断定しない
 
@@ -211,7 +211,7 @@ GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実�
 
 ### RQ4 Correctness and Numerical Behavior
 
-提案実装のBCベクトルは独立参照および異なるメモリ経路とどこまで一致し、どの条件で未解決の差が残るか。
+提案実装のBCベクトルは独立参照および異なるメモリ経路とどこまで一致し、どの数値表現・provenance制約が残るか。
 
 ---
 
@@ -630,6 +630,12 @@ RQ1～RQ4と各実験項目の対応、主指標、集計方法、試行数を�
 - 実データと合成グラフ
 - provenanceとSHA256
 - 各グラフの選択目的とRQ対応
+- Nodes / Edges / Input File [MiB] / CSR [MiB] / Used ForをT1に掲載
+- 修正版325557はRQ2/RQ3/RQ4のみ、RQ1主性能比較には不使用
+- input graph file / CSR / BC vector / per-source state / batch-dependent working setを区別
+- batch/sub-batchはsource groupingで、graph partitionや近似ではなく全sourceを処理
+- corrected SHA `8373244f...`、checkpoint `45352a3`、jobs 2404743/2406254を記録
+- 旧malformed inputをhistoricalとして分離
 
 #### 5.4 Evaluated Implementations
 
@@ -687,11 +693,14 @@ RQ2のH/W/A ablationとPA/TX forced shared/block比較の方法を述べる。
 
 #### 5.9 Memory Scalability Protocol
 
-RQ3のUM/Pure/Chunkedの容量評価方法を述べる。
+RQ3のUM/Pure/Chunkedの容量評価方法を述べる。3方式は共通GPU実行基盤のmemory-management variantsである。
 
-- 325557_3216152限定
-- 評価対象はfeasibility（SUCCESS/OOM、最大成功バッチ）であり最速時間ではない
-- legacy系とmemory-path系の2測定系とOOM境界の非可比性
+- 修正版325557_3216152_corrected_v1限定
+- job 2404743 / checkpoint `45352a3`、各targeted condition n=1
+- input fileは45.35 MBで、容量問題は`batch × per-source state`
+- Pure b8192 CUDA device OOMとUM b12288 cgroup host-memory OOM killを区別
+- Chunked `SUB_BATCH=6596`, `num_subs=3`、index-safety boundがbinding
+- 評価対象はfeasibilityであり最速時間ではない
 - UM/Chunkedの無制限な容量拡張を主張しない
 
 #### 5.10 Correctness Validation
@@ -709,7 +718,10 @@ RQ4の正確性水準を定義し、各比較の水準を区別する。
 - SHA256
 - independent reference
 - same implementation
-- memory-pathのCore Failを隠さない
+- Tier A（独立CPU参照3行）とTier B（修正版325557の10実装間比較）を区別
+- 全13行はmissing=0 / mismatch=0 / PASS / ByteIdentical=No
+- PathMergeはexternal comparatorでground truthではない
+- 旧malformed inputのCore Failをhistoricalとして保持しcurrent conclusionから分離
 
 #### 5.11 Reproducibility and Data Provenance
 
@@ -725,8 +737,10 @@ RQ4の正確性水準を定義し、各比較の水準を区別する。
 - 対象範囲（4グラフ / 325557限定 / 小規模3グラフ）
 - 比較対象としてのPathMergeの限定
 - 設定の非対称性
-- 未解決事項（stress正確性、CORE_FAIL）
-- legacy依存
+- Tier Bは独立ground truthでなくbyte-identicalでもない
+- corrected graphはoriginal seed/upstream original不明のprovenance limitation
+- mixed-checkpoint、1 graph、1 trial、未取得RSS/residency/migration bytes
+- historical malformed-input Core Failの保存
 - 実行環境記録の限界（queue名を統制変数として扱わない）
 
 ### Target Length
@@ -829,10 +843,15 @@ roadNet-CA: 1.45x
 ### Required Results
 
 ```text
-Synthetic geometric mean:
-Hybrid BFS: 1.655x
-Warp-Cooperative Accumulation: 1.065x
-Dual Streams: 1.396x
+Corrected 325557:
+Hybrid BFS: 1.4767x
+Warp-Cooperative Accumulation: 1.1012x
+Dual Streams: 1.5563x
+
+Synthetic-4 geometric mean (mixed-checkpoint):
+Hybrid BFS: 1.679x
+Warp-Cooperative Accumulation: 1.066x
+Dual Streams: 1.391x
 
 email-EuAll:
 Hybrid BFS: 1.429x
@@ -848,6 +867,8 @@ roadNet-TX block: 1.66x faster
 
 - Warp効果はグラフ依存
 - emailではわずかに低速
+- synthetic-4はmixed-checkpoint（他3=job2354994、corrected325557=job2406254/checkpoint45352a3）
+- same-checkpoint four-graph remeasurementとは書かない
 - roadNet全体へアブレーションを一般化しない
 - kernel比較はPA/TX限定
 - phase breakdownから因果を断定しない
@@ -874,11 +895,13 @@ roadNet-TX block: 1.66x faster
 
 ```markdown
 ## 8.1 Evaluation Scope
-## 8.2 In-Capacity Performance
-## 8.3 Unified Memory Oversubscription
-## 8.4 Chunked Execution
-## 8.5 Memory Migration and Profiling
-## 8.6 Answer to RQ3
+## 8.1 Capacity Terms and Evaluation Scope
+## 8.2 Memory-Management Variants
+## 8.3 Corrected Targeted Boundary Validation
+## 8.4 Chunked Source Sub-Batches
+## 8.5 Performance Interpretation and Measurement Limits
+## 8.6 Historical Malformed-Input Results
+## 8.7 Answer to RQ3
 ```
 
 ### Required Figures and Tables
@@ -889,20 +912,24 @@ roadNet-TX block: 1.66x faster
 ### Required Results
 
 ```text
-GPU_Opt_Pure: success through b4096
-GPU_Opt: success through b10240; b12288 OOM_OR_FAIL (exit 137)
-GPU_Opt_Pure_Chunked: success through tested b16384
+GPU_Opt_Pure: b4096 SUCCESS; b8192 CUDA device-memory OOM
+GPU_Opt: b10240 SUCCESS; b12288 cgroup host-memory OOM kill (exit 137)
+GPU_Opt_Pure_Chunked: b16384 SUCCESS; SUB_BATCH=6596; num_subs=3
 ```
 
 ### Required Qualification
 
-- 325557_3216152限定
-- legacy feasibility result
-- current block-kernel performance comparisonではない
+- corrected 325557_3216152_corrected_v1限定
+- targeted boundary、各条件1 trial、job2404743/checkpoint45352a3
+- runtimeは方式間performance comparisonではない
+- input file 45.35 MBとbatch-dependent working setを区別
+- UM/Pure/Chunkedは共通基盤のmemory-management variants
+- CUDA device OOMとcgroup host-memory OOM killを区別
+- measured RSS / physical HBM residency / migration bytesは未取得
 - UMは無制限ではない
-- Chunkedの主な利点は容量
-- 27.918 MBは25秒部分トレース
-- 全実行migration量と書かない
+- Chunkedの主な利点はresident working-set controlとtested capacity extension
+- batch/sub-batchは全sourceを処理し、graph partitionではない
+- 旧malformed結果はhistoricalとして保存
 
 ### RQ3 Answer
 
@@ -925,12 +952,14 @@ GPU_Opt_Pure_Chunked: success through tested b16384
 ### Sections
 
 ```markdown
-## 9.1 Validation Levels
-## 9.2 Small-Graph Independent Validation
-## 9.3 Tuned-Configuration Consistency
-## 9.4 Memory-Path Same-Batch Comparison
-## 9.5 Stress-Condition Core Failures
-## 9.6 Answer to RQ4
+## 9.1 Validation Criterion and Evidence Tiers
+## 9.2 Tier A: Independent CPU Reference
+## 9.3 Tier B: Corrected 325557 Cross-Implementation Consistency
+## 9.4 Role of PathMerge
+## 9.5 Historical Malformed-Input Result
+## 9.6 Provenance Limitation of the Corrected Graph
+## 9.7 T5 Summary
+## 9.8 Answer to RQ4
 ```
 
 ### Required Table
@@ -956,31 +985,28 @@ GPU_Opt_Pure_Chunked: success through tested b16384
 - missing=0
 - NaN/Inf=0
 
-#### 9.3 Tuned Consistency
+#### 9.3 Tier B Corrected Consistency
 
-- email b64 vs b2048
-- CA b32 vs b64
-- mixed tolerance
-- Max BC
+- corrected 325557、job2404743/checkpoint45352a3
+- 6 vectors / 10 comparisons
+- same-implementation different-batch、same-batch different-path、PathMerge cross
+- missing=0 / mismatch=0 / PASS / ByteIdentical=No
+- PathMergeはexternal comparatorでground truthではない
 
-#### 9.4 Same-Batch
+#### 9.5 Historical Result
 
-- memory paths
-- tolerance内一致
-- SHA256非一致
-- byte-identicalではない
+- old malformed `CORE_FAIL`をcurrent conclusionから外す
+- canonical_job_2368587 / failure / provenance / raw vectorsを保存
+- 「削除した」と書かず、入力不整合発見後に修正版で再検証した経緯を説明
 
-#### 9.5 Core Fail
+#### 9.6 Provenance Limitation
 
-- 2行を保持
-- mismatch=6
-- max relative error
-- 原因未確定
-- PathMerge cross correctnessはundetermined
+- corrected graphはdeterministic internal reconstruction
+- original seed / complete upstream original未確認
 
 ### RQ4 Answer
 
-> Independent full-vector agreement was confirmed on the three evaluated small graphs, but numerical agreement under all large memory-stress conditions was not established.
+> Tier A independent full-vector validation was supported on three small graphs, while Tier B cross-implementation consistency on the corrected 325557 graph was supported with provenance and non-bitwise limitations.
 
 ### Target Length
 
@@ -1041,17 +1067,19 @@ GH200上での観測として説明し、他GPUへ一般化しない。
 
 #### 10.5 Threats to Validity
 
-PathMerge第三者実装、trial数、legacy測定、correctness tolerance、グラフ選択を含める。
+PathMerge第三者実装、mixed-checkpoint、1 graph、1 trial、correctness tolerance、未取得memory metrics、corrected graph provenance、historical malformed evidenceを含める。
 
 #### 10.6 Future Work
 
-- Core Fail原因分析
+- headline graphの独立full-vector reference
 - official/independent PathMerge implementation comparison
 - current blockによる統一7実装比較
 - 他GPU
 - 追加グラフ
 - full-duration migration
 - large-scale independent reference
+- same-checkpoint synthetic-4 ablation
+- corrected graphのupstream original/seed確認
 
 ### Target Length
 
@@ -1253,7 +1281,10 @@ Introductionの4つの貢献と対応させる。
 - [ ] 主張がevidence matrixの範囲内
 - [ ] PathMergeを公式実装と誤記していない
 - [ ] PathMergeをground truthとしていない
-- [ ] Core Failを隠していない
+- [ ] historical malformed-input Core Failを保存し、current corrected conclusionと分離している
+- [ ] Tier A / Tier BとByteIdentical=Noを区別している
+- [ ] CUDA device OOMとcgroup host-memory OOM killを区別している
+- [ ] input graph fileとbatch-dependent working setを区別している
 - [ ] 未測定グラフ・他GPUへ一般化していない
 - [ ] 同じ説明を複数章で過度に重複していない
 - [ ] 新しい実験値を推定していない
@@ -1284,7 +1315,8 @@ Introductionの4つの貢献と対応させる。
 | 実行可能性 | feasibility |
 | 容量拡張性 | memory scalability |
 | 混合許容 | mixed absolute-relative tolerance |
-| 未解決不一致 | Core Fail |
+| 履歴上の不正入力判定 | historical malformed-input Core Fail |
+| 現行Tier B | corrected-graph cross-implementation consistency |
 
 `GPU_Opt`、`GPU_Opt_Pure`、`GPU_Opt_Pure_Chunked`は3つの独立提案ではなく、共通GPU実行基盤におけるメモリ管理方式のバリエーションとして統一する。
 
@@ -1304,7 +1336,7 @@ Introductionの4つの貢献と対応させる。
 8. 数値の自動照合
 9. 主要speedup 3.17/1.31/1.51/1.45の確認
 10. PathMerge限定表現の確認
-11. Core Fail記述の確認
+11. Historical Core Failとcurrent corrected conclusionの分離確認
 12. 図表内の日本語文字検査
 13. 全図表の目視検査
 14. Chapter間の重複検査
@@ -1325,7 +1357,8 @@ Introductionの4つの貢献と対応させる。
 - 全数値が正式データと一致する
 - 関連研究に一次資料が引用されている
 - PathMergeの第三者実装・ライセンス制約が記録されている
-- small full-vector Passとmemory-path Core Failの両方が記載されている
+- Tier A small full-vector PASSとTier B corrected-325557 PASSが証拠強度別に記載されている
+- old malformed-input Core Failがhistorical evidenceとして保存・分離されている
 - 図表が正しい章に配置されている
 - 本文に未解決placeholderがない
 - 指導教員が日本語版の構成と内容を確認できる状態になっている
