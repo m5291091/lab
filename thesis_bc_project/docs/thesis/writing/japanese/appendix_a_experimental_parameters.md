@@ -118,17 +118,21 @@ PathMerge の tuning 手続き（Chapter 5、5.7 節）の設定を Table A.5 �
 
 | Graph | Requested Batch Candidates | Trials per Batch | Screening Job | Confirmation Job | Recorded Clamp | Adopted Tuned Batch | Checkpoint |
 |---|---|---|---|---|---|---|---|
-| roadNet-PA | 8, 16, 32, 64, 128, 256, 512 | 1 (b8/b16/b32), 4 (b64), 3 (b128/b256/b512) | Small-batch screening | Job 2355001 | None recorded | 64 | `phase_def_block_20260710` (sweep) |
-| roadNet-TX | 32, 64, 128 | 3 (b32, b64), 1 (b128) | Job 2360072 | Job 2361040 | None recorded | 64 | `phase_def_block_20260710` (sweep) |
-| roadNet-CA | 16, 32, 64, 128 | 1 (b16), 3 (b32, b64), 1 (b128) | Job 2360073 | Job 2362006, Job 2361041 (b16) | None recorded | 32 | `phase_def_block_20260710` |
-| email-EuAll | 8, 16, 64, 256, 512, 1024, 2048, 4096, 8192 | 1 (b8/b16/b64/b256), 3 (b512–b8192) | Small-batch screening | Job 2355000 series | Requested 8192 to effective 7393 | 2048 | `phase_def_block_20260710` |
-| 325557_3216152 | 32, 64, 256, 512, 1024, 2048, 4096, 8192 | 1–4 (batch dependent) | Job 2355000 | Job 2359081 (b4096, b8192) | Requested 8192 to effective 6018 | 4096 | `phase_def_block_20260710` |
+| roadNet-PA | 8, 16, 32, 64, 128, 256, 512 | Screening 1 (b8/b16/b32); Confirmation 3 (b64/b128/b256/b512) + 1 additional trial at b64; b64 pooled 4 | Job 2359080 (early terminated) | Job 2355001 | None recorded | 64 | `phase_def_block_20260710` (sweep) |
+| roadNet-TX | 32, 64, 128 | Screening 1 (b32/b64/b128); Confirmation 2 (b32/b64); b32 and b64 pooled 3 | Job 2360072 | Job 2361040 | None recorded | 64 | `phase_def_block_20260710` (sweep) |
+| roadNet-CA | 16, 32, 64, 128 | Screening 1 (b32/b64/b128); Extension 1 (b16); Confirmation 2 (b32/b64); b32 and b64 pooled 3 | Job 2360073 | Job 2362006 (b32/b64); Job 2361041 (b16 extension) | None recorded | 32 | `phase_def_block_20260710` |
+| email-EuAll | 8, 16, 64, 256, 512, 1024, 2048, 4096, 8192 | Screening 1 (b8/b16/b64/b256/b1024); Confirmation 3 (b512–b8192); b1024 pooled 4 | Job 2359096 (early terminated) | Job 2359169 | Requested 8192 to effective 7393 | 2048 | `phase_def_block_20260710` |
+| 325557_3216152 | 32, 64, 256, 512, 1024, 2048, 4096, 8192 | Initial exploration 1–2 (b32/b64/b256/b512); Screening 3 (b512/b1024/b2048); Confirmation 3 (b4096/b8192); b512 pooled 4 | Job 2355000 | Job 2359081 (b4096, b8192) | Requested 8192 to effective 6018 | 4096 | `phase_def_block_20260710` |
 
 tuned batch の選択規則は次のとおりである。各グラフについて候補バッチごとの median 実行時間を求め、最小の median を与えるバッチを掃引実測の最良とする。最終的な分母は、掃引最良と既定 b64 のうち速い方を採用する（`scripts/merge_final_tables.py`）。掃引は warmup を行わず、集計は median である。
 
 roadNet-PA および roadNet-TX については、最終採用値と掃引確認値の関係を明記する。両グラフの掃引では最適バッチが既定と同一の b64 であることを確認したが、最終表の分母には同一 b64 設定の legacy 実測値を採用した。すなわち、掃引の確認測定と最終採用値は同一バッチ設定に対する別々の測定であり、欠損でも矛盾でもない。legacy 実測値の方が掃引確認値よりわずかに速いため、この採用は当該 2 グラフの speedup を過小方向に見積もる。roadNet-CA と email-EuAll では、掃引実測の最良値がそのまま tuned として採用されている。
 
 clamp は 2 件記録されている。email-EuAll の要求 b8192 は HBM3 予算超過により実効 7393 へ、325557_3216152 の要求 b8192 は実効 6018 へ縮小された。いずれも保存ログの警告行に基づく記録である。その他の候補バッチでは clamp の記録はない。325557_3216152 は RQ1 の主性能比較の対象ではなく、その掃引結果は Tier B の external comparator 設定（b4096）の根拠として用いる。
+
+試行数の記載について 2 点を補足する。第 1 に、Table A.5 の Trials 列は stage 別に記す。同一の要求バッチが screening と confirmation の双方で測定された場合、両者は別 job の別測定であるため合算せずに併記し、掃引の順位判定に用いる pooled 集計の $N_{\mathrm{trials}}$ を `pooled` として別に示す。email-EuAll の b1024 はその代表例であり、screening 1 試行（job 2359096）と confirmation 3 試行（job 2359169）の計 4 試行が存在する。`result/tables/final_speedup_tables.md` が email-EuAll の b1024 を `n=4` と要約しているのは、この screening 1 試行と confirmation 3 試行を pooled した記述統計であって、単一 job で 4 試行を測定したものではない。同様に roadNet-PA の b64 は confirmation 3 試行と追加 1 試行の pooled 4、roadNet-TX と roadNet-CA の b32・b64 は screening 1 試行と confirmation 2 試行の pooled 3、325557_3216152 の b512 は初期実行 1 試行と screening 3 試行の pooled 4 である。各 trial の値と stage 別・pooled 別の集計は Appendix B に収録する。
+
+第 2 に、roadNet-PA と email-EuAll の screening は、いずれも意図的に早期打切りされた job（2359080 および 2359096）の trial 1 として記録されている。trial 1 の測定は完了しており raw TSV に値を伴って残るが、当該 job の trial 2 以降の記録は存在しない。この扱いは Appendix B の当該節に記す。
 
 関連する環境変数は `PATHMERGE_BC_BATCH_SIZE`（runner のバッチ指定）、および投入スクリプト変数 `BATCH_LIST`（既定 `1,2,4,8,16,32,64,128,256`）、`TRIALS`（既定 1）、`GRAPHS_STR`、`TIMEOUT_SEC`（既定 21600）である。
 
@@ -313,7 +317,7 @@ profiling 系列の設定を Table A.13 に示す。保存されている範囲�
 | Experiment Series | Code Snapshot | Checkpoint | PBS Job IDs | Canonical Result | Canonical Raw Data |
 |---|---|---|---|---|---|
 | Main performance | `code_snapshots/phase_def_block_20260710/` | `phase_def_block_20260710` | 2356120, 2357334–2357337 | `result/main_performance/proposed_variants/` | `raw_data/main_performance/proposed_variants/` |
-| PathMerge batch sweep | `code_snapshots/phase_def_block_20260710/` | `phase_def_block_20260710` | 2355000, 2355001, 2359081, 2360072, 2360073, 2361040, 2361041, 2362006 | `result/tuning/pathmerge/` | `raw_data/tuning/pathmerge/` |
+| PathMerge batch sweep | `code_snapshots/phase_def_block_20260710/` | `phase_def_block_20260710` | 2355000, 2355001, 2359080, 2359081, 2359096, 2359169, 2360072, 2360073, 2361040, 2361041, 2362006 | `result/tuning/pathmerge/` | `raw_data/tuning/pathmerge/`, `raw_data/unsuccessful/early_terminated/pathmerge_sweep/` |
 | Kernel selection | `code_snapshots/phase_def_block_20260710/` | `phase_def_block_20260710` | 2354329, 2354330 | `result/tuning/kernel_selection/` | `raw_data/tuning/kernel_selection/` |
 | Ablation (synthetic three graphs) | `code_snapshots/phase_def_block_20260710/` | `phase_def_block_20260710` | 2354994 | `result/ablation/synthetic_2354994/` | `raw_data/ablation/synthetic/` |
 | Ablation (email-EuAll) | `code_snapshots/phase_def_block_20260710/` | `phase_def_block_20260710` | 2354999 | `result/ablation/email_2354999/` | `raw_data/ablation/email-EuAll/` |
