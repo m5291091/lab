@@ -1,0 +1,11 @@
+ComparisonClass	LabelA	LabelB	MismatchedElements	MaxAbsError	MaxRelError	Status
+same_impl_diff_batch	gpu_opt_b9792	gpu_opt_b1024	0	3.0517578125e-05	5.316059532295196e-14	PASS
+same_impl_diff_batch	gpu_opt_pure_chunked_b16384	gpu_opt_pure_chunked_b1024	0	3.0517578125e-05	4.751990102037526e-14	PASS
+same_batch_diff_path	gpu_opt_b1024	gpu_opt_pure_b1024	0	1.9073486328125e-06	1.0100438291287163e-14	PASS
+same_batch_diff_path	gpu_opt_b1024	gpu_opt_pure_chunked_b1024	0	7.62939453125e-06	1.0797020242410409e-14	PASS
+same_batch_diff_path	gpu_opt_pure_b1024	gpu_opt_pure_chunked_b1024	0	7.62939453125e-06	1.03303473016501e-14	PASS
+pathmerge_cross	pathmerge_b4096	gpu_opt_b1024	0	0.0012221336364746094	5.088913980026039e-13	PASS
+pathmerge_cross	pathmerge_b4096	gpu_opt_b9792	0	0.0012359619140625	5.088913980026039e-13	PASS
+pathmerge_cross	pathmerge_b4096	gpu_opt_pure_b1024	0	0.0012221336364746094	5.088913980026039e-13	PASS
+pathmerge_cross	pathmerge_b4096	gpu_opt_pure_chunked_b1024	0	0.0012221336364746094	5.088913980026039e-13	PASS
+pathmerge_cross	pathmerge_b4096	gpu_opt_pure_chunked_b16384	0	0.00122833251953125	5.088913980026039e-13	PASS

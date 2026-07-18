@@ -1,0 +1,6 @@
+Config	Implementation	RequestedBatch	Observed	OutcomeClass	RuntimeSec	RunnerExit	OOMEvidenceClass	FailureReason
+pure_b4096	GPU_Opt_Pure	4096	SUCCESS	EXPECTED_SUCCESS	65.889429	0	none	not_applicable
+pure_b8192	GPU_Opt_Pure	8192	OOM_CONFIRMED	EXPECTED_CUDA_OOM	not_recorded	1	cuda_oom	oom_evidence=cuda_oom;matched=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pure_b8192.stderr.log:5;runner_exit=1
+um_b10240	GPU_Opt	10240	SUCCESS	EXPECTED_SUCCESS	238.672569	0	none	not_applicable
+um_b12288	GPU_Opt	12288	RUNTIME_FAILED	EXPECTED_FAILURE_STATUS	not_recorded	137	none	oom_evidence=none;runner_exit=137;sigkill_exit_137
+chunked_b16384	GPU_Opt_Pure_Chunked	16384	SUCCESS	EXPECTED_SUCCESS	66.598223	0	none	not_applicable

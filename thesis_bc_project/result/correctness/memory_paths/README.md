@@ -1,5 +1,23 @@
 # Memory-path correctness (325557_3216152)
 
+> ## ⚠ HISTORICAL — malformed legacy input (superseded)
+>
+> ```
+> Status: Historical result on malformed legacy input
+> Input: data/325557_3216152 (malformed legacy graph)
+> UsedInCurrentThesisClaim: No
+> SupersededByCorrectedInputJob: 2404743
+> SupersededBy: result/correctness/corrected_325557/
+> ```
+>
+> このディレクトリの `CORE_FAIL`（stress 条件で 6–8 頂点が `rel_tol=1e-6` を超過）は
+> **malformed な旧 325557 入力** (`data/325557_3216152`) 上の結果である。修正版入力
+> (`data/325557_3216152_corrected_v1`, job 2404743) では同じ 10 比較すべてが
+> **mismatch=0**（stress の `same_impl_diff_batch` を含め max_rel ≤ 5.3e-14）となり、
+> current thesis claim は修正版のみを使用する。**このアーカイブは削除・改変せず、
+> historical provenance として保持する。** 正式な現行結果は
+> `result/correctness/corrected_325557/` を参照。
+
 GH200 のメモリ経路 (UM / Pure / Chunked) と大バッチ・oversubscription 条件で、
 提案実装が出力する全 BC ベクトルを混合許容基準で比較した正確性・診断アーカイブである。
 対象グラフは `data/325557_3216152` の 1 グラフに限定する。canonical は checkpoint
