@@ -18,7 +18,7 @@ Ablation の対象は、提案実行基盤の 3 つの工夫である。Hybrid B
 
 > Source: `src/proposed/host_ablation.cu`, `include/proposed/brandes_kernels.cuh`, `result/ablation/{corrected_325557,synthetic_2354994,email_2354999}/`.
 
-測定した構成は、$\mathrm{H}\{0,1\} \times \mathrm{W}\{0,1\} \times \mathrm{A}\{0,1\}$ の全 8 構成である。H0W0A0 が baseline、H1W1A1 が full 構成である。benchmark_7000_41459、benchmark_11023_62184、56438_300801 は PBS job 2354994、修正版 `325557_3216152_corrected_v1` は job 2406254 / checkpoint `45352a3` で各構成 n=5、email-EuAll は job 2354999 で各構成 n=3 である。各 8 構成 invocation 先頭の global・untimed H1W1A1 warmup は formal trial に含めない。合成 4 集約は mixed-checkpoint であり、同一 checkpoint で 4 グラフを再測定したものではない。すべて固定 b512、主値は構成 median である。ablation 実行は BC vector comparison を記録していないため correctness level は `none` である。
+測定した構成は、$\mathrm{H}\{0,1\} \times \mathrm{W}\{0,1\} \times \mathrm{A}\{0,1\}$ の全 8 構成である。H0W0A0 が baseline、H1W1A1 が full 構成である。benchmark_7000_41459、benchmark_11023_62184、56438_300801 は PBS job 2354994、修正版 `325557_3216152_corrected_v1` は job 2406254 / checkpoint `45352a3` で各構成 n=5、email-EuAll は job 2354999 で各構成 n=3 である。3 系列（job 2354994、job 2354999、job 2406254）はいずれも、各 8 構成 invocation 先頭で global・untimed な H1W1A1 warmup を 1 回実行しており、これを formal trial に含めない（marker はそれぞれ 20、3、5 件、formal 行はそれぞれ 160、24、40 行である）。合成 4 集約は mixed-checkpoint であり、同一 checkpoint で 4 グラフを再測定したものではない。すべて固定 b512、主値は構成 median である。ablation 実行は BC vector comparison を記録していないため correctness level は `none` である。
 
 合成グラフ群と email-EuAll は分けて集計する。両者は次数分布と探索深さが対照的であり（5.3 節）、試行数も異なる（n=5 と n=3）ため、単一の集計に混合しない。合成 4 グラフは幾何平均で統合し、email-EuAll は単独で報告する。また、ablation は専用の測定シリーズであり、その絶対実行時間を Chapter 6 の主性能値と同一視しない。例えば email-EuAll の full 構成（H1W1A1）の median は本シリーズで 30.42 s であり、Table 6.1 の GPU_Opt の 30.81 s（別ジョブ 2357334 の測定）とは別の測定である。
 
