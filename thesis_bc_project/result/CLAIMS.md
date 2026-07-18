@@ -31,9 +31,15 @@
 ### Stage 3 小規模検証の適用範囲
 小規模3グラフの正確性だけを `SUPPORTED` とする。email/roadNet は `SUPPORTED_WITH_LIMITATIONS` を**維持**する（headline 4グラフの独立参照 full-vector は未実施）。GPU_Opt_Pure、GPU_Opt_Pure_Chunked、UM oversubscription 固有経路にも一般化しない。また Hybrid BFS、warp 等の個別経路を専用カウンタで確認した検証ではない。
 
-## メモリ経路 (Stage 4C / Gate H0; 325557 限定)
+## メモリ経路 (Stage 4C / Gate H0; 325557 限定) — **[HISTORICAL: malformed legacy input]**
 
-memory-path 関連は主軸(A)・副次(B)の性能主張から分離する。canonical=checkpoint `memory_correctness_20260712` / job `2368587`、診断=checkpoint `memory_diagnostic_20260713` / job `2369632`。各構成 n=1、warmup なし、判定 `abs_tol=1e-3` `rel_tol=1e-6`。canonical の formal overall status は `CORE_FAIL`（隠さない）。詳細は `correctness/memory_paths/`。
+> **この節の表は旧 malformed 入力 `data/325557_3216152` 上の履歴結果である。**
+> 現行の memory-path 正確性 claim は修正版入力（job 2404743, `data/325557_3216152_corrected_v1`）の
+> 下記「Gate W7.4」節を参照。canonical の `CORE_FAIL`（stress `same_impl_diff_batch` 超過）は
+> **修正版で mismatch=0 となり置換された**が、履歴として削除・改変せず保持する
+> (`UsedInCurrentThesisClaim=No`, `SupersededByCorrectedInputJob=2404743`)。
+
+memory-path 関連は主軸(A)・副次(B)の性能主張から分離する。canonical=checkpoint `memory_correctness_20260712` / job `2368587`、診断=checkpoint `memory_diagnostic_20260713` / job `2369632`。各構成 n=1、warmup なし、判定 `abs_tol=1e-3` `rel_tol=1e-6`。canonical の formal overall status は `CORE_FAIL`（隠さない）。詳細は `correctness/memory_paths/`。**（以下は malformed legacy input 上の履歴; 現行 active claim ではない）**
 
 | 主張 | 状態 | 根拠 / 検証範囲 |
 |:--|:--|:--|
@@ -53,23 +59,29 @@ memory-path 関連は主軸(A)・副次(B)の性能主張から分離する。ca
 
 ---
 
-## Gate W7.3A — 325557 入力不正の影響（**案。再検証前の暫定状態**）
+## Gate W7.4 — 修正版325557 再検証 **完了**後の RQ 支持状態
 
-`data/325557_3216152` が **malformed**（1-based を 0-based として格納。隣接要素が `2m` に 7 個不足、
-範囲外頂点 ID `325557` を 7 個含む）と確定した（`provenance/GRAPH_325557_INTEGRITY_AUDIT.md`）。
-修復版 `data/325557_3216152_corrected_v1` を追加したが、**本 Gate では GPU 実行をしていない**。
-したがって以下は**再検証待ちの暫定状態**であり、本 Gate で正式 status を `SUPPORTED` へ戻さない。
+`data/325557_3216152` は **malformed** と確定し（`provenance/GRAPH_325557_INTEGRITY_AUDIT.md`）、
+修復版 `data/325557_3216152_corrected_v1`（`ProvenanceStatus=internally_reconstructed_no_original_seed`）
+で再検証を実施した。GPU 実行済み（Series A/B=job 2404743, Series C=job 2406254, いずれも checkpoint
+`45352a3`, `SUCCESS`）、Gate W7.3C1 で独立監査済み。正式結果は
+`result/{correctness,memory_scalability,ablation}/corrected_325557/`、raw は
+`raw_data/corrected_325557/`。旧 malformed 入力上の結果は **historical** として保存（削除・置換せず）。
 
-| 主張群 | 影響 | 暫定状態 |
+| 主張群 | 状態 | 根拠 / 検証範囲・制約 |
 |:--|:--|:--|
-| **RQ1 main performance**（email-EuAll / roadNet-PA/TX/CA） | **影響なし**。325557 を使用しない。当該 4 グラフは `ValidationStatus=valid` | 現行 status を維持 |
-| **RQ2 synthetic aggregate**（ablation 合成 4 グラフ幾何平均） | 4 グラフ中 1 つ（325557）が malformed | **corrected input で再検証待ち**（Series C）。既存 3 グラフは再実行しない |
-| **RQ3 memory feasibility**（UM/Pure/Chunked の容量境界） | 325557 限定のため全面的に影響 | **corrected input で境界確認待ち**（Series B） |
-| **RQ4 same-batch / stress / cross**（memory-path 正確性） | 325557 限定のため全面的に影響 | **corrected input で再検証待ち**（Series A） |
+| **RQ1 main performance**（email-EuAll / roadNet-PA/TX/CA） | `SUPPORTED` | **不変**。325557 を使用しない。主要値 **3.17 / 1.31 / 1.51 / 1.45**（上表）は変更しない |
+| **RQ2 synthetic aggregate**（ablation H/W/A） | `SUPPORTED_WITH_LIMITATIONS` | 修正版325557 H=1.4767 / W=1.1012 / A=1.5563（job 2406254, 40行完全）。合成4集約（他3グラフ raw 不変 + 325557 修正版）= **H=1.679 / W=1.066 / A=1.391**。**制約**: 4 synthetic graphs、**mixed checkpoints**（他3=job2354994, 325557=job2406254）、325557 のみ修正版再測定、roadNet へ一般化しない |
+| **RQ3 memory feasibility**（UM/Pure/Chunked 容量境界） | `SUPPORTED_WITH_LIMITATIONS` | corrected 325557 の targeted boundary confirmation（job 2404743 Series B）。pure_b8192=**CUDA OOM**、um_b10240=success、**um_b12288=host/cgroup memory OOM kill（exit137, CUDA/HBM OOM ではない）**、chunked_b16384=success。**制約**: **各境界 1 trial**、feasibility であり性能比較ではない、host/cgroup memory limit を含む、入力≈43.25 MiB で容量問題は batch 依存 working set、他グラフ・他 GPU へ一般化しない |
+| **RQ4a 小規模独立参照 full-vector 正確性** | `SUPPORTED` | **不変**。benchmark_7000_41459 / benchmark_11023_62184 / chain_200 の Sequential 独立参照 vs GPU_Opt（`correctness/small_full_vector/`） |
+| **RQ4b 修正版325557 memory-path / cross consistency** | `SUPPORTED_WITH_LIMITATIONS` | job 2404743: 6ベクトル完全・**10比較すべて mismatch=0**（stress `same_impl_diff_batch` b9792/b1024・b16384/b1024 を含め混合許容内, max_rel<=5.09e-13）。**制約**: 混合許容内 mismatch=0 だが **byte-identical ではない**、PathMerge は独立正解ではない、corrected graph は内部再構成で original seed 不明、対象は 325557 のみ |
 
-- 既存の `CORE_FAIL`・raw 結果・vector・SHA256 は**削除も置換もしない**。
-  **malformed legacy input 上の履歴結果**として保存する（`UsedForHistoricalExperiments=yes`）。
-- **stress 差の原因を GPU 数値計算へ帰属しない**。旧入力には範囲外添字アクセス（source 間の状態への
-  書き込みを含む）が存在したが（監査 §2.3）、本 Gate では**それが原因であるとも断定しない**。
-  因果は corrected input での再検証後に判断する。
-- `RQ1` を除き、325557 を根拠に含む主張は、修復版での再測定が済むまで**格上げしない**。
+- 旧 `CORE_FAIL`（stress 超過, malformed input）は **current active claim から外し**、
+  historical malformed-input result として保存（`UsedInCurrentThesisClaim=No`,
+  `SupersededByCorrectedInputJob=2404743`）。上記「メモリ経路 (Stage 4C)」節参照。
+- **stress 差の原因を GPU 数値計算へ帰属しない**。旧入力には範囲外添字アクセスがあったが（監査 §2.3）、
+  修正版で差が消えたことは「malformed 入力が差の必要条件だった」ことと整合するが、**単一因果とは断定しない**。
+- 失敗系列（build 失敗 2403658 / OOM マーカー誤判定 2404249）は `failure/failed/{build,validation}/` に保存。
+  W7.3B1.1 / W7.3B2.2 で修正済み、成功再実行は job 2404743。
+- **RQ3/RQ4b は corrected 325557 に限定し、他グラフ・他 GPU・block 一般へ一般化しない。**
+  PathMerge は external comparator（ground truth ではない）。追加 GPU 実験は完了（Gate W7.3C1）。

@@ -1,7 +1,25 @@
 # graph_metadata — グラフ来歴と整合性（叙述）
 
-機械可読版は `graph_catalog.tsv`（19 列）。ここでは来歴・修復・検証状態のうち
+機械可読版は `graph_catalog.tsv`（24 列）。ここでは来歴・修復・検証状態のうち
 TSV に収まらない内容を記録する。
+
+## サイズ定義（`graph_catalog.tsv` の後半 5 列）
+
+各グラフについて次を推定なしで記録する（`FileSizeBytes` は canonical 入力を `stat` した実測値）。
+
+| 列 | 定義 |
+|:--|:--|
+| `FileSizeBytes` | ディスク上の CSR テキスト入力ファイルの容量（`stat`）。GPU メモリ使用量ではない。 |
+| `FileSizeMB` | `FileSizeBytes / 1,000,000`（decimal MB） |
+| `FileSizeMiB` | `FileSizeBytes / 1,048,576`（binary MiB） |
+| `CSRBytes` | コードが読み込む CSR 配列の理論容量 `((n + 1) + 2m) × 4`（int32） |
+| `BCVectorBytes` | BC 出力ベクトルの容量 `n × 8`（double） |
+
+これらは**静的なグラフ表現**であり、GPU の working set とは別概念である。1 始点の
+BC 処理に必要な per-source state は `32n + 4·D_est + 8`（`D_est = max_depth_estimate`）で、
+batch 依存 working set は `EffectiveNS × EffectiveBatch × PerSourceStateBytes`（Chunked は
+同時 resident を `SUB_BATCH` に制限）で決まる。これは code 由来の allocation 見積りであり、
+実測 RSS・実測 HBM residency・実測 migration bytes とは区別する。
 
 - 検証器: `tools/validate_graph_csr.py`（読み取り専用。PASS=exit 0 / FAIL=exit 1）
 - 全 12 行の検証状態: **valid 11 / malformed 1**（malformed は `325557_3216152` のみ）
@@ -84,10 +102,19 @@ TSV に収まらない内容を記録する。
 
 ### メモリ見積りへの影響
 
-`n` と `m` が不変のため、`avg_deg = 19.758`（< 20）→ `max_depth_estimate = 256` も不変であり、
-`src/proposed/host_um.cu` の `per_batch_mem` は旧入力と**同一**（= 10,418,856 bytes）。
-したがって既存のバッチ別 working-set 見積り（NS_eff=1 換算で b8192 ≈ 85.35 GB、
-b10240 ≈ 106.69 GB、b12288 ≈ 128.03 GB）は修復版でもそのまま適用される。
-入力ファイル自体は約 43.25 MiB であり、大きくなるのは **batch 依存の working set** である。
+修復版の静的サイズ: 入力ファイル `45,348,105 bytes`（45.35 MB / 43.25 MiB）、
+CSR topology `((n+1)+2m)×4 = 27,031,448 bytes`（27.03 MB / 25.78 MiB）、
+BC 出力ベクトル `n×8 = 2,604,456 bytes`（2.60 MB / 2.48 MiB）。いずれも HBM3 を超えない。
+
+`n` と `m` が不変のため、`avg_deg = 19.758`（< 20）→ `max_depth_estimate (D_est) = 256` も不変であり、
+per-source state `32n + 4·D_est + 8`（`src/proposed/host_pure.cu:141-157` で確認）は旧入力と**同一**
+（= 10,418,856 bytes）。修正版 job 2404743 の implementation manifest に基づく code-derived
+working-set estimate（`EffectiveNS × EffectiveBatch × PerSourceStateBytes`）は、Pure b4096
+（EffectiveNS=2）が 85,351,268,352 bytes、Pure b8192 が 170,702,536,704 bytes、UM b10240
+（EffectiveNS=1）が 106,689,085,440 bytes、UM b12288 が 128,026,902,528 bytes である。
+Chunked b16384 は同時 resident を `SUB_BATCH=6596` に制限し、68,722,774,176 bytes と見積もる。
+入力ファイル自体は約 43.25 MiB であり、大容量になるのは **batch 依存 working set** であって、
+グラフファイル・CSR・BC ベクトルではない。これらは allocation estimate であり、実測 RSS、
+physical HBM residency、migration bytes ではない。
 
 詳細は `../provenance/GRAPH_325557_INTEGRITY_AUDIT.md`。

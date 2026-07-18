@@ -21,8 +21,11 @@ Gate B 整理で、`results_miyabi/`（checkpoint `phase_def_block_20260710`）�
 | `ablation/` | Ablation(H/W/A) — synthetic_2354994(n5) / email_2354999(n3) |
 | `correctness/pathmerge_tuned/` | PathMerge tuned batch 間 全ベクトル一致検証 |
 | `correctness/small_full_vector/` | 小規模3グラフの Sequential 独立参照 vs GPU_Opt 全ベクトル検証（SourceSnapshotID small_correctness_20260712, job 2367583.opbs） |
-| `correctness/memory_paths/` | GH200 メモリ経路(UM/Pure/Chunked)・大バッチ正確性/診断（325557限定, canonical=memory_correctness_20260712/2368587, 診断=memory_diagnostic_20260713/2369632）。同一batch mismatch=0(非byte一致)、stress差=未解決、formal `CORE_FAIL` 保存 |
-| `memory_scalability/` | UM/pure/chunked feasibility（副次B; 意図的OOM同居） |
+| `correctness/memory_paths/` | **[HISTORICAL/malformed]** GH200 メモリ経路正確性/診断（旧 `data/325557_3216152`, canonical=2368587, 診断=2369632）。stress差=未解決 formal `CORE_FAIL` 保存。**修正版 job 2404743 で置換（削除せず historical 保持; 現行claim非使用）** |
+| `correctness/corrected_325557/` | **[現行]** 修正版325557 正確性（job 2404743, checkpoint 45352a3）。6ベクトル完全・**10比較すべて mismatch=0**（stress same_impl_diff_batch含む, max_rel<=5.09e-13, 非byte）。PathMerge=external comparator |
+| `ablation/corrected_325557/` | **[現行]** 修正版325557 H/W/A（job 2406254, 40 rows）。H=1.4767 W=1.1012 A=1.5563。合成4集約=mixed-checkpoint |
+| `memory_scalability/` | **[HISTORICAL]** UM/pure/chunked feasibility（旧tree, malformed; 意図的OOM同居） |
+| `memory_scalability/corrected_325557/` | **[現行]** 修正版325557 容量境界（job 2404743 Series B）。pure_b8192=CUDA OOM, um_b12288=host/cgroup OOM kill(exit137,非CUDA), chunked b16384=success。1 trial/config |
 | `profiling/` | 帯域 + nsys（um_prefetch は25秒部分トレース注記） |
 | `tables/` `figures/` | 最終表 / 図 |
 | `environment/` `datasets/` `provenance/` | 実行環境 / グラフカタログ / git SHA・コード差分監査 |
@@ -34,7 +37,7 @@ Gate B 整理で、`results_miyabi/`（checkpoint `phase_def_block_20260710`）�
 - `TABLES_AND_FIGURES.md` 表・図の入力(新パス)・再生成コマンド
 - `MIGRATION_MAP.tsv` 移行表（Original/New SHA256 + HashMatch、`SourceSnapshotID` 列で commit 非依存）
 - `EXTERNAL_ARTIFACTS.tsv` **Git 管理下に本体を置かない成果物の台帳**（Gate J1.1 でスリム化 4 件 → Gate W5.2 で 8 件, 12 列）: 再生成可能 `.sqlite` 3（`Availability=regeneratable_from_tracked_nsys_rep`）+ ビルド成果物ディレクトリ補助記録 1（`not_applicable`）+ PathMerge tuned 比較の BC ベクトル 4（`RetentionStatus=not_retained`, `Availability=currently_unavailable`; 比較 summary のみ保存, 復元・再生成・推定なし）。`OriginalPath` は実験時の original runtime path（historical build output path）であり現在の保存場所ではない。`Note` 列が Notes に相当する。全件監査は `provenance/EXTERNAL_ARTIFACTS_AUDIT.tsv`（42 件×11 列, Decision 付）、`.sqlite` 再生成は `provenance/SQLITE_REGENERATION.tsv`
-- **Git 履歴非依存化**: 生データは `../raw_data/`（`MANIFEST.tsv`/`SHA256SUMS`, Gate J1.1 で 164 件）、実験時コードは `../code_snapshots/<SourceSnapshotID>/` に凍結保存。commit SHA は `../code_snapshots/_legacy_audit/LEGACY_COMMIT_TO_SNAPSHOT.tsv`（監査用）にのみ保持し、データ/コードアクセスに不要。
+- **Git 履歴非依存化**: 生データは `../raw_data/`（`MANIFEST.tsv`/`SHA256SUMS`, Gate J1.1 で 164 件 → Gate W7.4 で修正版325557を追加し **240 件**; corrected 325557 は `../raw_data/corrected_325557/`（自己完結 MANIFEST.tsv/SHA256SUMS 併設））、実験時コードは `../code_snapshots/<SourceSnapshotID>/` に凍結保存。commit SHA は `../code_snapshots/_legacy_audit/LEGACY_COMMIT_TO_SNAPSHOT.tsv`（監査用）にのみ保持し、データ/コードアクセスに不要。
 - 非正常データは `../failure/`（要約）+ `../raw_data/unsuccessful/`（生データ本体）
 
 ## 集計規約

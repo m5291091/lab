@@ -28,22 +28,31 @@ CUDA カーネル）により、共通カーネル（`include/proposed/brandes_k
 ## 貢献 3：アブレーションによる最適化要因分析
 Hybrid BFS・warp 協調・2 ストリームを個別に ON/OFF する 2^3=8 構成のアブレーションにより、
 **Hybrid BFS と 2 ストリームが主要な性能寄与を示し、warp 協調の効果はグラフ依存である**ことを、
-5 グラフ（synthetic 4 + email）で定量化した。フェーズ内訳（BFS/backward）とプロファイル
-（56438_300801・本測定 H1W1A0 と untimed H1W1A1 warmupを含む単一トレースにおける CUDA GPU カーネル時間 backward 63.9%/bfs 36.1%、帯域）を補助資料とした。
-- 根拠：`result/ablation/{synthetic_2354994,email_2354999}/`, `result/profiling/`,
+5 グラフ（synthetic 4 + email）で定量化した。修正版 325557 の主効果は H=1.4767× / W=1.1012× /
+A=1.5563×（job 2406254, checkpoint `45352a3`）、合成 4 集約は H≈1.679× / W≈1.066× / A≈1.391×
+だが、これは **mixed-checkpoint**（他 3 グラフ = job 2354994、325557 のみ修正版）である。
+フェーズ内訳（BFS/backward）とプロファイル（56438_300801・本測定 H1W1A0 と untimed H1W1A1
+warmupを含む単一トレースにおける CUDA GPU カーネル時間 backward 63.9%/bfs 36.1%、帯域）を補助資料とした。
+- 根拠：`result/ablation/{corrected_325557,synthetic_2354994,email_2354999}/`, `result/profiling/`,
   `docs/kernel_selection_decision.md`。
-- 主張しないこと：因果を評価外グラフへ一般化しない。W が常に有効/有害とは書かない。
+- 主張しないこと：因果を評価外グラフへ一般化しない。W が常に有効/有害とは書かない。同一
+  checkpoint で 4 グラフを再測定したとは書かない（mixed-checkpoint を明記）。
 
 ## 貢献 4：UM/Pure/Chunked の容量特性と数値的限界の明確化
-共通計算基盤に対する 3 つのメモリ管理方式について、**(a) 実行可能バッチ範囲と OOM 境界
-（Pure は b8192+ で OOM、UM は旧 tree でb10240まで到達してb12288でOOM_OR_FAIL(exit 137)、host-memory-limited 100 GiB configurationではb9792完走・b10240 OOM、Chunked は
-b16384 まで到達）、(b) same-batch のメモリ経路一致（非 byte 一致）と (c) stress 条件で残る
-構成依存差（原因未特定）**を、一貫した許容基準（`abs_tol=1e-3`, `rel_tol=1e-6`）で明確化した。
-すなわち容量拡張の便益と、同時に露呈する数値的制約の**両方**を隠さず記述した点が貢献である。
-- 根拠：`result/memory_scalability/`, `result/correctness/memory_paths/`,
-  `failure/failed/oom/memory_correctness_2368269/`, `result/provenance/um_code_diff_audit.md`。
-- 主張しないこと：「UM が容量制約を完全に解消」「Chunked が全条件で OOM 回避」とは書かない。
-  migration byte 量を直接計測したとは書かない。PathMerge を ground truth としない。
+共通計算基盤に対する 3 つのメモリ管理方式について、修正版 325557（job 2404743, checkpoint
+`45352a3`, targeted boundary, 各 n=1）で **(a) 実行可能バッチ範囲と OOM 種別の区別
+（Pure b4096 成功 / b8192 CUDA device OOM、UM b10240 成功 / b12288 cgroup host-memory OOM kill
+(exit 137)、Chunked b16384 成功 `SUB_BATCH=6596` num_subs=3）、(b) 実装間 full-vector 整合
+（Tier B, 10 比較すべて mismatch=0・非 byte 一致）と (c) 独立 CPU 参照との一致（Tier A, 3 グラフ）**を、
+一貫した許容基準（`abs_tol=1e-3`, `rel_tol=1e-6`）で明確化した。容量問題は入力グラフファイル
+（≈ 45.35 MB）ではなく **batch × per-source state** の working set が作ること、および容量拡張の便益と
+限界（UM も b12288 で host-memory OOM kill）を隠さず記述した点が貢献である。
+- 根拠：`result/memory_scalability/corrected_325557/`, `result/correctness/{corrected_325557,small_full_vector}/`,
+  `raw_data/corrected_325557/job_2404743/`, `result/CORRECTED_325557_ARTIFACT_PROVENANCE.tsv`。
+- 主張しないこと：「UM が容量制約を完全に解消」「Chunked が全条件で OOM 回避」「96 GB を超える
+  グラフを格納」とは書かない。CUDA device OOM と cgroup host-memory OOM kill を混同しない。
+  migration byte 量を直接計測したとは書かない。PathMerge を ground truth としない。旧 malformed
+  入力の CORE_FAIL は historical として保持し現行結論に含めない。
 
 ---
 

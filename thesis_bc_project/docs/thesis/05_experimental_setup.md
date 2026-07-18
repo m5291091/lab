@@ -34,7 +34,9 @@
 | 実験群 | checkpoint | 備考 |
 |:--|:--|:--|
 | 提案 block（proposed_variants）・kernel_selection・PathMerge 掃引・correctness(small)・profiling | `phase_def_block_20260710` | 常時 block 化後 |
-| ablation（synthetic/email） | `phase_def_block_20260710`（測定 2026-07-10） | build_miyabi から curate |
+| **ablation 修正版 325557（Series C）** | **`45352a3`（job 2406254）** | 修正版 `325557_3216152_corrected_v1`；旧 malformed を置換 |
+| **correctness + memory feasibility 修正版 325557（Series A/B）** | **`45352a3`（job 2404743）** | targeted boundary + 10 比較, 各 n=1 |
+| ablation（synthetic/email） | `phase_def_block_20260710`（測定 2026-07-10） | build_miyabi から curate（他 3 グラフ, job 2354994） |
 | legacy baseline（seven_implementations, PathMerge 既定 b64 / 旧 shared 提案） | 旧 tree（oldtree_f05ec52_20260512-era, pre-consolidation） | 旧 mylab/research 由来 |
 | UM feasibility（memory_scalability） | `oldtree_f05ec52_20260512`（2026-05-12, 旧 tree） | **時間値非採用**, feasibility のみ |
 | memory-path canonical | `memory_correctness_20260712`（job 2368587） | Host-memory-limited 100 GiB configuration |
@@ -43,27 +45,48 @@
 | memory-path fail-fast（early_terminated） | `memory_correctness_failfast_20260712`（job 2368398） | 比較不一致で打切り |
 
 ## 5.4 データセット（T-GRAPH）
-すべて無向・非重み CSR。統計は `docs/graph_stats.md`、素性は `result/datasets/graph_catalog.tsv`。
+すべて無向・非重み CSR。統計は `docs/graph_stats.md`、素性・サイズは `result/datasets/graph_catalog.tsv`
+（T1 参照）。`Input File [MiB]` はディスク上の CSR テキスト入力（`FileSizeBytes / 1,048,576`）であり
+GPU メモリ使用量ではない。
 
-| グラフ | 分類 | n | m | avg_deg | max_deg | CV(次数) | BFS深さ中央 | 用途 |
-|:--|:--|--:|--:|--:|--:|--:|--:|:--|
-| email-EuAll | 実データ(ハブ有) | 265,009 | 364,481 | 2.75 | 7,636 | 13.93 | 10 | RQ1 主 |
-| roadNet-PA | 道路網 | 1,088,092 | 1,541,898 | 2.83 | 9 | 0.36 | 674 | RQ1 主 |
-| roadNet-TX | 道路網 | 1,379,917 | 1,921,660 | 2.79 | 12 | 0.36 | 798 | RQ1 主 |
-| roadNet-CA | 道路網 | 1,965,206 | 2,766,607 | 2.82 | 12 | 0.35 | 608 | RQ1 主 |
-| 325557_3216152 | 合成(高次数) | 325,557 | 3,216,152 | 19.76 | 18,280 | 11.15 | 27 | RQ3/RQ4（UM/memory-path） |
-| 56438_300801 | 合成 | 56,438 | 300,801 | 10.66 | 604 | 2.01 | 8 | ablation, 7impl(small) |
-| benchmark_7000_41459 | 合成 | 7,000 | 41,459 | 11.85 | 589 | 1.37 | 5 | ablation, 正確性(small) |
-| benchmark_11023_62184 | 合成 | 11,023 | 62,184 | 11.28 | 2,109 | 4.60 | 8 | ablation, 正確性(small) |
-| chain_200 | 合成(鎖) | 200 | 199 | 1.99 | 2 | 0.05 | 171 | 正確性(small) |
-| random | 合成 | 32,212 | 101,805 | 6.32 | 22 | 0.19 | 12 | 7impl(small) |
+| グラフ | 分類 | n | m | avg_deg | Input File [MiB] | 用途 |
+|:--|:--|--:|--:|--:|--:|:--|
+| email-EuAll | 実データ(ハブ有) | 265,009 | 364,481 | 2.75 | 5.59 | RQ1 主; ablation |
+| roadNet-PA | 道路網 | 1,088,092 | 1,541,898 | 2.83 | 28.43 | RQ1 主; kernel selection |
+| roadNet-TX | 道路網 | 1,379,917 | 1,921,660 | 2.79 | 36.53 | RQ1 主; kernel selection |
+| roadNet-CA | 道路網 | 1,965,206 | 2,766,607 | 2.82 | 53.83 | RQ1 主 |
+| **325557_3216152_corrected_v1** | 合成(高次数, 修復版) | 325,557 | 3,216,152 | 19.76 | 43.25 | **RQ2/RQ3/RQ4**（ablation/memory/correctness） |
+| 56438_300801 | 合成 | 56,438 | 300,801 | 10.66 | 3.72 | ablation |
+| benchmark_7000_41459 | 合成 | 7,000 | 41,459 | 11.85 | 0.39 | ablation, 正確性(small) |
+| benchmark_11023_62184 | 合成 | 11,023 | 62,184 | 11.28 | 0.61 | ablation, 正確性(small) |
+| chain_200 | 合成(鎖) | 200 | 199 | 1.99 | 0.00 | 正確性(small) |
+| random | 合成 | 32,212 | 101,805 | 6.32 | 1.30 | 補助 |
+| 325557_3216152（旧, malformed） | 合成(高次数) | 325,557 | 3,216,152 | 19.76 | 43.25 | Historical（修復版に置換） |
+
+- 修正版 325557（`325557_3216152_corrected_v1`, SHA256 `8373244f...`, checkpoint `45352a3`,
+  jobs 2404743/2406254）を **RQ2（ablation）/ RQ3（memory）/ RQ4（correctness）にのみ**使用し、
+  **RQ1 主性能比較には使用しない**。旧 malformed `325557_3216152`（SHA256 `a095b2e7...`）は
+  historical としてのみ保持し（`ValidationStatus=malformed`）、現在の実験対象と混同しない。
+
+### 入力ファイルサイズと GPU working set は別概念
+入力ファイル（修正版 325557 で約 45.35 MB / 43.25 MiB）や CSR topology（約 27.03 MB）は GPU の
+working set ではない。GPU working set を作るのは **batch 依存の per-source state** であり、
+
+```
+per-source state = 32n + 4·D_est + 8（D_est = max_depth_estimate; host_pure.cu:141-157）
+Working-set estimate = EffectiveNS × EffectiveBatch × PerSourceStateBytes
+```
+
+修正版 325557 では per-source state = 10,418,856 bytes。batch はグラフを分割した近似ではなく、
+**全始点を複数回の batch / sub-batch に分けて厳密に処理する source 単位**であり、BC を近似・省略しない。
 
 ### 前処理・directed/undirected（`graph_catalog.tsv`）
 - email-EuAll：SNAP 由来（原本 directed）を **無向化**して使用（`Symmetrized=yes`）。
 - roadNet-PA/TX/CA：SNAP 由来（原本 undirected）を無向で使用（`Symmetrized=no`）。
-- 合成グラフ：`tools/gen_graph.py` 生成、無向。325557 は 1-indexed。
+- 合成グラフ：`tools/gen_graph.py` 生成、無向。旧 325557 は 1-indexed（malformed）、修正版は
+  `tools/repair_325557_graph.py` で 0-based へ決定的に relabelling + 欠落行再構成。
 - SelfLoop/DupEdge 処理：SNAP グラフは `unknown`（原データ準拠, 推定しない）。
-- SHA256 は `graph_catalog.tsv` に記録（同一性確認可能）。
+- SHA256・入力サイズ 5 列は `graph_catalog.tsv` に記録（同一性確認可能）。
 
 ## 5.5 集計規約
 - **Aggregation = median（中央値）**。主値は median。mean と混在させない。速度向上は median/median。
@@ -80,8 +103,9 @@
     warmup ループ無し・全実行を trial 記録、log/TSV 1:1 で確認）；gpu_opt_pure ＝ `not_recorded`
     （log に trial header 無し・生成ドライバ未保存のため確認不能）。
 - **試行数（trials）**：proposed email n=5 / road n=3；PathMerge tuned n=3（掃引最良）；
-  ablation synthetic n=5 / email n=3；memory_scalability n=5；memory-path 各構成 **n=1**；
-  profiling n=1（トレース）。
+  ablation synthetic n=5 / email n=3；修正版 325557 の targeted memory boundary は各条件 **n=1**；
+  correctness は比較ごと **n=1**；profiling n=1（トレース）。旧 malformed 入力の legacy
+  memory_scalability n=5 は historical 記録であり、現行 RQ3 の trial 数と混同しない。
 - **TimingScope**：runner が実装関数全体を `Time_sec` として stdout 出力
   （`src/core/runner.cpp`）。phase 内訳は stderr。
 - **GTEPS**：`n_nodes × n_edges / Time_sec`（`n_edges`＝無向辺数 m）で統一。
@@ -94,8 +118,11 @@
 - **許容値は事後に変更しない**。`rel_tol=3e-6` 感度分析は補助情報で、正式 FAIL を PASS 化しない。
 
 ## 5.7 OOM / TIMEOUT の扱い
-- OOM は **0 秒として扱わない**。feasibility 表では `Status=OOM_OR_FAIL`（`Time_sec=0` は
-  「未達」を表すマーカーであり性能値ではない）。取得不能値は `N/A`。
+- OOM・kill は **0 秒として扱わない**。修正版 325557 の正式な feasibility 表では取得不能時間を
+  `N/A` とし、Pure b8192 の **CUDA device-memory OOM**（exit 1）と UM b12288 の
+  **cgroup host-memory OOM kill**（exit 137）を別 class として記録する。
+- 旧 malformed 入力の `OOM_OR_FAIL` は historical label のまま保持し、修正版の failure class へ
+  混入させない。
 - `failed/{build,runtime,timeout}` は該当なし（`failure/README.md`）。PBS `.o` の
   `Timeout: 21600s` はジョブ設定行であり実タイムアウトではない。
 - UM b10240 の OOM はhost-memory-limited 100 GiB configurationで発生（runner_exit=137,

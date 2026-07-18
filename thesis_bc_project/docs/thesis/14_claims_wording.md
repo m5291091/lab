@@ -1,97 +1,78 @@
 # 14 主張の表現ガイド
 
-各主張について「使用可能な表現 / 避ける表現 / 根拠と制約」を示す。査読・口頭試問での
-過大主張を防ぐためのチェックリスト。数値は `result/CLAIMS.md`・元 TSV と一致。
+## 14.1 RQ1 性能
 
----
+- **使用可能**：「固定 b512 の block GPU_Opt は、評価した email-EuAll および roadNet-PA/TX/CA において、グラフごとに調整した評価対象の第三者実装 PathMerge より 1.31〜3.17 倍高速だった（email 3.17×、PA 1.31×、TX 1.51×、CA 1.45×）。」
+- **避ける**：all graphs、always faster、universally、最速の BC 実装、PathMerge/Galliot 一般または原著者公式実装への一般化。
+- **制約**：4 graph、GPU_Opt fixed b512、PathMerge tuned。修正版 325557 は RQ1 に不使用。
 
-## 14.1 性能 1.31〜3.17×（中心主張）
-- **使用可能**：「固定 b512 の block GPU_Opt は、評価した email-EuAll および roadNet-PA/TX/CA に
-  おいて、グラフごとに調整した「評価した第三者実装の PathMerge」（tuned; 上流
-  `gobardhanm/path-merging-bc`, 論文著者の公式実装ではない）より 1.31〜3.17 倍高速だった（median/median;
-  email 3.17×, PA 1.31×, TX 1.51×, CA 1.45×）」。
-- **避ける**：「あらゆるグラフで高速」「常に PathMerge より速い」「一般に高速」「最速の BC 実装」。
-  既定 b64 比較の「7.15×/1.64×」を tuned 主張と混同する表現。評価した第三者実装に対する結果を、
-  PathMerge/Galliot アルゴリズム一般や原著者の公式実装に対する優劣へ一般化する表現。
-- **根拠と制約**：`proposed_variants` / `tuning/pathmerge` / legacy b64（PA/TX）。4 グラフ限定、
-  提案は固定 b512、PathMerge は tuned（保守的比較）。正確性は headline で `max_bc_only`。
+## 14.2 RQ2 アブレーション
 
-## 14.2 Hybrid BFS
-- **使用可能**：「BFS の top-down/bottom-up 方向切替（Beamer らの direction-optimizing）を採用し、
-  評価したアブレーション条件で主要な性能寄与（synthetic 主効果幾何平均 ≈1.66×）を示した」。
-- **避ける**：「CPU–GPU ハイブリッド」（誤り）。「Hybrid BFS を発明した」。「全グラフで最大の寄与」。
-- **根拠と制約**：`ablation/*`、`brandes_kernels.cuh`（α=14/β=24）。既存手法の適用。email では
-  1.429×、325557 で 1.395× 等グラフで幅がある。
+- **使用可能**：「修正版 325557 の main effect は H=1.4767 / W=1.1012 / A=1.5563。合成 4 graph aggregate は H=1.679 / W=1.066 / A=1.391。」
+- **必須注記**：aggregate は mixed-checkpoint（他 3 = job 2354994、修正版 325557 = job 2406254 / checkpoint `45352a3`）。same-checkpoint four-graph remeasurement ではない。
+- **使用可能**：「評価した ablation 条件では Hybrid BFS と Dual Streams が主要な正の効果を示し、Warp-Cooperative Accumulation は graph-dependent だった。」
+- **避ける**：旧 1.655 / 1.065 / 1.396 を current 値として使用、roadNet への因果一般化、W が常に有効/有害という表現。
 
-## 14.3 2 ストリーム（async 2-stream）
-- **使用可能**：「host 側 cudaMemsetAsync とカーネルの 2 ストリーム重畳により、評価条件で主要な
-  性能寄与（synthetic 主効果 ≈1.40×, email ≈1.72×）を示した」。
-- **避ける**：「常に 2 倍高速化」。gap の負値を「バグ」と書く。
-- **根拠と制約**：`ablation/*`、`profiling`（HBM3/C2C 帯域差, Copy Engine 独立実行）。gap 負値は
-  2 stream 重畳の証拠（‡）。
+## 14.3 Graph File Size and Working Set
 
-## 14.4 warp 協調
-- **使用可能**：「warp 協調（shfl 還元）による後向き累積の効果は**グラフ依存**であり、高次数寄りの
-  グラフで正（bench_7000 1.175×, 325557 1.096×）、email/56438 では中立〜わずかに悪化
-  （0.970×/0.992×）だった」。
-- **避ける**：「warp 協調が常に高速化」「warp 協調は無効」（どちらも過度）。
-- **根拠と制約**：`ablation_contributions.tsv`。専用カウンタ検証はしていない。
+- **使用可能**：「修正版 325557 の input graph file は 45,348,105 bytes（45.35 MB / 43.25 MiB）、CSR は 27,031,448 bytes、BC vector は 2,604,456 bytes である。」
+- **使用可能**：「容量問題は input graph file ではなく、`EffectiveNS × EffectiveBatch × PerSourceStateBytes` の batch-dependent working set から生じる。per-source state は 10,418,856 bytes である。」
+- **避ける**：96 GB graph、graph larger than HBM、入力 graph が HBM3 を超えた、96 GB 以上の graph を UM で格納した。
+- **必須区別**：allocation estimate と measured RSS / physical HBM residency / migration bytes。後 3 者は未取得。
 
-## 14.5 Unified Memory（UM）
-- **使用可能**：「UM（cudaMallocManaged）により、Pure が OOM する領域（325557, b8192+）でも
-  oversubscription で実行を継続できた。ただし UM も無制限ではなく、旧 tree で b12288 が
-  OOM_OR_FAIL（exit 137, 原因独立未確認）で失敗し、host memoryを100 GiBに制限した構成で
-  b10240 が OOM した」。
-- **避ける**：「UM が容量制約を完全に解消」「UM は無制限」「UM でどんな working set も扱える」。
-- **根拠と制約**：`memory_scalability`（feasibility, 時間値非採用）、`memory_paths`（b9792 完走）、
-  `failure/.../2368269`（b10240 OOM）。境界は環境依存。
+## 14.4 Batch and Sub-Batch
 
-## 14.6 Chunked
-- **使用可能**：「Chunked は実確保を SUB_BATCH 単位に抑え、試験範囲で最大の実行可能バッチ
-  （325557, b16384, num_subs=3）に到達した。主効果は最高性能ではなく実行可能バッチの拡大」。
-- **避ける**：「Chunked は全条件で OOM を完全回避」「Chunked が常に最速」。
-- **根拠と制約**：`memory_scalability`（b16384 全 SUCCESS）、`memory_paths`（num_subs=3）。325557
-  限定。
+- **使用可能**：「batch は source grouping の実行単位で、outer loop が全 source を処理する。Chunked は source batch を sub-batch に分けて同時 resident state を制限する。」
+- **避ける**：the graph was split into batches、batch で graph を分割、一部の graph/source だけを計算、近似計算。
+- **必須説明**：batch/sub-batch を使用しても全 source を exact に処理し、BC を省略しない。
 
-## 14.7 OOM 回避
-- **使用可能**：「試験したバッチ範囲で、UM は Pure より、Chunked は UM より大きなバッチまで到達した
-  （feasibility 順序 Pure<UM<Chunked）」。
-- **避ける**：「OOM を完全に回避」「容量制約を解決」。
-- **根拠と制約**：feasibility 表（[08](08_results_memory.md)）。OOM を 0 秒扱いしない。
+## 14.5 Unified Memory
 
-## 14.8 exactness（厳密性）
-- **使用可能**：「小規模 3 グラフ（bench_7000/11023/chain_200）で独立参照 Sequential と全 BC
-  ベクトルが混合許容内で一致（mismatch/missing/NaN/Inf=0）」。「headline 4 グラフでは提案 3 実装
-  間 + 独立参照 PathMerge の Max BC が一致（max_bc_only）」。
-- **避ける**：「提案実装は厳密性が全条件で検証済み」「全グラフで正しい」。「mismatch=0 だから
-  byte 一致」。stress 差を「FP 累積が原因」と断定。
-- **根拠と制約**：`small_full_vector`（SUPPORTED, 3 グラフ限定）、`memory_paths`（same-batch は
-  SUPPORTED_WITH_LIMITATIONS, stress は NOT_YET_SUPPORTED）。
+- **使用可能**：「UM は managed allocation と migration により device memory を超え得る working set を扱う。修正版 325557 の b10240 は code-derived estimate 106.69 GB が `free_before≈101.4 GB` を上回る条件で成功した。」
+- **必須注記**：入力 graph file の格納目的ではない。physical residency / migration bytes は未測定。
+- **使用可能**：「UM b12288 は cgroup host-memory OOM kill（exit 137）であり、UM は無制限ではない。」
+- **避ける**：UM completely avoids OOM、UM unlimited、CUDA/HBM OOM と cgroup kill の混同。
 
-## 14.9 PathMerge
-- **使用可能**：「評価に使用した第三者実装の PathMerge を tuned baseline かつ external comparator と
-  して用いた」。「PathMerge と提案の差（325557, 約 11027 要素, max_rel≈0.2%）は正誤未決定」。
-- **避ける**：「PathMerge を ground truth として提案の正しさを証明」「PathMerge と一致＝提案が正しい」。
-  「PathMerge を固定設定にして提案だけ最適化」（誤り: PathMerge が tuned）。「原著者の公式実装」や
-  「PathMerge アルゴリズム一般」と断定する表現。
-- **根拠と制約**：`pathmerge_cross`（5/5 DIFF, 未解決）。ground truth ではない。上流
-  `gobardhanm/path-merging-bc`（@ `9c231b46`）は論文著者の公式実装ではない第三者実装で、上流に
-  明示的ライセンス表記なし（§12.5 [R6]; 再配布可否は未確定でユーザー判断）。
+## 14.6 Pure and Chunked
 
-## 14.10 cuGraph
-- **使用可能**：「cuGraph（exact, normalized=false, endpoints=false, undirected）を small 限定の
-  補助 baseline として掲載した」。
-- **避ける**：「cuGraph と厳密に同条件で全グラフ比較」「cuGraph を正確性基準に採用」。
-- **根拠と制約**：`cugraph_bc.cu`。/2 補正・timing scope（初期化含む）の同条件性は未確認
-  ([05](05_experimental_setup.md) §5.9)。medium/large は欠。
+- **Pure**：「b4096 success、b8192 confirmed CUDA device-memory OOM（exit 1）。b8192 estimate は 170,702,536,704 bytes。」
+- **Chunked**：「b16384 success、`SUB_BATCH=6596`、`num_subs=3`、resident estimate 68,722,774,176 bytes。」
+- **binding constraint**：「修正版 325557 では `safe_sub_batch=INT_MAX/n=6596` が HBM-budget upper bound より小さく、index-safety が binding。」
+- **避ける**：Chunked eliminates OOM、Chunked always avoids OOM、Chunked always fastest。
 
----
+## 14.7 RQ3 の範囲
 
-## 14.11 禁止表現チェック（提出前に grep）
-以下が本文に 0 件であることを確認する：
-- 「全グラフ」「あらゆるグラフ」「常に」「一般に高速」「最速」
-- 「完全に OOM 回避」「容量制約を解消」「UM 無制限」
-- 「PathMerge を ground truth」「PathMerge と一致＝正しい」
-- 「byte 一致」（same-batch/ run-to-run について。SHA256 は相異）
-- stress 差を「FP 累積順序が原因」と断定する表現
-- 主要性能値 3.17 / 1.31 / 1.51 / 1.45 以外への差し替え・逆算
+- **使用可能**：「試験範囲内の maximum successful batch は Pure b4096 < UM b10240 < Chunked b16384。」
+- **必須注記**：corrected 325557、job 2404743 / checkpoint `45352a3`、各条件 1 trial、targeted feasibility only、runtime は formal performance comparison ではない。
+
+## 14.8 RQ4 正確性
+
+- **Tier A**：「小規模 3 graph の independent Sequential CPU reference comparison は full-vector PASS (`SUPPORTED`)。」
+- **Tier B**：「修正版 325557 の 6 vector・10 comparison は mixed tolerance 内で全て missing 0 / mismatch 0 / PASS (`SUPPORTED_WITH_LIMITATIONS`)。」
+- **全体**：「T5 の 13 comparison はすべて `ByteIdentical=No`。」
+- **避ける**：bitwise identical、exactly identical、ground truth、all conditions verified。
+- **PathMerge**：external comparator であり ground truth ではない。
+
+## 14.9 Historical Malformed Input
+
+- **使用可能**：「旧 malformed input の `CORE_FAIL` と stress/pathmerge differences は historical invalid-input evidence として保存し、修正版 job 2404743 で再検証した。」
+- **必須保持**：`result/correctness/memory_paths/canonical_job_2368587/`、`failure/`、provenance documents、raw vectors/logs。
+- **避ける**：「過去に誤っていたため削除した」、旧 `CORE_FAIL` を current failure とする表現、修正版 PASS を旧判定へ遡及適用する表現。
+
+## 14.10 Corrected Graph Provenance
+
+- **使用可能**：「修正版は deterministic internal reconstruction である。」
+- **必須制約**：original generation seed / complete upstream original は未確認。`internally_reconstructed_no_original_seed`。
+- **避ける**：外部原本と完全同一、provenance が完全に確立したという表現。
+
+## 14.11 Submission Checks
+
+提出前に次を確認する。
+
+- RQ1 値 3.17 / 1.31 / 1.51 / 1.45 が不変。
+- RQ2 current 値 1.4767 / 1.1012 / 1.5563 と 1.679 / 1.066 / 1.391 が一致。
+- mixed-checkpoint、1 graph、1 trial、repair provenance の制約が記載される。
+- CUDA device OOM と cgroup host-memory OOM kill が区別される。
+- graph file / CSR / BC vector / per-source state / batch working set が区別される。
+- historical `CORE_FAIL` が保存され current conclusion と分離される。
+- prohibited wording（all graphs、always faster、universally、ground truth、bitwise/exactly identical、UM completely avoids OOM、Chunked eliminates OOM、96 GB graph、graph larger than HBM、graph split into batches、same-checkpoint four-graph ablation）が current claim に 0 件。

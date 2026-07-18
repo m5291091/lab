@@ -59,3 +59,14 @@
   - Series C（アブレーション）: 修復版 325557 × 8 構成 × n=5。job 2354994 の一次資料監査に合わせ、各 `run_ablation ... all` invocation（8構成セット）の先頭で global・untimed H1W1A1 warmup を1回実行し、40本試行には含めない。8構成集合、各trial 1〜5、合計40行、有限正のTime/GTEPS、runner exit 0、失敗markerなしを機械検証する。既存 3 グラフは再実行せず、325557 の値のみ差し替えて幾何平均を再集計できる構成にする。
 - 既存の 325557 由来の結果（`correctness/memory_paths/`、`memory_scalability/`、ablation synthetic の 325557 分、`CORE_FAIL`）は **malformed legacy input 上の履歴結果**として保存し、削除・置換しない。
 - **RQ1 main performance（email-EuAll / roadNet-PA/TX/CA）は 325557 を使用しないため影響を受けない。**
+
+## Gate W7.4 — 修正版325557 再検証 **完了**（案→充足）
+再検証を実施し、上記 Series A/B/C はすべて完了した（GPU 実行済み・独立監査済み; Gate W7.3C1）。
+
+- **Series A/B（job 2404743, checkpoint `45352a3`, `SUCCESS`）**: raw=`raw_data/corrected_325557/job_2404743/`、正式=`result/correctness/corrected_325557/`・`result/memory_scalability/corrected_325557/`。
+  - 正確性: 6ベクトル完全、**10比較すべて mismatch=0**（旧 malformed で FAIL していた stress `same_impl_diff_batch`（b9792/b1024, b16384/b1024）も PASS, max_rel<=5.09e-13, 非byte一致）。PathMerge=external comparator。→ memory-path stress full-vector は corrected 入力で **一致（旧 CORE_FAIL を置換）**。
+  - 容量境界（feasibility, 各1試行）: pure_b8192=**CUDA OOM**（ログ確認）、um_b10240=SUCCESS、**um_b12288=host/cgroup memory OOM kill（exit137, CUDA/HBM OOM ではない）**、chunked_b16384=SUCCESS。入力ファイル≈43.25 MiB、容量問題は batch 依存 working set。
+- **Series C（job 2406254, checkpoint `45352a3`, `SUCCESS_COMPLETE_40`）**: raw=`raw_data/corrected_325557/job_2406254/`、正式=`result/ablation/corrected_325557/`。40行完全・warmup 5回(untimed H1W1A1, 統計非算入)。**H=1.4767 / W=1.1012 / A=1.5563**。合成4集約（他3=job2354994 raw不変 + 325557修正版）= **H=1.6787 / W=1.0661 / A=1.3914**（本文丸め 1.679/1.066/1.391, **mixed-checkpoint**）。
+- 失敗系列: build 失敗 job 2403658（`failure/failed/build/`）、OOM マーカー誤判定 job 2404249（`failure/failed/validation/`）を自己完結で保持。
+- 旧 malformed 入力上の `CORE_FAIL`・legacy feasibility・旧 synthetic 325557 値は **historical** として保存（削除・上書きせず、現行 claim 非使用）。
+- 制約: 4 synthetic graphs、mixed checkpoints、325557 のみ修正版再測定、各境界 1 試行、修正版は内部再構成(seed 不明)。roadNet・他 GPU へ一般化しない。PathMerge は独立正解ではない。

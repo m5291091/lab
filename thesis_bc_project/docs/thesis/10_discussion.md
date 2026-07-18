@@ -1,63 +1,51 @@
 # 10 考察
 
-データに基づく解釈と、データがない推測（「可能性」と明示）を分ける。
+観測事実、解釈、未測定の可能性を分ける。数値は修正版 325557 の正式 artifact と RQ1 の不変値に基づく。
 
-## 10.1 なぜ roadNet で高速化が異なるか（email 3.17× vs road 1.31〜1.51×）
-- 観測：ハブ有り実データ email-EuAll（avg_deg 2.75, max_deg 7636, CV 13.93, BFS 深さ中央 10）で
-  3.17×、低次数の道路網（max_deg 9〜12, CV 0.35〜0.36, BFS 深さ中央 608〜798）で 1.31〜1.51×。
-- 解釈（実験範囲内）：email はアブレーションで A（2 ストリーム）の主効果が最大（1.720×）で、
-  BFS 深さが浅く（中央 10）フロンティアが大きいためカーネル/初期化の重畳が効きやすい。一方
-  道路網は BFS 深さが数百レベルと深く、レベルあたりフロンティアが小さいため、各レベルの
-  カーネル起動・同期のオーバヘッドが相対的に大きく、baseline（PathMerge）との差が縮む可能性がある。
-- **可能性（データ未確定）**：道路網での提案優位が縮む主因が「深い BFS によるレベル同期コスト」
-  か「PathMerge 側の相対効率」かは、本データでは分離できない（提案手法の phase breakdown を
-  road で詳細分解する追加分析が必要）。
+## 10.1 RQ1〜RQ4 の統合
 
-## 10.2 グラフ構造と BFS/backward 負荷
-- nsys（`ablation_H1W1A0`）では backward 63.9% / bfs 36.1%（56438_300801、本測定 H1W1A0 と untimed H1W1A1 warmupを含む単一トレースの CUDA GPU カーネル時間のみ）。この限定された観測では backward が支配的であり、他グラフへ一般化しない。
-- アブレーションのフェーズ帰属では、H が BFS cum を大きく削る（325557 で Δ57.5 s）。したがって
-  H の便益は BFS が重いグラフ（高次数・大フロンティア）で大きいと解釈でき、主効果表
-  （56438 で H=1.965×, 325557 で 1.395×, email 1.429×）と整合する。
-- **可能性**：backward 支配のグラフでは W（warp 協調）の便益が期待されるが、実測では W は
-  グラフ依存で小さい（§10.4）。backward のボトルネックが隣接走査ではなく atomic/同期側にある
-  可能性がある（未検証）。
+- **RQ1 (`SUPPORTED`)**：固定 b512 の block GPU_Opt は、評価した第三者実装 PathMerge tuned に対し email 3.17×、PA 1.31×、TX 1.51×、CA 1.45×。修正版 325557 は RQ1 に使用していない。
+- **RQ2 (`SUPPORTED_WITH_LIMITATIONS`)**：修正版 325557 は H=1.4767 / W=1.1012 / A=1.5563、合成 4 mixed-checkpoint 集約は H=1.679 / W=1.066 / A=1.391。Hybrid BFS と 2 streams が主要な正の効果を示し、warp は graph-dependent。ただし roadNet へ因果を一般化しない。
+- **RQ3 (`SUPPORTED_WITH_LIMITATIONS`)**：corrected targeted boundary は Pure b4096 success / b8192 CUDA device OOM、UM b10240 success / b12288 cgroup host-memory OOM kill、Chunked b16384 success (`SUB_BATCH=6596`, `num_subs=3`)。各条件 n=1 で runtime 比較ではない。
+- **RQ4**：Tier A は小規模 3 グラフの独立 CPU 参照で `SUPPORTED`。Tier B は修正版 325557 の 10 比較で `SUPPORTED_WITH_LIMITATIONS`。全 13 比較 PASS / mismatch 0 / byte-identical No。
 
-## 10.3 固定 b512 と tuned PathMerge の比較の意味
-- 提案手法は固定 b512（提案の batch sweep 未実施）。PathMerge はグラフごとに調整（tuned）。
-  すなわち **提案手法に不利・PathMerge に有利な保守的比較**である。それでも提案が 1.31〜3.17×
-  速い。この非対称性は「提案の優位が baseline の調整不足によるものではない」ことを支持する。
-- 逆に、提案手法を sweep すればさらに差が開く**可能性**はあるが、本研究では測定していないため
-  主張しない。
+## 10.2 性能要因の解釈
 
-## 10.4 Hybrid BFS と 2 ストリームの寄与
-- H と A が主要寄与という結論は、主効果（幾何平均 H≈1.655/A≈1.396, synthetic）とフェーズ帰属
-  （H→BFS cum 短縮, A→wall 短縮）の両方から支持される。A の物理的裏付けは Copy Engine と SM の
-  独立実行、および HBM3(1818.6)/C2C(177.7) の帯域差（重畳の余地）。
+email と roadNet の speedup 差は graph structure の違いと整合するが、roadNet では H/W/A factorial ablation を行っていないため原因を断定しない。W の主効果は 0.970〜1.175 に分布し、修正版 325557 では 1.1012 であった。専用 counter による因果検証はなく、次数分布だけから一般則を導かない。
 
-## 10.5 warp 協調がグラフ依存となる理由
-- 観測：W は email 0.970×・56438 0.992×（中立〜微減）、bench_7000 1.175×・325557 1.096×（正）。
-- 解釈（可能性）：warp 分割の backward 還元は、頂点の隣接数が warp 幅（32）に対して十分大きい
-  ときに得をするが、平均次数が中程度〜低いと lane の遊びや shuffle 還元のオーバヘッドが相殺し、
-  次数分布（CV）に敏感になる。email（CV 13.93）はハブ以外の低次数頂点が多く、平均的には
-  warp 分割の利得が出にくい**可能性**がある。これは仮説であり専用カウンタでは未検証。
+合成 4 集約は他 3 グラフ = job 2354994、修正版 325557 = job 2406254 / checkpoint `45352a3` の mixed-checkpoint であり、same-checkpoint four-graph remeasurement ではない。
 
-## 10.6 UM と Chunked の用途
-- UM：`cudaMallocManaged` により**コード変更なしで**容量超過に耐える（Pure が OOM する b8192+
-  でも実行継続）。代償は oversubscription 領域での spill コスト（実験 A 内で b10240≈324 s）。
-- Chunked：実確保を SUB_BATCH に抑え、最大バッチ（b16384）まで到達し実行時間も平坦。明示的な
-  分割制御が必要。
-- 使い分け：容量が HBM3 を少し超える程度で簡潔さ優先なら UM、大幅超過や安定性優先なら Chunked。
+## 10.3 容量問題の設計上の含意
 
-## 10.7 性能と容量のトレードオフ
-- in-capacity では 3 方式は同等性能（proposed_variants）。差は oversubscription 領域で顕在化。
-- 「容量拡張（feasibility）」と「実行時間」は独立の軸として提示すべきで、UM の feasibility 優位を
-  性能優位と混同しない。
+修正版 325557 の input file / CSR / BC vector は 45,348,105 / 27,031,448 / 2,604,456 bytes で HBM3 を超えない。容量を支配するのは per-source state 10,418,856 bytes を batch 内で複製する working set である。
 
-## 10.8 PathMerge 差から何が言えて何が言えないか
-- 言える：325557 で提案 3 実装は same-batch 混合許容内で相互一致し、Max BC も一致。PathMerge
-  との差（約 11027 要素, max_rel≈0.2%）は、提案実装間の差（stress で最大 rel≈2.85e-6）とは
-  **桁が異なる別 regime**である。
-- 言えない：どちらが「正しい」か（PathMerge は ground truth ではない）。この差が FP か
-  アルゴリズム差かは未決定。したがって提案実装の誤りとも PathMerge の誤りとも断定しない。
-- 補足：Max BC 値は全実装で ≈39343001000.108 に一致し、独立参照との整合の一部（max_bc_only）は
-  満たす。full-vector の独立参照確認は headline/stress で未達（[11](11_limitations.md)）。
+```
+Working-set estimate = EffectiveNS × EffectiveBatch × PerSourceStateBytes
+```
+
+batch/sub-batch は graph partition や近似ではなく source grouping であり、全 source を反復処理する。このため容量制御点は graph file size ではなく同時 source state 数にある。
+
+## 10.4 UM と Chunked
+
+UM は managed allocation と migration により device memory を超え得る working set を扱う。b10240 の code-derived estimate 106.69 GB は `free_before≈101.4 GB` を超える条件で成功したが、b12288 は cgroup host-memory OOM kill であり無制限ではない。入力 graph を分割格納する仕組みとして説明しない。
+
+Chunked は source batch を sub-batch に分け、b16384 の同時 resident estimate を 68.72 GB に制限した。`SUB_BATCH=6596` は `INT_MAX/n` の index-safety 上限が binding constraint であった。Chunked の主価値は最高速度ではなく resident working-set control と tested capacity extension であり、未測定条件の OOM 回避を保証しない。
+
+## 10.5 正確性と provenance
+
+Tier B は混合許容内の cross-implementation consistency で、独立 ground truth ではない。PathMerge は external comparator であり、全 13 比較は byte-identical ではない。修正版 graph は内部再構成データで元 seed・上流原本を確認できず、この provenance limitation を残す。
+
+旧 malformed 入力の `CORE_FAIL` は current active conclusion から外すが、`canonical_job_2368587`、`failure/`、provenance documents に historical invalid-input evidence として保存する。旧判定を削除・relabel せず、修正版 job 2404743 の PASS を遡及適用しない。
+
+## 10.6 妥当性への脅威
+
+- **Internal**：RQ2 mixed-checkpoint、job/checkpoint 分離、CUDA OOM と cgroup OOM の evidence class。
+- **External**：RQ1 4 graph、RQ2 5 graph、RQ3/Tier B 1 corrected graph、GH200 1 台。
+- **Statistical**：corrected boundary は各条件 1 trial。runtime ranking を主張しない。
+- **Construct**：working-set は code-derived estimate。process RSS、physical HBM residency、migration bytes は未取得。
+- **Data provenance**：corrected graph は deterministic repair だが original seed/upstream original 不明。
+- **Baseline**：PathMerge は第三者実装で ground truth ではない。
+
+## 10.7 今後の課題
+
+headline graph の独立 full-vector reference、同一 checkpoint の synthetic-4 remeasurement、複数 trial の容量境界、full-run RSS/residency/migration、追加 graph・他 GPU、upstream original/seed による provenance 強化が必要である。
