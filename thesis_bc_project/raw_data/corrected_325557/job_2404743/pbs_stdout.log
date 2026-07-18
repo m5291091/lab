@@ -1,0 +1,146 @@
+/home/j17000/.zshenv:.:1: no such file or directory: /home/j17000/.cargo/env
+/home/j17000/.bashrc: line 53: /home/j17000/.cargo/env: No such file or directory
+/home/j17000/.bash_profile: line 13: /home/j17000/.cargo/env: No such file or directory
+[Validate graph] data/325557_3216152_corrected_v1
+[BUILD] scripts/build_miyabi_interactive.sh
+  root build directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs
+  mini build directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT   : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD     : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs
+║  MINI BUILD: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+║  JOBS      : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (5.3s)
+-- Generating done (0.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_CUGRAPH_BC_MINI
+
+
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs
+[ 12%] Building CUDA object CMakeFiles/bandwidth_benchmark.dir/tools/bandwidth_benchmark.cu.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/runner.cpp.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/graph.cpp.o
+/work/gj17/j17000/m5291091/lab/thesis_bc_project/tools/bandwidth_benchmark.cu(87): warning #177-D: variable "LPDDR5X_PEAK_GBS" was declared but never referenced
+  static const double LPDDR5X_PEAK_GBS = 512.0;
+                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[ 16%] Linking CUDA executable bandwidth_benchmark
+[ 16%] Built target bandwidth_benchmark
+[ 20%] Linking CXX static library libcore.a
+[ 20%] Built target core
+[ 36%] Building CUDA object CMakeFiles/baseline_cugraph.dir/src/baseline/cugraph_bc.cu.o
+[ 36%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_um.cu.o
+[ 44%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_pure.cu.o
+[ 44%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/pathmerge.cu.o
+[ 52%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_chunked.cu.o
+[ 52%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot.cu.o
+[ 52%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_ablation.cu.o
+[ 52%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot_kernels.cu.o
+[ 56%] Building CXX object CMakeFiles/baseline.dir/src/baseline/sequential.cpp.o
+[ 60%] Building CXX object CMakeFiles/baseline.dir/src/baseline/omp.cpp.o
+[ 64%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/gpu_unopt.cu.o
+[ 68%] Linking CXX static library libproposed.a
+[ 68%] Built target proposed
+[ 72%] Building CUDA object CMakeFiles/run_ablation.dir/experiments/run_ablation.cu.o
+[ 76%] Linking CXX static library libbaseline.a
+[ 76%] Built target baseline
+[ 80%] Building CUDA object CMakeFiles/run_pathmerge_sweep.dir/experiments/run_pathmerge_sweep.cu.o
+[ 84%] Linking CXX executable run_ablation
+[ 84%] Built target run_ablation
+[ 88%] Linking CXX executable run_pathmerge_sweep
+[ 88%] Built target run_pathmerge_sweep
+[ 92%] Linking CXX static library libbaseline_cugraph.a
+[ 92%] Built target baseline_cugraph
+[ 96%] Building CUDA object CMakeFiles/run_benchmark.dir/experiments/run_benchmark.cu.o
+[100%] Linking CXX executable run_benchmark
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+=== Series A: correctness vectors; stop at first acquisition failure ===
+[A 1/6] gpu_opt_b1024: gpu_opt batch=1024
+  runner_exit=0; oom_evidence=none
+[A 2/6] gpu_opt_pure_chunked_b1024: gpu_opt_pure_chunked batch=1024
+  runner_exit=0; oom_evidence=none
+[A 3/6] gpu_opt_pure_b1024: gpu_opt_pure batch=1024
+  runner_exit=0; oom_evidence=none
+[A 4/6] gpu_opt_b9792: gpu_opt batch=9792
+  runner_exit=0; oom_evidence=none
+[A 5/6] gpu_opt_pure_chunked_b16384: gpu_opt_pure_chunked batch=16384
+  runner_exit=0; oom_evidence=none
+[A 6/6] pathmerge_b4096: pathmerge_bc batch=4096
+  runner_exit=0; oom_evidence=none
+=== Series A: all vectors complete; running full comparison matrix ===
+[COMPARE same_impl_diff_batch] gpu_opt_b9792 vs gpu_opt_b1024: PASS
+[COMPARE same_impl_diff_batch] gpu_opt_pure_chunked_b16384 vs gpu_opt_pure_chunked_b1024: PASS
+[COMPARE same_batch_diff_path] gpu_opt_b1024 vs gpu_opt_pure_b1024: PASS
+[COMPARE same_batch_diff_path] gpu_opt_b1024 vs gpu_opt_pure_chunked_b1024: PASS
+[COMPARE same_batch_diff_path] gpu_opt_pure_b1024 vs gpu_opt_pure_chunked_b1024: PASS
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_b1024: PASS
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_b9792: PASS
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_pure_b1024: PASS
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_pure_chunked_b1024: PASS
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_pure_chunked_b16384: PASS
+=== Series B: feasibility; record every outcome and continue ===
+[B 1/5] pure_b4096: gpu_opt_pure batch=4096 expectation=pure_success_boundary
+  observed=SUCCESS; outcome=EXPECTED_SUCCESS; runtime=65.889429
+[B 2/5] pure_b8192: gpu_opt_pure batch=8192 expectation=pure_cuda_oom
+  observed=OOM_CONFIRMED; outcome=EXPECTED_CUDA_OOM; runtime=not_recorded
+[B 3/5] um_b10240: gpu_opt batch=10240 expectation=um_success_boundary
+  observed=SUCCESS; outcome=EXPECTED_SUCCESS; runtime=238.672569
+[B 4/5] um_b12288: gpu_opt batch=12288 expectation=um_failure_status_not_assumed_oom
+/var/spool/pbs/mom_priv/jobs/2404743.opbs.SC: line 281: 673063 Killed                  env "${batch_env}=${batch}" timeout -k 30 "${TIMEOUT_SEC}" "${RUNNER}" "${args[@]}" > "${CFG_OUTPUT}" 2> "${CFG_STDERR}"
+  observed=RUNTIME_FAILED; outcome=EXPECTED_FAILURE_STATUS; runtime=not_recorded
+[B 5/5] chunked_b16384: gpu_opt_pure_chunked batch=16384 expectation=chunked_tested_limit_success
+  observed=SUCCESS; outcome=EXPECTED_SUCCESS; runtime=66.598223
+=== Complete ===
+manifest=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/MANIFEST.txt
+implementation_manifest=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/implementation_manifest.tsv
+Series A/B timings are correctness/feasibility observations, not performance results.
+Cgroup memsw limit exceeded: oom-kill:constraint=CONSTRAINT_MEMCG,nodemask=(null),cpuset=2404743.opbs,mems_allowed=0-1,oom_memcg=/pbs_jobs.service/jobid/2404743.opbs,task_memcg=/pbs_jobs.service/jobid/2404743.opbs,task=run_benchmark,pid=673064,uid=14102

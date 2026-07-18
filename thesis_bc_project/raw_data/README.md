@@ -8,6 +8,11 @@
 - **commit SHA は生データアクセスの必須条件ではない**。過去の commit SHA と `SourceSnapshotID` の対応は
   `../code_snapshots/_legacy_audit/LEGACY_COMMIT_TO_SNAPSHOT.tsv`（raw 取得・再生成には不要な旧履歴対応表）にのみ保持する。
 - 旧 `result/`・`failure/` 内 raw → 新 raw パスの移行対応は `../result/provenance/RAW_DATA_MIGRATION.tsv`。
+- **Gate W7.4 追加**: 修正版325557 の再検証 raw は `corrected_325557/`（自己完結サブアーカイブ）に集約。
+  job 2404743（Series A/B: 6ベクトル+10比較+容量境界）と job 2406254（Series C: 40行ablation）を
+  `corrected_325557/job_<jobid>/` 配下に保持し、`corrected_325557/{README.md, MANIFEST.tsv, SHA256SUMS}`
+  で自己完結の copy-integrity/検証を提供する（top-level `RAW_DATA_INDEX.tsv`/`MANIFEST.tsv`/`SHA256SUMS`
+  にも 76 raw が追加され計 240 件）。gitignore された PBS `.o<jobid>` は内容不変で `pbs_stdout.log` に複製。
 
 ## パス命名規約
 

@@ -1,0 +1,8 @@
+Running: GPU_Opt_Pure on 325557_3216152_corrected_v1...
+  > [Warn] BC_BATCH_OVERRIDE=4096 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=85.35 GB, batch_per_stream=4096
+  > [GPU Phase] BFS wall=19.6003 s (cum=38.0270 s), Backward wall=32.9795 s (cum=63.2127 s)
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 65.889429 
+  > GTEPS = 15.8909 (nodes=325557, edges=3216152)

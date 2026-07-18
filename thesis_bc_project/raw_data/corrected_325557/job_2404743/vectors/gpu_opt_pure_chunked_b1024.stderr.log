@@ -1,0 +1,7 @@
+Running: GPU_Opt_Pure_Chunked on 325557_3216152_corrected_v1...
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(SUB_BATCH alloc)=21.34 GB, BATCH=1024, SUB_BATCH=1024, num_subs=1, NS_eff=2
+  > [GPU Phase] BFS wall=28.6975 s (cum=56.7990 s), Backward wall=32.5403 s (cum=62.2023 s), SUB_BATCH=1024, num_subs=1
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 64.878506 
+  > GTEPS = 16.1385 (nodes=325557, edges=3216152)

@@ -1,0 +1,15 @@
+checkpoint_sha=193eb21f9c1d0646a2a58826000e9c876d84fabb
+pbs_job_id=2403658.opbs
+series=AB
+graph=data/325557_3216152_corrected_v1
+graph_sha256=8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22
+graph_size_bytes=45348105
+n_nodes=325557
+n_edges=3216152
+max_depth_estimate=256
+vector_expected_length=325557
+abs_tol=1e-3
+rel_tol=1e-6
+allocation_values=recorded_log_values_or_code_derived_estimated_values_only
+unknown_policy=not_recorded;inapplicable_policy=not_applicable
+pathmerge_formula_policy=PathMerge_specific_only;GPU_Opt_formula_not_applied

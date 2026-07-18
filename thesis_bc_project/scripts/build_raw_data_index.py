@@ -17,7 +17,7 @@ RAW = os.path.join(TBP, "raw_data")
 MIG = os.path.join(TBP, "result/provenance/RAW_DATA_MIGRATION.tsv")
 SESS_MOVES = "/home/j17000/.copilot/session-state/d1db1e20-60af-40b5-8232-80d5d66e5ab7/files/migration_done.tsv"
 
-META_NAMES = {"README.md","MANIFEST.tsv","SHA256SUMS","RAW_CLASSIFICATION.tsv","RAW_DATA_INDEX.tsv"}
+META_NAMES = {"README.md","MANIFEST.tsv","SHA256SUMS","RAW_CLASSIFICATION.tsv","RAW_DATA_INDEX.tsv","SOURCE.md"}
 
 def sha256(fp):
     h = hashlib.sha256()
@@ -55,6 +55,9 @@ JOB = {
  '2360074':('phase_def_block_20260710','success'),  # PathMerge correctness email-EuAll
  'multi':  ('phase_def_block_20260710','success'),
  'notrecorded':('oldtree_f05ec52_20260512','success'),
+ # Gate W7.4: corrected 325557 re-verification (checkpoint 45352a3)
+ '2404743':('corrected325557_ab_20260717','success'),   # Series A/B correctness + feasibility
+ '2406254':('corrected325557_ablation_20260718','success'),  # Series C H/W/A ablation
 }
 # 実験ルート（長い順にマッチ）
 EXP_ROOTS = [
@@ -64,6 +67,7 @@ EXP_ROOTS = [
  'ablation','memory_scalability','profiling',
  'unsuccessful/oom/memory_paths','unsuccessful/early_terminated/memory_paths',
  'unsuccessful/early_terminated/pathmerge_sweep','unsuccessful/failed/profiling',
+ 'corrected_325557',
 ]
 # 実験 -> (DerivedResultPath, UsedInThesis)
 DERIVED = {
@@ -80,6 +84,7 @@ DERIVED = {
  'unsuccessful/early_terminated/memory_paths':('result/correctness/memory_paths/canonical_job_2368587/','no'),
  'unsuccessful/early_terminated/pathmerge_sweep':('result/tuning/pathmerge/','no'),
  'unsuccessful/failed/profiling':('result/profiling/','no'),
+ 'corrected_325557':('result/correctness/corrected_325557/; result/memory_scalability/corrected_325557/; result/ablation/corrected_325557/','yes'),
 }
 FAILSUM = {
  'unsuccessful/oom/memory_paths':'failure/failed/oom/memory_correctness_2368269/',
@@ -103,6 +108,19 @@ PBS_ORIGIN = {
  'raw_data/correctness/small_full_vector/_job/job_2367583_20260712/pbs_stdout.log':
    'thesis_bc_project/bc_small_correct.o2367583',
 }
+
+def load_corrected_origins():
+    """Gate W7.4: read accurate OriginalPath for corrected_325557 raw from its own
+    self-contained copy-integrity manifest (raw_data/corrected_325557/MANIFEST.tsv)."""
+    m = {}
+    fp = os.path.join(RAW, 'corrected_325557', 'MANIFEST.tsv')
+    if not os.path.exists(fp): return m
+    for r in csv.DictReader(open(fp), delimiter='\t'):
+        canon = r.get('CanonicalPath',''); orig = r.get('OriginalPath','')
+        if canon.startswith('raw_data/') and orig:
+            m[canon] = orig
+    return m
+
 
 def load_existing_manifest_origins():
     """既存 MANIFEST.tsv から RawPath->OriginalPath を読む（regen 時の自己修復; EXTERNAL 非依存）。"""
@@ -132,7 +150,9 @@ def parse(rel):
     fname = parts[-1]
     jidx = next((i for i,p in enumerate(parts) if p.startswith('job_')), None)
     if jidx is not None:
-        token, date = parts[jidx][len('job_'):].rsplit('_',1)
+        # robust to job dirs with or without a trailing _YYYYMMDD date token
+        token, _, date = parts[jidx][len('job_'):].partition('_')
+        date = date or 'na'
         pre = parts[:jidx]
     else:
         mm = re.match(r'pbs_stdout_job_([0-9]+)_([0-9]+)\.log', fname)
@@ -162,6 +182,7 @@ def main():
     load_j0()
     mig = load_migration()
     existing = load_existing_manifest_origins()
+    corrected_orig = load_corrected_origins()
     files = []
     for dp,_,fns in os.walk(RAW):
         for fn in fns:
@@ -177,8 +198,11 @@ def main():
         snap = JOB.get(token, ('oldtree_f05ec52_20260512','success'))[0]
         status = status_of(rel, token)
         rawpath = 'raw_data/'+rel
+        if exp == 'corrected_325557':
+            graph = '325557_3216152_corrected_v1'   # self-contained corrected re-run
         orig = (mig.get(rawpath) or J0_ORIGIN.get(rawpath) or PBS_ORIGIN.get(rawpath)
-                or existing.get(rawpath) or 'build_miyabi(gitignored)')
+                or corrected_orig.get(rawpath) or existing.get(rawpath)
+                or 'build_miyabi(gitignored)')
         pbsjob = token if re.match(r'^[0-9]+$', token) else ('multi' if token=='multi' else 'not_recorded')
         derived, uit = DERIVED.get(exp, ('',''))
         failsum = FAILSUM.get(exp,'') if rel.startswith('unsuccessful/') else ''

@@ -1,0 +1,8 @@
+Running: GPU_Opt on 325557_3216152_corrected_v1...
+  > [BFS kernel] auto=block (avg_deg=19.76, heuristic=block)
+  > [Diag] force_full_reset=false
+  > [Diag] force_ns_eff_one=false
+  > [Diag] diagnostic_mode=false
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=256.05 GB, BATCH=12288, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH

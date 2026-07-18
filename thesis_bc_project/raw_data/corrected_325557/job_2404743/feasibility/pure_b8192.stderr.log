@@ -1,0 +1,5 @@
+Running: GPU_Opt_Pure on 325557_3216152_corrected_v1...
+  > [Warn] BC_BATCH_OVERRIDE=8192 exceeds safe limit 512; may cause cudaMalloc OOM
+  > [Mem] GPU: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(GPU)=0.03 GB, dynamic(GPU)=170.70 GB, batch_per_stream=8192
+CUDA error at /work/gj17/j17000/m5291091/lab/thesis_bc_project/src/proposed/host_pure.cu:144: out of memory

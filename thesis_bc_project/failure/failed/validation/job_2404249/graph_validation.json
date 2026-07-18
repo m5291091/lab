@@ -1,0 +1,103 @@
+{
+  "path": "/work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1",
+  "file_size_bytes": 45348105,
+  "sha256": "8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22",
+  "n": 325557,
+  "m": 3216152,
+  "expected_adj_len_2m": 6432304,
+  "ptr_len": 325558,
+  "ptr_n": 6432304,
+  "adj_len": 6432304,
+  "adj_min": 0,
+  "adj_max": 325556,
+  "out_of_range_count": 0,
+  "out_of_range_values": [],
+  "degree_sum": 6432304,
+  "degree_min": 1,
+  "degree_max": 18280,
+  "degree_mean": 19.757843,
+  "isolated_vertices": 0,
+  "isolated_vertex_sample": [],
+  "symmetry": "symmetric",
+  "self_loop_adj_entries": 174884,
+  "self_loop_edges": 87442,
+  "distinct_ordered_pairs": 5565380,
+  "duplicate_ordered_pairs": 866924,
+  "extra_entries_from_duplicates": 866924,
+  "multiplicity_histogram": {
+    "1": 4698456,
+    "2": 866924
+  },
+  "max_multiplicity": 2,
+  "connected_components": 1,
+  "largest_component_size": 325557,
+  "validation_status": "PASS",
+  "checks": [
+    {
+      "name": "line_count==3",
+      "ok": true,
+      "detail": "actual=3"
+    },
+    {
+      "name": "header has 2 ints",
+      "ok": true,
+      "detail": "actual=['325557', '3216152']"
+    },
+    {
+      "name": "n > 0",
+      "ok": true,
+      "detail": "n=325557"
+    },
+    {
+      "name": "m >= 0",
+      "ok": true,
+      "detail": "m=3216152"
+    },
+    {
+      "name": "len(ptr)==n+1",
+      "ok": true,
+      "detail": "actual=325558 expected=325558"
+    },
+    {
+      "name": "ptr[0]==0",
+      "ok": true,
+      "detail": "actual=0"
+    },
+    {
+      "name": "ptr non-decreasing",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "ptr[n]==2m",
+      "ok": true,
+      "detail": "ptr[n]=6432304 expected 2m=6432304 (diff=0)"
+    },
+    {
+      "name": "len(adj)==2m",
+      "ok": true,
+      "detail": "actual=6432304 expected=6432304 (shortage=0)"
+    },
+    {
+      "name": "all 0<=v<n",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "sum(degree)==len(adj)",
+      "ok": true,
+      "detail": "sum(deg)=6432304 len(adj)=6432304"
+    },
+    {
+      "name": "undirected symmetry",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "self-loop entries even (stored twice)",
+      "ok": true,
+      "detail": ""
+    }
+  ],
+  "failed_checks": []
+}

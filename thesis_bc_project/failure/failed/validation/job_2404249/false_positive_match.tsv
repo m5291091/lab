@@ -1,0 +1,2 @@
+Config	Implementation	RunnerExit	VectorComplete	MatchedFile	LineNumber	MatchedLine	NaiveCheck	StrongEvidenceClass	Verdict
+gpu_opt_pure_b1024	GPU_Opt_Pure	0	yes	gpu_opt_pure_b1024.stderr.log	2	> [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM	substring 'OOM' matched (false positive)	none	FALSE_POSITIVE: advisory warning, runner_exit=0, vector complete (GTEPS=16.1750, max BC index 272816)

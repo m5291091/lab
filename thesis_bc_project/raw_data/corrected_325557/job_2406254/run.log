@@ -1,0 +1,123 @@
+=== validate_graph_csr: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1 ===
+  path                            : /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1
+  file_size_bytes                 : 45348105
+  sha256                          : 8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22
+  n                               : 325557
+  m                               : 3216152
+  expected_adj_len_2m             : 6432304
+  ptr_len                         : 325558
+  ptr_n                           : 6432304
+  adj_len                         : 6432304
+  adj_min                         : 0
+  adj_max                         : 325556
+  out_of_range_count              : 0
+  out_of_range_values             : []
+  degree_sum                      : 6432304
+  degree_min                      : 1
+  degree_max                      : 18280
+  degree_mean                     : 19.757843
+  isolated_vertices               : 0
+  isolated_vertex_sample          : []
+  symmetry                        : symmetric
+  self_loop_adj_entries           : 174884
+  self_loop_edges                 : 87442
+  distinct_ordered_pairs          : 5565380
+  duplicate_ordered_pairs         : 866924
+  extra_entries_from_duplicates   : 866924
+  multiplicity_histogram          : {1: 4698456, 2: 866924}
+  max_multiplicity                : 2
+  connected_components            : 1
+  largest_component_size          : 325557
+  --- checks ---
+  [OK  ] line_count==3  -- actual=3
+  [OK  ] header has 2 ints  -- actual=['325557', '3216152']
+  [OK  ] n > 0  -- n=325557
+  [OK  ] m >= 0  -- m=3216152
+  [OK  ] len(ptr)==n+1  -- actual=325558 expected=325558
+  [OK  ] ptr[0]==0  -- actual=0
+  [OK  ] ptr non-decreasing
+  [OK  ] ptr[n]==2m  -- ptr[n]=6432304 expected 2m=6432304 (diff=0)
+  [OK  ] len(adj)==2m  -- actual=6432304 expected=6432304 (shortage=0)
+  [OK  ] all 0<=v<n
+  [OK  ] sum(degree)==len(adj)  -- sum(deg)=6432304 len(adj)=6432304
+  [OK  ] undirected symmetry
+  [OK  ] self-loop entries even (stored twice)
+VALIDATION PASS: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1 (0 failed check(s))
+  -> JSON: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_ablation_20260718_060627_2406254.opbs/graph_validation.json
+[CMAKE configure] /home/j17000/.local/bin/cmake -S /work/gj17/j17000/m5291091/lab/thesis_bc_project -B /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (5.2s)
+-- Generating done (0.1s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs
+[CMAKE build] target=run_ablation
+[ 20%] Building CXX object CMakeFiles/core.dir/src/core/graph.cpp.o
+[ 20%] Building CXX object CMakeFiles/core.dir/src/core/runner.cpp.o
+[ 30%] Linking CXX static library libcore.a
+[ 30%] Built target core
+[ 40%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_um.cu.o
+[ 70%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_pure.cu.o
+[ 70%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_chunked.cu.o
+[ 70%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_ablation.cu.o
+[ 80%] Linking CXX static library libproposed.a
+[ 80%] Built target proposed
+[ 90%] Building CUDA object CMakeFiles/run_ablation.dir/experiments/run_ablation.cu.o
+[100%] Linking CXX executable run_ablation
+[100%] Built target run_ablation
+[RUN trial 1/5] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs/run_ablation data/325557_3216152_corrected_v1 all (one untimed global H1W1A1 warmup)
+status=PASS
+row_count=8 expected=8
+configuration_count=8 expected=8
+duplicate_trial_count=0
+[RUN trial 2/5] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs/run_ablation data/325557_3216152_corrected_v1 all (one untimed global H1W1A1 warmup)
+status=PASS
+row_count=16 expected=16
+configuration_count=8 expected=8
+duplicate_trial_count=0
+[RUN trial 3/5] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs/run_ablation data/325557_3216152_corrected_v1 all (one untimed global H1W1A1 warmup)
+status=PASS
+row_count=24 expected=24
+configuration_count=8 expected=8
+duplicate_trial_count=0
+[RUN trial 4/5] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs/run_ablation data/325557_3216152_corrected_v1 all (one untimed global H1W1A1 warmup)
+status=PASS
+row_count=32 expected=32
+configuration_count=8 expected=8
+duplicate_trial_count=0
+[RUN trial 5/5] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260718_060627_2406254.opbs/run_ablation data/325557_3216152_corrected_v1 all (one untimed global H1W1A1 warmup)
+status=PASS
+row_count=40 expected=40
+configuration_count=8 expected=8
+duplicate_trial_count=0
+status=PASS
+row_count=40 expected=40
+configuration_count=8 expected=8
+duplicate_trial_count=0
+per-config stats: 8 rows -> /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_ablation_20260718_060627_2406254.opbs/ablation_per_config_stats.tsv
+=== Series C complete: exact 8 configs x 5 trials = 40 formal rows ===
+manifest=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_ablation_20260718_060627_2406254.opbs/MANIFEST.txt
+runner_sha256=70f2df8f7faa435264ceadbb86975e34a5ef7d3edaff4a1323b534aef4164606; checkpoint_sha=45352a344aaac463283a647467b790be9b45bfb8

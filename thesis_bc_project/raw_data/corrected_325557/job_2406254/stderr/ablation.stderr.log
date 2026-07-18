@@ -1,0 +1,295 @@
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.7408 s, Backward cum=64.6526 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=118.0051 s, Backward cum=57.7629 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 176.358035 
+  > GTEPS = 5.9370 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=145.4415 s, Backward cum=77.7696 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 112.073926 
+  > GTEPS = 9.3424 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=117.9629 s, Backward cum=45.1822 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 163.735910 
+  > GTEPS = 6.3947 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=139.9898 s, Backward cum=60.6028 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 100.765035 
+  > GTEPS = 10.3909 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6293 s, Backward cum=54.2003 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 116.418547 
+  > GTEPS = 8.9938 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=74.7907 s, Backward cum=81.9350 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 78.896392 
+  > GTEPS = 13.2711 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6471 s, Backward cum=45.6095 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 107.844926 
+  > GTEPS = 9.7088 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.9805 s, Backward cum=64.5720 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 69.290090 
+  > GTEPS = 15.1110 (nodes=325557, edges=3216152)
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.8938 s, Backward cum=64.7446 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=117.9946 s, Backward cum=57.7062 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 176.290382 
+  > GTEPS = 5.9393 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=145.3950 s, Backward cum=77.8425 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 112.090565 
+  > GTEPS = 9.3410 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=118.0184 s, Backward cum=45.1609 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 163.769977 
+  > GTEPS = 6.3934 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=140.2645 s, Backward cum=60.4899 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 100.839434 
+  > GTEPS = 10.3832 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6332 s, Backward cum=54.0667 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 116.288659 
+  > GTEPS = 9.0038 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=74.5712 s, Backward cum=82.1276 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 78.868771 
+  > GTEPS = 13.2757 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6115 s, Backward cum=45.6405 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 107.840803 
+  > GTEPS = 9.7091 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=73.0957 s, Backward cum=64.6366 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 69.376091 
+  > GTEPS = 15.0922 (nodes=325557, edges=3216152)
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.9096 s, Backward cum=64.6450 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=117.9339 s, Backward cum=57.7695 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 176.301738 
+  > GTEPS = 5.9389 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=145.5001 s, Backward cum=77.7089 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 112.087905 
+  > GTEPS = 9.3412 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=117.9894 s, Backward cum=45.1428 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 163.729329 
+  > GTEPS = 6.3949 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=140.0900 s, Backward cum=60.4755 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 100.763793 
+  > GTEPS = 10.3910 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.5792 s, Backward cum=54.0952 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 116.271917 
+  > GTEPS = 9.0051 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=74.9656 s, Backward cum=81.8553 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 78.879567 
+  > GTEPS = 13.2739 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.5721 s, Backward cum=45.6403 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 107.809662 
+  > GTEPS = 9.7119 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.9993 s, Backward cum=64.5910 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 69.324039 
+  > GTEPS = 15.1036 (nodes=325557, edges=3216152)
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.8769 s, Backward cum=64.7657 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=118.0085 s, Backward cum=57.7448 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 176.350609 
+  > GTEPS = 5.9373 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=145.6618 s, Backward cum=77.6454 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 112.138071 
+  > GTEPS = 9.3371 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=117.9942 s, Backward cum=45.2071 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 163.799227 
+  > GTEPS = 6.3922 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=139.9562 s, Backward cum=60.6331 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 100.779244 
+  > GTEPS = 10.3894 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6862 s, Backward cum=54.0462 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 116.330316 
+  > GTEPS = 9.0006 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=74.9113 s, Backward cum=81.8768 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 78.865354 
+  > GTEPS = 13.2763 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6367 s, Backward cum=45.6150 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 107.847937 
+  > GTEPS = 9.7085 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=73.1124 s, Backward cum=64.5954 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 69.376184 
+  > GTEPS = 15.0922 (nodes=325557, edges=3216152)
+=== Warmup (untimed, H1W1A1) ===
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=72.9719 s, Backward cum=64.6895 s
+=== hybrid=OFF warp=OFF async=OFF ===
+Running: Ablation_H0_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=118.0366 s, Backward cum=57.7786 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 176.413246 
+  > GTEPS = 5.9352 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=OFF async=ON  ===
+Running: Ablation_H0_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=145.6226 s, Backward cum=77.6952 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 112.144524 
+  > GTEPS = 9.3365 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=OFF ===
+Running: Ablation_H0_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=117.9935 s, Backward cum=45.1459 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 163.738336 
+  > GTEPS = 6.3946 (nodes=325557, edges=3216152)
+=== hybrid=OFF warp=ON  async=ON  ===
+Running: Ablation_H0_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H0 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=139.8284 s, Backward cum=60.7132 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 100.751330 
+  > GTEPS = 10.3923 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=OFF ===
+Running: Ablation_H1_W0_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6722 s, Backward cum=54.0941 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 116.363404 
+  > GTEPS = 8.9980 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=OFF async=ON  ===
+Running: Ablation_H1_W0_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W0 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=74.8074 s, Backward cum=81.9257 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 78.836244 
+  > GTEPS = 13.2812 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=OFF ===
+Running: Ablation_H1_W1_A0 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A0] NS=1, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=61.6444 s, Backward cum=45.6524 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 107.893349 
+  > GTEPS = 9.7044 (nodes=325557, edges=3216152)
+=== hybrid=ON  warp=ON  async=ON  ===
+Running: Ablation_H1_W1_A1 on 325557_3216152_corrected_v1...
+  > [Ablation H1 W1 A1] NS=2, tpb=256, BATCH=512, max_depth=256, avg_deg=19.76
+  > [Ablation Phase] BFS cum=73.0687 s, Backward cum=64.5930 s
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 69.299777 
+  > GTEPS = 15.1089 (nodes=325557, edges=3216152)

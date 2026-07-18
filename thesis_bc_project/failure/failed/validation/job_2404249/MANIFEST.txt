@@ -1,0 +1,25 @@
+checkpoint_sha=b677d6cd495b450557b014c740f77d727ddb0f9a
+pbs_job_id=2404249.opbs
+series=AB
+graph=data/325557_3216152_corrected_v1
+graph_sha256=8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22
+graph_size_bytes=45348105
+n_nodes=325557
+n_edges=3216152
+max_depth_estimate=256
+vector_expected_length=325557
+abs_tol=1e-3
+rel_tol=1e-6
+allocation_values=recorded_log_values_or_code_derived_estimated_values_only
+unknown_policy=not_recorded;inapplicable_policy=not_applicable
+pathmerge_formula_policy=PathMerge_specific_only;GPU_Opt_formula_not_applied
+root_build_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs
+mini_build_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+runner_path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs/run_benchmark
+runner_sha256=11be0eec64a36c86d50bcecdefe91a116592e92234664b1a8a435ba4f647e50c
+cmake_source_dir=/work/gj17/j17000/m5291091/lab/thesis_bc_project
+cmake_cache_home_directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project
+mini_cmake_cache_home_directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini
+build_status=built
+final_status=FAILED
+final_reason=Series A gpu_opt_pure_b1024: oom_marker;runner_exit=0

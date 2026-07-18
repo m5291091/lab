@@ -1,0 +1,18 @@
+{
+  "configuration_count": 8,
+  "duplicate_trial_count": 0,
+  "errors": [],
+  "expected_configurations": [
+    "Ablation_H0_W0_A0",
+    "Ablation_H0_W0_A1",
+    "Ablation_H0_W1_A0",
+    "Ablation_H0_W1_A1",
+    "Ablation_H1_W0_A0",
+    "Ablation_H1_W0_A1",
+    "Ablation_H1_W1_A0",
+    "Ablation_H1_W1_A1"
+  ],
+  "expected_row_count": 32,
+  "row_count": 32,
+  "status": "PASS"
+}

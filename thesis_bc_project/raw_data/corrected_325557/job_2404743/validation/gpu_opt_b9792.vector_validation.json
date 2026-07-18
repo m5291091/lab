@@ -1,0 +1,17 @@
+{
+  "data_rows": 325557,
+  "duplicate_indices": 0,
+  "examples": [],
+  "expected_length": 325557,
+  "missing_indices": 0,
+  "nan_values": 0,
+  "negative_inf_values": 0,
+  "out_of_range_indices": 0,
+  "parse_errors": 0,
+  "path": "/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b9792.bc.tsv",
+  "positive_inf_values": 0,
+  "sha256": "22f5eed2b4fbe5eb07368704eb0e29e2a129effc4996323fa246e5f1dfcc8a9a",
+  "status": "PASS",
+  "unique_index_count": 325557,
+  "value_column_missing": 0
+}

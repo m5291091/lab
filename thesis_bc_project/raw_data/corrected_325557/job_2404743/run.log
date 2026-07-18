@@ -1,0 +1,641 @@
+[Validate graph] data/325557_3216152_corrected_v1
+=== validate_graph_csr: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1 ===
+  path                            : /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1
+  file_size_bytes                 : 45348105
+  sha256                          : 8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22
+  n                               : 325557
+  m                               : 3216152
+  expected_adj_len_2m             : 6432304
+  ptr_len                         : 325558
+  ptr_n                           : 6432304
+  adj_len                         : 6432304
+  adj_min                         : 0
+  adj_max                         : 325556
+  out_of_range_count              : 0
+  out_of_range_values             : []
+  degree_sum                      : 6432304
+  degree_min                      : 1
+  degree_max                      : 18280
+  degree_mean                     : 19.757843
+  isolated_vertices               : 0
+  isolated_vertex_sample          : []
+  symmetry                        : symmetric
+  self_loop_adj_entries           : 174884
+  self_loop_edges                 : 87442
+  distinct_ordered_pairs          : 5565380
+  duplicate_ordered_pairs         : 866924
+  extra_entries_from_duplicates   : 866924
+  multiplicity_histogram          : {1: 4698456, 2: 866924}
+  max_multiplicity                : 2
+  connected_components            : 1
+  largest_component_size          : 325557
+  --- checks ---
+  [OK  ] line_count==3  -- actual=3
+  [OK  ] header has 2 ints  -- actual=['325557', '3216152']
+  [OK  ] n > 0  -- n=325557
+  [OK  ] m >= 0  -- m=3216152
+  [OK  ] len(ptr)==n+1  -- actual=325558 expected=325558
+  [OK  ] ptr[0]==0  -- actual=0
+  [OK  ] ptr non-decreasing
+  [OK  ] ptr[n]==2m  -- ptr[n]=6432304 expected 2m=6432304 (diff=0)
+  [OK  ] len(adj)==2m  -- actual=6432304 expected=6432304 (shortage=0)
+  [OK  ] all 0<=v<n
+  [OK  ] sum(degree)==len(adj)  -- sum(deg)=6432304 len(adj)=6432304
+  [OK  ] undirected symmetry
+  [OK  ] self-loop entries even (stored twice)
+VALIDATION PASS: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1 (0 failed check(s))
+  -> JSON: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/graph_validation.json
+[BUILD] scripts/build_miyabi_interactive.sh
+  root build directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs
+  mini build directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT   : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD     : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs
+║  MINI BUILD: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+║  JOBS      : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] cugraph_bc_mini: OK (up-to-date)
+[Stage 2] Building run_benchmark...
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (5.3s)
+-- Generating done (0.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_CUGRAPH_BC_MINI
+
+
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs
+[ 12%] Building CUDA object CMakeFiles/bandwidth_benchmark.dir/tools/bandwidth_benchmark.cu.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/runner.cpp.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/graph.cpp.o
+/work/gj17/j17000/m5291091/lab/thesis_bc_project/tools/bandwidth_benchmark.cu(87): warning #177-D: variable "LPDDR5X_PEAK_GBS" was declared but never referenced
+  static const double LPDDR5X_PEAK_GBS = 512.0;
+                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[ 16%] Linking CUDA executable bandwidth_benchmark
+[ 16%] Built target bandwidth_benchmark
+[ 20%] Linking CXX static library libcore.a
+[ 20%] Built target core
+[ 36%] Building CUDA object CMakeFiles/baseline_cugraph.dir/src/baseline/cugraph_bc.cu.o
+[ 36%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_um.cu.o
+[ 44%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_pure.cu.o
+[ 44%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/pathmerge.cu.o
+[ 52%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_chunked.cu.o
+[ 52%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot.cu.o
+[ 52%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_ablation.cu.o
+[ 52%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot_kernels.cu.o
+[ 56%] Building CXX object CMakeFiles/baseline.dir/src/baseline/sequential.cpp.o
+[ 60%] Building CXX object CMakeFiles/baseline.dir/src/baseline/omp.cpp.o
+[ 64%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/gpu_unopt.cu.o
+[ 68%] Linking CXX static library libproposed.a
+[ 68%] Built target proposed
+[ 72%] Building CUDA object CMakeFiles/run_ablation.dir/experiments/run_ablation.cu.o
+[ 76%] Linking CXX static library libbaseline.a
+[ 76%] Built target baseline
+[ 80%] Building CUDA object CMakeFiles/run_pathmerge_sweep.dir/experiments/run_pathmerge_sweep.cu.o
+[ 84%] Linking CXX executable run_ablation
+[ 84%] Built target run_ablation
+[ 88%] Linking CXX executable run_pathmerge_sweep
+[ 88%] Built target run_pathmerge_sweep
+[ 92%] Linking CXX static library libbaseline_cugraph.a
+[ 92%] Built target baseline_cugraph
+[ 96%] Building CUDA object CMakeFiles/run_benchmark.dir/experiments/run_benchmark.cu.o
+[100%] Linking CXX executable run_benchmark
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_215817_2404743.opbs/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+=== Series A: correctness vectors; stop at first acquisition failure ===
+[A 1/6] gpu_opt_b1024: gpu_opt batch=1024
+  runner_exit=0; oom_evidence=none
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024.bc.tsv
+sha256=adc6270b15aba9201c7667460b235d0e3762dcb9e529e6390bc5db218d738796
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 2/6] gpu_opt_pure_chunked_b1024: gpu_opt_pure_chunked batch=1024
+  runner_exit=0; oom_evidence=none
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b1024.bc.tsv
+sha256=d53afd646d3895a60f065ba98561ccfca522bb240681610c915dfabd3ff7f618
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 3/6] gpu_opt_pure_b1024: gpu_opt_pure batch=1024
+  runner_exit=0; oom_evidence=none
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_b1024.bc.tsv
+sha256=65c109ef96f418be91cfb0acf5891504356783a172e28f703192b3594e8cacbb
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 4/6] gpu_opt_b9792: gpu_opt batch=9792
+  runner_exit=0; oom_evidence=none
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b9792.bc.tsv
+sha256=22f5eed2b4fbe5eb07368704eb0e29e2a129effc4996323fa246e5f1dfcc8a9a
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 5/6] gpu_opt_pure_chunked_b16384: gpu_opt_pure_chunked batch=16384
+  runner_exit=0; oom_evidence=none
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b16384.bc.tsv
+sha256=222bcfccd085da93b13aefbda83e597020688a1afd5fab3321df14b9e27bed1f
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 6/6] pathmerge_b4096: pathmerge_bc batch=4096
+  runner_exit=0; oom_evidence=none
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096.bc.tsv
+sha256=164cceb2c179ce1a6552685663e6d66745a2483c877e0afe52e9f94bc7aa9496
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+=== Series A: all vectors complete; running full comparison matrix ===
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b9792__vs__gpu_opt_b1024.md
+# BC ベクトル数値比較: gpu_opt_b9792 vs gpu_opt_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b9792.bc.tsv`  (header: impl=GPU_Opt graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `22f5eed2b4fbe5eb07368704eb0e29e2a129effc4996323fa246e5f1dfcc8a9a`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024.bc.tsv`  (header: impl=GPU_Opt graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `adc6270b15aba9201c7667460b235d0e3762dcb9e529e6390bc5db218d738796`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 3.051758e-05 (index 272816) |
+| 最大相対誤差 | 5.316060e-14 (index 192607) |
+| 最大絶対誤差 index の値 | A=39343117052.53947, B=39343117052.53944 |
+| 最大相対誤差 index の値 | A=21863761.42063821, B=21863761.42063705 |
+| Max BC A | index 272816, value 39343117052.539467 |
+| Max BC B | index 272816, value 39343117052.539436 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[COMPARE same_impl_diff_batch] gpu_opt_b9792 vs gpu_opt_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b16384__vs__gpu_opt_pure_chunked_b1024.md
+# BC ベクトル数値比較: gpu_opt_pure_chunked_b16384 vs gpu_opt_pure_chunked_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b16384.bc.tsv`  (header: impl=GPU_Opt_Pure_Chunked graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `222bcfccd085da93b13aefbda83e597020688a1afd5fab3321df14b9e27bed1f`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure_Chunked graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `d53afd646d3895a60f065ba98561ccfca522bb240681610c915dfabd3ff7f618`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 3.051758e-05 (index 272816) |
+| 最大相対誤差 | 4.751990e-14 (index 186859) |
+| 最大絶対誤差 index の値 | A=39343117052.53946, B=39343117052.53943 |
+| 最大相対誤差 index の値 | A=2929987.687586053, B=2929987.687586192 |
+| Max BC A | index 272816, value 39343117052.539459 |
+| Max BC B | index 272816, value 39343117052.539429 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[COMPARE same_impl_diff_batch] gpu_opt_pure_chunked_b16384 vs gpu_opt_pure_chunked_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024__vs__gpu_opt_pure_b1024.md
+# BC ベクトル数値比較: gpu_opt_b1024 vs gpu_opt_pure_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024.bc.tsv`  (header: impl=GPU_Opt graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `adc6270b15aba9201c7667460b235d0e3762dcb9e529e6390bc5db218d738796`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `65c109ef96f418be91cfb0acf5891504356783a172e28f703192b3594e8cacbb`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 1.907349e-06 (index 44622) |
+| 最大相対誤差 | 1.010044e-14 (index 260168) |
+| 最大絶対誤差 index の値 | A=4013628796.616262, B=4013628796.616264 |
+| 最大相対誤差 index の値 | A=167123.6552127306, B=167123.6552127323 |
+| Max BC A | index 272816, value 39343117052.539436 |
+| Max BC B | index 272816, value 39343117052.539436 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[COMPARE same_batch_diff_path] gpu_opt_b1024 vs gpu_opt_pure_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024__vs__gpu_opt_pure_chunked_b1024.md
+# BC ベクトル数値比較: gpu_opt_b1024 vs gpu_opt_pure_chunked_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024.bc.tsv`  (header: impl=GPU_Opt graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `adc6270b15aba9201c7667460b235d0e3762dcb9e529e6390bc5db218d738796`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure_Chunked graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `d53afd646d3895a60f065ba98561ccfca522bb240681610c915dfabd3ff7f618`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 7.629395e-06 (index 272816) |
+| 最大相対誤差 | 1.079702e-14 (index 260168) |
+| 最大絶対誤差 index の値 | A=39343117052.53944, B=39343117052.53943 |
+| 最大相対誤差 index の値 | A=167123.6552127306, B=167123.6552127324 |
+| Max BC A | index 272816, value 39343117052.539436 |
+| Max BC B | index 272816, value 39343117052.539429 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[COMPARE same_batch_diff_path] gpu_opt_b1024 vs gpu_opt_pure_chunked_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_b1024__vs__gpu_opt_pure_chunked_b1024.md
+# BC ベクトル数値比較: gpu_opt_pure_b1024 vs gpu_opt_pure_chunked_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `65c109ef96f418be91cfb0acf5891504356783a172e28f703192b3594e8cacbb`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure_Chunked graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `d53afd646d3895a60f065ba98561ccfca522bb240681610c915dfabd3ff7f618`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 7.629395e-06 (index 272816) |
+| 最大相対誤差 | 1.033035e-14 (index 1576) |
+| 最大絶対誤差 index の値 | A=39343117052.53944, B=39343117052.53943 |
+| 最大相対誤差 index の値 | A=1758003.838080153, B=1758003.838080135 |
+| Max BC A | index 272816, value 39343117052.539436 |
+| Max BC B | index 272816, value 39343117052.539429 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | OK |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS** |
+
+[COMPARE same_batch_diff_path] gpu_opt_pure_b1024 vs gpu_opt_pure_chunked_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096__vs__gpu_opt_b1024.md
+# BC ベクトル数値比較: pathmerge_b4096 vs gpu_opt_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096.bc.tsv`  (header: impl=PathMerge_BC graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `164cceb2c179ce1a6552685663e6d66745a2483c877e0afe52e9f94bc7aa9496`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b1024.bc.tsv`  (header: impl=GPU_Opt graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `adc6270b15aba9201c7667460b235d0e3762dcb9e529e6390bc5db218d738796`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 1.222134e-03 (index 48184) |
+| 最大相対誤差 | 5.088914e-13 (index 309697) |
+| 最大絶対誤差 index の値 | A=3750319918.790966, B=3750319918.789744 |
+| 最大相対誤差 index の値 | A=117887775.6666132, B=117887775.6666732 |
+| Max BC A | index 272816, value 39343117052.538231 |
+| Max BC B | index 272816, value 39343117052.539436 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | WARN (超過; 巨大 magnitude で不適切な場合あり) |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS (absolute-only warning)** |
+
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096__vs__gpu_opt_b9792.md
+# BC ベクトル数値比較: pathmerge_b4096 vs gpu_opt_b9792
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096.bc.tsv`  (header: impl=PathMerge_BC graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `164cceb2c179ce1a6552685663e6d66745a2483c877e0afe52e9f94bc7aa9496`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_b9792.bc.tsv`  (header: impl=GPU_Opt graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `22f5eed2b4fbe5eb07368704eb0e29e2a129effc4996323fa246e5f1dfcc8a9a`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 1.235962e-03 (index 272816) |
+| 最大相対誤差 | 5.088914e-13 (index 309697) |
+| 最大絶対誤差 index の値 | A=39343117052.53823, B=39343117052.53947 |
+| 最大相対誤差 index の値 | A=117887775.6666132, B=117887775.6666732 |
+| Max BC A | index 272816, value 39343117052.538231 |
+| Max BC B | index 272816, value 39343117052.539467 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | WARN (超過; 巨大 magnitude で不適切な場合あり) |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS (absolute-only warning)** |
+
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_b9792: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096__vs__gpu_opt_pure_b1024.md
+# BC ベクトル数値比較: pathmerge_b4096 vs gpu_opt_pure_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096.bc.tsv`  (header: impl=PathMerge_BC graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `164cceb2c179ce1a6552685663e6d66745a2483c877e0afe52e9f94bc7aa9496`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `65c109ef96f418be91cfb0acf5891504356783a172e28f703192b3594e8cacbb`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 1.222134e-03 (index 48184) |
+| 最大相対誤差 | 5.088914e-13 (index 309697) |
+| 最大絶対誤差 index の値 | A=3750319918.790966, B=3750319918.789744 |
+| 最大相対誤差 index の値 | A=117887775.6666132, B=117887775.6666732 |
+| Max BC A | index 272816, value 39343117052.538231 |
+| Max BC B | index 272816, value 39343117052.539436 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | WARN (超過; 巨大 magnitude で不適切な場合あり) |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS (absolute-only warning)** |
+
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_pure_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096__vs__gpu_opt_pure_chunked_b1024.md
+# BC ベクトル数値比較: pathmerge_b4096 vs gpu_opt_pure_chunked_b1024
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096.bc.tsv`  (header: impl=PathMerge_BC graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `164cceb2c179ce1a6552685663e6d66745a2483c877e0afe52e9f94bc7aa9496`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b1024.bc.tsv`  (header: impl=GPU_Opt_Pure_Chunked graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `d53afd646d3895a60f065ba98561ccfca522bb240681610c915dfabd3ff7f618`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 1.222134e-03 (index 48184) |
+| 最大相対誤差 | 5.088914e-13 (index 309697) |
+| 最大絶対誤差 index の値 | A=3750319918.790966, B=3750319918.789744 |
+| 最大相対誤差 index の値 | A=117887775.6666132, B=117887775.6666732 |
+| Max BC A | index 272816, value 39343117052.538231 |
+| Max BC B | index 272816, value 39343117052.539429 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | WARN (超過; 巨大 magnitude で不適切な場合あり) |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS (absolute-only warning)** |
+
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_pure_chunked_b1024: PASS
+
+[written] /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096__vs__gpu_opt_pure_chunked_b16384.md
+# BC ベクトル数値比較: pathmerge_b4096 vs gpu_opt_pure_chunked_b16384
+
+- 入力A: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/pathmerge_b4096.bc.tsv`  (header: impl=PathMerge_BC graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `164cceb2c179ce1a6552685663e6d66745a2483c877e0afe52e9f94bc7aa9496`
+- 入力B: `/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/gpu_opt_pure_chunked_b16384.bc.tsv`  (header: impl=GPU_Opt_Pure_Chunked graph=325557_3216152_corrected_v1 nodes=325557)
+  - SHA256: `222bcfccd085da93b13aefbda83e597020688a1afd5fab3321df14b9e27bed1f`
+
+| 項目 | 値 |
+|:--|:--|
+| 期待ベクトル長 | 325557 |
+| ベクトル長 A | 325557 |
+| ベクトル長 B | 325557 |
+| データ行数 A / B | 325557 / 325557 |
+| 共通 index 数 | 325557 |
+| 欠損 index 数 (A のみ) | 0 |
+| 欠損 index 数 (B のみ) | 0 |
+| expected domain 欠損 A / B | 0 / 0 |
+| duplicate index A / B | 0 / 0 |
+| out-of-range index A / B | 0 / 0 |
+| parse error A / B | 0 / 0 |
+| 値列欠損 A / B | 0 / 0 |
+| NaN A / B | 0 / 0 |
+| +Inf A / B | 0 / 0 |
+| -Inf A / B | 0 / 0 |
+| 最大絶対誤差 | 1.228333e-03 (index 272816) |
+| 最大相対誤差 | 5.088914e-13 (index 309697) |
+| 最大絶対誤差 index の値 | A=39343117052.53823, B=39343117052.53946 |
+| 最大相対誤差 index の値 | A=117887775.6666132, B=117887775.6666732 |
+| Max BC A | index 272816, value 39343117052.538231 |
+| Max BC B | index 272816, value 39343117052.539459 |
+| 許容値 | rel_tol=1e-06, abs_tol=0.001 |
+| 絶対許容のみ (abs_diff ≤ abs_tol) | WARN (超過; 巨大 magnitude で不適切な場合あり) |
+| 混合許容 abs_diff ≤ abs_tol+rel_tol·max(\|a\|,\|b\|) 不一致要素数 | 0 |
+| **総合判定** | **PASS (absolute-only warning)** |
+
+[COMPARE pathmerge_cross] pathmerge_b4096 vs gpu_opt_pure_chunked_b16384: PASS
+=== Series B: feasibility; record every outcome and continue ===
+[B 1/5] pure_b4096: gpu_opt_pure batch=4096 expectation=pure_success_boundary
+  observed=SUCCESS; outcome=EXPECTED_SUCCESS; runtime=65.889429
+[B 2/5] pure_b8192: gpu_opt_pure batch=8192 expectation=pure_cuda_oom
+  observed=OOM_CONFIRMED; outcome=EXPECTED_CUDA_OOM; runtime=not_recorded
+[B 3/5] um_b10240: gpu_opt batch=10240 expectation=um_success_boundary
+  observed=SUCCESS; outcome=EXPECTED_SUCCESS; runtime=238.672569
+[B 4/5] um_b12288: gpu_opt batch=12288 expectation=um_failure_status_not_assumed_oom
+  observed=RUNTIME_FAILED; outcome=EXPECTED_FAILURE_STATUS; runtime=not_recorded
+[B 5/5] chunked_b16384: gpu_opt_pure_chunked batch=16384 expectation=chunked_tested_limit_success
+  observed=SUCCESS; outcome=EXPECTED_SUCCESS; runtime=66.598223
+=== Complete ===
+manifest=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/MANIFEST.txt
+implementation_manifest=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_215817_2404743.opbs/implementation_manifest.tsv
+Series A/B timings are correctness/feasibility observations, not performance results.

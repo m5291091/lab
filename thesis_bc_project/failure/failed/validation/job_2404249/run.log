@@ -1,0 +1,283 @@
+[Validate graph] data/325557_3216152_corrected_v1
+=== validate_graph_csr: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1 ===
+  path                            : /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1
+  file_size_bytes                 : 45348105
+  sha256                          : 8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22
+  n                               : 325557
+  m                               : 3216152
+  expected_adj_len_2m             : 6432304
+  ptr_len                         : 325558
+  ptr_n                           : 6432304
+  adj_len                         : 6432304
+  adj_min                         : 0
+  adj_max                         : 325556
+  out_of_range_count              : 0
+  out_of_range_values             : []
+  degree_sum                      : 6432304
+  degree_min                      : 1
+  degree_max                      : 18280
+  degree_mean                     : 19.757843
+  isolated_vertices               : 0
+  isolated_vertex_sample          : []
+  symmetry                        : symmetric
+  self_loop_adj_entries           : 174884
+  self_loop_edges                 : 87442
+  distinct_ordered_pairs          : 5565380
+  duplicate_ordered_pairs         : 866924
+  extra_entries_from_duplicates   : 866924
+  multiplicity_histogram          : {1: 4698456, 2: 866924}
+  max_multiplicity                : 2
+  connected_components            : 1
+  largest_component_size          : 325557
+  --- checks ---
+  [OK  ] line_count==3  -- actual=3
+  [OK  ] header has 2 ints  -- actual=['325557', '3216152']
+  [OK  ] n > 0  -- n=325557
+  [OK  ] m >= 0  -- m=3216152
+  [OK  ] len(ptr)==n+1  -- actual=325558 expected=325558
+  [OK  ] ptr[0]==0  -- actual=0
+  [OK  ] ptr non-decreasing
+  [OK  ] ptr[n]==2m  -- ptr[n]=6432304 expected 2m=6432304 (diff=0)
+  [OK  ] len(adj)==2m  -- actual=6432304 expected=6432304 (shortage=0)
+  [OK  ] all 0<=v<n
+  [OK  ] sum(degree)==len(adj)  -- sum(deg)=6432304 len(adj)=6432304
+  [OK  ] undirected symmetry
+  [OK  ] self-loop entries even (stored twice)
+VALIDATION PASS: /work/gj17/j17000/m5291091/lab/thesis_bc_project/data/325557_3216152_corrected_v1 (0 failed check(s))
+  -> JSON: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_203136_2404249.opbs/graph_validation.json
+[BUILD] scripts/build_miyabi_interactive.sh
+  root build directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs
+  mini build directory=/work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+╔══════════════════════════════════════════╗
+║  Miyabi-G 統合ビルド (全 BC 実装)        ║
+╠══════════════════════════════════════════╣
+║  PROJECT   : /work/gj17/j17000/m5291091/lab/thesis_bc_project
+║  BUILD     : /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs
+║  MINI BUILD: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+║  JOBS      : 8
+╚══════════════════════════════════════════╝
+
+[Stage 1] Building cugraph_bc_mini...
+========================================
+  cugraph_bc_mini Build (BC-only)
+  SRC  : /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini
+  BUILD: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+  TYPE : Release
+  JOBS : 8
+  CMAKE: /home/j17000/.local/bin/cmake (4.3.4)
+  GEN  : Ninja
+========================================
+-- The C compiler identification is GNU 11.4.1
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- CPM: Adding package CCCL@3.3.0 (3.3.0)
+-- Finding CCCL components: Thrust;CUB;libcudacxx
+-- Found CUB: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/cub/cub-config.cmake (found suitable version "3.3.0.0", minimum required is "3.3.0.0")
+-- Found libcudacxx: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/libcudacxx/libcudacxx-config.cmake (found suitable exact version "3.3.0.0")
+-- Found Thrust: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/thrust/thrust-config.cmake (found suitable exact version "3.3.0.0")
+-- Found CCCL: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/cccl/cccl-config.cmake (found version "3.3.0.0")
+-- Found libcudacxx: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/libcudacxx/libcudacxx-config.cmake (found version "3.3.0.0")
+-- Found CUB: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/cub/cub-config.cmake (found version "3.3.0.0")
+-- Found Thrust: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/_deps/cccl-src/lib/cmake/thrust/thrust-config.cmake (found version "3.3.0.0")
+-- CPM: Adding package rmm@26.04 (v26.04.00)
+-- RMM: RMM_LOGGING_LEVEL = 'INFO'
+-- CPM: Adding package rapids_logger@0.2.3 (4c72b598f99c8aa06af49468b3fc82f3931c6bf6)
+-- CPM: Adding package spdlog@1.14.1 (v1.14.1)
+-- Build spdlog: 1.14.1
+-- Build type: Release
+-- CPM: Adding package nvtx3@3.2.0 (69c9949150ac1c310758a304082228a36d5e4758)
+-- CPM: Adding package cuco@0.0.1 (f517bbb1277753b1852dfd388993383e401eaa38)
+-- Roaring Bitmap test data downloaded to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build/data/roaring_bitmap
+-- CPM: Adding package raft@26.06.00 (v26.04.00)
+-- RAFT: No CMAKE_INSTALL_PREFIX argument detected, setting to: /home/j17000/.conda/envs/claude-env
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- CPM: Using local package rapids_logger@0.2.3
+-- cugraph_bc_mini: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini
+--   Sources: /work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/centrality/betweenness_centrality_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/create_graph_from_edgelist_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/graph_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/graph_view_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/renumber_edgelist_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/renumber_utils_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/symmetrize_edgelist_sg_v32_e32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/detail/utility_wrappers_32.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/detail/utility_wrappers_64.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/utilities/shuffle_properties_mg.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/utilities/validation_checks.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/utilities/invert_flags.cu;/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/detail/permute_range_v32.cu
+--   cugraph headers: /work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/include
+-- Configuring done (23.7s)
+-- Generating done (0.1s)
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+[1/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/graph_sg_v32_e32.cu.o
+[2/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/detail/utility_wrappers_32.cu.o
+[3/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/renumber_edgelist_sg_v32_e32.cu.o
+[4/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/renumber_utils_sg_v32_e32.cu.o
+[5/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/graph_view_sg_v32_e32.cu.o
+[6/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/detail/utility_wrappers_64.cu.o
+[7/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/aligned.cpp.o
+[8/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/cuda_device.cpp.o
+[9/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/cuda_stream_pool.cpp.o
+[10/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/cuda_stream_view.cpp.o
+[11/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/cuda_stream.cpp.o
+[12/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/device_buffer.cpp.o
+[13/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/error.cpp.o
+[14/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/utilities/invert_flags.cu.o
+[15/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/logger.cpp.o
+[16/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/utilities/shuffle_properties_mg.cu.o
+[17/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/prefetch.cpp.o
+[18/35] Building CXX object _deps/rapids_logger-build/CMakeFiles/rapids_logger.dir/src/logger.cpp.o
+[19/35] Building CXX object _deps/rmm-build/CMakeFiles/rmm.dir/src/exec_policy.cpp.o
+[20/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/stdout_sinks.cpp.o
+[21/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/file_sinks.cpp.o
+[22/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/color_sinks.cpp.o
+[23/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/utilities/validation_checks.cu.o
+[24/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/cfg.cpp.o
+[25/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/async.cpp.o
+[26/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/spdlog.cpp.o
+[27/35] Building CXX object _deps/spdlog-build/CMakeFiles/spdlog.dir/src/bundled_fmtlib_format.cpp.o
+[28/35] Linking CXX static library _deps/spdlog-build/libspdlog.a
+[29/35] Linking CXX shared library _deps/rapids_logger-build/librapids_logger.so
+[30/35] Linking CXX shared library _deps/rmm-build/librmm.so
+[31/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/detail/permute_range_v32.cu.o
+[32/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/create_graph_from_edgelist_sg_v32_e32.cu.o
+[33/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/structure/symmetrize_edgelist_sg_v32_e32.cu.o
+[34/35] Building CUDA object CMakeFiles/cugraph_bc_mini.dir/work/gj17/j17000/m5291091/lab/thesis_bc_project/third_party/cugraph/cpp/src/centrality/betweenness_centrality_sg_v32_e32.cu.o
+[35/35] Linking CUDA static library libcugraph_bc_mini.a
+
+[build_cugraph_bc_mini] Done.
+  Build dir: /work/gj17/j17000/m5291091/lab/thesis_bc_project/cugraph_bc_mini/build
+  Next: bash scripts/build_miyabi_interactive.sh
+[Stage 1] cugraph_bc_mini: DONE
+[Stage 2] Building run_benchmark...
+-- The CXX compiler identification is GNU 11.4.1
+-- The CUDA compiler identification is NVIDIA 13.0.48 with host compiler GNU 11.4.1
+-- The C compiler identification is GNU 11.4.1
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /usr/bin/g++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting CUDA compiler ABI info
+-- Detecting CUDA compiler ABI info - done
+-- Check for working CUDA compiler: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/compilers/bin/nvcc - skipped
+-- Detecting CUDA compile features
+-- Detecting CUDA compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /usr/bin/gcc - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Found OpenMP_C: -fopenmp (found version "4.5")
+-- Found OpenMP_CXX: -fopenmp (found version "4.5")
+-- Found OpenMP_CUDA: -fopenmp (found version "4.5")
+-- Found OpenMP: TRUE (found version "4.5")
+-- Found CUDAToolkit: /work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/cuda/13.0/targets/sbsa-linux/include/cccl;/work/opt/local/aarch64/cores/nvidia/25.9/Linux_aarch64/25.9/math_libs/13.0/include (found version "13.0.48")
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD
+-- Performing Test CMAKE_HAVE_LIBC_PTHREAD - Success
+-- Found Threads: TRUE
+-- Configuring done (4.4s)
+-- Generating done (0.1s)
+CMake Warning:
+  Manually-specified variables were not used by the project:
+
+    USE_CUGRAPH_BC_MINI
+
+
+-- Build files have been written to: /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/graph.cpp.o
+[ 12%] Building CUDA object CMakeFiles/bandwidth_benchmark.dir/tools/bandwidth_benchmark.cu.o
+[ 12%] Building CXX object CMakeFiles/core.dir/src/core/runner.cpp.o
+/work/gj17/j17000/m5291091/lab/thesis_bc_project/tools/bandwidth_benchmark.cu(87): warning #177-D: variable "LPDDR5X_PEAK_GBS" was declared but never referenced
+  static const double LPDDR5X_PEAK_GBS = 512.0;
+                      ^
+
+Remark: The warnings can be suppressed with "-diag-suppress <warning-number>"
+
+[ 16%] Linking CUDA executable bandwidth_benchmark
+[ 16%] Built target bandwidth_benchmark
+[ 20%] Linking CXX static library libcore.a
+[ 20%] Built target core
+[ 44%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_um.cu.o
+[ 44%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/pathmerge.cu.o
+[ 44%] Building CUDA object CMakeFiles/baseline_cugraph.dir/src/baseline/cugraph_bc.cu.o
+[ 52%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_chunked.cu.o
+[ 52%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot_kernels.cu.o
+[ 52%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/galliot.cu.o
+[ 52%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_pure.cu.o
+[ 52%] Building CXX object CMakeFiles/baseline.dir/src/baseline/sequential.cpp.o
+[ 56%] Building CUDA object CMakeFiles/proposed.dir/src/proposed/host_ablation.cu.o
+[ 60%] Building CXX object CMakeFiles/baseline.dir/src/baseline/omp.cpp.o
+[ 64%] Building CUDA object CMakeFiles/baseline.dir/src/baseline/gpu_unopt.cu.o
+[ 68%] Linking CXX static library libproposed.a
+[ 72%] Linking CXX static library libbaseline.a
+[ 72%] Built target proposed
+[ 72%] Built target baseline
+[ 76%] Building CUDA object CMakeFiles/run_ablation.dir/experiments/run_ablation.cu.o
+[ 80%] Building CUDA object CMakeFiles/run_pathmerge_sweep.dir/experiments/run_pathmerge_sweep.cu.o
+[ 84%] Linking CXX executable run_pathmerge_sweep
+[ 88%] Linking CXX executable run_ablation
+[ 88%] Built target run_pathmerge_sweep
+[ 88%] Built target run_ablation
+[ 92%] Linking CXX static library libbaseline_cugraph.a
+[ 92%] Built target baseline_cugraph
+[ 96%] Building CUDA object CMakeFiles/run_benchmark.dir/experiments/run_benchmark.cu.o
+[100%] Linking CXX executable run_benchmark
+[100%] Built target run_benchmark
+[Stage 2] run_benchmark: DONE (/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs/run_benchmark)
+
+╔══════════════════════════════════════════╗
+║  Build Complete!                         ║
+╠══════════════════════════════════════════╣
+║  Runners:
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs/run_benchmark        (全実装ベンチ/正確性検証)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs/run_ablation         (アブレーション実験)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs/run_pathmerge_sweep  (PathMerge バッチ探索)
+║    /work/gj17/j17000/m5291091/lab/thesis_bc_project/build_corrected_325557/20260717_203136_2404249.opbs/bandwidth_benchmark  (帯域計測)
+╠══════════════════════════════════════════╣
+║  Next: qsub scripts/run_benchmark_small.sh (PBS) または直接実行
+╚══════════════════════════════════════════╝
+=== Series A: correctness vectors; stop at first acquisition failure ===
+[A 1/6] gpu_opt_b1024: gpu_opt batch=1024
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_203136_2404249.opbs/gpu_opt_b1024.bc.tsv
+sha256=08b70e4652eb65ef6314b984cba56c276a2785aaa7696aab7168b1af10e85e5a
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 2/6] gpu_opt_pure_chunked_b1024: gpu_opt_pure_chunked batch=1024
+path=/work/gj17/j17000/m5291091/lab/thesis_bc_project/build_miyabi/result_corrected_325557_20260717_203136_2404249.opbs/gpu_opt_pure_chunked_b1024.bc.tsv
+sha256=f24ca2a5eb893fcce4bb5bd432278aa75c3b81af1cb61a00ffb459a89da22fb2
+expected_length=325557
+data_rows=325557
+unique_index_count=325557
+missing_indices=0
+duplicate_indices=0
+out_of_range_indices=0
+nan_values=0
+positive_inf_values=0
+negative_inf_values=0
+parse_errors=0
+value_column_missing=0
+status=PASS
+[A 3/6] gpu_opt_pure_b1024: gpu_opt_pure batch=1024
+FAILED: Series A gpu_opt_pure_b1024: oom_marker;runner_exit=0

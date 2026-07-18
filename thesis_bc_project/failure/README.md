@@ -5,10 +5,17 @@ Gate B 整理で `result/`（正常・論文使用データ）から分離した
 `raw_data/unsuccessful/` へ集約した。`failure/` は失敗要約と raw への参照のみを保持する。**
 
 分類規則:
-- `failed/` … 実行失敗（build / runtime / oom / timeout）
+- `failed/` … 実行失敗（build / runtime / oom / timeout / validation）
+  - `failed/build/` … ビルド段階の失敗
+  - `failed/validation/` … 検証ハーネスの誤判定（runner 自体は成功）
 - `early_terminated/` … 意図的早期終了
 - `incomplete/` … 空・欠損・不正出力
 - `superseded_success/` … 正常だが新結果に置換済（派生表）
+
+> **例外（corrected_325557 の自己完結失敗アーカイブ）**: `failed/build/job_2403658/` と
+> `failed/validation/job_2404249/` は、修正版325557の再検証系列で生じた失敗を**自己完結**で保持する
+> （小容量・ベクトル本体なし）。各 `job_*/SOURCE.md` に分類・一次証拠・来歴を記録。BC ベクトル本体は
+> Git へ複製せず SHA/size のみ記録する。
 
 各エントリの出所・SHA256・job・`SourceSnapshotID`・**新 raw パス**は `MANIFEST.tsv`（`Path` 列＝現在の所在）を参照。
 raw の正式索引は `../raw_data/RAW_DATA_INDEX.tsv`、旧→新対応は `../result/provenance/RAW_DATA_MIGRATION.tsv`。
@@ -20,8 +27,31 @@ raw の正式索引は `../raw_data/RAW_DATA_INDEX.tsv`、旧→新対応は `..
 - `MANIFEST.tsv`, `README.md`
 
 ## カテゴリ別の状況
-### failed/{build,runtime,timeout}: **該当なし**
-- 実行失敗（コンパイル失敗・実行時クラッシュ・タイムアウト）は検出されていない。
+### failed/build: job 2403658（CMake binary-dir 衝突）
+- job `2403658`（checkpoint `193eb21`, pre-fix）: Stage 1 の `cugraph_bc_mini` が共有 `build_miyabi/` を
+  configure 後、Stage 2 が同一 binary dir を別 CMake source で再利用しようとして
+  `CMake Error: The source ... does not match the source ... used to generate cache` で `ABORTED`。
+  **runner=0 / vector=0**（graph validation は PASS＝グラフ問題ではない）。W7.3B1.1（job 固有
+  `build_corrected_325557/<stamp>_<jobid>/` + `build_dir_guard.sh`）で修正、成功再実行は job 2404743。
+- **PBS `.o2403658` は存在しない**（tree 全体に不在）。`run.log` を唯一の stdout 証拠として保持し、
+  `pbs_stdout.log` は捏造しない。
+- 保持: `failed/build/job_2403658/{SOURCE.md, MANIFEST.txt, run.log, graph_validation.json,
+  header-only 4 TSV}`。
+
+### failed/validation: job 2404249（OOM マーカー誤判定）
+- job `2404249`（checkpoint `b677d6c`, pre-fix）: `gpu_opt_pure_b1024` は runner_exit=0・ベクトル完全
+  （GTEPS=16.1750, max BC index 272816）だが、助言的警告
+  `> [Warn] BC_BATCH_OVERRIDE=1024 exceeds safe limit 512; may cause cudaMalloc OOM` 中の `OOM` を
+  素朴なマーカー検査が拾い、Series A を誤って失敗判定（`oom_marker;runner_exit=0`）。**実 OOM ではない**。
+  W7.3B2.2（`oom_evidence.sh`＝強証拠3クラス限定）で修正、成功再実行は job 2404743。
+- 3 ベクトル本体は superseded checkpoint `b677d6c` 由来で canonical(2404743)と**byte 非一致**のため
+  Git へ複製せず、`vector_provenance.tsv` に path/size/SHA のみ記録。
+- 保持: `failed/validation/job_2404249/{SOURCE.md, MANIFEST.txt, run.log, pbs_stdout.log,
+  graph_validation.json, implementation_manifest.tsv, vector_inventory.tsv, header-only 2 TSV,
+  gpu_opt_pure_b1024.stderr.log, false_positive_match.tsv, vector_provenance.tsv}`。
+
+### failed/{runtime,timeout}: **該当なし**
+- 実行時クラッシュ・タイムアウトは検出されていない。
 - PBS `.o` の `Timeout: 21600s` はジョブ**設定行**であり、実タイムアウトではない。空のため Git 非保存。
 
 ### failed/oom: memory_correctness_2368269（UM b10240 がhost-memory-limited 100 GiB configurationでOOM）

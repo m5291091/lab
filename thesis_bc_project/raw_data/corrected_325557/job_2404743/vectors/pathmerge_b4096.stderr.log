@@ -1,0 +1,6 @@
+Running: PathMerge_BC on 325557_3216152_corrected_v1...
+  > [PathMerge] free_mem=101.4 GB, batch_size=4096, num_sources=325557, num_batches=80
+  > [GPU Phase] BFS: 125.9072 sec, Backward: 40.2666 sec
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 167.972522 
+  > GTEPS = 6.2334 (nodes=325557, edges=3216152)

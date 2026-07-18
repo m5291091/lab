@@ -1,0 +1,14 @@
+Running: GPU_Opt on 325557_3216152_corrected_v1...
+  > [BFS kernel] auto=block (avg_deg=19.76, heuristic=block)
+  > [Diag] force_full_reset=false
+  > [Diag] force_ns_eff_one=false
+  > [Diag] diagnostic_mode=false
+  > [Mem] GPU HBM3: total=102.0 GB, free_before=101.4 GB
+  > [Mem] topology(CPU/HBM3)=0.03 GB, dynamic(UM)=213.38 GB, BATCH=10240, SUB_BATCH=6596, num_subs=2, NS_eff=1
+  > [Mode] HBM3 streaming: 6596 sources/launch (HBM3 budget=81.1 GB), 2 sub-launches per BATCH
+  > [GPU Phase] BFS wall=211.5260 s (cum=211.5260 s), Backward wall=11.2585 s (cum=11.2585 s), Prefetch cum=76.1854 s, SUB_BATCH=6596, num_subs=2
+  > [Diag] full_memset_calls=64
+  > [Diag] visited_reset_calls=0
+  > index : 272816, Maximum Betweenness Centrality ==> 39343117052.54
+  > Elapse time [sec.] = 238.672569 
+  > GTEPS = 4.3869 (nodes=325557, edges=3216152)

@@ -1,0 +1,4 @@
+Vector	OriginalPath	SizeBytes	SHA256	GitTracked	ByteIdenticalToCanonical2404743	Reason
+gpu_opt_b1024	build_miyabi/result_corrected_325557_20260717_203136_2404249.opbs/gpu_opt_b1024.bc.tsv	9330105	08b70e4652eb65ef6314b984cba56c276a2785aaa7696aab7168b1af10e85e5a	no	no	superseded checkpoint b677d6c; recorded by SHA/size only (not duplicated into Git)
+gpu_opt_pure_b1024	build_miyabi/result_corrected_325557_20260717_203136_2404249.opbs/gpu_opt_pure_b1024.bc.tsv	9330110	d7f82fcc4ae14f848f64b42af7a0d506f89a3a94920419658b6f3c159cab0b70	no	no	superseded checkpoint b677d6c; recorded by SHA/size only (not duplicated into Git)
+gpu_opt_pure_chunked_b1024	build_miyabi/result_corrected_325557_20260717_203136_2404249.opbs/gpu_opt_pure_chunked_b1024.bc.tsv	9330118	f24ca2a5eb893fcce4bb5bd432278aa75c3b81af1cb61a00ffb459a89da22fb2	no	no	superseded checkpoint b677d6c; recorded by SHA/size only (not duplicated into Git)

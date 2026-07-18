@@ -1,5 +1,8 @@
 # ビルド成果物（build ディレクトリ全体は追跡しない）
 build/
+# 例外: 失敗アーカイブの build 段階失敗（Gate W7.4; ビルド成果物ではなく失敗要約）
+!failure/failed/build/
+!failure/failed/build/**
 build_miyabi/
 cugraph_bc_mini/build/
 # 修正版 325557 再検証の job 固有 root build directory（Gate W7.3B1.1）
