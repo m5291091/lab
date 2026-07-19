@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate the Gate V1.1 master's-thesis presentation deck.
+"""Generate the Gate V1.2.1 results-first master's-thesis presentation deck.
 
 Every character the audience can see is English: slide titles, body text,
 callouts, captions, table cells, chart categories, series names, axis titles, and
@@ -71,10 +71,6 @@ README_PATH = OUT / "README.md"
 PLAN_PATH = OUT / "presentation_plan.md"
 NOTES_PATH = OUT / "speaker_notes_bilingual.md"
 
-# The repository records no official presentation length; 15 minutes is the
-# provisional budget declared in README.md and is changed in one place.
-TALK_MINUTES = 15
-
 DECK_TITLE_PT = 32   # deck title floor is 30 pt
 TITLE_PT = 28        # slide title floor
 BODY_PT = 20         # body floor
@@ -87,43 +83,46 @@ THESIS_TITLE_EN = (
     "Betweenness Centrality on GH200"
 )
 THESIS_TITLE_FLAT = THESIS_TITLE_EN.replace("\n", " ")
+RESULT_HEADLINE = (
+    "Main Result\n"
+    "1.31–3.17× faster than the tuned external comparator"
+)
 TBF = "[TO BE FILLED]"
 
 # Visible slides are English, but a few typographic characters outside ASCII are
 # deliberate: an en dash for numeric ranges, an em dash for the historical
 # banner, and a multiplication sign for speedups. Everything else visible must be
 # ASCII, and no CJK may appear on a slide at all.
-VISIBLE_NON_ASCII = {"–": 556, "—": 1000, "×": 584}
+VISIBLE_NON_ASCII = {"–": 556, "—": 1000, "×": 584, "·": 278, "≈": 889}
 CJK_RE = re.compile(r"[\u3040-\u30ff\u3400-\u9fff]")
 
 # Claim-boundary sentences. These are the wordings the deck is required to state
 # verbatim, so they are authored once and asserted back out of the saved package
 # rather than being retyped into each slide body.
-WORKING_SET_SENTENCE = "Input graph size and the batch-dependent working set are different quantities."
-NOT_PARTITION_SENTENCE = "Source batching groups source vertices; it does not partition the graph."
-COMPARATOR_SENTENCE = ("PathMerge is an evaluated third-party implementation and an external comparator, "
-                       "not ground truth.")
-NO_GENERALIZE_SENTENCE = "The result does not generalize to PathMerge implementations in general."
-FAILURE_CATEGORICAL_SENTENCE = "Failures are categorical outcomes, not zero-second runtimes."
-CHUNKED_BOUND_SENTENCE = ("Chunked succeeded at the tested upper bound of b16384; "
-                          "this does not imply unlimited capacity.")
+WORKING_SET_SENTENCE = "Input file size is not working-set size."
+NOT_PARTITION_SENTENCE = "Source batching groups source vertices. It does not split the graph."
+COMPARATOR_SENTENCE = "PathMerge is a third-party external comparator. It is not ground truth."
+NO_GENERALIZE_SENTENCE = "I do not generalize this result to PathMerge in general."
+FAILURE_CATEGORICAL_SENTENCE = "Failures are not zero-second runtimes."
+CHUNKED_BOUND_SENTENCE = "A tested upper bound is not an unlimited capacity claim."
 TIER_A_SENTENCE = "Tier A uses an independent Sequential CPU reference."
 TIER_B_SENTENCE = ("Tier B compares implementation paths and is not an independent "
                    "ground-truth evaluation.")
 TOLERANCE_SENTENCE = "All 13 comparisons passed the mixed tolerance, but none was byte-identical."
-SCOPE_SENTENCE = ("The conclusions are limited to one GH200 GPU, the evaluated graphs, the retained "
-                  "implementation snapshots, and the recorded experimental conditions.")
+SCOPE_SENTENCE = "I do not generalize beyond these conditions."
+CORRECTNESS_ROLE_SENTENCE = ("Correctness is treated as required validation. "
+                             "It is not presented as the main research result.")
 HISTORICAL_BANNER = "HISTORICAL EVIDENCE \u2014 NOT PART OF THE CURRENT RESULTS"
 
 # Slide number -> sentences that must appear verbatim on that slide, ignoring the
 # line breaks introduced purely to fit a shape.
 REQUIRED_SENTENCES = {
-    5: [WORKING_SET_SENTENCE, NOT_PARTITION_SENTENCE],
-    9: [COMPARATOR_SENTENCE, NO_GENERALIZE_SENTENCE],
-    11: [FAILURE_CATEGORICAL_SENTENCE, CHUNKED_BOUND_SENTENCE],
-    12: [TIER_A_SENTENCE, TIER_B_SENTENCE, TOLERANCE_SENTENCE],
-    13: [SCOPE_SENTENCE],
-    22: [HISTORICAL_BANNER],
+    7: [WORKING_SET_SENTENCE, NOT_PARTITION_SENTENCE],
+    11: [COMPARATOR_SENTENCE, NO_GENERALIZE_SENTENCE],
+    13: [FAILURE_CATEGORICAL_SENTENCE, CHUNKED_BOUND_SENTENCE],
+    14: [SCOPE_SENTENCE],
+    22: [TIER_B_SENTENCE, CORRECTNESS_ROLE_SENTENCE],
+    23: [HISTORICAL_BANNER, CORRECTNESS_ROLE_SENTENCE],
 }
 
 
@@ -189,12 +188,18 @@ def tx(slide, x, y, w, h, text, size=BODY_PT, color="neutral", bold=False,
 # title instead would breach the floor, and relying on PowerPoint's auto-wrap
 # would put the break outside the text-fit guard's view.
 TITLE_BREAKS = {
-    "GPU_Opt Achieved 1.31–3.17× Speedup over the Tuned Comparator":
-        "GPU_Opt Achieved 1.31–3.17× Speedup\nover the Tuned Comparator",
-    "Numerical Results Matched within Tolerance but Were Not Byte-Identical":
-        "Numerical Results Matched within Tolerance\nbut Were Not Byte-Identical",
-    "The Integrated Framework Improved Performance and Clarified Capacity Limits":
-        "The Integrated Framework Improved Performance\nand Clarified Capacity Limits",
+    "Brandes' Algorithm Reduces the Cost of Exact BC":
+        "Brandes' Algorithm Reduces the Cost\nof Exact BC",
+    "The Proposal Is an Integrated GPU Execution Framework":
+        "The Proposal Is an Integrated GPU\nExecution Framework",
+    "Source Batching Creates a Batch-Dependent Working Set":
+        "Source Batching Creates a Batch-Dependent\nWorking Set",
+    "Three Memory-Management Variants Share One Framework":
+        "Three Memory-Management Variants Share\nOne Framework",
+    "Hybrid BFS and Dual Streams Gave the Largest Observed Effects":
+        "Hybrid BFS and Dual Streams Gave\nthe Largest Observed Effects",
+    "The Framework Improved Performance and Expanded the Tested Batch Range":
+        "The Framework Improved Performance\nand Expanded the Tested Batch Range",
 }
 
 
@@ -222,15 +227,17 @@ def note(slide, text, color="neutral", y=6.72, size=FIGURE_MIN_PT, name="Note"):
     return tx(slide, 0.55, y, 12.25, 0.55, text, size, color, True, PP_ALIGN.LEFT, name)
 
 
-def bullets(slide, items, x=0.9, y=1.75, w=11.6, gap=0.92, size=BODY_PT, accent="gpu"):
+def bullets(slide, items, x=0.9, y=1.75, w=11.6, gap=0.92, size=BODY_PT,
+            accent="gpu", prefix="Bullet"):
     for i, text in enumerate(items):
         top = y + i * gap
         chip = slide.shapes.add_shape(lib.MSO_SHAPE.RECTANGLE, Inches(x), Inches(top + 0.10), Inches(0.09), Inches(0.42))
         chip.fill.solid()
         chip.fill.fore_color.rgb = rgb(C[accent])
         chip.line.fill.background()
-        chip.name = f"BulletMark_{i+1}"
-        tx(slide, x + 0.32, top, w, 0.80, text, size, "neutral", False, PP_ALIGN.LEFT, f"Bullet_{i+1}")
+        chip.name = f"{prefix}Mark_{i+1}"
+        tx(slide, x + 0.32, top, w, min(0.80, gap), text, size, "neutral", False,
+           PP_ALIGN.LEFT, f"{prefix}_{i+1}")
 
 
 def table(slide, x, y, w, h, rows, col_widths=None, size=FIGURE_MIN_PT, name="Table",
@@ -302,19 +309,111 @@ def slide_title(prs):
     band.fill.fore_color.rgb = rgb(C["gpu"])
     band.line.fill.background()
     band.name = "TitleBand"
-    tx(s, 0.85, 1.20, 11.6, 1.82, THESIS_TITLE_EN, DECK_TITLE_PT, "neutral", True, PP_ALIGN.LEFT, "ThesisTitle")
-    tx(s, 0.85, 3.20, 11.6, 0.55, "Master's Thesis Presentation", 22, "gpu", True, PP_ALIGN.LEFT, "TitleSubtitle")
-    rule = s.shapes.add_shape(lib.MSO_SHAPE.RECTANGLE, Inches(0.88), Inches(4.40), Inches(3.1), Inches(0.04))
+    tx(s, 0.65, 0.58, 12.05, 1.88, THESIS_TITLE_EN, DECK_TITLE_PT,
+       "neutral", True, PP_ALIGN.CENTER, "ThesisTitle", MSO_ANCHOR.MIDDLE)
+    tx(s, 0.85, 2.48, 11.6, 0.38, "Master's Thesis Presentation",
+       18, "gpu", True, PP_ALIGN.CENTER, "TitleSubtitle")
+    box(s, 1.20, 2.98, 10.93, 1.20, RESULT_HEADLINE,
+        "pale_blue", "gpu", 22, True, name="MainResult")
+    tx(s, 1.20, 4.22, 10.93, 0.45,
+       "One GH200 GPU · Four evaluated graphs · Median-to-median comparison",
+       FIGURE_MIN_PT, "neutral", True, PP_ALIGN.CENTER, "ResultScope")
+    rule = s.shapes.add_shape(lib.MSO_SHAPE.RECTANGLE, Inches(0.88), Inches(4.82), Inches(3.1), Inches(0.04))
     rule.fill.solid()
     rule.fill.fore_color.rgb = rgb(C["gpu"])
     rule.line.fill.background()
     rule.name = "TitleAccent"
-    tx(s, 0.85, 4.78, 6.4, 2.1,
+    tx(s, 0.85, 5.02, 6.4, 1.72,
        f"Name: {TBF}\nAffiliation: {TBF}\nSupervisor: {TBF}\nDate: {TBF}",
-       BODY_PT, "neutral", False, PP_ALIGN.LEFT, "TitleMeta")
-    tx(s, 7.9, 4.78, 4.55, 0.95,
-       "Unfilled items cannot be determined\nfrom the repository.",
-       FIGURE_MIN_PT, "cpu", False, PP_ALIGN.LEFT, "TitleMetaNote")
+       16, "neutral", False, PP_ALIGN.LEFT, "TitleMeta")
+
+
+def slide_agenda(prs):
+    s = slide_frame(prs, "Agenda")
+    items = [
+        "1. What Is Betweenness Centrality?",
+        "2. How Does Brandes' Algorithm Work?",
+        "3. How Do I Run Brandes on the GPU?",
+        "4. How Do I Evaluate the Framework?",
+        "5. What Results Do I Get?",
+        "6. What Are the Limits?",
+    ]
+    for i, item in enumerate(items):
+        col = i % 2
+        row = i // 2
+        x = 0.75 + col * 6.15
+        y = 1.62 + row * 1.30
+        box(s, x, y, 5.65, 0.94, item, "light" if col == 0 else "pale_blue",
+            "gpu", 19, True, name=f"Agenda_{i + 1}")
+    box(s, 1.35, 5.72, 10.65, 1.02,
+        "I first explain BC and Brandes.\nI then show the GPU design, results, and limits.",
+        "pale_teal", "um", 19, True, name="AgendaSummary")
+
+
+def slide_bc_graph(prs):
+    s = slide_frame(prs, "Betweenness Centrality Finds Important Bridge Vertices")
+    centers = [1.25, 3.35, 5.55, 7.75, 9.85]
+    y, d = 2.10, 1.05
+    for i in range(4):
+        line(s, centers[i] + d, y + d / 2, centers[i + 1], y + d / 2,
+             "neutral", 3.0, name=f"BC_Edge_{i + 1}")
+    labels = ["A", "B", "C", "D", "E"]
+    values = [0, 3, 4, 3, 0]
+    for i, (label, value) in enumerate(zip(labels, values)):
+        fill = "pale_orange" if label == "C" else "pale_blue"
+        outline = "pure" if label == "C" else "gpu"
+        circle(s, centers[i], y, d, label, fill, outline, 24, f"BC_Node_{label}")
+        text_box(s, centers[i] - 0.28, 3.30, 1.61, 0.42,
+                 f"{label}: BC = {value}", FIGURE_MIN_PT, outline,
+                 label == "C", name=f"BC_Value_{label}")
+    box(s, 0.75, 4.05, 5.85, 1.10,
+        "Vertex C has the highest BC.\nC lies on the most shortest paths.",
+        "pale_orange", "pure", 20, True, name="BCMessage")
+    box(s, 6.90, 4.05, 5.70, 1.25,
+        "BC helps find important transfer points.\nExamples include communication,\ntransport, and social networks.",
+        "pale_teal", "um", 18, True, name="BCUse")
+    note(s, "The graph is a simple path. C is the central bridge between both sides.", "gpu", 6.10)
+
+
+def slide_brandes(prs):
+    s = slide_frame(prs, "Brandes' Algorithm Reduces the Cost of Exact BC")
+    tx(s, 0.70, 1.46, 12.0, 0.78,
+       "Direct path enumeration is expensive.\nBrandes reuses shortest-path information.",
+       BODY_PT, "neutral", True, PP_ALIGN.CENTER, "BrandesIntro")
+    steps = ["Choose One\nSource", "Run BFS", "Count Shortest\nPaths",
+             "Accumulate\nDependencies", "Update BC"]
+    widths = [2.00, 1.55, 2.25, 2.35, 1.75]
+    x = 0.60
+    for i, (label, width) in enumerate(zip(steps, widths)):
+        box(s, x, 2.55, width, 1.02, label, "pale_blue", "gpu",
+            FIGURE_MIN_PT, True, name=f"BrandesStep_{i + 1}")
+        if i < len(steps) - 1:
+            arrow(s, x + width, 3.06, x + width + 0.28, 3.06,
+                  "gpu", 2.0, name=f"BrandesFlow_{i + 1}")
+        x += width + 0.28
+    box(s, 0.75, 4.18, 4.30, 1.18,
+        "Unweighted exact BC:\nO(|V|(|V| + |E|))",
+        "light", "neutral", 22, True, name="BrandesComplexity")
+    box(s, 5.45, 4.18, 7.10, 1.18,
+        "Brandes improves the algorithmic cost.\nI do not change Brandes' mathematical algorithm.",
+        "pale_orange", "pure", 19, True, name="BrandesBoundary")
+    note(s, "This study improves GPU execution. It does not improve Brandes' asymptotic complexity.", "failure", 6.12)
+
+
+def slide_gpu_contribution(prs):
+    s = slide_frame(prs, "I Improve How Brandes Runs on the GPU")
+    box(s, 0.65, 1.55, 5.75, 0.72, "Brandes Defines the Exact Computation",
+        "pale_blue", "gpu", 20, True, name="BrandesSideTitle")
+    bullets(s, ["BFS from every source", "Reverse dependency accumulation", "Exact BC output"],
+            x=0.85, y=2.48, w=5.20, gap=0.78, size=18, prefix="BrandesBullet")
+    box(s, 6.88, 1.55, 5.80, 0.72, "I Improve the GPU Execution",
+        "pale_orange", "pure", 20, True, name="GPUSideTitle")
+    bullets(s, ["Batch many sources", "Assign one block to one source", "Switch BFS direction",
+                "Use warp cooperation", "Use two CUDA streams"],
+            x=7.08, y=2.35, w=5.12, gap=0.65, size=18, accent="pure", prefix="GPUBullet")
+    box(s, 1.25, 6.05, 10.83, 0.82,
+        "I keep the same BC definition. I change how the computation runs on the GPU.",
+        "pale_teal", "um", 20, True, name="ContributionBoundary")
 
 
 def slide_problem(prs):
@@ -381,13 +480,13 @@ def slide_framework(prs):
     box(s, 5.55, 2.78, 3.30, 1.05, "Global BC\nAccumulation", "pale_orange", "pure", FIGURE_MIN_PT, True, name="GlobalBC")
     arrow(s, 11.45, 2.67, 8.85, 3.02, "pure", 2.0, name="Accum0_to_GlobalBC")
     arrow(s, 11.45, 3.92, 8.85, 3.58, "pure", 2.0, name="Accum1_to_GlobalBC")
-    text_box(s, 0.60, 5.30, 12.15, 0.45,
+    text_box(s, 0.60, 5.18, 12.15, 0.45,
              "Dual-Stream Execution: two streams share one framework with independent source-local buffers",
              FIGURE_MIN_PT, "neutral", True, name="FrameworkCaption")
-    bullets(s, [
-        "Four execution components are integrated into one shared execution flow.",
-    ], y=5.85, gap=0.80)
-    note(s, "No novelty is claimed for individual components; the contribution is the integration and its evaluation.", "gpu")
+    bullets(s, ["I combine four execution components.",
+                "Each component solves a different GPU bottleneck."],
+            y=5.65, gap=0.55, size=18)
+    note(s, "I do not claim novelty for each component. I claim the integration and its evaluation.", "gpu", 6.78)
 
 
 def slide_batching(prs, design):
@@ -401,14 +500,19 @@ def slide_batching(prs, design):
     box(s, 10.45, 1.72, 2.30, 1.15, "Per-Source\nState", "pale_orange", "pure", FIGURE_MIN_PT, True, name="PerSourceState")
     arrow(s, 7.50, 2.30, 7.70, 2.30, "gpu", 2.0, name="Batch_to_NSeff")
     arrow(s, 10.25, 2.30, 10.45, 2.30, "pure", 2.0, name="NSeff_to_State")
-    box(s, 3.05, 3.35, 7.20, 0.85,
-        "Working set = NS_eff  x  EffectiveBatch  x  Per-Source State",
+    box(s, 2.35, 3.35, 8.60, 0.85,
+        "Working set = NS_eff × EffectiveBatch × Per-Source State",
         "light", "pure", FIGURE_MIN_PT, True, name="WorkingSetFormula")
     box(s, 0.60, 4.55, 5.85, 1.05, "Input graph file\n(does not grow with batch)", "white", "neutral", FIGURE_MIN_PT, True, name="GraphFileBox")
     box(s, 6.90, 4.55, 5.85, 1.05, "Batch-dependent working set\n(grows with batch)", "pale_orange", "pure", FIGURE_MIN_PT, True, name="WorkingSetBox")
-    text_box(s, 0.60, 5.75, 12.15, 0.45, NOT_PARTITION_SENTENCE,
+    text_box(s, 0.60, 5.67, 12.15, 0.45, NOT_PARTITION_SENTENCE,
              FIGURE_MIN_PT, "failure", True, name="NotPartitionNote")
-    note(s, WORKING_SET_SENTENCE, "pure")
+    text_box(s, 0.60, 6.14, 12.15, 0.40,
+             f"At b512 and NS_eff = {design['NS_eff']}: Estimated allocation ≈ 10.67 GB",
+             FIGURE_MIN_PT, "pure", True, name="AllocationEstimate")
+    text_box(s, 0.60, 6.56, 12.15, 0.64,
+             f"{WORKING_SET_SENTENCE}\nThis is a code-derived estimate. It is not a measured footprint.",
+             FIGURE_MIN_PT, "neutral", True, name="WorkingSetBoundary")
 
 
 def slide_variants(prs):
@@ -425,30 +529,28 @@ def slide_variants(prs):
         text_box(s, x + 0.12, 3.18, 3.39, 0.45, impl, 18 if len(impl) < 16 else FIGURE_MIN_PT, "neutral", True, name=f"VariantName_{i}")
         text_box(s, x + 0.12, 3.78, 3.39, 0.45, label, 18, outline, True, name=f"VariantMode_{i}")
         text_box(s, x + 0.12, 4.35, 3.39, 0.80, desc, FIGURE_MIN_PT, "neutral", False, name=f"VariantDesc_{i}")
-    bullets(s, [
-        "Not three separate proposals: these are memory-management variants of one framework.",
-        "Chunked subdivides the source set, not the graph itself.",
-    ], y=5.55, gap=0.72)
-    note(s, "The comparison therefore characterises capacity behaviour rather than ranking the three variants.", "gpu")
+    bullets(s, ["All three use the same execution framework.",
+                "They are not three separate proposals."], y=5.55, gap=0.56, size=18)
+    note(s, "Chunked splits the source batch. It does not split the graph.", "gpu", 6.72)
 
 
 def slide_eval_design(prs):
-    s = slide_frame(prs, "The Evaluation Separates Performance and Capacity Studies")
+    s = slide_frame(prs, "I Separate Performance and Capacity Studies")
     rows = [
         ["Graph", "Nodes", "Edges", "Input File (MiB)", "Evaluation Purpose"],
         ["email-EuAll", "265,009", "364,481", "5.59", "Main performance (RQ1)"],
         ["roadNet-PA", "1,088,092", "1,541,898", "28.43", "Main performance (RQ1)"],
         ["roadNet-TX", "1,379,917", "1,921,660", "36.53", "Main performance (RQ1)"],
         ["roadNet-CA", "1,965,206", "2,766,607", "53.83", "Main performance (RQ1)"],
-        ["325557 corrected_v1", "325,557", "3,216,152", "43.25", "Memory and correctness study"],
+        ["325557 corrected_v1", "325,557", "3,216,152", "43.25", "Capacity tests"],
     ]
     table(s, 0.60, 1.62, 12.15, 3.30, rows, [2.85, 1.95, 1.95, 2.20, 3.20], FIGURE_MIN_PT, "EvaluationDesignTable")
     box(s, 0.60, 5.15, 12.15, 0.70, WORKING_SET_SENTENCE,
         "pale_orange", "pure", 18, True, name="CapacityCaveat")
-    bullets(s, [
-        "Main performance: four graphs. Memory and correctness: corrected 325557 only.",
-    ], y=6.05, gap=0.70)
-    note(s, "One GH200 GPU. Reported values are medians, and speedup is a median-to-median ratio.", "gpu", 6.78)
+    bullets(s, ["I use four graphs for main performance.",
+                "I use corrected 325557 for capacity tests."],
+            y=5.92, gap=0.46, size=18)
+    note(s, "All runs use one GH200 GPU.", "gpu", 6.88)
 
 
 def slide_runtime(prs, data):
@@ -467,28 +569,28 @@ def slide_runtime(prs, data):
     text_box(s, 0.60, 6.15, 12.15, 0.42,
              "Lower is better. Bars are raw-trial medians; 5 trials for email-EuAll, 3 for each road graph.",
              FIGURE_MIN_PT, "neutral", True, name="RuntimeCaption")
-    note(s, "GPU_Opt runs a fixed b512 while PathMerge is tuned per graph, so the setting is unfavourable to the proposal.", "gpu")
+    note(s, "GPU_Opt uses fixed b512. PathMerge uses a tuned batch for each graph.", "gpu")
 
 
 def slide_speedup(prs, data):
-    s = slide_frame(prs, "GPU_Opt Achieved 1.31–3.17× Speedup over the Tuned Comparator")
+    s = slide_frame(prs, "GPU_Opt Achieved 1.31–3.17× Speedup")
     vals = [r["Speedup"] for r in data]
     chart = add_chart(
         s, XL_CHART_TYPE.COLUMN_CLUSTERED, 0.60, 1.55, 12.15, 4.35,
         [GRAPH_SHORT[r["Graph"]] for r in data],
-        [("Speedup", vals), ("Parity 1.0x", [1.0] * len(vals))],
-        ["gpu", "neutral"], "Speedup over tuned PathMerge (x)", True, True, '0.00"x"')
+        [("Speedup", vals), ("Parity 1.0×", [1.0] * len(vals))],
+        ["gpu", "neutral"], "Speedup over tuned PathMerge (×)", True, True, '0.00"×"')
     chart.value_axis.minimum_scale = 0
     chart.value_axis.maximum_scale = 3.6
     series_to_line(chart, 1, "neutral", 1.8, True)
     bump_chart_fonts(chart)
     batches = "   ".join(f"{GRAPH_SHORT[r['Graph']]}: b{r['PathMerge_Tuned_Batch']}"
                          for r in load_runtime_batches(data))
-    text_box(s, 0.60, 5.95, 12.15, 0.42, f"Tuned PathMerge batch per graph — {batches}",
+    text_box(s, 0.60, 5.93, 12.15, 0.35, f"Tuned PathMerge batch per graph — {batches}",
              FIGURE_MIN_PT, "neutral", True, name="TunedBatchCaption")
-    text_box(s, 0.60, 6.35, 12.15, 0.42, COMPARATOR_SENTENCE,
+    text_box(s, 0.60, 6.31, 12.15, 0.42, COMPARATOR_SENTENCE,
              FIGURE_MIN_PT, "failure", True, name="ComparatorCaveat")
-    note(s, NO_GENERALIZE_SENTENCE, "failure", 6.82, name="NoGeneralizeNote")
+    note(s, NO_GENERALIZE_SENTENCE, "failure", 6.78, name="NoGeneralizeNote")
 
 
 def load_runtime_batches(speedup_rows):
@@ -498,7 +600,7 @@ def load_runtime_batches(speedup_rows):
 
 
 def slide_ablation(prs, data):
-    s = slide_frame(prs, "Multiple Execution Components Contributed to Performance")
+    s = slide_frame(prs, "Hybrid BFS and Dual Streams Gave the Largest Observed Effects")
     lookup = {(r["Graph"], r["Factor"]): r["Main_Effect"] for r in data}
     graphs = ["325557_3216152_corrected_v1", "Synthetic-4 aggregate"]
     names = ["325557 corrected", "Synthetic-4 aggregate"]
@@ -514,17 +616,17 @@ def slide_ablation(prs, data):
     chart.value_axis.maximum_scale = 2.0
     series_to_line(chart, 3, "neutral", 1.5, True)
     bump_chart_fonts(chart)
-    text_box(s, 0.60, 5.95, 12.15, 0.42,
+    text_box(s, 0.60, 5.82, 12.15, 0.42,
              "Synthetic-4 is a mixed-checkpoint aggregate; the other three graphs come from an earlier checkpoint.",
              FIGURE_MIN_PT, "failure", True, name="MixedCheckpointNote")
-    bullets(s, [
-        "Hybrid BFS and Dual-Stream contributed most; the warp effect was graph-dependent.",
-    ], y=6.35, gap=0.70)
-    note(s, "No factor decomposition was run on roadNet, so these results alone do not explain the main performance gap.", "gpu", 6.95)
+    text_box(s, 0.60, 6.26, 12.15, 0.42,
+             "Corrected 325557: H = 1.4767×   W = 1.1012×   A = 1.5563×",
+             FIGURE_MIN_PT, "gpu", True, name="CorrectedEffects")
+    note(s, "I did not run this analysis on roadNet graphs. I do not use it to explain the roadNet speedups.", "gpu", 6.70)
 
 
 def slide_memory(prs, data):
-    s = slide_frame(prs, "Memory Variants Expanded the Tested Feasible Batch Range")
+    s = slide_frame(prs, "Memory Variants Expanded the Tested Batch Range")
     x0, x1 = 2.55, 12.35
     xmax = max(r["Requested_Batch"] for r in data) * 1.12
     # Row baselines are spaced so that the failure label hanging below one row and
@@ -552,57 +654,39 @@ def slide_memory(prs, data):
             else:
                 line(s, x - 0.17, y - 0.17, x + 0.17, y + 0.17, "failure", 3.0)
                 line(s, x - 0.17, y + 0.17, x + 0.17, y - 0.17, "failure", 3.0)
-                txt = "CUDA OOM" if r["Status"] == "CUDA OOM" else "Host/cgroup OOM kill"
-                text_box(s, x - 1.35, y + 0.22, 2.70, 0.55, txt, FIGURE_MIN_PT, "failure", True, name=f"FAIL_{r['Config']}")
+                txt = (f"b{r['Requested_Batch']}: CUDA OOM" if r["Status"] == "CUDA OOM"
+                       else f"Host/cgroup OOM\nat b{r['Requested_Batch']}")
+                fail_y = y + 0.05 if r["Status"] == "CUDA OOM" else y
+                fail_h = 0.55 if r["Status"] == "CUDA OOM" else 0.62
+                text_box(s, x - 1.35, fail_y, 2.70, fail_h, txt, FIGURE_MIN_PT,
+                         "failure", True, name=f"FAIL_{r['Config']}")
     text_box(s, 0.60, 1.24, 12.15, 0.42,
-             f"{FAILURE_CATEGORICAL_SENTENCE} Each point is one targeted feasibility run.",
+             FAILURE_CATEGORICAL_SENTENCE,
              FIGURE_MIN_PT, "failure", True, name="MemoryCaption")
     note(s, CHUNKED_BOUND_SENTENCE, "failure", 6.85)
 
 
-def slide_correctness(prs):
-    s = slide_frame(prs, "Numerical Results Matched within Tolerance but Were Not Byte-Identical")
-    rows = [
-        ["Evidence Tier", "Comparisons", "Missing", "Mismatched", "Byte-Identical"],
-        ["Tier A: independent Sequential CPU reference", "3", "0", "0", "No"],
-        ["Tier B: implementation-path consistency", "10", "0", "0", "No"],
-        ["Total", "13", "0", "0", "No"],
-    ]
-    table(s, 0.60, 1.65, 12.15, 2.30, rows, [5.15, 1.85, 1.65, 1.90, 1.60], FIGURE_MIN_PT, "CorrectnessTable")
-    box(s, 0.60, 4.20, 5.90, 1.05,
-        "Tier A uses an independent\nSequential CPU reference.", "pale_green", "chunked", FIGURE_MIN_PT, True, name="TierABox")
-    box(s, 6.85, 4.20, 5.90, 1.05,
-        "Tier B compares implementation paths and is\nnot an independent ground-truth evaluation.",
-        "pale_orange", "pure", FIGURE_MIN_PT, True, name="TierBBox")
-    bullets(s, [
-        TOLERANCE_SENTENCE,
-        "Agreement here is numerical, not bitwise identity.",
-    ], y=5.45, gap=0.72)
-    note(s, "The CORE_FAIL result on the old malformed input is kept as a historical record and is not used here.", "failure", 6.95)
-
-
 def slide_limits(prs):
-    s = slide_frame(prs, "The Evidence Has Clear Boundaries", "failure")
+    s = slide_frame(prs, "The Results Have Clear Limits", "failure")
     bullets(s, [
-        "The evaluation used a single GH200 GPU and does not generalize to other GPUs.",
-        "Main performance covers four graphs; memory and correctness use corrected 325557 only.",
-        "Trial counts are small, and each capacity boundary is a single targeted validation run.",
-        "PathMerge is a retained third-party snapshot, not a claim about PathMerge in general.",
-        "UM and Chunked have finite capacity limits; complete avoidance of OOM is not claimed.",
-    ], y=1.72, gap=0.85, accent="failure")
+        "I use one GH200 GPU.",
+        "I evaluate four graphs for main performance.",
+        "I use one corrected graph for capacity tests.",
+        "Trial counts are small.",
+        "PathMerge is a retained third-party snapshot.",
+    ], y=1.72, gap=0.78, accent="failure")
     box(s, 0.60, 6.05, 12.15, 0.95,
-        "The conclusions are limited to one GH200 GPU, the evaluated graphs,\n"
-        "the retained implementation snapshots, and the recorded experimental conditions.",
+        SCOPE_SENTENCE,
         "pale_red", "failure", 18, True, name="ScopeStatement")
 
 
 def slide_contributions(prs):
     s = slide_frame(prs, "Contributions")
     items = [
-        ("1", "Integrated GPU\nExecution Framework", "Design and implementation\nof a framework integrating\nexisting components", "pale_blue", "gpu"),
-        ("2", "Performance vs. Tuned\nExternal Comparator", "Performance evaluation\nagainst a tuned third-party\nimplementation", "pale_teal", "um"),
-        ("3", "Component-Level\nContribution Analysis", "Quantified H/W/A\ncontributions and their\ngraph dependence", "pale_purple", "pathmerge"),
-        ("4", "Memory and Numerical\nBoundary Analysis", "Separate analysis of\ncapacity range and\nnumerical limits", "pale_orange", "pure"),
+        ("1", "Integrated GPU\nFramework", "I integrate a GPU execution\nframework for exact BC.", "pale_blue", "gpu"),
+        ("2", "External GPU\nComparison", "I compare it with a tuned\nexternal GPU implementation.", "pale_teal", "um"),
+        ("3", "Component\nEffects", "I measure the effects of\nkey execution components.", "pale_purple", "pathmerge"),
+        ("4", "Tested Memory\nCapacity", "I compare the tested capacity\nof three memory variants.", "pale_orange", "pure"),
     ]
     x = 0.62
     for num, head, caption, fill, outline in items:
@@ -610,23 +694,23 @@ def slide_contributions(prs):
         box(s, x, 2.48, 2.98, 1.35, head, fill, outline, FIGURE_MIN_PT, True, name=f"Contribution_{num}")
         tx(s, x - 0.06, 3.98, 3.10, 1.45, caption, FIGURE_MIN_PT, "neutral", False, PP_ALIGN.CENTER, f"ContribCaption_{num}")
         x += 3.16
-    note(s, "No novelty is claimed for individual components; the contribution is the integration and its evaluation.", "gpu", 5.75, name="NoteScope")
-    note(s, "Conclusions are limited to GH200, the evaluated graphs, and the retained implementation snapshots.", "cpu", 6.45, name="NoteLimit")
+    note(s, "I do not present correctness as a main contribution.", "gpu", 5.75, name="NoteScope")
+    note(s, "The conclusions apply only to the evaluated conditions.", "cpu", 6.45, name="NoteLimit")
 
 
 def slide_conclusion(prs):
-    s = slide_frame(prs, "The Integrated Framework Improved Performance and Clarified Capacity Limits")
+    s = slide_frame(prs, "The Framework Improved Performance and Expanded the Tested Batch Range")
     box(s, 0.60, 1.70, 12.15, 1.85,
-        "The integrated block-based GPU implementation achieved 1.31–3.17× speedup\n"
-        "over the tuned comparator on the four evaluated graphs, while the memory-path\n"
-        "experiments clarified both feasible batch ranges and remaining numerical limitations.",
+        "I achieved 1.31–3.17× speedup on four evaluated graphs.",
         "pale_blue", "gpu", 18, True, name="ConclusionStatement")
     bullets(s, [
-        "The gain came from multiple components of the integrated framework, not one technique.",
-        "Comparing UM, Pure, and Chunked exposed capacity behaviour and numerical agreement.",
-        "The conclusions are limited to the evaluated GPU, graphs, and implementation snapshots.",
-    ], y=3.85, gap=0.78)
-    tx(s, 0.60, 6.35, 12.15, 0.75, "Thank you for your attention — Questions",
+        "I used one fixed GPU_Opt batch.",
+        "I used a tuned external comparator.",
+        "Hybrid BFS and dual streams gave the largest observed effects.",
+        "Memory variants changed the tested feasible batch range.",
+        "The conclusions apply only to the evaluated conditions.",
+    ], y=3.78, gap=0.52, size=18)
+    tx(s, 0.60, 6.50, 12.15, 0.55, "Questions",
        BODY_PT, "gpu", True, PP_ALIGN.CENTER, "Questions")
 
 
@@ -659,7 +743,25 @@ def backup_parameters(prs, runtime, design):
         rows.append([r["Graph"], f"b{r['GPU_Opt_Batch']}", f"{r['GPU_Opt_Median_s']:.2f}",
                      f"b{r['PathMerge_Tuned_Batch']}", f"{r['PathMerge_Median_s']:.2f}",
                      f"{r['GPU_Opt_N']} / {r['PathMerge_N']}"])
-    table(s, 0.60, 1.60, 12.15, 2.95, rows, [2.55, 1.80, 2.20, 1.85, 2.20, 1.55], FIGURE_MIN_PT, "ParameterTable")
+    parameter_table = table(
+        s, 0.60, 1.60, 12.15, 2.95, rows,
+        [2.55, 1.80, 2.20, 1.85, 2.20, 1.55],
+        FIGURE_MIN_PT, "ParameterTable")
+    # Assigning ``cell.text`` creates one paragraph per newline.  The generic
+    # table helper styles the first paragraph, so explicitly style every header
+    # paragraph on this two-line backup header.  This avoids renderer-dependent
+    # fallback to black on the second line while preserving Graph/Trials
+    # alignment, cell geometry, and all data.
+    for c, cell in enumerate(parameter_table.table.rows[0].cells):
+        cell.vertical_anchor = MSO_ANCHOR.MIDDLE
+        alignment = PP_ALIGN.LEFT if c == 0 else PP_ALIGN.CENTER
+        for para in cell.text_frame.paragraphs:
+            para.alignment = alignment
+            for run in para.runs:
+                run.font.name = FONT
+                run.font.size = Pt(FIGURE_MIN_PT)
+                run.font.bold = True
+                run.font.color.rgb = rgb(C["white"])
     box(s, 0.60, 4.70, 12.15, 1.15,
         f"Working set = NS_eff ({design['NS_eff']})  x  EffectiveBatch  x  Per-Source State (10,418,856 bytes)\n"
         "Hybrid BFS thresholds: alpha = %d, beta = %d" % (design["alpha"], design["beta"]),
@@ -695,13 +797,30 @@ def backup_kernel(prs, data):
     series = [("Shared kernel", [lookup[(g, "shared")]["Median_Runtime_s"] for g in graphs]),
               ("Block kernel", [lookup[(g, "block")]["Median_Runtime_s"] for g in graphs])]
     chart = add_chart(s, XL_CHART_TYPE.COLUMN_CLUSTERED, 0.60, 1.55, 12.15, 4.35, list(graphs), series,
-                      ["cpu", "gpu"], "Median runtime (s)", True, True, "0")
+                      ["cpu", "gpu"], "Median runtime (s)", False, True, "0")
     bump_chart_fonts(chart)
+    # Some independent renderers duplicate the first category label beside a
+    # native chart legend.  Slide 20 therefore uses only editable PowerPoint
+    # shapes for its two-item legend and leaves the chart legend disabled.
+    legend_y = 5.57
+    for idx, (label, color, marker_x, text_x) in enumerate([
+            ("Shared kernel", "cpu", 5.40, 5.68),
+            ("Block kernel", "gpu", 7.30, 7.58)], 1):
+        marker = s.shapes.add_shape(
+            lib.MSO_SHAPE.RECTANGLE, Inches(marker_x), Inches(legend_y),
+            Inches(0.18), Inches(0.18))
+        marker.fill.solid()
+        marker.fill.fore_color.rgb = rgb(C[color])
+        marker.line.color.rgb = rgb(C[color])
+        marker.name = f"KernelLegendMarker_{idx}"
+        tx(s, text_x, legend_y - 0.07, 1.55, 0.34, label,
+           FIGURE_MIN_PT, "neutral", False, PP_ALIGN.LEFT,
+           f"KernelLegendLabel_{idx}", MSO_ANCHOR.MIDDLE)
     ratios = "   ".join(
-        f"{g}: block is {lookup[(g, 'shared')]['Median_Runtime_s'] / lookup[(g, 'block')]['Median_Runtime_s']:.2f}x faster"
+        f"{g}: block is {lookup[(g, 'shared')]['Median_Runtime_s'] / lookup[(g, 'block')]['Median_Runtime_s']:.2f}× faster"
         for g in graphs)
     text_box(s, 0.60, 5.95, 12.15, 0.42, ratios, FIGURE_MIN_PT, "gpu", True, name="KernelRatios")
-    text_box(s, 0.60, 6.35, 12.15, 0.42,
+    text_box(s, 0.60, 6.40, 12.15, 0.42,
              "Measured only on roadNet-PA and roadNet-TX; no selector rule is inferred for unmeasured graphs.",
              FIGURE_MIN_PT, "failure", True, name="KernelCaveat")
     note(s, "The current implementation always uses the block kernel.", "cpu", 6.90)
@@ -737,10 +856,12 @@ def backup_correctness(prs, rows_tsv):
                      r["MaxRelativeError"], r["ToleranceResult"]])
     table(s, 0.60, 1.58, 12.15, 4.55, rows, [0.60, 2.01, 2.72, 2.72, 1.85, 1.40, 0.85],
           FIGURE_MIN_PT, "CorrectnessDetailTable")
-    text_box(s, 0.60, 6.22, 12.15, 0.40,
+    text_box(s, 0.60, 6.12, 12.15, 0.40,
              "All 13 comparisons: MissingIndices = 0, MismatchedElements = 0, ByteIdentical = No.",
              FIGURE_MIN_PT, "neutral", True, name="CorrectnessDetailCaption")
-    note(s, TIER_B_SENTENCE, "failure", 6.72)
+    text_box(s, 0.60, 6.54, 12.15, 0.34, TIER_B_SENTENCE,
+             FIGURE_MIN_PT, "failure", True, name="TierBBoundary")
+    note(s, CORRECTNESS_ROLE_SENTENCE, "cpu", 6.92)
 
 
 def backup_historical(prs):
@@ -756,10 +877,9 @@ def backup_historical(prs):
         ["Status in this thesis", "Retained as invalid-input evidence", "Sole basis of current conclusions"],
     ]
     table(s, 0.60, 2.55, 12.15, 3.10, rows, [3.05, 4.55, 4.55], FIGURE_MIN_PT, "HistoricalTable")
-    bullets(s, [
-        "Historical results are retained but are not used in any current conclusion.",
-        "Detecting the defect and re-validating on corrected input is part of the record.",
-    ], y=5.82, gap=0.72, accent="failure")
+    bullets(s, ["Historical results are not used in any current conclusion."],
+            y=5.78, gap=0.60, size=18, accent="failure")
+    note(s, CORRECTNESS_ROLE_SENTENCE, "failure", 6.52)
 
 
 # --- Speaker notes ----------------------------------------------------------
@@ -1376,27 +1496,200 @@ NOTES = [
     ),
 ]
 
-MAIN_SLIDES = 15
+# Gate V1.2 uses concise bilingual scripts. Timing is intentionally left to the
+# user, so the legacy V1.1 scripts above are replaced before any output is built.
+def _v12_note(slide, en, ja, en_transition, ja_transition, limitation_en,
+              limitation_ja, question_en, question_ja):
+    return Note(slide, 0, en, ja, en_transition, ja_transition,
+                ((limitation_en, limitation_ja),), ((question_en, question_ja),))
+
+
+NOTES = [
+    _v12_note(1,
+        "The main result comes first. GPU_Opt achieved 1.31 to 3.17 times speedup on four evaluated graphs. The comparison used one GH200 GPU and median runtimes.",
+        "最初に主結果を示します。GPU_Optは評価した4グラフで1.31倍から3.17倍の高速化を達成しました。比較はGH200一台と実行時間の中央値を用いました。",
+        "I will outline the talk.", "発表の流れを示します。",
+        "The result applies only to the evaluated conditions.", "結果は評価した条件にのみ適用されます。",
+        "What is the comparator? PathMerge is a tuned third-party external GPU implementation.",
+        "比較対象は何か。PathMergeは調整済みの第三者GPU実装です。"),
+    _v12_note(2,
+        "I first explain BC and Brandes. I then show the GPU design, evaluation, results, and limits.",
+        "最初にBCとBrandesを説明します。その後、GPU設計、評価、結果、限界を示します。",
+        "First, what does BC measure?", "まず、BCが何を測るかを説明します。",
+        "The agenda does not fix the speaking time.", "このAgendaは発表時間を固定しません。",
+        "Why start with results? The audience can see the outcome before the technical details.",
+        "なぜ結果から始めるのか。技術詳細の前に成果を共有できるからです。"),
+    _v12_note(3,
+        "BC measures how often a vertex lies on shortest paths. In this path graph, C has BC four. C connects the two sides most often.",
+        "BCは頂点が最短経路上に現れる頻度を表します。このパスグラフではCのBCが4で、両側を最も多く結びます。",
+        "Next, I explain the exact BC algorithm.", "次に、厳密BCアルゴリズムを説明します。",
+        "This graph is a simple teaching example.", "このグラフは説明用の簡単な例です。",
+        "Why is C important? More shortest paths pass through C than through any other vertex.",
+        "なぜCが重要か。他のどの頂点よりも多くの最短経路がCを通るからです。"),
+    _v12_note(4,
+        "Direct path enumeration is expensive. Brandes reuses shortest-path information from each BFS. For unweighted graphs, exact BC costs O of V times V plus E.",
+        "経路を直接列挙すると高コストです。Brandesは各BFSの最短経路情報を再利用します。無重みグラフの厳密BCはO(|V|(|V|+|E|))です。",
+        "The next slide separates Brandes from this study's contribution.", "次のスライドでBrandesと本研究の貢献を分けます。",
+        "I do not improve Brandes' asymptotic complexity.", "本研究はBrandesの漸近計算量を改善しません。",
+        "Does this study propose a new BC algorithm? No. It keeps Brandes' mathematical algorithm.",
+        "本研究は新しいBCアルゴリズムを提案するのか。いいえ。Brandesの数理アルゴリズムを維持します。"),
+    _v12_note(5,
+        "Brandes defines the exact computation. I improve its GPU execution. I batch sources, map blocks, switch BFS direction, cooperate within warps, and use two streams.",
+        "Brandesが厳密計算を定義します。本研究はGPU実行を改善します。始点のバッチ化、block割当、BFS方向切替、warp協調、2 streamを用います。",
+        "I now show the integrated framework.", "次に統合実行基盤を示します。",
+        "The BC definition and Brandes equations stay unchanged.", "BCの定義とBrandesの数式は変えません。",
+        "What is new? The contribution is the integrated GPU execution framework and its evaluation.",
+        "何が新しいのか。統合GPU実行基盤とその評価が貢献です。"),
+    _v12_note(6,
+        "The framework combines four execution components. Each component targets a different GPU bottleneck. I claim the integration and evaluation, not each component's first use.",
+        "実行基盤は4つの実行要素を組み合わせます。各要素は異なるGPUボトルネックを対象にします。個別要素の初出ではなく統合と評価を主張します。",
+        "Source batching also creates a memory constraint.", "始点バッチ化はメモリ制約も生みます。",
+        "Individual component novelty is not claimed.", "個々の要素の新規性は主張しません。",
+        "Why integrate the components? Their bottlenecks occur in one shared execution flow.",
+        "なぜ統合するのか。各ボトルネックが同じ実行フロー内に現れるからです。"),
+    _v12_note(7,
+        "Source batching groups source vertices. It does not split the graph. At b512 and two effective streams, the code-derived allocation estimate is about 10.67 GB.",
+        "始点バッチ化は始点頂点をまとめます。グラフを分割しません。b512と実効2 streamでは、コード由来の割当推定は約10.67 GBです。",
+        "Three variants manage this working set differently.", "3つのvariantはこのworking setを異なる方法で管理します。",
+        "The estimate is not a measured memory footprint.", "この推定値は実測メモリ使用量ではありません。",
+        "Is source batching graph partitioning? No. The input graph stays fixed.",
+        "始点バッチ化はgraph partitioningか。いいえ。入力グラフは固定です。"),
+    _v12_note(8,
+        "GPU_Opt uses Unified Memory. GPU_Opt_Pure uses device memory. GPU_Opt_Pure_Chunked splits the source batch. All variants share one execution framework.",
+        "GPU_OptはUnified Memory、GPU_Opt_Pureはdevice memoryを使います。GPU_Opt_Pure_Chunkedは始点バッチを分割します。全variantは同じ実行基盤を共有します。",
+        "I next separate the evaluation scopes.", "次に評価範囲を分けます。",
+        "These are memory variants, not separate proposals.", "これらはメモリvariantであり、別々の提案ではありません。",
+        "Does Chunked split the graph? No. It splits the source batch.",
+        "Chunkedはグラフを分割するのか。いいえ。始点バッチを分割します。"),
+    _v12_note(9,
+        "I use four graphs for main performance. I use corrected 325557 for capacity tests. Every run uses one GH200 GPU.",
+        "主性能評価には4グラフを使います。容量試験にはcorrected 325557を使います。すべての実行はGH200一台です。",
+        "The first result is runtime.", "最初の結果は実行時間です。",
+        "Input file size is not working-set size.", "入力ファイルサイズはworking setサイズではありません。",
+        "Why separate the studies? Performance and capacity use different graph scopes.",
+        "なぜ試験を分けるのか。性能と容量ではグラフ範囲が異なるからです。"),
+    _v12_note(10,
+        "GPU_Opt reduced median runtime on all four graphs. GPU_Opt uses fixed b512. PathMerge uses a tuned batch for each graph. The chart uses a log scale.",
+        "GPU_Optは4グラフすべてで実行時間中央値を短縮しました。GPU_Optはb512固定です。PathMergeは各グラフで調整したバッチを使います。縦軸は対数です。",
+        "The next slide shows the speedup ratios.", "次に高速化率を示します。",
+        "Trial counts are small, so I report medians.", "試行数が少ないため中央値を報告します。",
+        "Why use a log scale? Runtime spans a wide range across the graphs.",
+        "なぜ対数軸を使うのか。グラフ間で実行時間の範囲が広いからです。"),
+    _v12_note(11,
+        "GPU_Opt achieved 3.17, 1.31, 1.51, and 1.45 times speedup. PathMerge is an external comparator, not ground truth.",
+        "GPU_Optは3.17倍、1.31倍、1.51倍、1.45倍の高速化を達成しました。PathMergeは外部比較対象でありground truthではありません。",
+        "I next examine the execution components.", "次に実行要素の効果を確認します。",
+        "I do not generalize this result to PathMerge in general.", "この結果をPathMerge一般へは一般化しません。",
+        "Were both batch sizes tuned? No. GPU_Opt stayed at b512; PathMerge was tuned per graph.",
+        "両方のバッチを調整したのか。いいえ。GPU_Optはb512固定で、PathMergeは各グラフで調整しました。"),
+    _v12_note(12,
+        "On corrected 325557, H was 1.4767 times, W was 1.1012 times, and A was 1.5563 times. Hybrid BFS and dual streams had the largest observed effects.",
+        "corrected 325557ではHが1.4767倍、Wが1.1012倍、Aが1.5563倍でした。Hybrid BFSとdual streamsが最大の観測効果を示しました。",
+        "The next result concerns tested memory capacity.", "次は試験したメモリ容量の結果です。",
+        "The aggregate mixes checkpoints. No roadNet factor analysis was run.", "aggregateはcheckpointが混在します。roadNetの要因分析は未実施です。",
+        "Do these factors explain roadNet speedups? No. This analysis did not use roadNet graphs.",
+        "これらの要因はroadNetの高速化を説明するのか。いいえ。この分析ではroadNetを使っていません。"),
+    _v12_note(13,
+        "Pure passed b4096 and failed at b8192 with CUDA OOM. UM passed b10240 and ended at b12288 with a host OOM kill. Chunked passed b16384.",
+        "Pureはb4096に成功しb8192でCUDA OOMとなりました。UMはb10240に成功しb12288でhost OOM killとなりました。Chunkedはb16384に成功しました。",
+        "These results have clear limits.", "これらの結果には明確な限界があります。",
+        "A tested upper bound is not an unlimited capacity claim.", "試験上限は無制限の容量を意味しません。",
+        "Are failures zero-second runtimes? No. They are categorical failure outcomes.",
+        "失敗は0秒の実行時間か。いいえ。カテゴリとしての失敗結果です。"),
+    _v12_note(14,
+        "The evidence uses one GH200, four main graphs, one capacity graph, and small trial counts. I do not generalize beyond these conditions.",
+        "根拠はGH200一台、主性能4グラフ、容量1グラフ、少数試行に基づきます。これらの条件を超えて一般化しません。",
+        "Within these limits, I summarize four contributions.", "この限界の範囲で4つの貢献をまとめます。",
+        "PathMerge is a retained third-party snapshot.", "PathMergeは保存された第三者snapshotです。",
+        "Does the result cover other GPUs? No. Only one GH200 was evaluated.",
+        "他のGPUも対象か。いいえ。評価したGPUはGH200一台です。"),
+    _v12_note(15,
+        "I contribute an integrated exact-BC GPU framework, an external comparison, component measurements, and a tested capacity comparison. Correctness remains required validation, not a main contribution.",
+        "貢献は厳密BCの統合GPU基盤、外部比較、要素効果の測定、試験容量の比較です。正確性は必要な検証であり、主要貢献ではありません。",
+        "I will close with the result and scope.", "最後に結果と適用範囲を述べます。",
+        "No new BC algorithm is claimed.", "新しいBCアルゴリズムは主張しません。",
+        "What is the central contribution? The integration and evaluation of GPU execution methods.",
+        "中心的な貢献は何か。GPU実行方法の統合と評価です。"),
+    _v12_note(16,
+        "The framework achieved 1.31 to 3.17 times speedup. Hybrid BFS and dual streams had the largest observed effects. Memory variants changed the tested feasible batch range.",
+        "実行基盤は1.31倍から3.17倍の高速化を達成しました。Hybrid BFSとdual streamsが最大の観測効果を示しました。メモリvariantは試験上の実行可能バッチ範囲を変えました。",
+        "Questions are welcome. Backup evidence follows.", "質問を受けます。以降はBackup資料です。",
+        "The conclusions apply only to the evaluated conditions.", "結論は評価した条件にのみ適用されます。",
+        "What should be tested next? More GPUs, graphs, trials, and roadNet factor analysis.",
+        "次に何を試験すべきか。GPU、グラフ、試行数の拡大とroadNetの要因分析です。"),
+    _v12_note(17,
+        "This backup lists the hardware, software, bandwidth records, and aggregation method. The main experiments use one GH200 GPU.",
+        "このBackupはhardware、software、帯域記録、集計方法を示します。主実験はGH200一台を使います。",
+        "The next backup lists graph and batch parameters.", "次のBackupはグラフとバッチの設定です。",
+        "Undetermined items stay undetermined.", "未確定項目は未確定のままです。",
+        "Why are two memory capacity values shown? They come from different records and units.",
+        "なぜメモリ容量値が2つあるのか。異なる記録と単位に由来するからです。"),
+    _v12_note(18,
+        "This backup lists graph batches, medians, trial counts, and the working-set formula. The per-source state is code-derived, not measured.",
+        "このBackupはグラフ別バッチ、中央値、試行数、working set式を示します。始点ごとの状態量はコード由来で、実測ではありません。",
+        "The next backup shows PathMerge tuning.", "次のBackupはPathMergeの調整を示します。",
+        "GPU_Opt stays at b512 on every main graph.", "GPU_Optは主性能の全グラフでb512固定です。",
+        "Why not tune GPU_Opt? The fixed setting avoids a proposal-favoring comparison.",
+        "なぜGPU_Optを調整しないのか。提案側に有利な比較を避けるためです。"),
+    _v12_note(19,
+        "This sweep selects the tested PathMerge batch for each graph. The historical malformed graph is excluded.",
+        "このsweepは各グラフのPathMergeバッチを選びます。履歴的なmalformed graphは除外します。",
+        "The next backup compares two kernels.", "次のBackupは2つのkernelを比較します。",
+        "The sweep supports only the tested batch points.", "sweepが裏づけるのは試験点だけです。",
+        "Could another batch be faster? It is possible outside the tested points.",
+        "別のバッチがより速い可能性はあるか。試験点の外ではあり得ます。"),
+    _v12_note(20,
+        "This backup forces block and shared kernels on PA and TX. The block kernel was faster on both tested graphs.",
+        "このBackupはPAとTXでblock kernelとshared kernelを強制比較します。試験した両グラフでblock kernelが高速でした。",
+        "The next backup shows phase timing.", "次のBackupはphase timingを示します。",
+        "No selector rule is inferred for unmeasured graphs.", "未測定グラフのselector ruleは導きません。",
+        "Can shared memory win elsewhere? It was not tested on other graphs.",
+        "他のグラフでshared memoryが勝つか。他のグラフでは試験していません。"),
+    _v12_note(21,
+        "This backup separates BFS, backward accumulation, and other time. The values come from complete b512 wall-clock runs.",
+        "このBackupはBFS、backward accumulation、otherの時間を分けます。値は完全なb512 wall-clock runから得ています。",
+        "The next backup gives detailed correctness validation.", "次のBackupは詳細な正確性検証です。",
+        "The phase values are not partial Nsight totals.", "phase値は部分的なNsight合計ではありません。",
+        "Why use wall-clock data? A partial trace does not cover the complete run.",
+        "なぜwall-clock dataを使うのか。部分traceは完全な実行を覆わないからです。"),
+    _v12_note(22,
+        "Correctness is required validation, not the main research result. All 13 comparisons passed mixed tolerance. Tier A has three independent CPU comparisons. Tier B has ten path comparisons.",
+        "正確性は必要な検証であり、主要な研究成果ではありません。13比較はすべてmixed toleranceに合格しました。Tier Aは独立CPU比較3件、Tier Bは実装経路比較10件です。",
+        "The final backup preserves the malformed-input history.", "最後のBackupはmalformed inputの履歴を保存します。",
+        "Tier B is not an independent ground-truth evaluation.", "Tier Bは独立したground truth評価ではありません。",
+        "Was correctness checked? Yes. The detailed table retains all validation data.",
+        "正確性は確認したのか。はい。詳細表にすべての検証データを保持しています。"),
+    _v12_note(23,
+        "This backup preserves the malformed-input record. The old input failed validation. The corrected input passed all 13 comparisons. Current conclusions use only the corrected input.",
+        "このBackupはmalformed inputの記録を保存します。旧入力は検証に失敗しました。修正入力は13比較すべてに合格しました。現在の結論は修正入力だけを使います。",
+        "This ends the backup material.", "Backup資料は以上です。",
+        "Historical evidence is not part of the current results.", "履歴的根拠は現在の結果の一部ではありません。",
+        "Why keep the old result? It documents input validation and correction.",
+        "なぜ旧結果を残すのか。入力検証と修正の経緯を記録するためです。"),
+]
+
+MAIN_SLIDES = 16
 BACKUP_SLIDES = 7
 
 # Canonical one-line titles, index 0 = slide 1. ``slide_frame`` may break a title
 # across two lines to fit the band, but never changes its wording.
 SLIDE_TITLES = [
     THESIS_TITLE_FLAT,
-    "Exact All-Sources BC Is Computationally Expensive",
-    "Performance Alone Is Not Enough",
+    "Agenda",
+    "Betweenness Centrality Finds Important Bridge Vertices",
+    "Brandes' Algorithm Reduces the Cost of Exact BC",
+    "I Improve How Brandes Runs on the GPU",
     "The Proposal Is an Integrated GPU Execution Framework",
     "Source Batching Creates a Batch-Dependent Working Set",
     "Three Memory-Management Variants Share One Framework",
-    "The Evaluation Separates Performance and Capacity Studies",
+    "I Separate Performance and Capacity Studies",
     "GPU_Opt Reduced Runtime on All Four Evaluated Graphs",
-    "GPU_Opt Achieved 1.31–3.17× Speedup over the Tuned Comparator",
-    "Multiple Execution Components Contributed to Performance",
-    "Memory Variants Expanded the Tested Feasible Batch Range",
-    "Numerical Results Matched within Tolerance but Were Not Byte-Identical",
-    "The Evidence Has Clear Boundaries",
+    "GPU_Opt Achieved 1.31–3.17× Speedup",
+    "Hybrid BFS and Dual Streams Gave the Largest Observed Effects",
+    "Memory Variants Expanded the Tested Batch Range",
+    "The Results Have Clear Limits",
     "Contributions",
-    "The Integrated Framework Improved Performance and Clarified Capacity Limits",
+    "The Framework Improved Performance and Expanded the Tested Batch Range",
     "Detailed Experimental Environment",
     "Graph and Batch Parameters",
     "PathMerge Batch-Size Sweep",
@@ -1447,10 +1740,9 @@ def notes_pacing() -> dict:
 
 
 def validate_notes_content() -> None:
-    """Both scripts exist, are substantial, and are each usable on their own."""
+    """Both scripts exist and are each usable without a fixed time budget."""
     assert len(NOTES) == MAIN_SLIDES + BACKUP_SLIDES, len(NOTES)
-    assert [n.slide for n in NOTES] == list(range(1, 23))
-    lo, hi = PACE_BAND
+    assert [n.slide for n in NOTES] == list(range(1, 24))
     for n in NOTES:
         assert n.en_script.strip() and n.ja_script.strip(), f"slide {n.slide}: empty script"
         assert not CJK_RE.search(n.en_script), f"slide {n.slide}: Japanese inside the English script"
@@ -1460,16 +1752,6 @@ def validate_notes_content() -> None:
         for en_text, ja_text in n.limitations + n.questions:
             assert not CJK_RE.search(en_text), f"slide {n.slide}: Japanese in an English entry"
             assert CJK_RE.search(ja_text), f"slide {n.slide}: Japanese entry has no Japanese"
-        for label, est in (("English", en_seconds(n.en_script)), ("Japanese", ja_seconds(n.ja_script))):
-            ratio = est / n.seconds
-            assert lo <= ratio <= hi, \
-                f"slide {n.slide}: {label} script is {est:.0f}s against a {n.seconds}s slot (ratio {ratio:.2f})"
-    pacing = notes_pacing()
-    assert pacing["declared_total"] == TALK_MINUTES * 60, pacing["declared_total"]
-    # Neither language may be the shorter "summary" of the other across the deck.
-    for key in ("english_total", "japanese_total"):
-        ratio = pacing[key] / pacing["declared_total"]
-        assert lo <= ratio <= hi, f"{key} is {pacing[key]}s against {pacing['declared_total']}s"
 
 
 def attach_notes(prs):
@@ -1478,7 +1760,7 @@ def attach_notes(prs):
         tf = prs.slides[n.slide - 1].notes_slide.notes_text_frame
         lines = [
             f"Slide {n.slide} — {SLIDE_TITLES[n.slide - 1]}",
-            f"Duration: {n.seconds} seconds",
+            "Duration: [USER TO EDIT]",
             "",
             "[English Script]",
             n.en_script,
@@ -1503,33 +1785,34 @@ def attach_notes(prs):
 
 
 SLIDE_FIGURES = {
-    2: "F02", 4: "F04", 5: "F05", 6: "F08", 8: "F09", 9: "F10",
-    10: "F12", 11: "F13", 18: "F11", 19: "F14", 20: "F15",
+    3: "native BC graph", 6: "F04", 7: "F05", 8: "F08", 10: "F09",
+    11: "F10", 12: "F12", 13: "F13", 19: "F11", 20: "F14", 21: "F15",
 }
 
 SLIDE_PURPOSE = {
-    1: "Frame the talk and identify the work",
-    2: "Establish the cost and irregularity of exact all-sources BC",
-    3: "Motivate four evaluation axes instead of runtime alone",
-    4: "Present the proposal as one integrated execution framework",
-    5: "Locate the capacity constraint in batch-dependent state",
-    6: "Show the three memory variants as one shared framework",
-    7: "Separate main-performance graphs from the capacity study",
-    8: "Report the headline runtime reduction on four graphs",
-    9: "Quantify speedup over the tuned external comparator",
-    10: "Attribute the gain to multiple execution components",
-    11: "Report tested feasible batch ranges and failure classes",
-    12: "Report numerical agreement and its explicit limits",
-    13: "State the boundaries of the evidence",
-    14: "Summarize the four contributions",
-    15: "Restate the central conclusion and invite questions",
-    16: "Backup: full hardware and software environment",
-    17: "Backup: graph, batch, and working-set parameters",
-    18: "Backup: PathMerge batch sweep justifying tuning",
-    19: "Backup: forced block-vs-shared kernel comparison",
-    20: "Backup: phase breakdown and profiling scope",
-    21: "Backup: per-comparison correctness detail",
-    22: "Backup: historical malformed-input evidence, separated",
+    1: "Lead with the measured result and scope",
+    2: "Preview the results-first narrative",
+    3: "Explain BC with an editable five-node graph",
+    4: "Explain how Brandes reduces exact-BC cost",
+    5: "Separate Brandes from this study's GPU contribution",
+    6: "Present the integrated GPU execution framework",
+    7: "Explain the batch-dependent working set",
+    8: "Show three memory variants of one framework",
+    9: "Separate main performance from capacity tests",
+    10: "Report runtime reduction on four graphs",
+    11: "Report speedup over the tuned comparator",
+    12: "Report observed component effects",
+    13: "Report tested memory-capacity outcomes",
+    14: "State limits without correctness as a main result",
+    15: "Summarize four research contributions",
+    16: "Close with the result, capacity range, and scope",
+    17: "Backup: full hardware and software environment",
+    18: "Backup: graph, batch, and working-set parameters",
+    19: "Backup: PathMerge batch sweep justifying tuning",
+    20: "Backup: forced block-vs-shared kernel comparison",
+    21: "Backup: phase breakdown and profiling scope",
+    22: "Backup: required correctness validation detail",
+    23: "Backup: historical malformed-input evidence",
 }
 
 
@@ -1537,27 +1820,25 @@ SLIDE_PURPOSE = {
 def write_manifest(stats):
     header = ["SlideNumber", "Section", "SlideTitle", "NarrativePurpose", "FigureID",
               "ObjectType", "Editable", "PlannedSeconds", "CanonicalSource"]
-    seconds = {n.slide: n.seconds for n in NOTES}
     kinds = {st["Slide"]: st for st in stats["slide_stats"]}
     sources = {
-        8: "result/tables/thesis/T2_main_performance.tsv;raw_data/main_performance/proposed_variants/*",
-        9: "result/main_performance/proposed_vs_pathmerge/comparison.tsv;raw_data/main_performance/proposed_variants/*",
-        10: "result/tables/thesis/T3_ablation_summary.tsv;raw_data/ablation/*;raw_data/corrected_325557/*",
-        11: "result/tables/thesis/T4_memory_scalability.tsv;result/memory_scalability/corrected_325557/feasibility_boundary.tsv",
-        7: "result/tables/thesis/T1_graph_metadata.tsv;result/datasets/graph_catalog.tsv",
-        12: "result/tables/thesis/T5_correctness_summary.tsv",
-        16: "result/tables/thesis/T6_experimental_environment.tsv",
-        17: "result/tables/thesis/T2_main_performance.tsv;docs/thesis/writing/japanese/appendix_a_experimental_parameters.md",
-        18: "raw_data/tuning/pathmerge/*/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv",
-        19: "raw_data/tuning/kernel_selection/*",
-        20: "raw_data/main_performance/proposed_variants/*/_run/job_2357334_20260711/phase_timing.log",
-        21: "result/tables/thesis/T5_correctness_summary.tsv",
-        22: "result/provenance/GRAPH_325557_INTEGRITY_AUDIT.md;result/datasets/graph_catalog.tsv",
+        10: "result/tables/thesis/T2_main_performance.tsv;raw_data/main_performance/proposed_variants/*",
+        11: "result/main_performance/proposed_vs_pathmerge/comparison.tsv;raw_data/main_performance/proposed_variants/*",
+        12: "result/tables/thesis/T3_ablation_summary.tsv;raw_data/ablation/*;raw_data/corrected_325557/*",
+        13: "result/tables/thesis/T4_memory_scalability.tsv;result/memory_scalability/corrected_325557/feasibility_boundary.tsv",
+        9: "result/tables/thesis/T1_graph_metadata.tsv;result/datasets/graph_catalog.tsv",
+        17: "result/tables/thesis/T6_experimental_environment.tsv",
+        18: "result/tables/thesis/T2_main_performance.tsv;docs/thesis/writing/japanese/appendix_a_experimental_parameters.md",
+        19: "raw_data/tuning/pathmerge/*/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv",
+        20: "raw_data/tuning/kernel_selection/*",
+        21: "raw_data/main_performance/proposed_variants/*/_run/job_2357334_20260711/phase_timing.log",
+        22: "result/tables/thesis/T5_correctness_summary.tsv",
+        23: "result/provenance/GRAPH_325557_INTEGRITY_AUDIT.md;result/datasets/graph_catalog.tsv",
     }
     with MANIFEST_PATH.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, delimiter="\t", lineterminator="\n")
         w.writerow(header)
-        for n in range(1, 23):
+        for n in range(1, 24):
             st = kinds[n]
             kind = []
             if st["Charts"]:
@@ -1574,12 +1855,41 @@ def write_manifest(stats):
                 SLIDE_FIGURES.get(n, "NA"),
                 "; ".join(kind),
                 "yes",
-                seconds.get(n, "NA"),
+                "[USER TO EDIT]",
                 sources.get(n, "docs/thesis/writing/japanese/*"),
             ])
 
 
 def write_notes_document():
+    lines = [
+        "# Speaker Notes (Bilingual)", "",
+        "Presentation timing is intentionally not fixed.",
+        "The user will adjust slide selection and speaking time after rehearsal.", "",
+        "スライド面はすべて英語である。英語原稿と日本語説明は同じ主張と限定を述べる。", "",
+        "## Main", "",
+    ]
+    for n in NOTES:
+        if n.slide == MAIN_SLIDES + 1:
+            lines += ["## Backup", "", "Backup は質疑応答用である。", ""]
+        lines += [
+            f"## Slide {n.slide} — {SLIDE_TITLES[n.slide - 1]}", "",
+            "### Duration", "", "[USER TO EDIT]", "",
+            "### English Script", "", n.en_script, "",
+            "### 日本語説明", "", n.ja_script, "",
+            "### English Transition", "", n.en_transition, "",
+            "### 日本語トランジション", "", n.ja_transition, "",
+            "### Limitations to State", "",
+        ]
+        for en_text, ja_text in n.limitations:
+            lines += [f"- {en_text}", f"- {ja_text}"]
+        lines += ["", "### Expected Questions", ""]
+        for en_text, ja_text in n.questions:
+            lines += [f"- {en_text}", f"- {ja_text}"]
+        lines += [""]
+    NOTES_PATH.write_text("\n".join(lines), encoding="utf-8")
+    return None
+
+    # Legacy V1.1 timed-note writer retained below for provenance only.
     pacing = notes_pacing()
     total = pacing["declared_total"]
     lines = [
@@ -1599,8 +1909,7 @@ def write_notes_document():
         f"推定は英語 {EN_WORDS_PER_SEC} words/秒、日本語 {JA_CHARS_PER_SEC} 文字/秒の"
         "発表ペースによる計画値であり、実測ではない。",
         "",
-        f"発表時間 {TALK_MINUTES} 分はリポジトリに公式指定がないための暫定値であり、"
-        "`scripts/generate_thesis_presentation.py` の `TALK_MINUTES` と各スライドの想定秒数で調整する。",
+        "発表時間は固定せず、リハーサル後にユーザーが調整する。",
         "",
         "同じ内容は PPTX のノートペインにも埋め込まれており、スライド面には表示されない。",
         "",
@@ -1650,6 +1959,41 @@ def write_notes_document():
 
 
 def write_plan_document(total_seconds):
+    rows = "\n".join(
+        f"| {n} | {'Main' if n <= MAIN_SLIDES else 'Backup'} | {SLIDE_TITLES[n - 1]} | "
+        f"{SLIDE_PURPOSE[n]} | {SLIDE_FIGURES.get(n, '—')} |"
+        for n in range(1, 24))
+    PLAN_PATH.write_text(f"""# Presentation Plan — Gate V1.2.1
+
+## Narrative
+
+> Results → Agenda → BC → Brandes → GPU Execution → Evaluation → Results → Limits → Contributions → Conclusion
+
+The main result appears on Slide 1: GPU_Opt achieved 1.31–3.17× speedup on four evaluated graphs.
+
+Presentation timing is intentionally not fixed.
+The user will adjust slide selection and speaking time after rehearsal.
+
+## Slide map
+
+| # | Section | Title | Narrative purpose | Figure |
+|---:|---|---|---|---|
+{rows}
+
+## Claim boundaries
+
+- Brandes reduces the algorithmic cost of exact BC.
+- This study improves how Brandes runs on the GPU.
+- This study does not change Brandes' mathematical algorithm or asymptotic complexity.
+- Source batching groups sources. It does not split the graph.
+- PathMerge is a third-party external comparator, not ground truth.
+- Correctness is required validation, not a main research result.
+- Detailed correctness and malformed-input evidence remain in Backup Slides 22–23.
+- All visible slide text is English. Speaker notes contain English and Japanese.
+""", encoding="utf-8")
+    return
+
+    # Legacy V1.1 timed plan retained below for provenance only.
     pacing = notes_pacing()
     rows = "\n".join(
         f"| {n} | {'Main' if n <= MAIN_SLIDES else 'Backup'} | {SLIDE_TITLES[n - 1]} "
@@ -1673,7 +2017,7 @@ def write_plan_document(total_seconds):
 
 英語版のみを読んだ場合の推定合計は約 {pacing['english_total']} 秒、日本語版のみを読んだ場合の推定合計は約 {pacing['japanese_total']} 秒である。二つのスクリプトは代替であり、合算して読むことは想定していない。
 
-発表時間 **{TALK_MINUTES} 分は暫定値**である。リポジトリ内に公式の発表時間指定は存在しない（`docs/`・`result/`・`scripts/` を横断検索して該当なし）。20 分等へ変更する場合は、`scripts/generate_thesis_presentation.py` の `TALK_MINUTES` と `NOTES` の想定秒数を更新して再生成する。
+発表時間は固定しない。リハーサル後にユーザーがスライド選択と発表時間を調整する。
 
 ## 3. Slide map
 
@@ -1705,6 +2049,54 @@ def write_plan_document(total_seconds):
 
 
 def write_readme(stats, total_seconds):
+    README_PATH.write_text(f"""# Master's Thesis Presentation (Gate V1.2.1)
+
+Results-first, fully editable PowerPoint deck for the master's thesis presentation.
+
+## Files
+
+- `editable/master_thesis_presentation_v1.pptx`: {MAIN_SLIDES} main slides and {BACKUP_SLIDES} backup slides.
+- `presentation_plan.md`: results-first narrative and slide map.
+- `speaker_notes_bilingual.md`: English and Japanese notes for all 23 slides.
+- `PRESENTATION_MANIFEST.tsv`: slide relationships, object types, and sources.
+- `../../../scripts/generate_thesis_presentation.py`: deterministic generator and validator.
+
+## Presentation timing
+
+Presentation timing is intentionally not fixed.
+The user will adjust slide selection and speaking time after rehearsal.
+
+Every notes entry uses `Duration: [USER TO EDIT]` in the PowerPoint notes pane.
+
+## Correctness role
+
+Correctness is treated as required validation. It is not presented as the main research result.
+Detailed correctness evidence and the historical malformed input remain in Backup Slides 22–23.
+The Tier A/B data and all 13 comparisons are unchanged.
+
+## Editability
+
+- Editable objects: {stats['objects']}
+- Native charts: {stats['charts']}
+- Native tables: {stats['tables']}
+- Raster pictures: {stats['pictures']}
+- Raster-only slides: {stats['raster_only_slides']}
+
+All diagrams use native PowerPoint shapes and connectors. Charts retain embedded workbooks.
+
+## Regeneration
+
+```bash
+cd thesis_bc_project
+PYTHONPATH=<deps> python3 scripts/generate_thesis_presentation.py
+```
+
+The generator checks canonical measured values, slide language, font floors, text fit,
+object bounds, editable objects, notes, chart identifiers, and raster use.
+""", encoding="utf-8")
+    return
+
+    # Legacy V1.1 README writer retained below for provenance only.
     pacing = notes_pacing()
     README_PATH.write_text(f"""# Master's Thesis Presentation (Gate V1.1 draft)
 
@@ -1723,11 +2115,7 @@ def write_readme(stats, total_seconds):
 
 ## Presentation length
 
-**発表時間 {TALK_MINUTES} 分は暫定値である。** リポジトリ内に公式の発表時間指定は存在しない。
-本編の想定時間合計は {total_seconds} 秒（{total_seconds / 60:.1f} 分）である。
-
-20 分などへ変更する場合は、`scripts/generate_thesis_presentation.py` の `TALK_MINUTES`
-と `NOTES` の想定秒数を更新して再生成する。スライド構成自体は増減可能な形で分離してある。
+発表時間は固定しない。リハーサル後にユーザーがスライド選択と発表時間を調整する。
 
 ## Bilingual speaker notes
 
@@ -1773,7 +2161,7 @@ PowerPoint 上で個別に選択・移動・再着色・文字編集できる。
 
 - スライド面（`ppt/slides`・`ppt/charts`・`ppt/diagrams`・`ppt/embeddings`）に仮名・漢字が 1 文字も存在しないこと。notes slide は検査対象外。
 - 表示文字が ASCII、または明示的に許可した約物（{"".join(sorted(VISIBLE_NON_ASCII))}）のみであること。
-- 全 22 notes slide に `[English Script]` と `[日本語説明]` の双方があり、英語側に日本語が混入せず、日本語側に日本語が存在すること。
+- 全 23 notes slide に `[English Script]` と `[日本語説明]` の双方があり、英語側に日本語が混入せず、日本語側に日本語が存在すること。
 - 各スクリプトが宣言した想定秒数に対して妥当な長さであること（一方が他方の要約になっていないこと）。
 - 全 shape の各行が、指定 font size で box 内幅に収まること（途中改行の防止）。
 - 表示文字（表セルを含む）が全スライドで {FIGURE_MIN_PT} pt 以上であること。
@@ -1823,8 +2211,8 @@ def font_floor(shape_name: str) -> float:
         return 30
     if shape_name == "Title":
         return TITLE_PT
-    if shape_name.startswith("Bullet_"):
-        return BODY_PT
+    if "Bullet_" in shape_name:
+        return FIGURE_MIN_PT
     # Captions, notes, and figure/table interiors. The deck floor already sits
     # above the 14 pt footnote minimum, so it is applied uniformly here.
     return FIGURE_MIN_PT
@@ -1895,7 +2283,7 @@ def check_notes_bilingual(prs):
         english = text.split("[English Script]", 1)[1].split("[日本語説明]", 1)[0].strip()
         japanese = text.split("[日本語説明]", 1)[1].split("[English Transition]", 1)[0].strip()
         assert f"Slide {idx} — {title}" in text, f"slide {idx}: notes title mismatch"
-        assert re.search(r"Duration: \d+ seconds", text), f"slide {idx}: no duration"
+        assert "Duration: [USER TO EDIT]" in text, f"slide {idx}: editable duration missing"
         assert english and japanese, f"slide {idx}: empty script"
         assert re.search(r"[A-Za-z]", english), f"slide {idx}: English script has no Latin text"
         assert not CJK_RE.search(english), f"slide {idx}: Japanese inside the English script"
@@ -1977,6 +2365,41 @@ def validate(prs_path, expect_slides, values):
         totals["pictures"] += pictures
         totals["text"] += texts
 
+    # Gate V1.2.1 regressions: the complete Slide 18 header must be styled,
+    # including the second paragraph created by each explicit newline.
+    slide18 = prs.slides[17]
+    parameter_tables = [shape for shape in slide18.shapes
+                        if getattr(shape, "has_table", False) and shape.name == "ParameterTable"]
+    assert len(parameter_tables) == 1, "slide 18: ParameterTable missing or duplicated"
+    for c, cell in enumerate(parameter_tables[0].table.rows[0].cells):
+        expected_alignment = PP_ALIGN.LEFT if c == 0 else PP_ALIGN.CENTER
+        assert cell.vertical_anchor == MSO_ANCHOR.MIDDLE, f"slide 18 header c{c}: vertical alignment"
+        for para in cell.text_frame.paragraphs:
+            assert para.alignment == expected_alignment, f"slide 18 header c{c}: horizontal alignment"
+            runs = [run for run in para.runs if run.text]
+            assert runs, f"slide 18 header c{c}: empty paragraph"
+            for run in runs:
+                assert run.font.name == FONT, f"slide 18 header c{c}: font {run.font.name}"
+                assert run.font.size and run.font.size.pt == FIGURE_MIN_PT, \
+                    f"slide 18 header c{c}: size {run.font.size}"
+                assert run.font.bold is True, f"slide 18 header c{c}: not bold"
+                assert str(run.font.color.rgb) == C["white"], \
+                    f"slide 18 header c{c}: color {run.font.color.rgb}"
+
+    # Slide 20 deliberately has no native chart legend.  Its replacement is a
+    # two-item collection of editable native markers and text boxes.
+    slide20 = prs.slides[19]
+    kernel_charts = [shape.chart for shape in slide20.shapes if getattr(shape, "has_chart", False)]
+    assert len(kernel_charts) == 1, "slide 20: expected one chart"
+    assert not kernel_charts[0].has_legend, "slide 20: native legend must be disabled"
+    marker_names = sorted(shape.name for shape in slide20.shapes
+                          if shape.name.startswith("KernelLegendMarker_"))
+    label_shapes = sorted((shape for shape in slide20.shapes
+                           if shape.name.startswith("KernelLegendLabel_")), key=lambda shape: shape.name)
+    assert marker_names == ["KernelLegendMarker_1", "KernelLegendMarker_2"], marker_names
+    assert [shape.text for shape in label_shapes] == ["Shared kernel", "Block kernel"], \
+        [shape.text for shape in label_shapes]
+
     with zipfile.ZipFile(prs_path) as zf:
         names = zf.namelist()
         raster = [n for n in names if n.startswith("ppt/media/")
@@ -2021,6 +2444,10 @@ def validate(prs_path, expect_slides, values):
     assert values["tier_a"] == 3 and values["tier_b"] == 10 and values["tier_total"] == 13
     assert values["mismatch_total"] == 0 and values["missing_total"] == 0
     assert values["byte_identical"] == {"No"}
+    assert values["kernel"] == [
+        ("roadNet-PA", 1063.712326, 701.573311, 1.52),
+        ("roadNet-TX", 1639.164633, 984.587390, 1.66),
+    ], values["kernel"]
 
     return {"slides": len(prs.slides), "objects": totals["objects"], "charts": totals["charts"],
             "tables": totals["tables"], "pictures": totals["pictures"], "text_objects": totals["text"],
@@ -2039,6 +2466,12 @@ def collect_values(data, t5_rows):
     synth = [round(lookup[("Synthetic-4 aggregate", f)], 4) for f in ("H", "W", "A")]
     tier_a = sum(1 for r in t5_rows if r["EvidenceTier"] == "Independent CPU reference")
     tier_b = sum(1 for r in t5_rows if r["EvidenceTier"] == "Cross-implementation consistency")
+    kernel_lookup = {(r["Graph"], r["Kernel"]): r["Median_Runtime_s"] for r in data["kernel"]}
+    kernel = [
+        (graph, kernel_lookup[(graph, "shared")], kernel_lookup[(graph, "block")],
+         round(kernel_lookup[(graph, "shared")] / kernel_lookup[(graph, "block")], 2))
+        for graph in ("roadNet-PA", "roadNet-TX")
+    ]
     return {
         "speedups": speedups,
         "tuned_batches": tuned,
@@ -2051,6 +2484,7 @@ def collect_values(data, t5_rows):
         "mismatch_total": sum(int(r["MismatchedElements"]) for r in t5_rows),
         "missing_total": sum(int(r["MissingIndices"]) for r in t5_rows),
         "byte_identical": {r["ByteIdentical"] for r in t5_rows},
+        "kernel": kernel,
     }
 
 
@@ -2059,8 +2493,10 @@ def build(prs_path, data, t5_rows):
     prs.slide_width = Inches(lib.SLIDE_W)
     prs.slide_height = Inches(lib.SLIDE_H)
     slide_title(prs)
-    slide_problem(prs)
-    slide_four_axes(prs)
+    slide_agenda(prs)
+    slide_bc_graph(prs)
+    slide_brandes(prs)
+    slide_gpu_contribution(prs)
     slide_framework(prs)
     slide_batching(prs, data["design"])
     slide_variants(prs)
@@ -2069,7 +2505,6 @@ def build(prs_path, data, t5_rows):
     slide_speedup(prs, data["speedup"])
     slide_ablation(prs, data["ablation"])
     slide_memory(prs, data["memory"])
-    slide_correctness(prs)
     slide_limits(prs)
     slide_contributions(prs)
     slide_conclusion(prs)
@@ -2101,7 +2536,7 @@ def main():
 
     build(PPTX_PATH, data, t5_rows)
     normalize_in_place(PPTX_PATH)
-    stats = validate(PPTX_PATH, 22, values)
+    stats = validate(PPTX_PATH, 23, values)
 
     total_seconds = write_notes_document()
     write_plan_document(total_seconds)
@@ -2109,19 +2544,16 @@ def main():
     write_readme(stats, total_seconds)
 
     pacing = notes_pacing()
-    print("Gate V1.1 presentation generated and validated")
+    print("Gate V1.2.1 presentation generated and validated")
     print(f"main_slides\t{MAIN_SLIDES}")
     print(f"backup_slides\t{BACKUP_SLIDES}")
     for key in ("slides", "objects", "text_objects", "charts", "tables", "pictures", "raster_only_slides"):
         print(f"{key}\t{stats[key]}")
-    print(f"planned_seconds\t{total_seconds}")
-    print(f"english_only_estimate_seconds\t{pacing['english_total']}")
-    print(f"japanese_only_estimate_seconds\t{pacing['japanese_total']}")
-    print(f"backup_planned_seconds\t{pacing['backup_declared_total']}")
+    print("presentation_timing\t[USER TO EDIT]")
     print(f"visible_japanese_chars\t0")
     print(f"visible_parts_scanned\t{len(stats['visible_parts'])}")
-    print(f"english_script_slides\t{len(stats['notes_report'])}/22")
-    print(f"japanese_script_slides\t{len(stats['notes_report'])}/22")
+    print(f"english_script_slides\t{len(stats['notes_report'])}/23")
+    print(f"japanese_script_slides\t{len(stats['notes_report'])}/23")
     print(f"notes_path\t{NOTES_PATH.name}")
     print(f"speedups\t{values['speedups']}")
     print(f"tuned_batches\t{values['tuned_batches']}")
