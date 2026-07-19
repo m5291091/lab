@@ -14,7 +14,7 @@
 
 ---
 
-## 2. Working Title
+## 2. Canonical Thesis Title
 
 ### English Title
 
