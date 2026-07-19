@@ -1,0 +1,23 @@
+SlideNumber	Section	SlideTitle	NarrativePurpose	FigureID	ObjectType	Editable	PlannedSeconds	CanonicalSource
+1	Main	Design and Evaluation of a Batch-Based GPU Execution Framework for Betweenness Centrality on GH200	Frame the talk and identify the work	NA	native shapes and text	yes	25	docs/thesis/writing/japanese/*
+2	Main	Exact All-Sources BC Is Computationally Expensive	Establish the cost and irregularity of exact all-sources BC	F02	native shapes and text	yes	55	docs/thesis/writing/japanese/*
+3	Main	Performance Alone Is Not Enough	Motivate four evaluation axes instead of runtime alone	NA	native shapes and text	yes	60	docs/thesis/writing/japanese/*
+4	Main	The Proposal Is an Integrated GPU Execution Framework	Present the proposal as one integrated execution framework	F04	native shapes and text	yes	85	docs/thesis/writing/japanese/*
+5	Main	Source Batching Creates a Batch-Dependent Working Set	Locate the capacity constraint in batch-dependent state	F05	native shapes and text	yes	75	docs/thesis/writing/japanese/*
+6	Main	Three Memory-Management Variants Share One Framework	Show the three memory variants as one shared framework	F08	native shapes and text	yes	60	docs/thesis/writing/japanese/*
+7	Main	The Evaluation Separates Performance and Capacity Studies	Separate main-performance graphs from the capacity study	NA	native table; native shapes and text	yes	55	result/tables/thesis/T1_graph_metadata.tsv;result/datasets/graph_catalog.tsv
+8	Main	GPU_Opt Reduced Runtime on All Four Evaluated Graphs	Report the headline runtime reduction on four graphs	F09	native chart; native shapes and text	yes	75	result/tables/thesis/T2_main_performance.tsv;raw_data/main_performance/proposed_variants/*
+9	Main	GPU_Opt Achieved 1.31–3.17× Speedup over the Tuned Comparator	Quantify speedup over the tuned external comparator	F10	native chart; native shapes and text	yes	90	result/main_performance/proposed_vs_pathmerge/comparison.tsv;raw_data/main_performance/proposed_variants/*
+10	Main	Multiple Execution Components Contributed to Performance	Attribute the gain to multiple execution components	F12	native chart; native shapes and text	yes	75	result/tables/thesis/T3_ablation_summary.tsv;raw_data/ablation/*;raw_data/corrected_325557/*
+11	Main	Memory Variants Expanded the Tested Feasible Batch Range	Report tested feasible batch ranges and failure classes	F13	native shapes and text	yes	80	result/tables/thesis/T4_memory_scalability.tsv;result/memory_scalability/corrected_325557/feasibility_boundary.tsv
+12	Main	Numerical Results Matched within Tolerance but Were Not Byte-Identical	Report numerical agreement and its explicit limits	NA	native table; native shapes and text	yes	60	result/tables/thesis/T5_correctness_summary.tsv
+13	Main	The Evidence Has Clear Boundaries	State the boundaries of the evidence	NA	native shapes and text	yes	50	docs/thesis/writing/japanese/*
+14	Main	Contributions	Summarize the four contributions	NA	native shapes and text	yes	30	docs/thesis/writing/japanese/*
+15	Main	The Integrated Framework Improved Performance and Clarified Capacity Limits	Restate the central conclusion and invite questions	NA	native shapes and text	yes	25	docs/thesis/writing/japanese/*
+16	Backup	Detailed Experimental Environment	Backup: full hardware and software environment	NA	native table; native shapes and text	yes	40	result/tables/thesis/T6_experimental_environment.tsv
+17	Backup	Graph and Batch Parameters	Backup: graph, batch, and working-set parameters	NA	native table; native shapes and text	yes	40	result/tables/thesis/T2_main_performance.tsv;docs/thesis/writing/japanese/appendix_a_experimental_parameters.md
+18	Backup	PathMerge Batch-Size Sweep	Backup: PathMerge batch sweep justifying tuning	F11	native chart; native shapes and text	yes	40	raw_data/tuning/pathmerge/*/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv
+19	Backup	Forced Block-vs-Shared Kernel Comparison	Backup: forced block-vs-shared kernel comparison	F14	native chart; native shapes and text	yes	40	raw_data/tuning/kernel_selection/*
+20	Backup	Phase Breakdown and Profiling Scope	Backup: phase breakdown and profiling scope	F15	native chart; native shapes and text	yes	40	raw_data/main_performance/proposed_variants/*/_run/job_2357334_20260711/phase_timing.log
+21	Backup	Detailed Correctness Evidence	Backup: per-comparison correctness detail	NA	native table; native shapes and text	yes	40	result/tables/thesis/T5_correctness_summary.tsv
+22	Backup	Historical Record of the Malformed Input	Backup: historical malformed-input evidence, separated	NA	native table; native shapes and text	yes	40	result/provenance/GRAPH_325557_INTEGRITY_AUDIT.md;result/datasets/graph_catalog.tsv
