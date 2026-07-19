@@ -1,0 +1,39 @@
+JapaneseTerm	CanonicalEnglish	AbbreviationOrIdentifier	UsageRule	FirstChapter	Notes
+媒介中心性	Betweenness Centrality	BC	Use this full form at first occurrence; do not alternate with centrality betweenness.	Chapter 1	Capitalize when introducing BC; lowercase is acceptable for a generic concept after definition.
+全始点	all-sources		Use as a hyphenated modifier; do not alternate with every-source.	Chapter 1	Use all source vertices when a noun phrase is required.
+無向グラフ	undirected graph		Use consistently; do not alternate with nondirected graph.	Chapter 2	n/a
+非重みグラフ	unweighted graph		Use consistently; do not alternate with weightless graph.	Chapter 2	n/a
+厳密計算	exact computation		Use consistently; do not alternate with precise computation.	Chapter 1	Exact concerns source coverage, not bitwise identity.
+始点	source vertex		Use source vertex in prose and source only where the context is unambiguous.	Chapter 2	Do not translate as starting point.
+依存度累積	dependency accumulation		Use consistently; do not alternate with dependency aggregation.	Chapter 2	n/a
+始点バッチ処理	source batching		Use consistently; do not alternate with source batch processing.	Chapter 4	n/a
+実効バッチ	effective batch		Use consistently and distinguish from requested batch.	Chapter 4	Identifier form may remain `EffectiveBatch`.
+要求バッチ	requested batch		Use consistently and distinguish from effective batch.	Chapter 4	n/a
+始点局所状態	source-local state		Use the hyphenated form; do not alternate with per-vertex state.	Chapter 4	Per-source state is permitted only when matching an implementation field or formula explanation.
+ワーキングセット	working set		Use consistently; do not imply a measured memory footprint.	Chapter 4	n/a
+統合GPU実行基盤	integrated GPU execution framework		Use this full phrase; do not alternate with unified GPU framework.	Chapter 4	Unified is reserved for Unified Memory.
+Hybrid BFS	Hybrid BFS	H	Preserve capitalization and do not translate or rename.	Chapter 4	n/a
+warp協調累積	Warp-Cooperative Accumulation	W	Use this canonical feature name; do not alternate with warp-level accumulation.	Chapter 4	Lowercase descriptive wording is allowed only when explaining the mechanism.
+2ストリーム実行	Dual-Stream Execution	A	Use this canonical feature name; do not alternate with two-stream processing.	Chapter 4	Use two streams only when stating the stream count.
+block-based	block-based		Preserve the hyphenated form; do not alternate with block based.	Chapter 4	n/a
+Unified Memory	Unified Memory	UM	Preserve capitalization; introduce UM at first occurrence.	Chapter 4	Do not call it out-of-core memory.
+device-only	device-only		Preserve the hyphenated form; do not alternate with device exclusive.	Chapter 4	n/a
+source sub-batching	source sub-batching		Preserve the hyphenated form; do not alternate with graph chunking.	Chapter 4	n/a
+実行可能範囲	feasible range		Use consistently; do not alternate with executable range.	Chapter 5	n/a
+試験上限	tested upper bound		Use evidence-sensitive wording; do not call it a maximum capacity.	Chapter 5	n/a
+外部比較対象	external comparator		Use consistently; do not describe it as ground truth.	Chapter 3	n/a
+第三者実装	third-party implementation		Use consistently and preserve the hyphen.	Chapter 3	For PathMerge, state that official status was not confirmed.
+独立参照	independent reference		Use only for an independently implemented reference.	Chapter 5	Tier B and PathMerge are not independent references.
+混合許容式	mixed tolerance criterion		Use consistently; define the absolute-relative equation explicitly.	Chapter 5	Mixed absolute-relative tolerance is acceptable when naming the mathematical form.
+byte一致	byte-identical		Use this adjective; do not alternate with exact match.	Chapter 5	`ByteIdentical=No` must not be described as complete identity.
+数値整合性	numerical consistency		Use consistently; do not overstate as correctness proof.	Chapter 5	n/a
+来歴	provenance		Use consistently; do not alternate with lineage in technical records.	Chapter 5	n/a
+標本標準偏差	sample standard deviation		Use consistently and retain ddof=1.	Chapter 5	n/a
+中央値同士の比較	median-to-median comparison		Use consistently; speedup is a ratio of medians.	Chapter 5	Do not mix median and mean.
+修正版325557	corrected 325557 graph	325557_3216152_corrected_v1	Use this phrase in prose and preserve the full identifier in code formatting.	Chapter 5	Do not omit corrected.
+self-loop	self-loop		Preserve the hyphenated form; do not alternate with loop edge.	Chapter 5	Retained in the corrected graph.
+多重辺・重複辺	parallel/duplicate edges		Choose parallel edges for graph semantics and duplicate ordered pairs for stored adjacency records; do not conflate them.	Chapter 5	The retained count refers to duplicate ordered pairs at multiplicity 2.
+cgroup OOM	cgroup OOM		Use for the retained host/cgroup limit evidence; do not call it CUDA or HBM OOM.	Chapter 5	n/a
+PBS epilogue	PBS epilogue		Use consistently for the post-job record appended after the runtime classifier scope.	Chapter 5	n/a
+runtime classifier	runtime classifier		Use consistently for the per-configuration classifier that inspected only configuration stdout/stderr.	Chapter 5	n/a
+post-hoc archive audit	post-hoc archive audit		Use consistently for the later inspection of retained job-level evidence.	Chapter 5	Preserve the hyphen in post-hoc.
