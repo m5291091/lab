@@ -2,7 +2,38 @@
 
 すべて **canonical raw（新パス）** を入力とし `scripts/` で再生成する。主要値は元 TSV から再生成し変更しない。
 
-## Gate W7.4.1 — 修正版 325557 を反映した表・図（T3/F4, T4/F5, T5）
+## Gate T1B2 — 図中 internal ID の除去と F5 OOM 証拠の来歴整備（現行）
+
+論文 caption が Figure 番号を担うため、**図の画像内から internal artifact ID を除去**した。
+F1〜F7 の in-figure title（`F1  Main Runtime Comparison…` 等）を削除し、F3 legend の
+`Tuned batch (used in F1/F2/T2)` を `Tuned batch (used in the main comparison)` へ、
+F4/F5 の脚注から PBS job ID・checkpoint SHA を除いた。**chart data・axis scale・legend
+系列・error bar・marker・F1〜F7 の mapping は不変**である（F4 panel (a) は title 削除で
+tight_layout の余白が変わるため、y tick を従来値へ固定して表示を不変に保つ）。
+
+in-figure title を全図で揃えるため、この Gate では **F1〜F7 を単一 toolchain で一括再生成**
+した。生成コマンド:
+
+```bash
+python3 scripts/generate_thesis_artifacts.py
+```
+
+F5 の failure 表示は短い class 名（`CUDA out-of-memory (device)` /
+`Host-memory cgroup OOM`）だけとし、その根拠である post-hoc PBS epilogue の
+**path・行番号・SHA256 は図から外して来歴側へ移した**。あわせて
+`raw_data/corrected_325557/job_2404743/pbs_stdout.log` を **F5 の canonical input へ追加**
+した（従来は T4 のみが引用）。T4 の読者向け table note からは長い repository-relative raw
+path と SHA256 を外し、完全な情報は
+`result/CORRECTED_325557_ARTIFACT_PROVENANCE.tsv` と各 manifest 行に置く。
+**T4 の数値と分類は不変**（`T4_memory_scalability.tsv` は byte 不変）。
+
+概念図（Figure 1.1 / 2.1 / 2.2 / 4.1〜4.5）は本表の対象外で、編集正本
+`docs/thesis/figures/editable/thesis_figure_library.pptx` から
+`scripts/export_conceptual_figures.py` が `docs/thesis/figures/exported/` へ書き出す。
+editable library の ID `F01`〜`F15` は、本表の canonical result figure `F1`〜`F7` とは
+**別 namespace** である（`F01` は `F1` ではない）。
+
+## Gate W7.4.1 — 修正版 325557 を反映した表・図（T3/F4, T4/F5, T5）（履歴）
 
 `scripts/generate_thesis_artifacts.py` の T3/F4（ablation）, T4/F5（memory feasibility）, T5（correctness）を
 **修正版 325557**（`data/325557_3216152_corrected_v1`, SHA256 `8373244f…4eeaa22`, checkpoint `45352a3`）の

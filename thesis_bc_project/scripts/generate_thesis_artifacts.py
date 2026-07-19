@@ -27,12 +27,17 @@ Design rules (see result/figures/thesis/README.md for the full policy):
     NOT byte-identical; PathMerge is an external comparator, not ground truth.
   * All in-figure / in-table text is English. Graph and implementation names
     are kept verbatim (not translated).
+  * No in-figure text carries an internal artifact ID (F1..F7, T1..T6), a PBS
+    job ID, a checkpoint SHA, or a repository path. Figure numbers are supplied
+    by the thesis caption, not burned into the image; provenance lives in
+    FIGURE_MANIFEST.tsv and CORRECTED_325557_ARTIFACT_PROVENANCE.tsv.
   * No dependency on build_miyabi/. Deterministic output (fixed SOURCE_DATE_EPOCH,
     no embedded timestamps, fixed SVG hash salt). Matplotlib binaries are only
-    reproducible run-to-run within one toolchain, so THESIS_FIGS selects which
-    figures to (re)render; this gate regenerates only the corrected F4 and F5.
+    reproducible run-to-run within one toolchain, so THESIS_FIGS can select a
+    subset; Gate T1B2 re-renders all seven figures in one toolchain because the
+    in-figure titles changed.
 
-Run:  THESIS_FIGS=F4,F5 python3 scripts/generate_thesis_artifacts.py
+Run:  python3 scripts/generate_thesis_artifacts.py
 """
 
 import os
@@ -130,7 +135,7 @@ CORRECTED_JOB_CORRECTNESS_MEM = "2404743"   # Series A/B: correctness + feasibil
 CORRECTED_JOB_ABLATION = "2406254"          # Series C: ablation
 CORRECTNESS_ABS_TOL = "1e-3"
 CORRECTNESS_REL_TOL = "1e-6"
-GEN_COMMAND = "THESIS_FIGS=F4,F5 python3 scripts/generate_thesis_artifacts.py"
+GEN_COMMAND = "python3 scripts/generate_thesis_artifacts.py"
 
 # --------------------------------------------------------------------------- #
 # UM b12288 failure evidence (Gate T1B1.1): TWO layers, deliberately separate.
@@ -183,11 +188,11 @@ FIG_STEMS = {
     "F7": "phase_breakdown",
 }
 # Matplotlib binary output is only reproducible run-to-run WITHIN one toolchain
-# environment, not byte-identically across matplotlib builds. The committed
-# F1/F2/F3/F6/F7 came from the original toolchain, so this gate regenerates ONLY
-# the corrected-data figures (F4, F5) and leaves the others byte-invariant.
-# THESIS_FIGS (comma-separated IDs) selects which figures to (re)render; unset
-# means "all" (full from-scratch regeneration in the original toolchain).
+# environment, not byte-identically across matplotlib builds. Gate T1B2 removed
+# the internal artifact IDs from every in-figure title, so all seven figures are
+# re-rendered together in one toolchain; partial regeneration would leave a mix
+# of ID-bearing and ID-free titles. THESIS_FIGS (comma-separated IDs) still
+# selects a subset when only one figure's data changes; unset means "all".
 _ENV_FIGS = os.environ.get("THESIS_FIGS", "").strip()
 FIGURES_TO_GENERATE = (set(FIG_STEMS) if not _ENV_FIGS
                        else {f.strip() for f in _ENV_FIGS.split(",") if f.strip()})
@@ -904,7 +909,6 @@ def fig_F1(mp):
     ax.set_yscale("log")
     ax.set_ylabel("Median Runtime (s)  [log scale]")
     ax.set_xlabel("Graph")
-    ax.set_title("F1  Main Runtime Comparison: GPU_Opt (b512) vs Tuned PathMerge")
     ax.set_xticks(x); ax.set_xticklabels(HEADLINE_ORDER)
     ax.set_ylim(10, 6000)
     for i, g in enumerate(HEADLINE_ORDER):
@@ -933,7 +937,6 @@ def fig_F2(mp):
                label="Parity (1.0x, Tuned PathMerge)")
     ax.set_ylabel("Speedup over Tuned PathMerge")
     ax.set_xlabel("Graph")
-    ax.set_title("F2  GPU_Opt (b512) Speedup over Tuned PathMerge")
     ax.set_xticks(x); ax.set_xticklabels(HEADLINE_ORDER)
     ax.set_ylim(0, max(sp) * 1.25)
     for i in range(len(x)):
@@ -1016,7 +1019,7 @@ def fig_F3(sweeps, tuned_batch):
                markerfacecolor="white", label="Screening only (n=1; no error bar)"),
         Line2D([0], [0], marker="o", color=OK["blue"], linestyle="None",
                markerfacecolor="none", markersize=11, markeredgewidth=1.8,
-               label="Tuned batch (used in F1/F2/T2)"),
+               label="Tuned batch (used in the main comparison)"),
         Line2D([0], [0], marker="s", color=OK["purple"], linestyle="None",
                markerfacecolor="none", markersize=11, markeredgewidth=1.8,
                label="Clamped (requested and effective annotated)"),
@@ -1027,7 +1030,6 @@ def fig_F3(sweeps, tuned_batch):
         legend_ax.set_title("Legend")
     else:
         axes[0].legend(handles=handles, loc="upper right", fontsize=8)
-    fig.suptitle("F3  PathMerge Batch-Size Sweep (Median Runtime)", fontsize=12)
     fig.text(0.5, 0.012,
              "The x-axis shows requested batch size. Effective batch is annotated where "
              "canonical logs record clamping. Lines stop at missing batch sizes.",
@@ -1066,6 +1068,11 @@ def fig_F4(abl):
     axA.set_ylabel("Main Effect (geometric-mean speedup)")
     axA.set_title("(a) Synthetic-4 aggregate (mixed-checkpoint)")
     axA.set_ylim(0, 2.05)
+    # Pin the ticks: removing the suptitle lets tight_layout give this panel more
+    # height, and the automatic locator would otherwise subdivide to 0.25 steps.
+    # The limits and the scale are unchanged either way; fixing the ticks keeps
+    # the printed axis labels identical to the pre-Gate-T1B2 figure.
+    axA.set_yticks(np.arange(0.0, 2.01, 0.5))
     axA.legend(loc="upper right", fontsize=8.5, framealpha=0.95)
     axA.grid(axis="x", visible=False)
 
@@ -1091,11 +1098,9 @@ def fig_F4(abl):
     axB.legend(loc="upper left", fontsize=8, ncol=1, framealpha=0.95)
     axB.grid(axis="x", visible=False)
 
-    fig.suptitle("F4  Ablation Contributions (4 synthetic graphs; mixed-checkpoint aggregate)",
-                 fontsize=12)
     fig.text(0.5, 0.02,
-             "Aggregate (a) is a MIXED-CHECKPOINT geometric mean: 3 graphs from job 2354994; "
-             "corrected 325557 from job 2406254 (checkpoint 45352a3).\n"
+             "Aggregate (a) is a MIXED-CHECKPOINT geometric mean over runs from two "
+             "checkpoints; see the caption and figure manifest for the job provenance.\n"
              "Per-graph values (b) and the aggregate are distinct and not interchangeable. "
              "n=5 per configuration; the per-invocation untimed H1W1A1 warm-up is excluded from the "
              "40 formal rows.\n"
@@ -1153,7 +1158,6 @@ def fig_F5(mem):
     ax.set_xscale("log", base=2)
     ax.set_xlabel("Requested Batch Size (log2; targeted boundary points only)")
     ax.set_ylabel("Single-run wall-clock time (s)  /  failure marker")
-    ax.set_title("F5  Memory Feasibility Boundary Validation (corrected 325557)")
     ax.set_xticks(batches)
     ax.set_xticklabels([str(b) for b in batches], rotation=45, fontsize=8.5)
     ax.get_xaxis().set_minor_locator(plt.NullLocator())
@@ -1164,15 +1168,15 @@ def fig_F5(mem):
     if "cuda_oom" in seen_fail:
         handles.append(Line2D([0], [0], marker="X", color="black", linestyle="None",
                               markersize=10,
-                              label="CUDA out-of-memory (GPU device; exit 1; no runtime)"))
+                              label="CUDA out-of-memory (device)"))
     if "cgroup_host_oom_kill" in seen_fail:
         handles.append(Line2D([0], [0], marker="P", color="black", linestyle="None",
                               markersize=10,
-                              label="Cgroup host-memory OOM kill (SIGKILL exit 137; not CUDA/HBM)"))
+                              label="Host-memory cgroup OOM"))
     ax.legend(handles=handles, loc="center left", fontsize=8.3, framealpha=0.95)
     ax.grid(axis="x", visible=False)
     bottom_caption(ax,
-                   "Targeted feasibility boundary on the corrected 325557 graph (job 2404743); "
+                   "Targeted feasibility boundary on the corrected 325557 graph; "
                    "each configuration n=1. Wall-clock times are single-run feasibility values at "
                    "different requested batches and are NOT a performance comparison.\n"
                    "Max successful requested batch is within the tested range only "
@@ -1199,22 +1203,25 @@ def fig_F6(ks):
     ax.set_xticks(x); ax.set_xticklabels(graphs)
     ax.set_ylabel("Median Runtime (s)")
     ax.set_xlabel("Graph")
-    ax.set_title("F6  Shared vs Block BFS Kernel (forced comparison)")
     ax.set_ylim(0, max(shared) * 1.38)
     for i, g in enumerate(graphs):
         ax.text(x[i] - w / 2, shared[i] * 1.01, f"{shared[i]:.1f}s", ha="center",
                 va="bottom", fontsize=8)
         ax.text(x[i] + w / 2, block[i] * 1.01, f"{block[i]:.1f}s", ha="center",
                 va="bottom", fontsize=8)
+        # Clear the per-bar value label below it (1.01x plus ~8 pt of text),
+        # which the previous 1.06x offset ran into on roadNet-PA.
         ax.annotate(f"Block {ks[g]['speedup']:.2f}x faster",
-                    xy=(x[i], max(shared[i], block[i]) * 1.06),
+                    xy=(x[i], max(shared[i], block[i]) * 1.13),
                     ha="center", fontsize=9, fontweight="bold", color=OK["blue"])
     ax.legend(loc="upper right")
     ax.grid(axis="x", visible=False)
-    fig.text(0.01, 0.01,
-             "Error bars = sample SD (n=3 per kernel). "
-             "No generalization is made to unmeasured graphs.",
-             fontsize=8.5, ha="left", style="italic")
+    # Axes-relative placement, so the note sits below the x-axis label instead of
+    # colliding with it the way a figure-relative fig.text() did.
+    bottom_caption(ax,
+                   "Error bars = sample SD (n=3 per kernel). "
+                   "No generalization is made to unmeasured graphs.",
+                   y=-0.20, fontsize=8.5, italic=True)
     return save_fig(fig, "shared_vs_block_kernel")
 
 
@@ -1257,7 +1264,6 @@ def fig_F7(ph):
     handles, labels = ax_email.get_legend_handles_labels()
     fig.legend(handles, labels, loc="upper center", bbox_to_anchor=(0.5, 0.92),
                ncol=3, fontsize=9)
-    fig.suptitle("F7  GPU_Opt (b512) Phase Breakdown", fontsize=12)
     fig.text(0.01, 0.008,
              "Measured components: BFS and Backward wall-clock timers. Other is computed "
              "per trial as total - BFS - Backward; bars show component medians. "
@@ -1433,17 +1439,14 @@ def table_T4(mem):
         "(GPU-device) out-of-memory (runner exit 1, host_pure.cu:144: out of memory); GPU_Opt "
         "b12288 is a host/cgroup memory OOM kill (SIGKILL, exit 137) and is NOT a CUDA or HBM "
         "out-of-memory. The two are never conflated.",
-        f"UM b12288 evidence is recorded in two layers. (1) Runtime classifier: during the run the "
-        f"per-configuration classifier scanned only that configuration's stdout/stderr and recorded "
-        f"OOMEvidenceClass={ph['runtime_classifier']} with runner exit 137 (SIGKILL-compatible); "
-        f"that record is retained unchanged. (2) Post-hoc archive audit: the PBS epilogue of the "
-        f"same job carries a direct cgroup OOM record at {ph['path']}:{ph['line']} "
-        f"(class {ph['evidence_class']}; file SHA256 {ph['sha256']}). The epilogue is appended at "
-        f"job end -- after '=== Complete ===' (line {ph['epilogue_after_line']}) -- so it was "
-        f"outside the running classifier's scan scope. The runtime "
-        f"{ph['runtime_classifier']} is therefore a scan-scope artifact, not a value contradicted "
-        f"or corrected by the audit. The kill is attributable to this configuration: the job's sole "
-        f"SIGKILL record (line {ph['sigkill_line']}) lies inside the um_b12288 block.",
+        f"Post-hoc PBS epilogue evidence confirms a cgroup OOM kill for UM b12288; the runtime "
+        f"per-configuration classifier reported {ph['runtime_classifier']} because the epilogue was "
+        f"appended after that configuration had completed and was therefore outside the "
+        f"classifier's scan scope. The runtime record is retained unchanged and is a scan-scope "
+        f"artifact, not a value contradicted by the audit. The kill is attributable to this "
+        f"configuration: the job's sole SIGKILL record lies inside the um_b12288 block. The "
+        f"evidence file path, line number, and SHA256 are recorded in "
+        f"result/CORRECTED_325557_ARTIFACT_PROVENANCE.tsv and in the T4/F5 manifest rows.",
         "Observed feasible ordering within the tested range only: GPU_Opt_Pure (maximum "
         "successful requested batch 4096) < GPU_Opt (10240) < GPU_Opt_Pure_Chunked (16384). "
         "Chunked was tested to 16384; this is no unlimited-capacity claim. The input file is "
@@ -1603,9 +1606,11 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, corr, small):
         f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/feasibility_results.tsv",
         f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/oom_evidence.tsv",
     ]
-    # T4 additionally cites the post-hoc cgroup OOM record; F5 is unchanged by
-    # this gate and keeps its original input set.
-    memory_inputs_t4 = memory_inputs + [UM_B12288_EVIDENCE_PATH]
+    # The post-hoc cgroup OOM record is a canonical input of BOTH T4 and F5:
+    # the F5 failure-class marker for UM b12288 rests on it, and the figure
+    # itself only shows the short class label.
+    memory_inputs = memory_inputs + [UM_B12288_EVIDENCE_PATH]
+    memory_inputs_t4 = memory_inputs
     kernel_inputs = [
         "raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/"
         "job_2354329_20260710/kernel_selection_results.tsv",
@@ -1666,7 +1671,13 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, corr, small):
          fig_out["F5"]["pdf"], fig_out["F5"]["png"], fig_out["F5"]["svg"],
          "Corrected 325557 only (job 2404743 / checkpoint 45352a3); targeted boundary not a sweep; "
          "runtimes not a performance comparison; CUDA OOM (device) vs cgroup host-memory OOM kill "
-         "(exit 137) distinct; failures shown as markers not 0 s; no unlimited-capacity claim"],
+         "(exit 137) distinct; failures shown as markers not 0 s; no unlimited-capacity claim; "
+         f"the in-figure label for the UM b12288 failure is the short class only -- the direct "
+         f"evidence is the post-hoc PBS epilogue line {UM_B12288_EVIDENCE_PATH}:"
+         f"{UM_B12288_EVIDENCE_LINE} (class {UM_B12288_EVIDENCE_CLASS}, token "
+         f"{UM_B12288_EVIDENCE_TOKEN}, SHA256 {UM_B12288_EVIDENCE_SHA256}), while the runtime "
+         f"per-configuration classifier recorded {UM_B12288_RUNTIME_CLASSIFIER} because the "
+         f"epilogue was appended after it had finished scanning"],
         ["F6", "Shared vs Block Kernel",
          "Block kernel is faster than shared: roadNet-PA 1.52x, roadNet-TX 1.66x",
          rel_inputs(*kernel_inputs), gs, "Median Runtime (s)", "median; sample SD", "3/kernel/graph",
@@ -1755,13 +1766,19 @@ def write_fig_readme(mp):
     lines.append("Generated by `scripts/generate_thesis_artifacts.py` from canonical, "
                  "Git-tracked data only. **All in-figure text is English.** Graph and "
                  "implementation names are kept verbatim.\n")
-    lines.append("Regenerate the corrected-data figures (F4, F5) for Gate W7.4.1:\n")
+    lines.append("Regenerate every figure:\n")
     lines.append(f"```bash\n{GEN_COMMAND}\n```\n")
-    lines.append("`THESIS_FIGS` selects which figures to (re)render. F1/F2/F3/F6/F7 are preserved "
-                 "byte-for-byte from their original toolchain (matplotlib binary output is only "
-                 "reproducible run-to-run within one toolchain), so this gate regenerates ONLY F4 "
-                 "and F5 (corrected 325557). Each figure is exported as PDF (embedded fonts), "
-                 "PNG (300 dpi), and SVG. See `FIGURE_MANIFEST.tsv` for per-figure provenance.\n")
+    lines.append("All seven figures are rendered together in one toolchain. Matplotlib binary "
+                 "output is only reproducible run-to-run within a single toolchain, so a partial "
+                 "regeneration mixes toolchains; `THESIS_FIGS` still selects a subset when only "
+                 "one figure's underlying data changed. Each figure is exported as PDF (embedded "
+                 "fonts), PNG (300 dpi), and SVG. See `FIGURE_MANIFEST.tsv` for per-figure "
+                 "provenance.\n")
+    lines.append("**No figure carries an internal artifact ID in the image.** In-figure titles "
+                 "were removed in Gate T1B2: the figure number and the descriptive caption are "
+                 "supplied by the thesis body, and artifact IDs (F1--F7), PBS job IDs, checkpoint "
+                 "SHAs and repository paths appear only in this manifest and in "
+                 "`result/CORRECTED_325557_ARTIFACT_PROVENANCE.tsv`.\n")
     lines.append("## Policy\n")
     lines.append("- median = numpy.median; speedup = median(PathMerge tuned) / median(GPU_Opt).\n"
                  "- Failed configurations are drawn as explicit failure markers, never as 0 s. In F5, "
@@ -1865,8 +1882,9 @@ def write_corrected_provenance():
     mem_inputs = ("result/memory_scalability/corrected_325557/feasibility_boundary.tsv;"
                   "raw_data/corrected_325557/job_2404743/feasibility_results.tsv;"
                   "raw_data/corrected_325557/job_2404743/oom_evidence.tsv")
-    # T4 additionally cites the post-hoc cgroup OOM record (F5 is unchanged here).
-    mem_inputs_t4 = mem_inputs + ";" + UM_B12288_EVIDENCE_PATH
+    # The post-hoc cgroup OOM record is a canonical input of both T4 and F5.
+    mem_inputs = mem_inputs + ";" + UM_B12288_EVIDENCE_PATH
+    mem_inputs_t4 = mem_inputs
     corr_inputs = ("result/correctness/small_full_vector/correctness_summary.tsv;"
                    "result/correctness/corrected_325557/comparison_summary.tsv;"
                    "result/correctness/corrected_325557/vector_summary.tsv;"
@@ -1886,15 +1904,20 @@ def write_corrected_provenance():
                 "result/tables/thesis/T4_memory_scalability.tsv"], mem_inputs_t4,
          CORRECTED_JOB_CORRECTNESS_MEM, "No",
          "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137; runtime classifier "
-         f"none, post-hoc PBS epilogue {UM_B12288_EVIDENCE_CLASS} at "
-         f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE})", "not_applicable",
+         f"{UM_B12288_RUNTIME_CLASSIFIER}, post-hoc PBS epilogue {UM_B12288_EVIDENCE_CLASS} at "
+         f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE}, evidence SHA256 "
+         f"{UM_B12288_EVIDENCE_SHA256}, configuration UM b12288)", "not_applicable",
          "targeted boundary n=1; runtimes not a performance comparison; no unlimited-capacity claim"),
         ("F5", ["result/figures/thesis/memory_scalability_325557.pdf",
                 "result/figures/thesis/memory_scalability_325557.png",
-                "result/figures/thesis/memory_scalability_325557.svg"], mem_inputs,
+                "result/figures/thesis/memory_scalability_325557.svg"], mem_inputs_t4,
          CORRECTED_JOB_CORRECTNESS_MEM, "No",
-         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137)", "not_applicable",
-         "targeted boundary n=1; failures as markers not 0 s; points not connected"),
+         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137; runtime classifier "
+         f"{UM_B12288_RUNTIME_CLASSIFIER}, post-hoc PBS epilogue {UM_B12288_EVIDENCE_CLASS} at "
+         f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE}, evidence SHA256 "
+         f"{UM_B12288_EVIDENCE_SHA256}, configuration UM b12288)", "not_applicable",
+         "targeted boundary n=1; failures as markers not 0 s; points not connected; the figure "
+         "shows the short failure class only, full evidence is recorded here"),
         ("T5", ["result/tables/thesis/T5_correctness_summary.md",
                 "result/tables/thesis/T5_correctness_summary.tsv"], corr_inputs,
          CORRECTED_JOB_CORRECTNESS_MEM, "No", "not_applicable", tol,
