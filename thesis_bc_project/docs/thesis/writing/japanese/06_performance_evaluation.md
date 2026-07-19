@@ -108,11 +108,11 @@ throughput は 5.6 節で統一した GTEPS（$\mathrm{GTEPS} = n \cdot m / (T \
 
 Table 6.1 の GTEPS 列に示すとおり、GPU_Opt の GTEPS は 2.40（roadNet-PA）から 3.14（email-EuAll）、tuned PathMerge の GTEPS は 0.99（email-EuAll）から 1.83（roadNet-PA）の範囲であり、4 グラフすべてで GPU_Opt が高い。GTEPS は処理量 $n \cdot m$ を実行時間で正規化した指標であるため、同一グラフでは GTEPS が高いほど処理量当たりの実行時間が短いことを意味する。また同一グラフでは、丸め前の GTEPS 比は定義上 speedup と一致する（Table 6.1 の表示値は小数第 2 位へ丸めているため、表示値同士の除算は丸め誤差の範囲で speedup 列と異なり得る）。
 
-GTEPS はグラフ間の比較指標としては限定的である。実行時間が最長の roadNet-CA でも GPU_Opt の GTEPS（2.55）は roadNet-PA（2.40）を上回るなど、GTEPS の大小は実行時間の大小と直結しない。また GTEPS は $n \cdot m$ に基づく正規化スループットであって、ハードウェアのメモリ帯域使用率や実効帯域と同一視できない。グラフ間の GTEPS 差の要因（次数分布や BFS 深さなど）は本章では断定せず、Chapter 10 で論じる。メモリ経路の実効帯域は Chapter 8 で扱う。
+GTEPS はグラフ間の比較指標としては限定的である。実行時間が最長の roadNet-CA でも GPU_Opt の GTEPS（2.55）は roadNet-PA（2.40）を上回るなど、GTEPS の大小は実行時間の大小と直結しない。また GTEPS は $n \cdot m$ に基づく正規化スループットであって、ハードウェアのメモリ帯域使用率や実効帯域と同一視できない。グラフ間の GTEPS 差の要因（次数分布や BFS 深さなど）は本章では断定せず、Chapter 10 で論じる。メモリ経路の実効帯域は環境上の補助測定として実験環境記録に保存しており、本章の GTEPS 値の要因説明には用いない。
 
 ## 6.5 Supplementary Baseline Results
 
-補助 baseline（Sequential、OpenMP、cuGraph [@rapidsCugraph]）を含む多実装比較は、5.4 節で述べたとおり小規模グラフに限定された legacy 部分データであり、本節では要約のみを示す。全数値と詳細な制約は Appendix E に置く。この比較は次の 2 点で headline の主性能比較と異なる。第 1 に、medium/large 規模では Sequential/OpenMP/cuGraph の測定が存在しないため、現行 block 実装による全グラフ統一の 7 実装比較は提示できない。第 2 に、この legacy データに含まれる提案系実装は旧 shared カーネルで測定されており、Table 6.1 の現行 block 実装の値とは経路が異なるため、headline には使用しない。
+補助 baseline（Sequential、OpenMP、cuGraph [@rapidsCugraph]）を含む多実装比較は、5.4 節で述べたとおり小規模グラフに限定された legacy 部分データであり、本節で全数値と制約を示す。この比較は次の 2 点で headline の主性能比較と異なる。第 1 に、medium/large 規模では Sequential/OpenMP/cuGraph の測定が存在しないため、現行 block 実装による全グラフ統一の 7 実装比較は提示できない。第 2 に、この legacy データに含まれる提案系実装は旧 shared カーネルで測定されており、Table 6.1 の現行 block 実装の値とは経路が異なるため、headline には使用しない。
 
 **Table 6.4: Supplementary legacy small-graph baseline comparison (mean ± sample standard deviation over n=10 trials; legacy shared-kernel measurements from the old tree). `N/A` denotes a measurement that does not exist; it is not zero.**
 

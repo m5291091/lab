@@ -50,10 +50,7 @@ thesis_bc_project/docs/thesis/writing/
 │   ├── 11_conclusion.md
 │   ├── appendix_a_experimental_parameters.md
 │   ├── appendix_b_pathmerge_batch_sweeps.md
-│   ├── appendix_c_complete_ablation_results.md
-│   ├── appendix_d_correctness_details.md
-│   ├── appendix_e_supplementary_baselines.md
-│   └── appendix_f_reproducibility.md
+│   └── appendix_c_complete_ablation_results.md
 └── english/
     ├── 00_abstract.md
     ├── 01_introduction.md
@@ -69,10 +66,7 @@ thesis_bc_project/docs/thesis/writing/
     ├── 11_conclusion.md
     ├── appendix_a_experimental_parameters.md
     ├── appendix_b_pathmerge_batch_sweeps.md
-    ├── appendix_c_complete_ablation_results.md
-    ├── appendix_d_correctness_details.md
-    ├── appendix_e_supplementary_baselines.md
-    └── appendix_f_reproducibility.md
+    └── appendix_c_complete_ablation_results.md
 ```
 
 最初は`japanese/`のみを執筆する。`english/`は日本語版の内容と数値が確定するまで翻訳を開始しない。
@@ -219,7 +213,7 @@ Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock
 
 ### RQ3 Memory Scalability
 
-GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実行可能なbatch sizeと性能にどのような影響を与えるか。
+評価した修正版325557グラフにおいて、GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実行可能なbatch sizeと観測されたメモリ制約にどのような影響を与えるか。
 
 ### RQ4 Correctness and Numerical Behavior
 
@@ -1181,49 +1175,7 @@ Introductionの4つの貢献と対応させる。
 - trial値
 - main effect
 
-## 9.4 `appendix_d_correctness_details.md`
-
-```markdown
-# Appendix D Correctness Details
-```
-
-- vector SHA256
-- graph SHA256
-- error index
-- values at error index
-- max absolute/relative error
-- mismatch
-- missing
-- NaN/Inf
-
-## 9.5 `appendix_e_supplementary_baselines.md`
-
-```markdown
-# Appendix E Supplementary Baseline Results
-```
-
-- Sequential
-- OpenMP
-- cuGraph
-- legacy partial 7 implementations
-- missing resultsをN/Aと表示
-- current block統一比較ではないことを明記
-
-## 9.6 `appendix_f_reproducibility.md`
-
-```markdown
-# Appendix F Reproducibility
-```
-
-- repository structure
-- raw_data
-- result
-- code_snapshots
-- figure/table generation
-- integrity check
-- hardware requirements
-- private repositoryの限定共有
-- third-party code notice
+本論文の正式なAppendixはA〜Cとする。correctness詳細はAppendix A §A.8とT5 correctness tableに、補助baselineの要約と制約はChapter 6のTable 6.4とそのSource noteに、再現手順はChapter 5とAppendix Aの実行条件記述に含める。独立したAppendix D/E/Fは作成しない。
 
 ---
 
@@ -1272,7 +1224,7 @@ Introductionの4つの貢献と対応させる。
 10. Chapter 11 Conclusion
 11. Chapter 1 Introduction
 12. Abstract
-13. Appendices
+13. Appendices A～C
 14. English translation
 
 ---
@@ -1363,7 +1315,7 @@ Introductionの4つの貢献と対応させる。
 
 - Chapter 1～11がすべて存在する
 - Abstractが存在する
-- Appendix A～Fが存在する
+- Appendix A～Cが存在する
 - 全RQに対応する結果章がある
 - 全主張がevidence matrixと対応する
 - 全数値が正式データと一致する

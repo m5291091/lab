@@ -37,10 +37,10 @@ GenerationCommand / Status / Chapter`。再生成可否は `result/TABLES_AND_FI
 ## 付録
 | ID | Title | Purpose | InputFiles | GenerationCommand | Status | Chapter |
 |:--|:--|:--|:--|:--|:--|:--|
-| A-SWEEP | PathMerge 全バッチ掃引 | tuned 選定の透明性 | `tuning/pathmerge/*/pathmerge_sweep_results.tsv` | `scripts/merge_final_tables.py`（掃引詳細節） | REGENERATABLE | 付録A |
-| A-ABL8 | アブレーション全 8 構成 | 完全開示 | `result/ablation/*/ablation_summary.md` | `scripts/summarize_ablation.py`（Sample SD, ddof=1） | REGENERATABLE | 付録B |
-| A-MEMMTX | memory-path 比較行列 | 正確性の一次情報 | `correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv` | `scripts/analyze_memory_correctness.py` | REGENERATABLE | 付録C |
-| A-FAIL | 失敗・OOM 記録 | 透明性 | `failure/README.md`; `failure/MANIFEST.tsv` | 手動整形 | MANUAL_FROM_TSV | 付録E |
+| A-SWEEP | PathMerge 全バッチ掃引 | tuned 選定の透明性 | `tuning/pathmerge/*/pathmerge_sweep_results.tsv` | `scripts/merge_final_tables.py`（掃引詳細節） | REGENERATABLE | 付録B |
+| A-ABL8 | アブレーション全 8 構成 | 完全開示 | `result/ablation/*/ablation_summary.md` | `scripts/summarize_ablation.py`（Sample SD, ddof=1） | REGENERATABLE | 付録C |
+| A-MEMMTX | memory-path 比較行列 | 正確性の一次情報 | `correctness/memory_paths/canonical_job_2368587/comparison_matrix.tsv` | `scripts/analyze_memory_correctness.py` | REGENERATABLE | 専用付録なし; 9章 9.5 で要約（条件は付録A A.7.3） |
+| A-FAIL | 失敗・OOM 記録 | 透明性 | `failure/README.md`; `failure/MANIFEST.tsv` | 手動整形 | MANUAL_FROM_TSV | 8 / 付録A |
 
 ## 本環境で再生成できない図（明記）
 `result/TABLES_AND_FIGURES.md` の通り、以下は numpy/matplotlib/scipy 依存で **本環境では未再検証**
