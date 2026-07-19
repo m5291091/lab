@@ -132,6 +132,34 @@ CORRECTNESS_ABS_TOL = "1e-3"
 CORRECTNESS_REL_TOL = "1e-6"
 GEN_COMMAND = "THESIS_FIGS=F4,F5 python3 scripts/generate_thesis_artifacts.py"
 
+# --------------------------------------------------------------------------- #
+# UM b12288 failure evidence (Gate T1B1.1): TWO layers, deliberately separate.
+#
+#   1. Runtime classifier record -- retained raw provenance, never rewritten.
+#      During the run, run_corrected_325557_validation.sh classified each
+#      configuration by scanning ONLY that configuration's stdout/stderr
+#      (classify_observed "${CFG_STDERR}" "${CFG_OUTPUT}"). For um_b12288 it
+#      recorded OOMEvidenceClass=none with runner_exit=137 (SIGKILL-compatible).
+#
+#   2. Post-hoc archive audit -- this record. The PBS epilogue appends a direct
+#      cgroup OOM line at JOB END, after "=== Complete ===" and after the
+#      validation script had already classified every configuration. It was
+#      therefore outside the running classifier's scan scope and could not have
+#      been observed by it.
+#
+# Layer 1 is NOT an error corrected by layer 2: the two differ in what they were
+# able to inspect. The runtime `none` is a scan-scope artifact and is reported
+# alongside the post-hoc class, never replaced by it.
+UM_B12288_EVIDENCE_PATH = (
+    f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/pbs_stdout.log")
+UM_B12288_EVIDENCE_SHA256 = \
+    "3c4c46680f9432b94fef79ca9344027ad77195973d075b8019379f934feb8ec5"
+UM_B12288_EVIDENCE_LINE = 146
+UM_B12288_EVIDENCE_TOKEN = "oom-kill:constraint=CONSTRAINT_MEMCG"
+UM_B12288_EVIDENCE_CLASS = "kernel_oom_kill"   # scripts/oom_evidence.sh vocabulary
+UM_B12288_RUNTIME_CLASSIFIER = "none"          # what layer 1 recorded
+UM_B12288_CONFIG_MARKER = "[B 4/5] um_b12288:"
+
 # Directories whose files are Gate-W7.4 corrected-input artifacts that are
 # legitimately still pending commit at gate time (Gate W7.4.1 does not commit).
 # They are canonical (under result/ or raw_data/) but not yet Git-tracked, so
@@ -478,6 +506,112 @@ def load_ablation():
                 trials=trials, factor_key=FACTOR_KEY)
 
 
+def verify_um_b12288_posthoc_evidence():
+    """Re-verify, from the retained archive itself, the direct cgroup OOM record
+    for the UM b12288 configuration of job 2404743.
+
+    This is a POST-HOC ARCHIVE AUDIT layered on top of -- never a replacement
+    for -- the runtime classifier record (see the UM_B12288_* constants). The
+    archive is only ever READ here; nothing under raw_data/ is modified.
+
+    Every check is hard. A missing file, a changed hash, a moved evidence line,
+    a foreign job or configuration context, a missing cgroup token, or an
+    ambiguous kill attribution aborts generation. The published claim is never
+    emitted from a hard-coded string alone, and a failed verification is never
+    silently downgraded to "no evidence".
+    """
+    path = input_path(UM_B12288_EVIDENCE_PATH)
+    if not path.is_file():
+        raise RuntimeError(
+            f"post-hoc OOM evidence missing: {UM_B12288_EVIDENCE_PATH}")
+
+    got_sha = _sha256_file(path)
+    if got_sha != UM_B12288_EVIDENCE_SHA256:
+        raise RuntimeError(
+            f"post-hoc OOM evidence hash mismatch for {UM_B12288_EVIDENCE_PATH}: "
+            f"expected {UM_B12288_EVIDENCE_SHA256}, got {got_sha}")
+
+    with open(path) as f:
+        lines = f.read().splitlines()
+    if len(lines) < UM_B12288_EVIDENCE_LINE:
+        raise RuntimeError(
+            f"post-hoc OOM evidence line {UM_B12288_EVIDENCE_LINE} is beyond the end "
+            f"of {UM_B12288_EVIDENCE_PATH} ({len(lines)} lines)")
+
+    exact = lines[UM_B12288_EVIDENCE_LINE - 1]
+    if UM_B12288_EVIDENCE_TOKEN not in exact:
+        raise RuntimeError(
+            f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE} does not carry the "
+            f"cgroup OOM token {UM_B12288_EVIDENCE_TOKEN!r}")
+    if CORRECTED_JOB_CORRECTNESS_MEM not in exact:
+        raise RuntimeError(
+            f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE} does not name the "
+            f"expected job {CORRECTED_JOB_CORRECTNESS_MEM}")
+
+    # Configuration context: the kill must be attributable to um_b12288 and to no
+    # other configuration recorded in the same job.
+    announce = [i for i, ln in enumerate(lines)
+                if ln.startswith(UM_B12288_CONFIG_MARKER)]
+    killed = [i for i, ln in enumerate(lines) if " Killed " in ln]
+    cgroup = [i for i, ln in enumerate(lines) if UM_B12288_EVIDENCE_TOKEN in ln]
+    complete = [i for i, ln in enumerate(lines) if ln.startswith("=== Complete ===")]
+    if len(announce) != 1:
+        raise RuntimeError(
+            f"expected exactly one {UM_B12288_CONFIG_MARKER!r} block in "
+            f"{UM_B12288_EVIDENCE_PATH}, found {len(announce)}")
+    if len(killed) != 1:
+        raise RuntimeError(
+            f"kill attribution is ambiguous: expected exactly one SIGKILL record in "
+            f"{UM_B12288_EVIDENCE_PATH}, found {len(killed)}")
+    if len(cgroup) != 1 or cgroup[0] != UM_B12288_EVIDENCE_LINE - 1:
+        raise RuntimeError(
+            f"expected exactly one cgroup OOM record at line {UM_B12288_EVIDENCE_LINE} "
+            f"of {UM_B12288_EVIDENCE_PATH}, found {len(cgroup)} at "
+            f"{[i + 1 for i in cgroup]}")
+
+    # The single SIGKILL record must sit inside the um_b12288 block, i.e. between
+    # its announcement and its own outcome line.
+    outcome_idx = next((i for i in range(announce[0] + 1, len(lines))
+                        if lines[i].lstrip().startswith("observed=")), None)
+    if outcome_idx is None:
+        raise RuntimeError(
+            f"no outcome line follows {UM_B12288_CONFIG_MARKER!r} in "
+            f"{UM_B12288_EVIDENCE_PATH}")
+    if not announce[0] < killed[0] < outcome_idx:
+        raise RuntimeError(
+            f"the SIGKILL record at line {killed[0] + 1} of {UM_B12288_EVIDENCE_PATH} "
+            f"does not lie inside the um_b12288 block "
+            f"(lines {announce[0] + 1}..{outcome_idx + 1})")
+    if "RUNTIME_FAILED" not in lines[outcome_idx]:
+        raise RuntimeError(
+            f"um_b12288 outcome line {outcome_idx + 1} of {UM_B12288_EVIDENCE_PATH} is "
+            f"not RUNTIME_FAILED: {lines[outcome_idx].strip()!r}")
+
+    # Epilogue position: the cgroup record is appended after the validation script
+    # finished, which is why the running classifier could not observe it.
+    if not complete or cgroup[0] < complete[0]:
+        raise RuntimeError(
+            f"the cgroup OOM record at line {cgroup[0] + 1} of "
+            f"{UM_B12288_EVIDENCE_PATH} does not follow '=== Complete ==='; the "
+            f"post-job epilogue position could not be confirmed")
+
+    note("um_b12288_posthoc_cgroup_oom", True,
+         f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE} verified "
+         f"({UM_B12288_EVIDENCE_CLASS}); sha256 {UM_B12288_EVIDENCE_SHA256[:16]}...; "
+         f"job {CORRECTED_JOB_CORRECTNESS_MEM}; sole SIGKILL (line {killed[0] + 1}) lies "
+         f"inside the um_b12288 block (lines {announce[0] + 1}..{outcome_idx + 1}); "
+         f"appended after '=== Complete ===' (line {complete[0] + 1}), hence outside the "
+         f"runtime per-config classifier scope that recorded "
+         f"OOMEvidenceClass={UM_B12288_RUNTIME_CLASSIFIER}")
+
+    return dict(path=UM_B12288_EVIDENCE_PATH, line=UM_B12288_EVIDENCE_LINE,
+                sha256=UM_B12288_EVIDENCE_SHA256,
+                evidence_class=UM_B12288_EVIDENCE_CLASS,
+                runtime_classifier=UM_B12288_RUNTIME_CLASSIFIER,
+                exact_line=exact, sigkill_line=killed[0] + 1,
+                epilogue_after_line=complete[0] + 1)
+
+
 def load_memory_scalability():
     """Load the CORRECTED-325557 targeted feasibility-boundary validation.
 
@@ -489,6 +623,9 @@ def load_memory_scalability():
     """
     boundary = read_tsv(
         "result/memory_scalability/corrected_325557/feasibility_boundary.tsv")
+    # Post-hoc archive audit for the um_b12288 SIGKILL (verified against the
+    # retained PBS stdout; aborts generation if the evidence does not check out).
+    posthoc = verify_um_b12288_posthoc_evidence()
     # Independent raw cross-checks (same job 2404743).
     raw_feas = {r["Config"]: r for r in read_tsv(
         f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/feasibility_results.tsv")}
@@ -528,6 +665,7 @@ def load_memory_scalability():
             fail_class=fail_class, runtime=runtime, exit=exit_code,
             evidence_class=evid_class,
             evidence_line=(ro["ExactMatchedLine"] if fail_class == "cuda_oom" else None),
+            posthoc=(posthoc if cfg == "um_b12288" else None),
             success=(outcome == "SUCCESS"), trials=1))
     got_order = [d["config"] for d in out]
     if got_order != order:
@@ -1256,7 +1394,7 @@ def table_T4(mem):
     per_note = {
         "pure_b4096": "Feasibility run (n=1)",
         "pure_b8192": "Confirmed CUDA out-of-memory (host_pure.cu:144)",
-        "um_b10240": "Feasibility run (n=1); UM oversubscription spill over NVLink-C2C",
+        "um_b10240": "Feasibility run (n=1); migration volume and memory placement not measured",
         "um_b12288": "Host/cgroup memory limit exceeded; not a CUDA or HBM out-of-memory",
         "chunked_b16384": "Tested upper limit (no unlimited-capacity claim)",
     }
@@ -1267,11 +1405,24 @@ def table_T4(mem):
             evidence = "none"
         else:
             rt = runtime_cell[d["outcome"]]
-            evidence = (f"cuda_oom ({_cuda_oom_snippet(d['evidence_line'])})"
-                        if d["fail_class"] == "cuda_oom" else "none (SIGKILL, exit 137)")
+            if d["fail_class"] == "cuda_oom":
+                evidence = f"cuda_oom ({_cuda_oom_snippet(d['evidence_line'])})"
+            elif d["posthoc"]:
+                # Both evidence layers, in one cell: what the runtime classifier
+                # recorded, and the post-hoc PBS-epilogue record that backs the
+                # cgroup class. Neither is hidden behind the other.
+                ph = d["posthoc"]
+                evidence = (f"runtime classifier: {ph['runtime_classifier']}; "
+                            f"post-hoc PBS epilogue: {ph['evidence_class']} "
+                            f"({Path(ph['path']).name}:{ph['line']})")
+            else:
+                evidence = "none (SIGKILL, exit 137)"
         rows.append([d["impl"], d["batch"], outcome_label[d["outcome"]],
                      fail_label[d["fail_class"]], rt, d["exit"], evidence,
                      per_note[d["config"]]])
+    ph = next((d["posthoc"] for d in mem if d["posthoc"]), None)
+    if ph is None:
+        raise RuntimeError("T4: the post-hoc um_b12288 evidence record is missing")
     notes = [
         f"Targeted feasibility-boundary validation on the corrected 325557 graph "
         f"(job {CORRECTED_JOB_CORRECTNESS_MEM}, checkpoint 45352a3); each configuration n=1. "
@@ -1280,8 +1431,19 @@ def table_T4(mem):
         "shown as N/A, never 0 s.",
         "Two failure classes are kept distinct: GPU_Opt_Pure b8192 is a confirmed CUDA "
         "(GPU-device) out-of-memory (runner exit 1, host_pure.cu:144: out of memory); GPU_Opt "
-        "b12288 is a host/cgroup memory OOM kill (SIGKILL, exit 137) with CUDA-level "
-        "oom_evidence=none, so it is NOT a CUDA or HBM out-of-memory.",
+        "b12288 is a host/cgroup memory OOM kill (SIGKILL, exit 137) and is NOT a CUDA or HBM "
+        "out-of-memory. The two are never conflated.",
+        f"UM b12288 evidence is recorded in two layers. (1) Runtime classifier: during the run the "
+        f"per-configuration classifier scanned only that configuration's stdout/stderr and recorded "
+        f"OOMEvidenceClass={ph['runtime_classifier']} with runner exit 137 (SIGKILL-compatible); "
+        f"that record is retained unchanged. (2) Post-hoc archive audit: the PBS epilogue of the "
+        f"same job carries a direct cgroup OOM record at {ph['path']}:{ph['line']} "
+        f"(class {ph['evidence_class']}; file SHA256 {ph['sha256']}). The epilogue is appended at "
+        f"job end -- after '=== Complete ===' (line {ph['epilogue_after_line']}) -- so it was "
+        f"outside the running classifier's scan scope. The runtime "
+        f"{ph['runtime_classifier']} is therefore a scan-scope artifact, not a value contradicted "
+        f"or corrected by the audit. The kill is attributable to this configuration: the job's sole "
+        f"SIGKILL record (line {ph['sigkill_line']}) lies inside the um_b12288 block.",
         "Observed feasible ordering within the tested range only: GPU_Opt_Pure (maximum "
         "successful requested batch 4096) < GPU_Opt (10240) < GPU_Opt_Pure_Chunked (16384). "
         "Chunked was tested to 16384; this is no unlimited-capacity claim. The input file is "
@@ -1441,6 +1603,9 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, corr, small):
         f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/feasibility_results.tsv",
         f"raw_data/corrected_325557/job_{CORRECTED_JOB_CORRECTNESS_MEM}/oom_evidence.tsv",
     ]
+    # T4 additionally cites the post-hoc cgroup OOM record; F5 is unchanged by
+    # this gate and keeps its original input set.
+    memory_inputs_t4 = memory_inputs + [UM_B12288_EVIDENCE_PATH]
     kernel_inputs = [
         "raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/"
         "job_2354329_20260710/kernel_selection_results.tsv",
@@ -1542,13 +1707,14 @@ def write_manifests_and_readmes(fig_out, tab_out, mp, corr, small):
         ["T4", "Memory Feasibility Boundary Validation (corrected 325557)",
          "Feasible batch within tested range: GPU_Opt_Pure 4096 < GPU_Opt 10240 < "
          "GPU_Opt_Pure_Chunked 16384 (Pure b8192 CUDA OOM; UM b12288 cgroup host-memory OOM kill)",
-         rel_inputs(*memory_inputs), gs,
+         rel_inputs(*memory_inputs_t4), gs,
          "single-run wall-clock time; evidence-backed failure class",
          "n=1 per configuration (targeted boundary validation)",
          tab_out["T4"]["md"], tab_out["T4"]["tsv"],
          "Corrected 325557 only (job 2404743 / checkpoint 45352a3); failures shown as N/A not 0 s; "
          "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137) distinct; runtimes not "
-         "a performance comparison; no unlimited-capacity claim"],
+         "a performance comparison; no unlimited-capacity claim; UM b12288 cgroup OOM is a post-hoc "
+         "PBS-epilogue record, while the runtime per-config classifier recorded none"],
         ["T5", "Correctness and Numerical Behavior",
          "3 independent Sequential-CPU-reference small-graph checks (Tier A) + 10 cross-"
          "implementation comparisons on corrected 325557 (Tier B); all 13 have MissingIndices=0, "
@@ -1699,6 +1865,8 @@ def write_corrected_provenance():
     mem_inputs = ("result/memory_scalability/corrected_325557/feasibility_boundary.tsv;"
                   "raw_data/corrected_325557/job_2404743/feasibility_results.tsv;"
                   "raw_data/corrected_325557/job_2404743/oom_evidence.tsv")
+    # T4 additionally cites the post-hoc cgroup OOM record (F5 is unchanged here).
+    mem_inputs_t4 = mem_inputs + ";" + UM_B12288_EVIDENCE_PATH
     corr_inputs = ("result/correctness/small_full_vector/correctness_summary.tsv;"
                    "result/correctness/corrected_325557/comparison_summary.tsv;"
                    "result/correctness/corrected_325557/vector_summary.tsv;"
@@ -1715,9 +1883,11 @@ def write_corrected_provenance():
          CORRECTED_JOB_ABLATION, "Yes", "not_applicable", "not_applicable",
          "4 synthetic graphs; mixed-checkpoint aggregate; not generalized to roadNet"),
         ("T4", ["result/tables/thesis/T4_memory_scalability.md",
-                "result/tables/thesis/T4_memory_scalability.tsv"], mem_inputs,
+                "result/tables/thesis/T4_memory_scalability.tsv"], mem_inputs_t4,
          CORRECTED_JOB_CORRECTNESS_MEM, "No",
-         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137)", "not_applicable",
+         "CUDA OOM (device, exit 1) vs cgroup host-memory OOM kill (exit 137; runtime classifier "
+         f"none, post-hoc PBS epilogue {UM_B12288_EVIDENCE_CLASS} at "
+         f"{UM_B12288_EVIDENCE_PATH}:{UM_B12288_EVIDENCE_LINE})", "not_applicable",
          "targeted boundary n=1; runtimes not a performance comparison; no unlimited-capacity claim"),
         ("F5", ["result/figures/thesis/memory_scalability_325557.pdf",
                 "result/figures/thesis/memory_scalability_325557.png",
