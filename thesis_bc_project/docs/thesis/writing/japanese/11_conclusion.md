@@ -12,7 +12,7 @@ RQ1 は `SUPPORTED` である。固定 b512 の block GPU_Opt は、評価した
 
 ### 11.2.2 RQ2 Optimization Contributions
 
-RQ2 は `SUPPORTED_WITH_LIMITATIONS` である。修正版 325557 の main effect は Hybrid BFS 1.4767、Warp-Cooperative Accumulation 1.1012、Dual-Stream Execution 1.5563 であった。合成 4 グラフ集約はそれぞれ 1.679、1.066、1.391 である。ただし、他 3 グラフは job 2354994、修正版 325557 は job 2406254 / checkpoint `45352a3` の mixed-checkpoint aggregate である。Hybrid BFS と Dual Streams が主要な正の効果を示し、Warp の効果は graph-dependent であったが、未測定 roadNet へ因果を一般化しない。
+RQ2 は `SUPPORTED_WITH_LIMITATIONS` である。修正版 325557 の main effect は Hybrid BFS 1.4767、Warp-Cooperative Accumulation 1.1012、Dual-Stream Execution 1.5563 であった。合成 4 グラフ集約はそれぞれ 1.679、1.066、1.391 である。ただしこの集約は、graph によって測定 job と checkpoint が異なる mixed-checkpoint aggregate である。Hybrid BFS と Dual Streams が主要な正の効果を示し、Warp の効果は graph-dependent であったが、未測定 roadNet へ因果を一般化しない。
 
 ### 11.2.3 RQ3 Memory Scalability
 
@@ -24,7 +24,7 @@ RQ3 は `SUPPORTED_WITH_LIMITATIONS` である。修正版 325557 の targeted b
 
 RQ4 の Tier A は `SUPPORTED` である。小規模 3 グラフの Sequential CPU independent reference と GPU_Opt の full-vector 比較はすべて PASS した。Tier B は `SUPPORTED_WITH_LIMITATIONS` である。修正版 325557 の 6 vector・10 cross-implementation comparisons はすべて MissingIndices=0、MismatchedElements=0、ToleranceResult=PASS であった。
 
-Tier A と Tier B の全 13 比較は `ByteIdentical=No` であり、結果は mixed tolerance 内の numerical consistency であって bitwise identity ではない。PathMerge は external comparator であり ground truth ではない。修正版 graph は内部再構成データで、元 seed・上流原本未確認の provenance limitation を残す。
+Tier A と Tier B の全 13 比較は `ByteIdentical=No` であり、結果は mixed tolerance 内の numerical consistency であって bitwise identity ではない。PathMerge は external comparator であり ground truth ではない。修正版 graph は内部再構成データで、元 seed・上流原本未確認の provenance limitation を残す。また修正版 325557 は self-loop と重複 adjacency pair を保持したままであるため、Tier B はこの保存された adjacency representation 上の実装間整合であり、simple-graph semantics に対する独立 ground truth ではない。
 
 ## 11.3 Contributions
 

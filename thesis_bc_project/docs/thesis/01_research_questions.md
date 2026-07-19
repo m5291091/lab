@@ -62,7 +62,7 @@
 ## RQ3：メモリ容量
 
 - **RQ**: RQ3
-- **Question**: UM・Pure・Chunked は性能と実行可能バッチ範囲へどのような影響を与えるか。
+- **Question**: 評価した修正版325557グラフにおいて、GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実行可能なbatch sizeと観測されたメモリ制約にどのような影響を与えるか。
 - **RequiredEvidence**: 同一グラフでの 3 方式の feasibility 境界、OOM 種別、working-set 見積り、
   Chunked の SUB_BATCH / num_subs。
 - **AvailableEvidence**（修正版 325557_3216152_corrected_v1, job 2404743, checkpoint `45352a3`,

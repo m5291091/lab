@@ -8,10 +8,10 @@
 
 本研究の評価は、次の 4 つの Research Question に沿って構成される。
 
-- **RQ1（性能）**: 評価した 4 グラフにおいて、固定バッチ b512 の block ベース GPU_Opt は、グラフごとに調整した第三者実装 PathMerge より高速か。
-- **RQ2（最適化の寄与）**: Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream Execution、および block カーネルは、観測された性能にどの程度寄与するか。
-- **RQ3（メモリ容量拡張性）**: GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunked のメモリ管理方式は、実行可能なバッチサイズにどのような影響を与えるか。
-- **RQ4（正確性と数値的挙動）**: 提案実装の BC ベクトルは独立参照および異なるメモリ経路とどこまで一致し、どの provenance・数値表現上の制約が残るか。
+- **RQ1（性能）**: 評価した4グラフにおいて、固定b512のblock-based GPU_Optは、グラフごとに調整した第三者実装PathMergeより高速か。
+- **RQ2（最適化の寄与）**: Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock Kernelは、観測された性能にどの程度寄与するか。
+- **RQ3（メモリ容量拡張性）**: 評価した修正版325557グラフにおいて、GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実行可能なbatch sizeと観測されたメモリ制約にどのような影響を与えるか。
+- **RQ4（正確性と数値的挙動）**: 提案実装のBCベクトルは独立参照および異なるメモリ経路とどこまで一致し、どの数値表現・provenance制約が残るか。
 
 本評価では、性能評価（RQ1）・要因分析（RQ2）・容量評価（RQ3）・数値的正確性（RQ4）を互いに独立した観点として分離する。性能評価は median 実行時間・speedup・GTEPS を対象とし、正確性検証は BC ベクトルの数値一致を対象とするため、測定対象も判定基準も異なる。したがって、正確性検証に用いた実行（各構成 n=1、warmup なし）の時間値を性能主張に用いず、逆に性能測定の実行を正確性の根拠にも用いない。要因分析と容量評価も、それぞれ合成グラフ・特定グラフに限定した専用実験であり、RQ1 の主性能比較とは対象グラフも目的も異なる。
 
@@ -37,7 +37,7 @@ GPU のメモリ容量については、根拠と単位系の異なる値を区�
 
 ソフトウェア環境は、NVIDIA driver 595.58.03、CUDA Toolkit（nvcc）release 13.0（V13.0.48）[@nvidiaCudaProgrammingGuide]、ホスト C++ コンパイラ g++（GCC）11.4.1、CMake 4.3.4、Nsight Systems（nsys）2025.5.1.121 である。主実験は Miyabi-G 上の PBS（Portable Batch System、group `gj17`）を通じて実行した。RQ3・RQ4 のメモリ経路実験は、ホストメモリ容量を明示的に制限した 100 GiB 資源構成で実行した。この構成はホストメモリ上限が legacy 容量評価と異なるため、両者の OOM 境界は一致しない（5.9 節）。したがって、本研究の全実験が単一の資源指定で実行されたわけではない。なお、実際の queue 名は保存ログから独立に確定できないため、本評価の正式な実験条件には含めない（5.12 節）。
 
-GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、NVLink-C2C prefetch）の実効帯域は、bandwidth ベンチマークで別途測定した（`raw_data/profiling/job_2359175_20260711/bandwidth.log`）。測定された帯域値は platform の性能特性であるため本章では示さず、メモリ経路の議論（Chapter 8）で扱う。実験群と checkpoint（SourceSnapshotID）の対応は 5.11 節で述べる。`result/` 全体は単一 checkpoint に対応しない。
+GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、NVLink-C2C prefetch）の実効帯域は、bandwidth ベンチマークで別途測定した（`raw_data/profiling/job_2359175_20260711/bandwidth.log`）。測定された帯域値は platform の環境上の補助測定であり、実験環境記録（Table 5.2 の canonical artifact である T6）に保存する。本研究はこれを個別実験の性能要因や失敗原因の説明には用いない。実験群と checkpoint（SourceSnapshotID）の対応は 5.11 節で述べる。`result/` 全体は単一 checkpoint に対応しない。
 
 **Table 5.2: Experimental environment.**
 
@@ -57,13 +57,17 @@ GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、N
 | Resource configuration — memory-path experiments (RQ3/RQ4) | Host-memory-limited 100 GiB configuration |
 
 <!-- canonical artifact: T6_experimental_environment -->
-> Source: `result/environment/environment.md`, `result/MANIFEST.md`; nominal HBM3 capacity from [@nvidiaGraceHopperInDepth]; run-start memory query values (`total`, `free_before`) from the saved run logs. The nominal 96 GB and the recorded 97871 MiB denote the same on-package HBM3 in different units and query methods, not separate memory regions. The queue name cannot be independently confirmed from the saved job logs and is therefore excluded from the reported experimental conditions (5.12). Memory-path bandwidth values are reported in Chapter 8.
+> Source: `result/environment/environment.md`, `result/MANIFEST.md`; nominal HBM3 capacity from [@nvidiaGraceHopperInDepth]; run-start memory query values (`total`, `free_before`) from the saved run logs. The nominal 96 GB and the recorded 97871 MiB denote the same on-package HBM3 in different units and query methods, not separate memory regions. The queue name cannot be independently confirmed from the saved job logs and is therefore excluded from the reported experimental conditions (5.12). Memory-path bandwidth values are environment-level supplementary measurements retained in the canonical environment record (T6); they are not reported as a result of this study and are not used to attribute per-experiment performance or failure causes.
 
 ## 5.3 Graph Datasets
 
 本評価で用いたグラフの属性を Table 5.3 に示す。数値は `result/datasets/graph_catalog.tsv` および `docs/graph_stats.tsv` の正式記録から取得したものであり、丸め値からの逆算や推定は行っていない。すべてのグラフは無向・非重みの CSR 形式で保持し、入力の同一性は `graph_catalog.tsv` に記録された graph SHA256 で管理する。
 
 グラフは実データと合成グラフに大別される。実データは Stanford Network Analysis Project（SNAP）から取得した 4 グラフである [@snapnets]。email-EuAll は原本が directed の電子メール通信網であり [@leskovec2007graphevolution]、本評価では無向化して用いた（`Symmetrized=yes`）。roadNet-PA/TX/CA は原本が undirected の道路網であり [@leskovec2009community]、対称化せずそのまま用いた（`Symmetrized=no`）。これら 4 グラフが RQ1 の対象である。合成グラフは要因分析・容量評価・正確性検証に用いた。旧 `325557_3216152` は 1-based を 0-based として格納した malformed input であり、現行実験では `tools/repair_325557_graph.py` により決定的に再構成した `325557_3216152_corrected_v1` のみを使用する。旧入力とその結果は historical provenance として保持する。
+
+修正版 325557 の構造について明記する。この修復は範囲外の頂点 ID と CSR 要素数の不一致を修正したものであり、グラフの正規化ではない。すなわち self-loop と重複 adjacency pair は除去しておらず、そのまま保持している。修正版は $n=325{,}557$、$m=3{,}216{,}152$、adjacency 要素数 $2m=6{,}432{,}304$ を維持し、そのうち self-loop は 87,442 本、多重度 2 の有向ペアは 866,924 組である（`result/provenance/GRAPH_325557_INTEGRITY_AUDIT.md`）。Table 5.3 の頂点数・辺数、および平均次数 19.758 は、この保存された adjacency representation に基づく値である。
+
+したがって、RQ2 の ablation、RQ3 の容量境界、RQ4 Tier B の実装間整合は、いずれもこの保存された adjacency representation に対する結果である。とくに RQ4 Tier B は同一入力上での実装間の数値的整合であり、self-loop と多重辺を除去した simple-graph semantics に対する独立な ground truth との一致ではない。修正版 325557 は RQ1 の主性能比較（email-EuAll、roadNet-PA/TX/CA の 4 グラフ）には用いていないため、RQ1 の speedup 値 3.17、1.31、1.51、1.45 はこの構造の影響を受けない。なお本研究は、self-loop と多重辺の存在が実装間の性能差の原因であるとは主張しない。
 
 各グラフの選択目的は次のとおりである。RQ1 の 4 グラフは対照的な 2 種の構造を含む。email-EuAll は変動係数の大きいハブ構造をもち BFS 深さが浅く、roadNet-PA/TX/CA は次数が均質で BFS 深さが深い。この対照により、次数分布と探索深さの異なる領域で RQ1 を評価する。修正版 325557 は入力ファイルが大きいからではなく、バッチ内の多数 source に対して per-source state を同時保持する条件を構成できるため、RQ2 の ablation、RQ3 の容量境界、RQ4 の実装間整合に用いた。RQ1 の主性能比較には用いない。benchmark_7000_41459、benchmark_11023_62184、chain_200 は独立 CPU 参照との全ベクトル検証に用いた。
 
@@ -77,15 +81,15 @@ GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、N
 | roadNet-CA | 1965206 | 2766607 | 53.83 | 28.60 | Main performance (RQ1) |
 | 325557_3216152_corrected_v1 | 325557 | 3216152 | 43.25 | 25.78 | Ablation; Memory scalability; Correctness |
 | 56438_300801 | 56438 | 300801 | 3.72 | 2.51 | Ablation |
-| benchmark_7000 | 7000 | 41459 | 0.39 | 0.34 | Ablation; Correctness |
-| benchmark_11023 | 11023 | 62184 | 0.61 | 0.52 | Ablation; Correctness |
+| benchmark_7000_41459 | 7000 | 41459 | 0.39 | 0.34 | Ablation; Correctness |
+| benchmark_11023_62184 | 11023 | 62184 | 0.61 | 0.52 | Ablation; Correctness |
 | benchmark_85830 | 85830 | 241080 | 3.18 | 2.17 | Auxiliary |
-| chain_200 | 200 | 199 | 0.00 | 0.00 | Correctness |
+| chain_200 | 200 | 199 | <0.01 | <0.01 | Correctness |
 | random | 32212 | 101805 | 1.30 | 0.90 | Auxiliary |
 | 325557_3216152 | 325557 | 3216152 | 43.25 | 25.78 | Historical (superseded by corrected_v1) |
 
 <!-- canonical artifact: T1_graph_metadata -->
-> Source: `result/tables/thesis/T1_graph_metadata.tsv`, generated from `docs/graph_stats.tsv` and `result/datasets/graph_catalog.tsv`. File sizes are measured with `stat`, not inferred. The corrected graph SHA256 is `8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22`; jobs 2404743/2406254 used checkpoint `45352a3`.
+> Source: `result/tables/thesis/T1_graph_metadata.tsv`, generated from `docs/graph_stats.tsv` and `result/datasets/graph_catalog.tsv`. File sizes are measured with `stat`, not inferred. `benchmark_7000_41459` and `benchmark_11023_62184` are recorded in the catalog and in T1 under the short identifiers `benchmark_7000` and `benchmark_11023`; the full dataset names are used here. `<0.01` denotes a non-zero size below the rounding resolution of this column: `chain_200` is 2,129 bytes on disk with a 1,600-byte CSR topology, not zero. The corrected graph SHA256 is `8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22`; jobs 2404743/2406254 used checkpoint `45352a3`.
 
 Input File、CSR topology、BC output vector は static storage であり、GPU working set ではない。修正版 325557 では順に 45,348,105 bytes、27,031,448 bytes、2,604,456 bytes である。平均次数 19.758 から実装が選ぶ $D_{est}=256$ に対し、1 source の状態量は
 

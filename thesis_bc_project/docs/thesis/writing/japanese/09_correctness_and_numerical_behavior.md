@@ -81,6 +81,8 @@ current active conclusion は `tools/repair_325557_graph.py` で決定的に再�
 
 この制約のため、Tier B は `SUPPORTED_WITH_LIMITATIONS` とする。修復手続きの決定性は上流 provenance の欠損を解消しない。
 
+構造上の制約も併記する。修復は範囲外の頂点 ID と CSR 要素数の不一致を修正したものであり、self-loop 87,442 本と多重度 2 の有向ペア 866,924 組は除去せず保持している（5.3 節）。したがって Tier B の 10 比較は、この保存された adjacency representation 上での実装間整合であり、self-loop と多重辺を除去した simple-graph semantics に対する独立な ground truth との一致ではない。
+
 ## 9.7 T5 Summary
 
 **Table 9.4: T5 summary across both evidence tiers.**

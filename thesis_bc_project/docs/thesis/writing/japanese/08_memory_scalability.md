@@ -119,4 +119,4 @@ Table 8.3 の runtime は feasibility に付随する single-run wall-clock time
 
 RQ3 は `SUPPORTED_WITH_LIMITATIONS` と回答する。修正版 325557 の targeted boundary validation では、Pure は b4096 で成功し b8192 で CUDA device-memory OOM、UM は b10240 で成功し b12288 で cgroup host-memory OOM kill、Chunked は `SUB_BATCH=6596`・`num_subs=3` により試験上限 b16384 で成功した。UM は managed allocation により Pure より大きい batch を扱い、Chunked は同時 resident working set を制限して試験範囲をさらに拡張した。
 
-この結論は修正版 325557、GH200、各条件 1 試行に限定される。UM も無制限ではなく、Chunked が未測定条件で OOM を回避する保証もない。主な設計上の含意は、容量問題が約 45.35 MB の input graph file ではなく `batch × per-source state` から生じ、source grouping と resident-state management が容量拡張の制御点になることである。
+この結論は修正版 325557、GH200、各条件 1 試行に限定される。各条件の実行時間は記録値であり、方式間の正式な性能比較には用いない。したがって Chunked の価値を最高性能としては主張しない。UM も無制限ではなく、Chunked が未測定条件で OOM を回避する保証もない。主な設計上の含意は、容量問題が約 45.35 MB の input graph file ではなく `batch × per-source state` から生じ、source grouping と resident-state management が容量拡張の制御点になることである。

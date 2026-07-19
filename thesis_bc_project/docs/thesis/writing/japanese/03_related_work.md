@@ -4,7 +4,7 @@
 
 ## 3.1 Exact Betweenness Centrality
 
-Brandes algorithm は、全頂点対の最短路を個別に列挙せず、各 source に対する最短路探索と依存度の逆向き累積を組み合わせる。非重みグラフでは、1 source の処理を BFS と辺走査で実行できるため、all-sources の時間計算量は $O(|V||E|)$、補助空間は $O(|V|+|E|)$ となる [@brandes2001]。これは、単純な全頂点対処理に比べて厳密 BC の実用性を大きく高めた。計算式と依存度漸化式は Chapter 2 で示したため、ここでは source-by-source processing が並列化の単位を与える点に注目する。
+Brandes algorithm は、全頂点対の最短路を個別に列挙せず、各 source に対する最短路探索と依存度の逆向き累積を組み合わせる。非重みグラフでは、1 source の処理を BFS と辺走査で実行できるため、all-sources の一般的な時間計算量は $O(|V|(|V|+|E|))$、補助空間は $O(|V|+|E|)$ となる [@brandes2001]。$|E|=\Omega(|V|)$ が成り立つ場合に限り、時間計算量は $O(|V||E|)$ と簡略化できる。これは、単純な全頂点対処理に比べて厳密 BC の実用性を大きく高めた。計算式と依存度漸化式は Chapter 2 で示したため、ここでは source-by-source processing が並列化の単位を与える点に注目する。
 
 ある source の寄与は、他の source の探索状態を参照せずに計算できる。したがって、複数の source を CPU thread、GPU、あるいは分散した計算資源へ割り当て、最後に頂点ごとの部分 BC を加算する source-level parallelism が成立する。ただし、各 worker が距離、最短路数、依存度、frontier などの source-local state を必要とする。source 数を増やすほど並列性は高まる一方、同時処理数に比例して作業領域が増える場合がある。
 

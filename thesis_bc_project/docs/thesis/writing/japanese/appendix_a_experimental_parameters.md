@@ -1,6 +1,6 @@
 # Appendix A Complete Experimental Parameters
 
-本付録は、本研究の各実験系列を再構成するために必要な実行パラメータを一覧する。収録対象は、全バッチサイズ、環境変数、PBS 資源記録、checkpoint、計時範囲、正確性許容値である。本付録は実験結果の再解釈を目的とせず、Chapter 5 で規定した方法と Chapter 6 から Chapter 9 で報告した結果に対応する実行条件のみを記述する。runtime 値や speedup を本付録で再掲することはせず、条件の記述に必要な範囲に限る。掃引の全 trial 値は Appendix B、ablation の全構成値は Appendix C、正確性の詳細指標は Appendix D に置く。
+本付録は、本研究の各実験系列を再構成するために必要な実行パラメータを一覧する。収録対象は、全バッチサイズ、環境変数、PBS 資源記録、checkpoint、計時範囲、正確性許容値である。本付録は実験結果の再解釈を目的とせず、Chapter 5 で規定した方法と Chapter 6 から Chapter 9 で報告した結果に対応する実行条件のみを記述する。runtime 値や speedup を本付録で再掲することはせず、条件の記述に必要な範囲に限る。掃引の全 trial 値は Appendix B、ablation の全構成値は Appendix C、正確性の検証条件は本付録 A.8 節、正確性の詳細指標は T5 correctness table に置く。
 
 すべての記載は保存された正式資料に基づく。実験時コードと現行スクリプトが異なる場合は、実験時 snapshot（`code_snapshots/<SourceSnapshotID>/`）を実行条件の正本とする。値が保存記録から確認できない場合は `Not recorded`、当該系列に適用されない場合は `N/A`、記録は存在するが独立に確定できない場合は `Not independently verifiable` と記す。これら 3 者を区別し、不明値を推定して埋めることはしない。
 
@@ -84,8 +84,6 @@ GPU メモリの記載では 4 つの量を分離している。第 1 は公称 
 Queue 欄は投入スクリプトの `#PBS -q` directive の記録である。保存されたジョブログからは実際に使用された queue 名を独立に確認できないため、directive の存在をもって当該 queue での実行を断定しない（Chapter 5、5.12 節）。GPU 数は `select` 指定に含まれておらず、directive からは確定できないため `Not specified in directive` とする。環境記録は実行ノードの GPU が NVIDIA GH200 であることを示すが、これは directive による資源要求の記録ではない。
 
 Host Memory Limit 欄の `Host-memory-limited 100 GiB configuration` は、memory-path 系列の保存文書に記録された資源条件である。他系列については同種の記録がないため `Not recorded` とする。legacy memory scalability 系列は旧ツリーでの実行であり、PBS job ID が当時のログに個別記録されていないため `Not recorded` である。
-
-なお、本環境ではシェル初期化時に `.zshenv` からの `.cargo/env` 読み込み警告が出力されるが、これは runner の実行・計測・結果に影響しない環境固有の初期化メッセージであり、実験の失敗記録として扱わない。
 
 ## A.4 Main Performance Parameters
 
@@ -234,10 +232,10 @@ memory-path correctness の legacy 系列（job 2368587 ほか）は旧 malforme
 
 RQ4 の正確性検証は 2 つの evidence tier に分かれる。両者は参照の独立性が異なるため分離して記述する。
 
-判定は混合絶対・相対許容による。reference $a_i$ と candidate $b_i$ の各要素について次を要求する。
+判定は混合絶対・相対許容による。reference $r_i$ と candidate $c_i$ の各要素について次を要求する。
 
 $$
-|a_i-b_i|\le\mathrm{abs\_tol}+\mathrm{rel\_tol}\max(|a_i|,|b_i|)
+|r_i-c_i|\le\mathrm{abs\_tol}+\mathrm{rel\_tol}\max(|r_i|,|c_i|)
 $$
 
 正式な許容値は `abs_tol = 1e-3`、`rel_tol = 1e-6` である。許容値を事後に変更して判定を PASS に変えることはしない。BC 値が大きい領域では絶対許容単独の超過が生じ得るため、これは WARN として分離し、単独の失敗判定としない。
@@ -270,6 +268,8 @@ Tier A の比較範囲は、Sequential CPU 実装を独立参照とする全 BC 
 比較は上記 6 vector から構成される 10 組であり、comparison class は `same_impl_diff_batch` が 2 組、`same_batch_diff_path` が 3 組、`pathmerge_cross` が 5 組である。各構成 $N_{\mathrm{trials}}=1$・warmup なし、許容値は Tier A と同一である。対象グラフは `325557_3216152_corrected_v1`（SHA256 `8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22`、$n=325{,}557$、$m=3{,}216{,}152$）である。
 
 Tier B は cross-implementation consistency であり、independent ground truth ではない。PathMerge は評価した第三者実装の external comparator であって参照真値ではない。
+
+この対象グラフは、範囲外頂点 ID と CSR 要素数不一致のみを修正した入力であり、self-loop（87,442 本）と重複 adjacency pair（多重度 2 の有向ペア 866,924 組）は除去していない。adjacency 要素数は $2m=6{,}432{,}304$ である。したがって Tier B の 10 比較は、この保存された adjacency representation 上での実装間整合であり、simple-graph semantics に対する独立 ground truth との一致ではない。
 
 ### A.8.3 Recorded Validation Checks
 

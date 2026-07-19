@@ -6,7 +6,7 @@
 
 RQ1 の主性能結果は変更しない。固定 b512 の block GPU_Opt は、評価した第三者実装の tuned PathMerge に対し、email-EuAll で 3.17 倍、roadNet-PA で 1.31 倍、roadNet-TX で 1.51 倍、roadNet-CA で 1.45 倍高速であった。修正版 325557 はこの主性能比較に含まれない。
 
-RQ2 は性能差の内部要因を、RQ1 とは別のグラフ集合で評価した。修正版 325557 の主効果は H=1.4767、W=1.1012、A=1.5563、合成 4 グラフ集約は H=1.679、W=1.066、A=1.391 である。後者は他 3 グラフが job 2354994、修正版 325557 が job 2406254 / checkpoint `45352a3` の mixed-checkpoint 集約である。Hybrid BFS と Dual-Stream Execution の正の効果、Warp-Cooperative Accumulation の graph dependence は評価条件内の観測であり、roadNet の RQ1 speedup をこのアブレーションだけで因果分解しない。
+RQ2 は性能差の内部要因を、RQ1 とは別のグラフ集合で評価した。修正版 325557 の主効果は H=1.4767、W=1.1012、A=1.5563、合成 4 グラフ集約は H=1.679、W=1.066、A=1.391 である。後者は、graph によって測定 job と checkpoint が異なる mixed-checkpoint 集約である（内訳は 5.11 節および Appendix A）。Hybrid BFS と Dual-Stream Execution の正の効果、Warp-Cooperative Accumulation の graph dependence は評価条件内の観測であり、roadNet の RQ1 speedup をこのアブレーションだけで因果分解しない。
 
 RQ3 は同じ計算基盤の memory-management variants を比較した。修正版 325557 の targeted boundary では Pure b4096、UM b10240、Chunked b16384 が成功し、Pure b8192 は CUDA device-memory OOM、UM b12288 は cgroup host-memory OOM kill であった。各条件 1 試行であり、runtime を方式間性能の formal ranking に用いない。
 
@@ -42,13 +42,13 @@ Tier A の独立参照 PASS は、小規模 3 グラフにおける GPU_Opt の 
 
 全 13 比較が `ByteIdentical=No` であることは、floating-point accumulation order の違いを許容する判定設計と整合する。ここから特定の差の原因を断定しない。混合許容内 PASS と bitwise identity を区別することが、性能・容量の変更を評価する際の construct validity に必要である。
 
-修正版 325557 は決定的に再構成されたが、元 seed・上流の完全な原本が未確認である。したがって Tier B の結論には provenance limitation が残る。旧 malformed 入力上の `CORE_FAIL` は current conclusion から除外する一方、failure archive と canonical job 2368587 を historical invalid-input evidence として保存する。この履歴は、入力 validation と再検証手続きの重要性を示す。
+修正版 325557 は決定的に再構成されたが、元 seed・上流の完全な原本が未確認である。したがって Tier B の結論には provenance limitation が残る。旧 malformed 入力上の `CORE_FAIL` は current conclusion から除外する一方、failure archive と当該 canonical job を historical invalid-input evidence として保存する（job ID は Appendix A）。この履歴は、入力 validation と再検証手続きの重要性を示す。
 
 ## 10.6 Threats to Validity
 
 ### 10.6.1 Internal Validity
 
-RQ2 の合成 4 集約は mixed-checkpoint であり、same-checkpoint four-graph remeasurement ではない。修正版 325557 の RQ3/RQ4 は job 2404743、RQ2 は job 2406254 である。manifest、checkpoint、job ID を明示し、異なる実験群を同一 run として扱わない。
+RQ2 の合成 4 集約は mixed-checkpoint であり、same-checkpoint four-graph remeasurement ではない。修正版 325557 の RQ3/RQ4 と RQ2 も別々の job で測定している。manifest、checkpoint、job ID は 5.11 節および Appendix A に明示し、異なる実験群を同一 run として扱わない。
 
 OOM class は保存 evidence に従う。Pure b8192 の CUDA error と UM b12288 の cgroup host-memory OOM kill を区別する。failure を 0 秒の runtime として扱わない。
 
@@ -63,6 +63,8 @@ RQ3 の working-set values は code-derived allocation estimates であり measu
 ### 10.6.4 Baseline and Data Validity
 
 PathMerge は第三者実装の external comparator であり原著者公式実装でも ground truth でもない。修正版 graph は内部再構成データで元 seed・上流原本未確認である。旧 malformed result を current evidence に混入させない。
+
+修正版 325557 の修復は範囲外頂点 ID と CSR 要素数不一致の是正であり、self-loop 87,442 本と多重度 2 の有向ペア 866,924 組は保持している（5.3 節）。RQ2、RQ3、および RQ4 Tier B の結果は、この保存された adjacency representation に対する結果であり、Tier B は同一入力上の実装間整合であって simple-graph semantics に対する独立 ground truth ではない。この構造が実装間の性能差の原因であるとは主張しない。修正版 325557 は RQ1 の主性能比較には用いていないため、RQ1 の speedup 値はこの構造の影響を受けない。
 
 ## 10.7 Future Work
 

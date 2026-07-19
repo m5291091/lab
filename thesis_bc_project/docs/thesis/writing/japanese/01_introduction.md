@@ -52,7 +52,7 @@ Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock
 
 **RQ3 Memory Scalability**
 
-GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実行可能なbatch sizeと性能にどのような影響を与えるか。
+評価した修正版325557グラフにおいて、GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunkedのメモリ管理方式は、実行可能なbatch sizeと観測されたメモリ制約にどのような影響を与えるか。
 
 この問いには Chapter 8: Memory Scalability で回答する。
 

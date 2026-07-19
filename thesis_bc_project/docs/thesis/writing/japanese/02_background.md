@@ -55,6 +55,8 @@ $$
 
 本研究で使用する BC は、undirected、unweighted、exact all-sources、unnormalized、endpoints excluded である。すなわち、$C_B^{\mathrm{undir}}$ を計算し、上式の normalization は適用しない。入力データの由来上の directedness ではなく、実験へ渡されるグラフ表現の directedness を基準とする。たとえば directed な原データを前処理で無向化した場合、計算対象は undirected graph である。これらの条件は Chapter 5 の評価設定、および Sequential、GPU_Opt、PathMerge の集計処理と整合する。
 
+以上の定義は $G=(V,E)$ の一般形に対するものであり、$E$ が self-loop と多重辺を含まない simple graph であることを前提としていない。実験上の例外として、本研究の実験入力の 1 つである修正版 325557 グラフは、self-loop と重複 adjacency pair を保持したまま評価している。この入力の構造と、それが影響する RQ の範囲は 5.3 節で述べる。
+
 **Table 2.1: Symbols used in this thesis.**
 
 | Symbol | Meaning |
