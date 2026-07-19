@@ -521,7 +521,7 @@ Synthetic-4 aggregate の構成要素を Table C.18 に示す。Corrected 325557
 
 ## C.10 Recalculation and Validation
 
-独立再計算は標準ライブラリだけを用い、canonical raw TSV を毎回新たに読み込んで、完全性、構成別 median/mean/$s_T$/min/max/median GTEPS、graph 別 main effect、および current Synthetic-4 aggregate を計算した。同一処理を 2 回実行した出力は byte-identical で、両方の SHA256 は `e77716fb31b76228824d9bfe04a9ef3fe35c6cf31a181ca04ff416d88cf384a5` であった。一時生成物は `/tmp` にのみ置いた。
+独立再計算は標準ライブラリだけを用い、canonical raw TSV を毎回新たに読み込んで、完全性、構成別 median/mean/$s_T$/min/max/median GTEPS、graph 別 main effect、および current Synthetic-4 aggregate を計算した。同一処理を 2 回実行した出力は byte-identical で、両方の SHA256 は `e77716fb31b76228824d9bfe04a9ef3fe35c6cf31a181ca04ff416d88cf384a5` であった。
 
 実験時 `summarize_ablation.py` についても Synthetic と email をそれぞれ 2 回再生成した。各回の `ablation_summary.md` と `ablation_contributions.tsv` は相互に byte-identical で、repository の正式成果物とも byte-identical であった。Corrected は独立計算した構成別統計を正式 `ablation_per_config_stats.tsv` と丸め精度内で照合し、main effect と aggregate は正式 contribution/aggregate TSV の小数第 4 位と一致した。
 
@@ -561,7 +561,7 @@ canonical source の役割を Table C.19 に整理する。raw trial 値は raw 
 | Non-finite or non-positive runtime / GTEPS | 0 | 0 | Pass |
 | Failed formal rows | 0 | 0 | Pass |
 | Warmup rows included | 0 | 0 | Pass |
-| Per-configuration median / mean / sample SD / min / max / median GTEPS | Exact recomputation | Match | Pass |
+| Per-configuration median / mean / sample standard deviation / min / max / median GTEPS | Exact recomputation | Match | Pass |
 | Per-graph main effects | Formal value at 4 d.p. | Match | Pass |
 | Current Synthetic-4 aggregate | H=1.6787; W=1.0661; A=1.3914 | Match | Pass |
 | Independent recalculation repeatability | Byte-identical | SHA256 identical | Pass |

@@ -4,7 +4,9 @@
 
 主要比較は、提案するバッチ型 GPU 実行基盤の主実装 GPU_Opt（Unified Memory、常時 block カーネル、全グラフ共通の固定バッチ b512）と、グラフごとにバッチサイズを調整した tuned PathMerge である。対象は email-EuAll、roadNet-PA、roadNet-TX、roadNet-CA の 4 グラフに限定される。報告する指標は median 実行時間、GTEPS、speedup であり、集計はすべて 5.6 節の定義（主値 median、speedup は median 同士の比、GTEPS は全実装統一式）に従う。
 
-本章で比較対象とする PathMerge は、Galliot（path-merging 型 BC アルゴリズム）[@zheng2023galliot; @zheng2023jsac] の第三者実装であり、上流リポジトリ `gobardhanm/path-merging-bc`（評価時 snapshot `9c231b46`）[@pathmergeRepo] を adapter 化して測定した（5.4 節）。これは原著論文著者による公式実装ではなく、external comparator であって ground truth ではない。したがって本章の結果は、評価に用いたこの実装・環境・4 グラフに限定され、PathMerge/Galliot アルゴリズム一般や原著者の公式実装への優劣を意味しない。
+本章で比較対象とする PathMerge は、Galliot（path-merging 型 BC アルゴリズム）[@zheng2023galliot; @zheng2023jsac] の第三者実装であり、上流リポジトリ `gobardhanm/path-merging-bc` の評価時 snapshot [@pathmergeRepo] を adapter 化して測定した（5.4 節）。これは原著論文著者による公式実装ではなく、external comparator であって independent ground truth ではない。したがって本章の結果は、評価に用いたこの実装・環境・4 グラフに限定され、PathMerge/Galliot アルゴリズム一般や原著者の公式実装への優劣を意味しない。
+
+<!-- Source note (internal): evaluated upstream commit 9c231b46f7499380d4495262c1ec75a11cdaae7a; see references.bib:pathmergeRepo and SOURCE_AUDIT.tsv:S08. -->
 
 本章は観測された性能の記述に限定する。各最適化（Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream Execution、block カーネル）の寄与は Chapter 7、メモリ管理方式の容量特性は Chapter 8、BC 出力の数値的一致は Chapter 9、要因の総合的な考察は Chapter 10 で扱う。GPU_Opt_Pure および GPU_Opt_Pure_Chunked は同一実行基盤におけるメモリ管理方式のバリエーションであり（5.4 節）、独立した提案ではないため、その評価は主に Chapter 8 で行う。
 
@@ -22,7 +24,7 @@
 | roadNet-CA | 1965206 | 2766607 | b512 | 3 | 2129.10 | 2.55 | b32 | 3 | 3079.72 | 1.77 | 1.45 |
 
 <!-- canonical artifact: T2_main_performance (internal ID: T2); Nodes/Edges from T1_graph_metadata -->
-> Source: `result/tables/thesis/T2_main_performance.tsv`; Nodes/Edges are the undirected counts of Table 5.3. GPU_Opt raw: `raw_data/main_performance/proposed_variants/<graph>/_run/job_2357334_20260711/results.tsv`. PathMerge raw: email-EuAll and roadNet-CA from `raw_data/tuning/pathmerge/<graph>/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`; roadNet-PA/TX from `raw_data/main_performance/seven_implementations/legacy_partial/large/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv` (same-b64 legacy baseline, 6.3). The GPU_Opt batch is fixed at 512 sources per CUDA stream (dual-stream execution, NS_eff=2) on all four graphs.
+<!-- Source note (internal): result/tables/thesis/T2_main_performance.tsv; GPU_Opt raw_data/main_performance/proposed_variants/<graph>/_run/job_2357334_20260711/results.tsv; PathMerge tuning and retained legacy baseline TSVs. GPU_Opt is fixed at 512 sources per stream with NS_eff=2. -->
 
 評価した 4 グラフすべてにおいて、GPU_Opt の median 実行時間は tuned PathMerge より短かった。email-EuAll では 30.81 s 対 97.80 s であり、差が最も大きい。roadNet-PA/TX/CA では 699.52 s 対 918.67 s、980.13 s 対 1482.68 s、2129.10 s 対 3079.72 s であり、いずれも GPU_Opt が短い。
 
@@ -40,7 +42,7 @@ roadNet 系 3 グラフは Nodes・Edges がこの順に増加するが（Table 
 
 **Table 6.2: Trial-level runtime statistics of the main comparison. All times are in seconds; SD denotes the sample standard deviation (ddof=1).**
 
-| Implementation (Batch) | Graph | n | Median [s] | Mean [s] | Sample SD [s] | Min [s] | Max [s] |
+| Implementation (Batch) | Graph | n | Median [s] | Mean [s] | Sample Standard Deviation [s] | Min [s] | Max [s] |
 |---|---|--:|--:|--:|--:|--:|--:|
 | GPU_Opt (b512) | email-EuAll | 5 | 30.81 | 30.81 | 0.061 | 30.75 | 30.91 |
 | GPU_Opt (b512) | roadNet-PA | 3 | 699.52 | 700.49 | 1.695 | 699.50 | 702.45 |
@@ -52,7 +54,7 @@ roadNet 系 3 グラフは Nodes・Edges がこの順に増加するが（Table 
 | PathMerge tuned (b32) | roadNet-CA | 3 | 3079.72 | 3083.85 | 25.511 | 3060.66 | 3111.18 |
 
 <!-- provenance: recomputed from the same canonical raw TSVs as Table 6.1 (median/mean/SD cross-checked against docs/thesis/thesis_values.tsv) -->
-> Source: computed from the per-trial `Time_sec` values in the canonical raw TSVs listed under Table 6.1. Median, mean, and sample SD agree with `docs/thesis/thesis_values.tsv`.
+<!-- Source note (internal): computed from per-trial Time_sec values in the canonical raw TSVs listed for Table 6.1; cross-checked with docs/thesis/thesis_values.tsv. -->
 
 ## 6.2 Speedup over Tuned PathMerge
 
@@ -76,7 +78,7 @@ Figure 6.2 に示すとおり、speedup は 4 グラフすべてで 1.0 を上�
 
 ![Figure 6.3: PathMerge batch-size sweep](../../../../result/figures/thesis/pathmerge_batch_sweep.png)
 
-**Figure 6.3: PathMerge batch-size sweep: median runtime versus requested batch size (log2 axis) per graph. Circled markers denote the tuned batch used in the main comparison; marker styles encode the number of recorded trials per batch (n=1 screening, n=2, n>=3 confirmation with sample-SD error bars; see the in-figure legend); squares annotate recorded clamping of the effective batch.**
+**Figure 6.3: PathMerge batch-size sweep: median runtime versus requested batch size (log2 axis) per graph. Circled markers denote the tuned batch used in the main comparison; marker styles encode the number of recorded trials per batch (n=1 screening, n=2, n>=3 confirmation with sample-standard-deviation error bars; see the in-figure legend); squares annotate recorded clamping of the effective batch.**
 
 <!-- canonical artifact: pathmerge_batch_sweep.{png,pdf,svg} (internal ID: F3) -->
 
@@ -98,7 +100,7 @@ default 設定と tuned 設定の区別を Table 6.3 に示す。本研究の中
 | roadNet-CA | 3499.03 | 1.64 | b32 | 3079.72 | 1.45 |
 
 <!-- provenance: default/tuned separation from result/tables/final_speedup_tables.md (merge_final_tables.py); default n: email-EuAll 5, roadNet-PA/TX/CA 3 -->
-> Source: `result/tables/final_speedup_tables.md`. Default b64 medians are legacy baseline measurements (`raw_data/main_performance/seven_implementations/legacy_partial/{medium,large}/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv`; email-EuAll n=5, roadNet n=3). Tuned values as in Table 6.1.
+<!-- Source note (internal): result/tables/final_speedup_tables.md; default b64 legacy baseline TSVs under raw_data/main_performance/seven_implementations/legacy_partial/; tuned values as in Table 6.1. -->
 
 GPU_Opt については、PathMerge に対して行ったようなグラフ別のバッチ掃引を実施していない。全 4 グラフで固定 b512 のみを測定しており（5.5 節）、この非対称性は 6.2 節で述べたとおり比較条件の一部である。なお、PathMerge の tuned バッチが既定 b64 と同一の BC ベクトルを出力すること（email-EuAll の b64 対 b2048、roadNet-CA の b32 対 b64）の全ベクトル検証は Chapter 9（9.3 節）で示す。
 
@@ -124,7 +126,7 @@ GTEPS はグラフ間の比較指標としては限定的である。実行時�
 | 56438_300801 | N/A | 13.35 ± 0.13 | 71.85 ± 1.36 | 2.02 ± 0.01 | 4.64 ± 0.01 |
 
 <!-- provenance: result/main_performance/seven_implementations/legacy_partial/small/statistical_test_no_gpu_opt.md (mean±SD, n=10); raw: raw_data/main_performance/seven_implementations/legacy_partial/small/no_gpu_opt/job_notrecorded_legacy/results_no_gpu_opt.tsv -->
-> Source: `result/main_performance/seven_implementations/legacy_partial/small/statistical_test_no_gpu_opt.md`. Aggregation is mean ± sample SD (n=10), as recorded in the legacy summary; no speedup is derived from this table. `GPU_Opt_Pure` here is the legacy shared-kernel measurement, not the current block implementation of Table 6.1. Sequential on 56438_300801 was not measured (prohibitive cost). `random` (32212 nodes / 101805 undirected edges) is a legacy-only small graph outside the catalog of Table 5.3.
+<!-- Source note (internal): result/main_performance/seven_implementations/legacy_partial/small/statistical_test_no_gpu_opt.md. Aggregation is mean ± sample standard deviation (n=10); GPU_Opt_Pure is the legacy shared-kernel measurement; Sequential on 56438_300801 was not measured. -->
 
 この補助比較から読み取れる事実は次のとおりである。Sequential は、記録のある 3 グラフで GPU 実装よりおおむね 1～2 桁長い実行時間を要した。OpenMP は最小規模の benchmark_7000_41459 と benchmark_11023_62184 では GPU 実装（旧 shared 提案系・PathMerge）より短時間であった一方、random と 56438_300801 では GPU 実装より長時間であった。cuGraph は評価した 4 つの小規模グラフすべてで提案系（旧 shared）および PathMerge より長時間であったが、cuGraph の計時範囲は初期化を含む関数全体である点（5.4 節）に注意する。
 

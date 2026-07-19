@@ -6,7 +6,9 @@
 
 ## B.1 Evaluation Scope
 
-本付録が対象とする PathMerge は、Galliot（path-merging 型 BC アルゴリズム）の第三者実装であり、上流リポジトリ `gobardhanm/path-merging-bc`（評価時 snapshot `9c231b46`）を adapter 化して保存した snapshot である（5.4 節）。これは原著論文著者による公式実装であるとは確認されていない。
+本付録が対象とする PathMerge は、Galliot（path-merging 型 BC アルゴリズム）の第三者実装であり、上流リポジトリ `gobardhanm/path-merging-bc` の評価時 snapshot を adapter 化して保存したものである（5.4 節）。これは原著論文著者による公式実装であるとは確認されていない。
+
+<!-- Source note (internal): evaluated upstream commit 9c231b46f7499380d4495262c1ec75a11cdaae7a; see references.bib:pathmergeRepo and SOURCE_AUDIT.tsv:S08. -->
 
 この実装は本研究における external comparator であって、ground truth ではない。BC 出力の正しさの基準として用いることはせず、掃引結果を正解性の根拠とすることもしない。掃引で得た値は、評価に用いたこの保存 snapshot、評価した graph、GH200（Miyabi-G）環境における観測に限定される。
 
@@ -89,13 +91,15 @@ email-EuAll の掃引は 2 stage からなる。screening は要求バッチ 8, 
 <!-- Source: raw_data/tuning/pathmerge/email-EuAll/pathmerge_bc/job_multi_20260710/email_smallbatch_trial1.tsv (screening); .../pathmerge_sweep_results.tsv and .../pathmerge_sweep.log (confirmation); .../job_2359096_20260711/ and .../job_2359169_20260711/pbs_stdout.log -->
 > Source: screening rows from `raw_data/tuning/pathmerge/email-EuAll/pathmerge_bc/job_multi_20260710/email_smallbatch_trial1.tsv`; confirmation rows from `.../job_multi_20260710/pathmerge_sweep_results.tsv`. Effective batches and the clamp warning are read from `.../job_multi_20260710/pathmerge_sweep.log` and `raw_data/unsuccessful/early_terminated/pathmerge_sweep/email-EuAll/job_2359096_20260711/pathmerge_sweep.log`. Job identifiers from the retained `pbs_stdout.log` of each job.
 
-clamp は要求 b8192 の 1 件である。保存ログには `WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 7393 (free=101.4 GB, 11660396 B/source)` が全 3 trial について記録されており、実効バッチは 7393、`num_batches` は 36 であった。これは実行を停止させる失敗ではなく、実装がメモリ予算に合わせてバッチを縮小した上で正常に完了した記録である。他の要求バッチでは clamp の記録はない。
+clamp は要求 b8192 の 1 件である。保存ログは、要求バッチが HBM3 budget を超えたため、空き容量 101.4 GB と 1 source 当たり 11,660,396 bytes に基づいて実効バッチを 7393 へ縮小したことを全 3 trial で記録している。`num_batches` は 36 であった。これは実行を停止させる失敗ではなく、実装がメモリ予算に合わせてバッチを縮小した上で正常に完了した記録である。他の要求バッチでは clamp の記録はない。
+
+<!-- Source note (internal): exact retained warning: WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 7393 (free=101.4 GB, 11660396 B/source). -->
 
 batch 別集計を Table B.3 に示す。
 
 **Table B.3: Per-batch aggregates of the email-EuAll sweep. Median, mean, min, and max are in seconds; SD is the sample standard deviation (ddof=1).**
 
-| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample SD (s) | Min (s) | Max (s) | Selection |
+| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample Standard Deviation (s) | Min (s) | Max (s) | Selection |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|:--|
 | Screening | 8 | 8 | 1 | 786.91 | 786.91 | N/A (n=1) | 786.91 | 786.91 | Not selected |
 | Screening | 16 | 16 | 1 | 491.01 | 491.01 | N/A (n=1) | 491.01 | 491.01 | Not selected |
@@ -156,7 +160,7 @@ batch 別集計を Table B.5 に示す。
 
 **Table B.5: Per-batch aggregates of the roadNet-PA sweep. Median, mean, min, and max are in seconds; SD is the sample standard deviation (ddof=1).**
 
-| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample SD (s) | Min (s) | Max (s) | Selection |
+| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample Standard Deviation (s) | Min (s) | Max (s) | Selection |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|:--|
 | Screening | 8 | 8 | 1 | 2714.98 | 2714.98 | N/A (n=1) | 2714.98 | 2714.98 | Not selected |
 | Screening | 16 | 16 | 1 | 1573.87 | 1573.87 | N/A (n=1) | 1573.87 | 1573.87 | Not selected |
@@ -191,22 +195,22 @@ roadNet-TX の掃引は、要求バッチ 32, 64, 128 を各 $N_{\mathrm{trials}
 
 | Stage | Requested Batch | Effective Batch | Trial | Runtime (s) | GTEPS | Status | Job ID | Checkpoint |
 |:--|--:|--:|--:|--:|--:|:--|:--|:--|
-| Screening | 32 | Not recorded | 1 | 1620.960440 | 1.6359 | Success | 2360072 | `88faffa3` |
-| Screening | 64 | Not recorded | 1 | 1493.690042 | 1.7753 | Success | 2360072 | `88faffa3` |
-| Screening | 128 | Not recorded | 1 | 1668.676282 | 1.5891 | Success | 2360072 | `88faffa3` |
-| Confirmation | 32 | Not recorded | 1 | 1615.624785 | 1.6413 | Success | 2361040 | `88faffa3` |
-| Confirmation | 32 | Not recorded | 2 | 1631.801685 | 1.6250 | Success | 2361040 | `88faffa3` |
-| Confirmation | 64 | Not recorded | 1 | 1491.127569 | 1.7783 | Success | 2361040 | `88faffa3` |
-| Confirmation | 64 | Not recorded | 2 | 1466.158928 | 1.8086 | Success | 2361040 | `88faffa3` |
+| Screening | 32 | Not recorded | 1 | 1620.960440 | 1.6359 | Success | 2360072 | `phase_def_block_20260710` |
+| Screening | 64 | Not recorded | 1 | 1493.690042 | 1.7753 | Success | 2360072 | `phase_def_block_20260710` |
+| Screening | 128 | Not recorded | 1 | 1668.676282 | 1.5891 | Success | 2360072 | `phase_def_block_20260710` |
+| Confirmation | 32 | Not recorded | 1 | 1615.624785 | 1.6413 | Success | 2361040 | `phase_def_block_20260710` |
+| Confirmation | 32 | Not recorded | 2 | 1631.801685 | 1.6250 | Success | 2361040 | `phase_def_block_20260710` |
+| Confirmation | 64 | Not recorded | 1 | 1491.127569 | 1.7783 | Success | 2361040 | `phase_def_block_20260710` |
+| Confirmation | 64 | Not recorded | 2 | 1466.158928 | 1.8086 | Success | 2361040 | `phase_def_block_20260710` |
 
 <!-- Source: raw_data/tuning/pathmerge/roadNet-TX/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv; job attribution from job_2360072 / job_2361040 pbs_stdout.log -->
-> Source: `raw_data/tuning/pathmerge/roadNet-TX/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`. Stage and job attribution from `.../job_2360072_20260711/pbs_stdout.log` (screening, `Trials: 1`) and `.../job_2361040_20260711/pbs_stdout.log` (confirmation, `Trials: 2`). Both retained logs preserve only the result TSV, so effective batches are `Not recorded`; no clamp warning is present. The checkpoint is the `checkpoint_sha` recorded in both logs (`88faffa391026852a4440e5b9a063c08c29624f7`), belonging to SourceSnapshotID `phase_def_block_20260710`.
+<!-- Source note (internal): raw_data/tuning/pathmerge/roadNet-TX/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv. Stage and job attribution are preserved in the retained pbs_stdout.log files for jobs 2360072 and 2361040. Both logs record commit 88faffa391026852a4440e5b9a063c08c29624f7, whose canonical SourceSnapshotID is phase_def_block_20260710. Effective batches are Not recorded; no clamp warning is present. -->
 
 batch 別集計を Table B.7 に示す。
 
 **Table B.7: Per-batch aggregates of the roadNet-TX sweep. Median, mean, min, and max are in seconds; SD is the sample standard deviation (ddof=1).**
 
-| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample SD (s) | Min (s) | Max (s) | Selection |
+| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample Standard Deviation (s) | Min (s) | Max (s) | Selection |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|:--|
 | Screening | 32 | Not recorded | 1 | 1620.96 | 1620.96 | N/A (n=1) | 1620.96 | 1620.96 | — |
 | Confirmation | 32 | Not recorded | 2 | 1623.71 | 1623.71 | 11.439 | 1615.62 | 1631.80 | — |
@@ -237,14 +241,14 @@ roadNet-CA の掃引は 3 stage からなる。screening は要求バッチ 32, 
 
 | Stage | Requested Batch | Effective Batch | Trial | Runtime (s) | GTEPS | Status | Job ID | Checkpoint |
 |:--|--:|--:|--:|--:|--:|:--|:--|:--|
-| Extension | 16 | Not recorded | 1 | 3609.950435 | 1.5061 | Success | 2361041 | `88faffa3` |
-| Screening | 32 | Not recorded | 1 | 3111.176829 | 1.7476 | Success | 2360073 | `88faffa3` |
-| Confirmation | 32 | Not recorded | 1 | 3079.716622 | 1.7654 | Success | 2362006 | `88faffa3` |
-| Confirmation | 32 | Not recorded | 2 | 3060.659395 | 1.7764 | Success | 2362006 | `88faffa3` |
-| Screening | 64 | Not recorded | 1 | 3588.386622 | 1.5152 | Success | 2360073 | `88faffa3` |
-| Confirmation | 64 | Not recorded | 1 | 3490.242337 | 1.5578 | Success | 2362006 | `88faffa3` |
-| Confirmation | 64 | Not recorded | 2 | 3491.644750 | 1.5571 | Success | 2362006 | `88faffa3` |
-| Screening | 128 | Not recorded | 1 | 3830.858410 | 1.4193 | Success | 2360073 | `88faffa3` |
+| Extension | 16 | Not recorded | 1 | 3609.950435 | 1.5061 | Success | 2361041 | `phase_def_block_20260710` |
+| Screening | 32 | Not recorded | 1 | 3111.176829 | 1.7476 | Success | 2360073 | `phase_def_block_20260710` |
+| Confirmation | 32 | Not recorded | 1 | 3079.716622 | 1.7654 | Success | 2362006 | `phase_def_block_20260710` |
+| Confirmation | 32 | Not recorded | 2 | 3060.659395 | 1.7764 | Success | 2362006 | `phase_def_block_20260710` |
+| Screening | 64 | Not recorded | 1 | 3588.386622 | 1.5152 | Success | 2360073 | `phase_def_block_20260710` |
+| Confirmation | 64 | Not recorded | 1 | 3490.242337 | 1.5578 | Success | 2362006 | `phase_def_block_20260710` |
+| Confirmation | 64 | Not recorded | 2 | 3491.644750 | 1.5571 | Success | 2362006 | `phase_def_block_20260710` |
+| Screening | 128 | Not recorded | 1 | 3830.858410 | 1.4193 | Success | 2360073 | `phase_def_block_20260710` |
 
 <!-- Source: raw_data/tuning/pathmerge/roadNet-CA/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv; job attribution from job_2360073 / job_2361041 / job_2362006 pbs_stdout.log -->
 > Source: `raw_data/tuning/pathmerge/roadNet-CA/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`. Stage and job attribution from `.../job_2360073_20260711/pbs_stdout.log` (screening, `Batches : 32,64,128  Trials: 1`), `.../job_2361041_20260711/pbs_stdout.log` (extension, `Batches : 16  Trials: 1`), and `.../job_2362006_20260711/pbs_stdout.log` (confirmation, `Batches : 32,64  Trials: 2`). The retained logs preserve only the result TSV, so effective batches are `Not recorded`; no clamp warning is present. Checkpoint as recorded by `checkpoint_sha` in each log.
@@ -253,7 +257,7 @@ batch 別集計を Table B.9 に示す。
 
 **Table B.9: Per-batch aggregates of the roadNet-CA sweep. Median, mean, min, and max are in seconds; SD is the sample standard deviation (ddof=1).**
 
-| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample SD (s) | Min (s) | Max (s) | Selection |
+| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample Standard Deviation (s) | Min (s) | Max (s) | Selection |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|:--|
 | Extension | 16 | Not recorded | 1 | 3609.95 | 3609.95 | N/A (n=1) | 3609.95 | 3609.95 | Not selected |
 | Screening | 32 | Not recorded | 1 | 3111.18 | 3111.18 | N/A (n=1) | 3111.18 | 3111.18 | — |
@@ -273,7 +277,7 @@ roadNet-CA では、tuned の b32（3079.72 s）と default の b64 を明確に
 
 ### Incomplete or Failed Runs
 
-roadNet-CA の掃引には、早期終了・不完全掃引・timeout・OOM・runtime failure の記録がない。`failure/` 以下に本グラフの掃引に対応する成果物は存在しない。
+roadNet-CA の掃引には、早期終了・不完全掃引・timeout・OOM・runtime failure の記録がなく、対応する `failure/` artifact も存在しない。
 
 ## B.7 Historical 325557 Sweep
 
@@ -313,13 +317,15 @@ roadNet-CA の掃引には、早期終了・不完全掃引・timeout・OOM・ru
 <!-- Source: raw_data/tuning/pathmerge/325557/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv; effective batches and clamp from .../pathmerge_sweep.log (job 2359081 scope) -->
 > Source: `raw_data/tuning/pathmerge/325557/pathmerge_bc/job_multi_20260710/pathmerge_sweep_results.tsv`. Job attribution from `.../job_2355000_20260710/pbs_stdout.log` (`Batches : 512,1024,2048  Trials: 3`) and `.../job_2359081_20260711/pbs_stdout.log` (`Batches : 4096,8192  Trials: 3`). The retained `pathmerge_sweep.log` covers only the job-2359081 batches, so effective batches are recorded for b4096 and b8192 and are `Not recorded` elsewhere. The trial-1 GTEPS at b32 was corrupted in the original TSV column and was recomputed from `Time_sec` with the runner formula (`result/tuning/pathmerge/325557/SOURCE.md`); the recomputation reproduces the tabulated 0.8103. Runs whose originating result directory carries no preserved PBS identifier are recorded as `Not recorded`.
 
-clamp は要求 b8192 の 1 件である。保存ログには `WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 6018 (free=101.4 GB, 14324508 B/source)` が全 3 trial について記録されており、実効バッチは 6018、`num_batches` は 55 であった。email-EuAll の clamp（実効 7393）と本件（実効 6018）が、掃引全体で記録されている clamp の 2 件である。1 source 当たりの状態量が本グラフの方が大きいため（14,324,508 B/source 対 11,660,396 B/source）、同一の要求 b8192 に対して縮小後の実効バッチが小さくなっている。
+clamp は要求 b8192 の 1 件である。保存ログは、要求バッチが HBM3 budget を超えたため、空き容量 101.4 GB と 1 source 当たり 14,324,508 bytes に基づいて実効バッチを 6018 へ縮小したことを全 3 trial で記録している。`num_batches` は 55 であった。email-EuAll の clamp（実効 7393）と本件（実効 6018）が、掃引全体で記録されている clamp の 2 件である。1 source 当たりの状態量が本グラフの方が大きいため（14,324,508 B/source 対 11,660,396 B/source）、同一の要求 b8192 に対して縮小後の実効バッチが小さくなっている。
+
+<!-- Source note (internal): exact retained warning: WARNING: batch_size=8192 exceeds HBM3 budget; clamping to 6018 (free=101.4 GB, 14324508 B/source). -->
 
 batch 別集計を Table B.11 に示す。
 
 **Table B.11: Per-batch aggregates of the historical 325557_3216152 sweep. Median, mean, min, and max are in seconds; SD is the sample standard deviation (ddof=1). These values are historical invalid-input evidence and are not used for any current performance or correctness claim.**
 
-| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample SD (s) | Min (s) | Max (s) | Selection |
+| Stage | Requested Batch | Effective Batch | Valid Trials | Median (s) | Mean (s) | Sample Standard Deviation (s) | Min (s) | Max (s) | Selection |
 |:--|--:|--:|--:|--:|--:|--:|--:|--:|:--|
 | Initial exploration | 32 | Not recorded | 2 | 1292.27 | 1292.27 | 0.077 | 1292.21 | 1292.32 | Not selected |
 | Initial exploration | 64 | Not recorded | 1 | 770.82 | 770.82 | N/A (n=1) | 770.82 | 770.82 | Not selected |
@@ -380,12 +386,12 @@ roadNet-PA と roadNet-TX について、掃引確認値ではなく legacy base
 | All effective batches recorded or explicitly marked `Not recorded` | Yes |
 | Recorded clamps captured | Yes, 2 of 2 (email-EuAll 8192 to 7393; historical 325557 8192 to 6018) |
 | Screening, confirmation, extension, and additional trials kept separate | Yes; pooled aggregates shown as explicitly labelled rows |
-| Sample SD omitted where $N_{\mathrm{trials}}<2$ | Yes, reported as `N/A (n=1)` |
+| Sample standard deviation omitted where $N_{\mathrm{trials}}<2$ | Yes, reported as `N/A (n=1)` |
 | Failed or unrecorded trials excluded, never treated as 0 s | Yes |
 | Per-batch medians reproduce each graph's `SOURCE.md` | Yes, all batches |
 | Adopted medians reproduce Table 6.1 and `thesis_values.tsv` | Yes (97.80, 918.67, 1482.68, 3079.72) |
 | Sweep confirmation medians reproduce the values quoted in 6.3 | Yes (roadNet-PA 941.39 with $N_{\mathrm{trials}}=4$; roadNet-TX 1491.13 with $N_{\mathrm{trials}}=3$; roadNet-CA b64 3491.64) |
-| Adopted mean and sample SD reproduce Table 6.2 | Yes (email-EuAll 97.90 / 0.988; roadNet-PA 923.26 / 9.593; roadNet-TX 1493.46 / 24.855; roadNet-CA 3083.85 / 25.511) |
+| Adopted mean and sample standard deviation reproduce Table 6.2 | Yes (email-EuAll 97.90 / 0.988; roadNet-PA 923.26 / 9.593; roadNet-TX 1493.46 / 24.855; roadNet-CA 3083.85 / 25.511) |
 | Default b64 medians reproduce Table 6.3 | Yes (email-EuAll 220.39; roadNet-CA 3499.03) |
 | Recomputed GTEPS of the historical b32 trial 1 reproduces the tabulated value | Yes (0.8103) |
 | Recalculation repeated twice with identical output | Yes |
@@ -394,5 +400,3 @@ roadNet-PA と roadNet-TX について、掃引確認値ではなく legacy base
 > Source: recomputation from the raw TSVs cited in B.3 through B.8, cross-checked against `result/tuning/pathmerge/<graph>/SOURCE.md`, `result/main_performance/proposed_vs_pathmerge/comparison.tsv`, `result/tables/final_speedup_tables.md`, and `docs/thesis/thesis_values.tsv`.
 
 集計粒度に関する注意を 1 点記す。`result/tables/final_speedup_tables.md` は email-EuAll の b1024 を $N_{\mathrm{trials}}=4$ と要約している。これは screening 1 試行（job 2359096）と confirmation 3 試行（job 2359169）を pooled した記述統計であり、単一 job で 4 試行を測定したものではない。Appendix A（A.5 節）と本付録の Table B.3 は、この関係を stage 別（screening 1 / confirmation 3）と pooled（4）に分けて記述する。いずれの粒度でも b1024 は最良ではなく、tuned バッチの選択（b2048）は変わらない。
-
-本付録は既存の測定値、checkpoint、batch selection、RQ status、および PathMerge の位置づけを変更しない。`raw_data/`、`failure/`、`code_snapshots/`、`scripts/`、および Chapter 1 から Chapter 11 に対する変更は行っていない。

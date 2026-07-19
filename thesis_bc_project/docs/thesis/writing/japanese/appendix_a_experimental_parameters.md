@@ -179,8 +179,8 @@ BFS カーネルの直接比較の設定を Table A.7 に示す。これは環�
 
 | Graph | Forced Kernels | Requested Batch | Effective Batch | `SUB_BATCH` | `num_subs` | Trials per Kernel | Warmup | Aggregation | Correctness Level | PBS Job ID | Checkpoint |
 |---|---|---:|---:|---:|---:|---:|---|---|---|---|---|
-| roadNet-PA | shared, block | 512 | 512 | 512 | 1 | 3 | None | Median with sample SD | `max_bc_only` | 2354329 | `phase_def_block_20260710` |
-| roadNet-TX | shared, block | 512 | 512 | 512 | 1 | 3 | None | Median with sample SD | `max_bc_only` | 2354330 | `phase_def_block_20260710` |
+| roadNet-PA | shared, block | 512 | 512 | 512 | 1 | 3 | None | Median with sample standard deviation | `max_bc_only` | 2354329 | `phase_def_block_20260710` |
+| roadNet-TX | shared, block | 512 | 512 | 512 | 1 | 3 | None | Median with sample standard deviation | `max_bc_only` | 2354330 | `phase_def_block_20260710` |
 
 カーネルの強制切替は環境変数 `BC_FORCE_BFS_KERNEL=shared|block` による。バッチは投入スクリプトが `BC_BATCH_OVERRIDE=512` を既定として設定する。集計スクリプト `scripts/summarize_kernel_selection.py` は forced shared/block の実測値（median、標本標準偏差、$N_{\mathrm{trials}}$、速い側、速度向上、Max BC 一致）のみを出力し、選択則の当否判定を含まない。
 
@@ -357,7 +357,7 @@ $$
 s_T=\sqrt{\frac{1}{N_{\mathrm{trials}}-1}\sum_{i=1}^{N_{\mathrm{trials}}}\left(t_i-\bar{t}\right)^2}
 $$
 
-で定義される。ここで $t_i$ は各試行の実行時間、$\bar{t}$ は標本平均である。試行数の記号は $N_{\mathrm{trials}}$ であり、頂点数 $n=|V|$ とは別の記号を用いる。表・図中の `n=3`、`n=5` は $N_{\mathrm{trials}}$ を示す慣用ラベルである。単一の最速試行を代表値としない。
+で定義される。各試行の実行時間を $t_i$、その標本平均を $\bar{t}$ とする。試行数の記号は $N_{\mathrm{trials}}$ であり、頂点数 $n=|V|$ とは別の記号を用いる。表・図中の `n=3`、`n=5` は $N_{\mathrm{trials}}$ を示す慣用ラベルである。単一の最速試行を代表値としない。
 
 speedup は median 同士の比として算出し、本研究の主比較では次式に統一する。
 

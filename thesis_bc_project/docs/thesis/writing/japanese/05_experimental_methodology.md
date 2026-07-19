@@ -2,7 +2,7 @@
 
 本章では、本研究の評価方法を規定する。対象とする厳密な Betweenness Centrality（BC, 媒介中心性）は、全始点からの Breadth-First Search（BFS, 幅優先探索）に基づく Brandes アルゴリズム [@brandes2001] で計算される。以下では、提案するバッチ型 GPU 実行基盤とその主実装 GPU_Opt を、評価対象の第三者実装 PathMerge および補助 baseline と比較するための計算機環境、評価グラフ、比較実装、実行設定、計時・統計処理、要因分析、容量評価、正確性検証、再現性管理の各手続きを述べる。本章は評価の「方法」を対象とし、具体的な数値結果は Chapter 6 から Chapter 9 で示す。本章で数値を示すのは、原則として実験条件の記述に必要な設定値（バッチサイズ、試行数、許容値など）に限る。
 
-すべての記述は `thesis_bc_project/` 配下の正式資料に基づく。実験時コードは checkpoint（SourceSnapshotID）で凍結保存され、生データは `raw_data/`、派生表・図は `result/` に分離される。一次情報は各 `SOURCE.md`・`README.md`・`*.tsv` を参照する。
+すべての記述は保存された正式資料に基づく。実験時コードは SourceSnapshotID で凍結保存され、生データ、派生表・図、非正常データを分離して管理する。具体的な保存構成と provenance は 5.11 節および Appendix A に示す。
 
 ## 5.1 Research Questions
 
@@ -23,11 +23,11 @@
 |---|---|---|---|---|---|
 | RQ1 | Main performance: GPU_Opt vs tuned PathMerge | email-EuAll, roadNet-PA, roadNet-TX, roadNet-CA | runtime, speedup, GTEPS | median | GPU_Opt: email 5 / road 3; PathMerge: 3 |
 | RQ2 | Ablation (H/W/A) | benchmark_7000_41459, benchmark_11023_62184, 56438_300801, 325557_3216152_corrected_v1, email-EuAll | main effect | median | 5 per synthetic configuration / 3 per email configuration |
-| RQ2 | Kernel selection (forced shared/block) | roadNet-PA, roadNet-TX | runtime, speedup | median (+ sample SD) | 3 |
+| RQ2 | Kernel selection (forced shared/block) | roadNet-PA, roadNet-TX | runtime, speedup | median (+ sample standard deviation) | 3 |
 | RQ3 | Memory scalability (UM / Pure / Chunked) | 325557_3216152_corrected_v1 | targeted feasibility and failure class | none (single run) | 1 per targeted condition |
 | RQ4 | Correctness (Tier A / Tier B) | benchmark_7000_41459, benchmark_11023_62184, chain_200, 325557_3216152_corrected_v1 | missing, mismatch, max abs/rel error, byte identity | single-run full-vector comparison | 1 per comparison |
 
-> Source: trial counts and aggregation from `result/main_performance/proposed_variants/SOURCE.md`, `result/tuning/{pathmerge,kernel_selection}/SOURCE.md`, `result/ablation/*/SOURCE.md`, `result/memory_scalability/SOURCE.md`, `result/correctness/*/README.md`.
+<!-- Source note (internal): trial counts and aggregation from result/main_performance/proposed_variants/SOURCE.md; result/tuning/{pathmerge,kernel_selection}/SOURCE.md; result/ablation/*/SOURCE.md; result/memory_scalability/SOURCE.md; result/correctness/*/README.md. -->
 
 ## 5.2 Hardware and Software Environment
 
@@ -37,7 +37,9 @@ GPU のメモリ容量については、根拠と単位系の異なる値を区�
 
 ソフトウェア環境は、NVIDIA driver 595.58.03、CUDA Toolkit（nvcc）release 13.0（V13.0.48）[@nvidiaCudaProgrammingGuide]、ホスト C++ コンパイラ g++（GCC）11.4.1、CMake 4.3.4、Nsight Systems（nsys）2025.5.1.121 である。主実験は Miyabi-G 上の PBS（Portable Batch System、group `gj17`）を通じて実行した。RQ3・RQ4 のメモリ経路実験は、ホストメモリ容量を明示的に制限した 100 GiB 資源構成で実行した。この構成はホストメモリ上限が legacy 容量評価と異なるため、両者の OOM 境界は一致しない（5.9 節）。したがって、本研究の全実験が単一の資源指定で実行されたわけではない。なお、実際の queue 名は保存ログから独立に確定できないため、本評価の正式な実験条件には含めない（5.12 節）。
 
-GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、NVLink-C2C prefetch）の実効帯域は、bandwidth ベンチマークで別途測定した（`raw_data/profiling/job_2359175_20260711/bandwidth.log`）。測定された帯域値は platform の環境上の補助測定であり、実験環境記録（Table 5.2 の canonical artifact である T6）に保存する。本研究はこれを個別実験の性能要因や失敗原因の説明には用いない。実験群と checkpoint（SourceSnapshotID）の対応は 5.11 節で述べる。`result/` 全体は単一 checkpoint に対応しない。
+GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、NVLink-C2C prefetch）の実効帯域は、bandwidth ベンチマークで別途測定した。測定された帯域値は platform の環境上の補助測定であり、実験環境記録（Table 5.2 の canonical artifact である T6）に保存する。本研究はこれを個別実験の性能要因や失敗原因の説明には用いない。実験群と SourceSnapshotID の対応は 5.11 節で述べる。派生結果全体は単一 SourceSnapshotID に対応しない。
+
+<!-- Source note (internal): raw_data/profiling/job_2359175_20260711/bandwidth.log. -->
 
 **Table 5.2: Experimental environment.**
 
@@ -57,13 +59,15 @@ GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、N
 | Resource configuration — memory-path experiments (RQ3/RQ4) | Host-memory-limited 100 GiB configuration |
 
 <!-- canonical artifact: T6_experimental_environment -->
-> Source: `result/environment/environment.md`, `result/MANIFEST.md`; nominal HBM3 capacity from [@nvidiaGraceHopperInDepth]; run-start memory query values (`total`, `free_before`) from the saved run logs. The nominal 96 GB and the recorded 97871 MiB denote the same on-package HBM3 in different units and query methods, not separate memory regions. The queue name cannot be independently confirmed from the saved job logs and is therefore excluded from the reported experimental conditions (5.12). Memory-path bandwidth values are environment-level supplementary measurements retained in the canonical environment record (T6); they are not reported as a result of this study and are not used to attribute per-experiment performance or failure causes.
+<!-- Source note (internal): result/environment/environment.md; result/MANIFEST.md; nominal HBM3 capacity from nvidiaGraceHopperInDepth; run-start total/free_before from retained logs. Queue name is excluded because it cannot be independently confirmed. -->
 
 ## 5.3 Graph Datasets
 
 本評価で用いたグラフの属性を Table 5.3 に示す。数値は `result/datasets/graph_catalog.tsv` および `docs/graph_stats.tsv` の正式記録から取得したものであり、丸め値からの逆算や推定は行っていない。すべてのグラフは無向・非重みの CSR 形式で保持し、入力の同一性は `graph_catalog.tsv` に記録された graph SHA256 で管理する。
 
-グラフは実データと合成グラフに大別される。実データは Stanford Network Analysis Project（SNAP）から取得した 4 グラフである [@snapnets]。email-EuAll は原本が directed の電子メール通信網であり [@leskovec2007graphevolution]、本評価では無向化して用いた（`Symmetrized=yes`）。roadNet-PA/TX/CA は原本が undirected の道路網であり [@leskovec2009community]、対称化せずそのまま用いた（`Symmetrized=no`）。これら 4 グラフが RQ1 の対象である。合成グラフは要因分析・容量評価・正確性検証に用いた。旧 `325557_3216152` は 1-based を 0-based として格納した malformed input であり、現行実験では `tools/repair_325557_graph.py` により決定的に再構成した `325557_3216152_corrected_v1` のみを使用する。旧入力とその結果は historical provenance として保持する。
+グラフは実データと合成グラフに大別される。実データは Stanford Network Analysis Project（SNAP）から取得した 4 グラフである [@snapnets]。email-EuAll は原本が directed の電子メール通信網であり [@leskovec2007graphevolution]、本評価では無向化して用いた（`Symmetrized=yes`）。roadNet-PA/TX/CA は原本が undirected の道路網であり [@leskovec2009community]、対称化せずそのまま用いた（`Symmetrized=no`）。これら 4 グラフが RQ1 の対象である。合成グラフは要因分析・容量評価・正確性検証に用いた。旧 `325557_3216152` は 1-based を 0-based として格納した malformed input であり、現行実験では決定的な修復手続きで再構成した `325557_3216152_corrected_v1` のみを使用する。旧入力とその結果は historical provenance として保持する。
+
+<!-- Source note (internal): deterministic repair tool tools/repair_325557_graph.py. -->
 
 修正版 325557 の構造について明記する。この修復は範囲外の頂点 ID と CSR 要素数の不一致を修正したものであり、グラフの正規化ではない。すなわち self-loop と重複 adjacency pair は除去しておらず、そのまま保持している。修正版は $n=325{,}557$、$m=3{,}216{,}152$、adjacency 要素数 $2m=6{,}432{,}304$ を維持し、そのうち self-loop は 87,442 本、多重度 2 の有向ペアは 866,924 組である（`result/provenance/GRAPH_325557_INTEGRITY_AUDIT.md`）。Table 5.3 の頂点数・辺数、および平均次数 19.758 は、この保存された adjacency representation に基づく値である。
 
@@ -89,7 +93,7 @@ GH200 の各メモリ経路（HBM3 の device-to-device、pinned host-device、N
 | 325557_3216152 | 325557 | 3216152 | 43.25 | 25.78 | Historical (superseded by corrected_v1) |
 
 <!-- canonical artifact: T1_graph_metadata -->
-> Source: `result/tables/thesis/T1_graph_metadata.tsv`, generated from `docs/graph_stats.tsv` and `result/datasets/graph_catalog.tsv`. File sizes are measured with `stat`, not inferred. `benchmark_7000_41459` and `benchmark_11023_62184` are recorded in the catalog and in T1 under the short identifiers `benchmark_7000` and `benchmark_11023`; the full dataset names are used here. `<0.01` denotes a non-zero size below the rounding resolution of this column: `chain_200` is 2,129 bytes on disk with a 1,600-byte CSR topology, not zero. The corrected graph SHA256 is `8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22`; jobs 2404743/2406254 used checkpoint `45352a3`.
+<!-- Source note (internal): result/tables/thesis/T1_graph_metadata.tsv generated from docs/graph_stats.tsv and result/datasets/graph_catalog.tsv. Corrected graph SHA256 8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22; jobs 2404743/2406254; checkpoint 45352a3. -->
 
 Input File、CSR topology、BC output vector は static storage であり、GPU working set ではない。修正版 325557 では順に 45,348,105 bytes、27,031,448 bytes、2,604,456 bytes である。平均次数 19.758 から実装が選ぶ $D_{est}=256$ に対し、1 source の状態量は
 
@@ -137,7 +141,9 @@ PathMerge tuned（RQ1 分母）は、グラフごとに候補バッチを測定�
 
 要求バッチと実効バッチの区別は本評価で重要である。要求バッチ（`BC_BATCH_OVERRIDE` または `PATHMERGE_BC_BATCH_SIZE` で指定）が HBM3 予算を超える場合、実効バッチは縮小される。GPU_Opt 系では、oversubscription 時に SUB_BATCH が動的に縮小して num_subs>1 となる。本評価では、要求バッチ・実効バッチ・SUB_BATCH・num_subs・NS_eff を区別し、clamp が生じた場合はその記録（各実行の stderr / `execution_summary`）に基づいて条件を記述する。具体的な clamp 値の観測結果は Chapter 6 および Chapter 8 で示す。
 
-warmup については、SourceSnapshotID `phase_def_block_20260710` の proposed_variants、kernel_selection、PathMerge sweep、small correctness では warmup を行わず、全 trial を記録する。ablation は例外であり、その 3 系列はいずれも、`run_ablation <graph> all` の各 runner invocation（すなわち各 graph/trial）の先頭で global・untimed な H1W1A1 warmup を 1 回実行し、formal TSV 行に含めない。warmup は runner 内で計時関数を経由せずに呼ばれるため、stdout の TSV 行を生成しない。系列別の一次記録は次のとおりである。合成グラフの job 2354994 は旧 malformed 325557 を含む 4 graph×5 invocation に対応する 20 marker / 160 formal rows、email-EuAll の job 2354999 は 1 graph×3 invocation に対応する 3 marker / 24 formal rows、修正版 325557 の job 2406254 は 5 marker / 40 formal rows を保持する。current synthetic-4 aggregate は job 2354994 のうち valid 3 graph の 120 rows と job 2406254 の 40 rows を用いる。3 系列の runner コードは byte 単位で同一である。legacy baseline の明示 warmup 記録がない場合は `not_recorded` とする。
+warmup については、SourceSnapshotID `phase_def_block_20260710` の proposed variants、kernel selection、PathMerge sweep、small correctness では warmup を行わず、全 trial を記録する。ablation は例外であり、その 3 系列はいずれも、各 graph/trial の runner invocation 先頭で global・untimed な H1W1A1 warmup を 1 回実行し、formal TSV 行に含めない。warmup は runner 内で計時関数を経由せずに呼ばれるため、stdout の TSV 行を生成しない。旧 4 合成グラフ系列は 20 marker / 160 formal rows、email-EuAll 系列は 3 marker / 24 formal rows、修正版 325557 系列は 5 marker / 40 formal rows を保持する。current synthetic-4 aggregate は旧系列の valid 3 graph に対応する 120 rows と修正版系列の 40 rows を用いる。3 系列の runner コードは byte 単位で同一である。legacy baseline の明示 warmup 記録がない場合は `not_recorded` とする。
+
+<!-- Source note (internal): ablation jobs 2354994, 2354999, and 2406254. -->
 
 性能測定と correctness-only 実行は区別する。性能測定は median 集計のために複数試行を記録し、その時間値を性能主張に用いる。一方、correctness-only 実行（小規模正確性・メモリ経路正確性）は各構成 n=1、warmup なしで実施し、その時間値は性能評価に用いない。実行時の調整ノブ（`BC_BATCH_OVERRIDE`、`PATHMERGE_BC_BATCH_SIZE`、`CUGRAPH_BC_MAX_SOURCES_PER_BATCH`、`BC_FORCE_BFS_KERNEL`）は通常の実験手続きの一部であり、条件を人為的に指定する RQ3/RQ4 やカーネル比較で用いる。
 
@@ -185,21 +191,25 @@ roadNet-PA/TX の分母には、注意すべき測定条件がある。両グラ
 
 RQ2 の要因分析は、ablation と kernel selection の 2 つの手続きからなる。
 
-Ablation は、提案手法の 3 つの工夫、すなわち Hybrid BFS（H、top-down/bottom-up の二方向 BFS [@beamer2012]）、Warp-Cooperative Accumulation（W、Backward phase の warp 協調累積）、Dual-Stream Execution（A、2 ストリームによる非同期初期化と計算の重畳）の寄与を測定する。これらを compile-time テンプレートで有効・無効に切り替えた 8 構成（$\mathrm{H}\{0,1\}\mathrm{W}\{0,1\}\mathrm{A}\{0,1\}$）を固定バッチ b512、median 集計で測定した。benchmark_7000_41459、benchmark_11023_62184、56438_300801 は job 2354994、修正版 325557 は job 2406254 / checkpoint `45352a3` で各構成 n=5、email-EuAll は n=3 である。合成 4 グラフ集約は mixed-checkpoint であり、同一 checkpoint で 4 グラフを再測定した結果ではない。各 8 構成セットの先頭の global・untimed H1W1A1 warmup は formal trial から除外する。
+Ablation は、提案手法の 3 つの工夫、すなわち Hybrid BFS（H、top-down/bottom-up の二方向 BFS [@beamer2012]）、Warp-Cooperative Accumulation（W、Backward phase の warp 協調累積）、Dual-Stream Execution（A、2 ストリームによる非同期初期化と計算の重畳）の寄与を測定する。これらを compile-time テンプレートで有効・無効に切り替えた 8 構成（$\mathrm{H}\{0,1\}\mathrm{W}\{0,1\}\mathrm{A}\{0,1\}$）を固定バッチ b512、median 集計で測定した。benchmark_7000_41459、benchmark_11023_62184、56438_300801、修正版 325557 は各構成 n=5、email-EuAll は n=3 である。合成 4 グラフ集約は mixed-checkpoint であり、同一 checkpoint で 4 グラフを再測定した結果ではない。各 8 構成セットの先頭の global・untimed H1W1A1 warmup は formal trial から除外する。測定系列の識別子は Appendix A に示す。
 
 各工夫の寄与は主効果（main effect）で評価する。ある工夫 $F$ の主効果は、他の 2 軸の全水準にわたって平均した、$F$ を無効にした場合と有効にした場合の実行時間比 $T(F{=}0)/T(F{=}1)$ の幾何平均として計算する。合成グラフの主効果は 4 グラフの幾何平均で要約し、email-EuAll は個別に扱う。本評価では、要因分析の主効果を roadNet などの未測定グラフへ一般化しない。特に、Warp 協調累積の効果はグラフ依存であり、email-EuAll では中立的または僅かに不利となり得るため、この点を限定条件として扱う。具体的な主効果値は Chapter 7 で示す。
 
 Kernel selection は、BFS カーネルの選択に関する直接比較である。`BC_FORCE_BFS_KERNEL=shared|block` によって shared-frontier カーネルと block カーネル（1 block = 1 source）を強制実行し、roadNet-PA と roadNet-TX で比較した。設定はバッチ 512、SUB_BATCH=512、num_subs=1、n=3、warmup なし、median 集計（標本標準偏差併記）であり、自動選択則に依存せず forced shared/block の実測のみを対象とする（`result/tuning/kernel_selection/SOURCE.md`）。旧実装には平均次数に基づく自動選択則（`avg_deg < 5 → shared`）が存在したが、現行方式では使用していない。したがって kernel selection の結論は roadNet-PA/TX の強制比較に限定され、他グラフへ一般化しない。
 
-Profiling は、56438_300801 に対する ablation バイナリの `ablation_H1W1A0` nsys トレースにより、BFS カーネルと Backward カーネルの実行時間比率を得るものである（単一トレース、`raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt`）。このトレースの本測定は H1W1A0 構成であるが、同一 process 冒頭の untimed H1W1A1 warmup もtrace scopeに含むため、63.9% / 36.1% は本測定だけを分離した値ではなく、warmupを含む単一トレース全体の CUDA GPU カーネル時間構成比である。同じ PBS job 2359175 には、同じ 56438_300801 を対象とする `ablation_H1W1A1` の別トレースと、325557_3216152 を対象とする GPU_Opt の UM prefetch 別トレースも含まれるが、63.9% / 36.1% の構成比には用いない。本評価では、フェーズ内訳から因果を断定せず、この観測された配分を、当該 1 グラフ・1 トレースに限定して記述する。
+Profiling は、56438_300801 に対する ablation バイナリの `ablation_H1W1A0` nsys トレースにより、BFS カーネルと Backward カーネルの実行時間比率を得るものである。この単一トレースは、同一 process 冒頭の untimed H1W1A1 warmup も trace scope に含むため、63.9% / 36.1% は本測定だけを分離した値ではなく、warmup を含む CUDA GPU カーネル時間構成比である。同じ測定系列には `ablation_H1W1A1` の別トレースと GPU_Opt の UM prefetch 別トレースも含まれるが、63.9% / 36.1% の構成比には用いない。本評価では、フェーズ内訳から因果を断定せず、この観測された配分を当該 1 グラフ・1 トレースに限定して記述する。
+
+<!-- Source note (internal): raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt; PBS job 2359175. -->
 
 ## 5.9 Memory Scalability Protocol
 
 RQ3 のメモリ容量拡張性は、修正版 `325557_3216152_corrected_v1` の 1 グラフに限定して評価する。入力ファイル自体は 45.35 MB であり HBM3 を超えない。バッチを増加させることで `batch × per-source state` の working set を増やし、GPU_Opt（Unified Memory）、GPU_Opt_Pure（デバイス専用）、GPU_Opt_Pure_Chunked（source sub-batch 分割）の実行可能性を比較する。
 
-本評価が対象とするのは最速実行時間ではなく容量到達性（feasibility）である。job 2404743 / checkpoint `45352a3` の targeted boundary validation として、Pure b4096/b8192、UM b10240/b12288、Chunked b16384 を各 1 回実行した。OOM・kill は 0 秒として扱わず、Pure b8192 の CUDA device-memory OOM と UM b12288 の cgroup host-memory OOM kill（exit 137）を区別する。single-run runtime を方式間の正式な性能比較に用いない。
+本評価が対象とするのは最速実行時間ではなく容量到達性（feasibility）である。targeted boundary validation として、Pure b4096/b8192、UM b10240/b12288、Chunked b16384 を各 1 回実行した。OOM・kill は 0 秒として扱わず、Pure b8192 の CUDA device-memory OOM と UM b12288 の cgroup host-memory OOM kill（exit 137）を区別する。single-run runtime を方式間の正式な性能比較に用いない。実行識別子は Appendix A に示す。
 
-旧 malformed 入力の legacy sweep と job 2368587 の `CORE_FAIL` は削除せず historical evidence として保存するが、現行 RQ3 の境界には用いない。現行結論は修正版入力の job 2404743 のみから導く。GPU_Opt、Pure、Chunked は独立した 3 手法ではなく、共通 GPU 実行基盤の memory-management variants である。UM の目的は入力グラフを分割格納することではなく、managed allocation と migration により device memory を超え得る working set を扱うことである。Chunked の目的は source batch を sub-batch に分け、同時 resident working set を制限することである。
+旧 malformed 入力の legacy sweep と `CORE_FAIL` は削除せず historical evidence として保存するが、現行 RQ3 の境界には用いない。現行結論は修正版入力の formal validation のみから導く。GPU_Opt、Pure、Chunked は独立した 3 手法ではなく、共通 GPU 実行基盤の memory-management variants である。UM の目的は入力グラフを分割格納することではなく、managed allocation と migration により device memory を超え得る working set を扱うことである。Chunked の目的は source batch を sub-batch に分け、同時 resident working set を制限することである。
+
+<!-- Source note (internal): historical job 2368587; corrected formal job 2404743; checkpoint 45352a3. -->
 
 本評価では次を主張しない。Unified Memory が無制限に容量を拡張するとは主張しない。Chunked が未測定条件で OOM を回避するとも主張しない。Chunked の主な利点は最高性能ではなく resident working-set 制御と試験範囲内の容量拡張であり、その結論は GH200・修正版 325557・各条件 1 試行に限定される。
 
@@ -216,9 +226,9 @@ RQ4 の正確性検証は、水準を分けて実施する。本評価では、�
 | Supplementary max_bc_only | Only the maximum BC index/value compared | Headline performance and kernel-selection runs |
 | None | No BC comparison recorded | Ablation runs |
 
-> Source: `result/tables/thesis/T5_correctness_summary.tsv` and `result/CLAIMS.md`.
+<!-- Source note (internal): result/tables/thesis/T5_correctness_summary.tsv and result/CLAIMS.md. -->
 
-本評価の正式な T5 は 2 tier からなる。Tier A は Sequential を独立参照、GPU_Opt を candidate とする小規模 3 グラフの全ベクトル比較（job 2367583、3 行）である。Tier B は修正版 325557 の UM/Pure/Chunked/PathMerge 6 vector に対する 10 組の実装間比較（job 2404743）である。Tier B は独立 ground truth ではなく cross-implementation consistency であり、PathMerge も external comparator である。両 tier の計 13 比較は MissingIndices=0、MismatchedElements=0、ToleranceResult=PASS、ByteIdentical=No である。
+本評価の正式な T5 は 2 tier からなる。Tier A は Sequential を独立参照、GPU_Opt を candidate とする小規模 3 グラフの全ベクトル比較（3 行）である。Tier B は修正版 325557 の UM/Pure/Chunked/PathMerge 6 vector に対する 10 組の実装間比較である。Tier B は independent ground truth ではなく cross-implementation consistency であり、PathMerge も external comparator である。両 tier の計 13 比較は MissingIndices=0、MismatchedElements=0、ToleranceResult=PASS、ByteIdentical=No である。
 
 本評価で記録する正確性指標は、最大 BC index/value のみではなく、ベクトル長、欠損 index 数、不一致要素数、最大絶対・相対誤差とその index における reference / candidate 値、NaN/Inf の有無、ベクトルおよび入力グラフの SHA256 を含む。これにより、最大 BC の一致だけでは捉えられない要素単位の差異を記録する。
 
@@ -230,17 +240,19 @@ $$
 
 ここで $r_i$ は reference、$c_i$ は candidate の値である。正式な許容値は $\mathrm{abs\_tol}=1\mathrm{e}{-3}$、$\mathrm{rel\_tol}=1\mathrm{e}{-6}$ である（`result/correctness/small_full_vector/correctness_summary.tsv`、`result/correctness/memory_paths/README.md`）。BC 値が $\sim 10^{10}$ と大きい場合、絶対許容単独は不適切であるため、絶対許容の超過は WARN として分離し、単独の失敗判定にはしない。許容値を事後に変更して判定を PASS に変える操作は行わない。
 
-旧 malformed 入力の canonical job 2368587 が `CORE_FAIL` であった事実は historical invalid-input result として保存する。この履歴判定を PASS へ relabel したり削除したりしない。一方、current active conclusion は修正版入力の job 2404743 であり、10 比較すべてが混合許容内で PASS した。これは bitwise identity や大規模独立参照による正しさを意味しない。修正版グラフは内部再構成データで、元生成 seed・上流の完全な原本が確認できない provenance 制約を残す。
+旧 malformed 入力の canonical series が `CORE_FAIL` であった事実は historical invalid-input result として保存する。この履歴判定を PASS へ relabel したり削除したりしない。一方、current active conclusion は修正版入力の formal series であり、10 比較すべてが混合許容内で PASS した。これは bitwise identity や大規模独立参照による正しさを意味しない。修正版グラフは内部再構成データで、元生成 seed・上流の完全な原本が確認できない provenance 制約を残す。
 
 ## 5.11 Reproducibility and Data Provenance
 
-本研究のアーカイブは、Git 履歴（commit）に依存せず、現在の単一 commit tree のみで検証可能なように構成されている。生データ本体は `raw_data/`、実験時コードは `code_snapshots/<SourceSnapshotID>/`、派生表・図・要約は `result/`、非正常データは `failure/`（要約）と `raw_data/unsuccessful/`（生データ本体）に分離して保持する。
+本研究のアーカイブは、Git 履歴だけに依存せず、保存された単一 tree から検証できるように構成されている。生データ、SourceSnapshotID ごとの実験時コード、派生表・図・要約、非正常データは役割別に分離して保持する。
 
-Provenance の正式参照は、commit SHA ではなく SourceSnapshotID（実験時コードのスナップショット識別子）である。各生データの内容・生成条件は、RawPath・`raw_data/MANIFEST.tsv`・`raw_data/SHA256SUMS`・`code_snapshots/<SourceSnapshotID>/` から判断でき、各実験群の PBS job ID は `SOURCE.md` および `MANIFEST` に記録される。図表は canonical raw を入力とし `scripts/` の再生成スクリプトで再生成可能であり、主要値は元 TSV から再生成して変更しない（`result/TABLES_AND_FIGURES.md`）。
+Provenance の正式参照は、raw commit SHA ではなく SourceSnapshotID（実験時コードのスナップショット識別子）である。各生データの内容・生成条件、checksum、実験識別子は manifest と内部 Source note に記録する。図表は canonical raw を入力として再生成でき、主要値は元 TSV から再計算して変更しない。
 
-失敗結果は削除せず分類している。OOM・意図的早期打切り・比較不一致 fail-fast などの非正常データは `failure/` に分類・保持され、その生データは `raw_data/unsuccessful/{oom,failed,early_terminated}/` に内容不変で保持される。SHA256 は `sha256sum -c SHA256SUMS` で検証可能である。
+失敗結果は削除せず分類している。OOM・意図的早期打切り・比較不一致 fail-fast などの非正常データは、要約と生データを分離して内容不変で保持する。保存内容は SHA256 checksum で検証できる。
 
-`result/` 全体は単一 checkpoint に対応しない。主性能実験は SourceSnapshotID `phase_def_block_20260710`、小規模正確性は `small_correctness_20260712`、修正版 325557 の correctness/feasibility（job 2404743）と ablation（job 2406254）は checkpoint `45352a3` で測定した。他 3 合成グラフの ablation は job 2354994 であり、合成 4 集約は mixed-checkpoint である。旧 malformed 入力の legacy 結果は historical archive として分離する。図表内の文字（軸名、凡例、列名、caption）は英語で統一する。
+派生結果全体は単一 SourceSnapshotID に対応しない。主性能実験は SourceSnapshotID `phase_def_block_20260710`、小規模正確性は `small_correctness_20260712` であり、修正版 325557 の correctness/feasibility と ablation は別の formal checkpoint で測定した。他 3 合成グラフの ablation と修正版 325557 は異なる測定系列であるため、合成 4 集約は mixed-checkpoint である。旧 malformed 入力の legacy 結果は historical archive として分離する。図表内の文字（軸名、凡例、列名、caption）は英語で統一する。
+
+<!-- Source note (internal): raw_data/MANIFEST.tsv; raw_data/SHA256SUMS; code_snapshots/<SourceSnapshotID>/; result/TABLES_AND_FIGURES.md; failure/; raw_data/unsuccessful/. Corrected jobs 2404743/2406254 at checkpoint 45352a3; unchanged three-graph ablation job 2354994. -->
 
 ## 5.12 Scope and Methodological Limitations
 

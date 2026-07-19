@@ -145,7 +145,7 @@ $$
 | `INT_MAX` | 32 bit 符号付き整数の最大値 2,147,483,647 | 4.7.3 項、8.4 節 |
 | `safe_sub_batch` | $\lfloor \texttt{INT\_MAX}/n\rfloor$ による index-safety 上限 | 8.4 節 |
 
-これらの列名・識別子は保存記録およびコードの表記であり、本 Gate では変更しない。
+これらの列名・識別子は保存記録およびコードの表記であり、本稿では変更しない。
 
 ## Units and Conventions
 

@@ -22,7 +22,7 @@ GPU は、多数の source、frontier vertex、および edge を並列に処理
 
 複数 source を batch として同時処理すると、source-level parallelism を明示的に利用できる。一方、source-local state は source batch に比例して増えるため、batch size と GPU memory capacity の間に trade-off が生じる。また、各 batch の状態初期化、BFS level と Backward level の同期、global BC accumulation、および buffer 再利用の同期は、主要計算以外の overhead となる。batch size を増やせばこれらの相対 cost が必ず減るわけではなく、容量超過や競合によって別の cost が生じ得る。
 
-容量を議論するときは、graph file と実行時 working set を区別する必要がある。本研究は、入力 graph file 自体が公称 96 GB の HBM3 を超えたため UM を用いたのではない。on-disk input graph file、in-memory CSR（Compressed Sparse Row）graph storage、および最終 BC vector は、source batch size に比例しない。これに対し、distance、shortest-path count、dependency、frontier、および traversal order は source-local state であり、同時に用意する source 数とともに増える。容量問題の中心は、この batch-dependent working set である。batch と sub-batch は source 集合の grouping であり、graph partition ではない。各 grouping を順に処理して全 source を計算するため、graph topology も BC の厳密性も維持される。
+容量を議論するときは、graph file と実行時 working set を区別する必要がある。本研究は、入力 graph file 自体が公称 96 GB の HBM3 を超えたため UM を用いたのではない。on-disk input graph file、in-memory CSR（Compressed Sparse Row）graph storage、および最終 BC vector は、source batch size に比例しない。これに対し、distance、shortest-path count、dependency、frontier、および traversal order は source-local state であり、同時に用意する source 数とともに増える。容量問題の中心は、この batch-dependent working set である。batch と sub-batch は graph を分割せず、source 集合だけを grouping する。各 grouping を順に処理して全 source を計算するため、graph topology も BC の厳密性も維持される。
 
 本研究の問題を、次の四つの観点に整理する。
 
@@ -125,6 +125,6 @@ Source notes (internal, not reader-facing):
 - RQ2 current corrected-325557 wording: result/tables/thesis/T3_ablation_summary.tsv and result/ablation/corrected_325557/. The corrected result is not used in RQ1.
 - RQ3 graph-file/working-set distinction and feasibility scope: result/tables/thesis/T4_memory_scalability.tsv, raw_data/corrected_325557/job_2404743/implementation_manifest.tsv, and writing/japanese/08_memory_scalability.md.
 - RQ4 tiering and non-byte identity: result/tables/thesis/T5_correctness_summary.tsv and writing/japanese/09_correctness_and_numerical_behavior.md.
-- Current corrected conclusion follows result/CLAIMS.md, "Gate W7.4". The older malformed-input CORE_FAIL is retained only as historical evidence.
+- Current corrected conclusion follows result/CLAIMS.md. The older malformed-input CORE_FAIL is retained only as historical evidence.
 - Figure 1.1 is exported from the editable figure library (slide 1, library ID F01) by scripts/export_conceptual_figures.py; the library ID namespace F01--F15 is distinct from the canonical result figure namespace F1--F7.
 -->

@@ -227,7 +227,7 @@ Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock
 
 1. GH200向けバッチ型GPU BC実行基盤の設計と実装
 2. tuned third-party PathMergeに対する4グラフでの性能評価
-3. Hybrid BFS、Warp-Cooperative Accumulation、Dual Streamsのアブレーション
+3. Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream Executionのアブレーション
 4. UM、Pure、Chunkedの容量特性および数値的限界の評価
 
 ---
@@ -244,13 +244,13 @@ Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock
 
 ### Purpose
 
-研究背景、課題、提案、評価方法、主要結果、結論を独立して理解できる形で要約する。
+最終英語 Abstract を作成するための translation source draft として、研究背景、課題、提案、評価方法、主要結果、結論を独立して理解できる形で要約する。
 
 ### Japanese Draft Structure
 
 1. BC計算の重要性と計算コスト
 2. GH200上のバッチ型GPU実行基盤
-3. Hybrid BFS、block-based source processing、warp cooperation、dual streams
+3. Hybrid BFS、block-based source processing、Warp-Cooperative Accumulation、Dual-Stream Execution
 4. tuned third-party PathMergeとの比較
 5. 主要性能値1.31～3.17倍
 6. アブレーション結果
@@ -260,7 +260,9 @@ Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock
 
 ### Length
 
-日本語初稿は約900～1,200文字を目安とする。英語版は大学指定の300～400 wordsに調整する。
+日本語 Abstract は translation source draft であり、提出用の文字数制限は適用しない。参考値を記録する場合は、Markdown heading を除く本文から空白を除き、Latin 文字も 1 code point を 1 文字として数える。この方式による現行稿の参考値は 1,428 文字であり、形式違反を意味しない。Latin 語を 1 token と数える方式とは混在させず、日本語文字数から英語 word count を換算しない。
+
+最終提出要件は **Final English Abstract: 300–400 words** とする。英訳時に内容と claim scope を維持したまま 300～400 words へ調整する。
 
 ### Timing
 
@@ -852,17 +854,17 @@ roadNet-CA: 1.45x
 Corrected 325557:
 Hybrid BFS: 1.4767x
 Warp-Cooperative Accumulation: 1.1012x
-Dual Streams: 1.5563x
+Dual-Stream Execution: 1.5563x
 
 Synthetic-4 geometric mean (mixed-checkpoint):
-Hybrid BFS: 1.679x
-Warp-Cooperative Accumulation: 1.066x
-Dual Streams: 1.391x
+Hybrid BFS: 1.6787x
+Warp-Cooperative Accumulation: 1.0661x
+Dual-Stream Execution: 1.3914x
 
 email-EuAll:
-Hybrid BFS: 1.429x
-Warp-Cooperative Accumulation: 0.970x
-Dual Streams: 1.720x
+Hybrid BFS: 1.4286x
+Warp-Cooperative Accumulation: 0.9695x
+Dual-Stream Execution: 1.7199x
 
 Kernel:
 roadNet-PA block: 1.52x faster
@@ -878,10 +880,11 @@ roadNet-TX block: 1.66x faster
 - roadNet全体へアブレーションを一般化しない
 - kernel比較はPA/TX限定
 - phase breakdownから因果を断定しない
+- Table 7.2 の H/W/A は全行を小数第 4 位まで表示し、本文および他の図の表示規則へ波及させない
 
 ### RQ2 Answer
 
-> Hybrid BFS and dual-stream execution provided the main observed improvements, whereas warp-cooperative accumulation was graph-dependent.
+> Hybrid BFS and Dual-Stream Execution provided the main observed improvements, whereas Warp-Cooperative Accumulation was graph-dependent.
 
 ### Target Length
 
@@ -900,7 +903,6 @@ roadNet-TX block: 1.66x faster
 ### Sections
 
 ```markdown
-## 8.1 Evaluation Scope
 ## 8.1 Capacity Terms and Evaluation Scope
 ## 8.2 Memory-Management Variants
 ## 8.3 Corrected Targeted Boundary Validation
@@ -1031,25 +1033,21 @@ GPU_Opt_Pure_Chunked: b16384 SUCCESS; SUB_BATCH=6596; num_subs=3
 ### Sections
 
 ```markdown
-## 10.1 Interpretation of the Performance Results
-## 10.2 Relationship with Graph Characteristics
-## 10.3 Performance-Capacity Trade-Off
+## 10.1 Interpretation of Performance Results
+## 10.2 Graph Characteristics and Observed Behavior
+## 10.3 Performance–Capacity–Numerical Trade-Off
 ## 10.4 Implications for GH200
 ## 10.5 Threats to Validity
-### 10.5.1 Internal Validity
-### 10.5.2 External Validity
-### 10.5.3 Construct Validity
-### 10.5.4 Baseline Validity
 ## 10.6 Limitations and Future Work
 ```
 
 ### Required Content
 
-#### 10.1 Performance
+#### 10.1 Interpretation of Performance Results
 
-結果とアブレーションを横断して説明する。測定していない因果を断定しない。
+Chapter 6 と Chapter 7 の観測を横断して解釈する。RQ1～RQ4 の正式回答や中心性能値を反復せず、必要な箇所は結果章を cross-reference する。測定していない因果を断定しない。
 
-#### 10.2 Graph Characteristics
+#### 10.2 Graph Characteristics and Observed Behavior
 
 - average degree
 - BFS depth
@@ -1058,7 +1056,7 @@ GPU_Opt_Pure_Chunked: b16384 SUCCESS; SUB_BATCH=6596; num_subs=3
 
 4グラフ程度の相関から一般的な法則を断定しない。
 
-#### 10.3 Trade-Off
+#### 10.3 Performance–Capacity–Numerical Trade-Off
 
 - GPU_Opt
 - Pure
@@ -1067,7 +1065,7 @@ GPU_Opt_Pure_Chunked: b16384 SUCCESS; SUB_BATCH=6596; num_subs=3
 - capacity
 - numerical behavior
 
-#### 10.4 GH200
+#### 10.4 Implications for GH200
 
 GH200上での観測として説明し、他GPUへ一般化しない。
 
@@ -1075,7 +1073,7 @@ GH200上での観測として説明し、他GPUへ一般化しない。
 
 PathMerge第三者実装、mixed-checkpoint、1 graph、1 trial、correctness tolerance、未取得memory metrics、corrected graph provenance、historical malformed evidenceを含める。
 
-#### 10.6 Future Work
+#### 10.6 Limitations and Future Work
 
 - headline graphの独立full-vector reference
 - official/independent PathMerge implementation comparison
@@ -1083,7 +1081,6 @@ PathMerge第三者実装、mixed-checkpoint、1 graph、1 trial、correctness to
 - 他GPU
 - 追加グラフ
 - full-duration migration
-- large-scale independent reference
 - same-checkpoint synthetic-4 ablation
 - corrected graphのupstream original/seed確認
 
@@ -1160,7 +1157,7 @@ Introductionの4つの貢献と対応させる。
 - 全trial
 - requested/effective batch
 - median
-- sample SD
+- sample standard deviation
 - clamp
 - screening/confirmation
 
@@ -1175,7 +1172,7 @@ Introductionの4つの貢献と対応させる。
 - trial値
 - main effect
 
-本論文の正式なAppendixはA〜Cとする。correctness詳細はAppendix A §A.8とT5 correctness tableに、補助baselineの要約と制約はChapter 6のTable 6.4とそのSource noteに、再現手順はChapter 5とAppendix Aの実行条件記述に含める。独立したAppendix D/E/Fは作成しない。
+本論文の正式なAppendixはA〜Cとする。correctness詳細はAppendix A §A.8とT5 correctness tableに、補助baselineの要約と制約はChapter 6のTable 6.4とそのSource noteに、再現手順はChapter 5とAppendix Aの実行条件記述に含める。これ以外の独立したAppendixは設けない。
 
 ---
 
@@ -1259,7 +1256,7 @@ canonical result figure の `F1`〜`F7` とは別 namespace であり、本文�
 - [ ] 未測定グラフ・他GPUへ一般化していない
 - [ ] 同じ説明を複数章で過度に重複していない
 - [ ] 新しい実験値を推定していない
-- [ ] TODO_SOURCEを残していない
+- [ ] 未解決の出典マーカーを残していない
 - [ ] 英訳しやすい文構造になっている
 
 ---

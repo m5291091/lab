@@ -1,71 +1,53 @@
 # Chapter 10 Discussion
 
-本章では RQ1〜RQ4 の関係を統合し、性能、最適化要因、容量、数値整合性の相互関係を論じる。観測事実と未検証の解釈を区別し、修正版 325557 の結果を旧 malformed input の historical evidence と混同しない。
+本章では、Chapter 6 から Chapter 9 の結果を横断し、性能、最適化要因、容量、数値挙動の関係を解釈する。各 Research Question への正式な回答は Chapter 11 に集約し、本章では観測事実と未検証の推論を区別する。また、修正版 325557 の結果を旧 malformed input の historical evidence と混同しない。
 
-## 10.1 Integrated Interpretation of the Research Questions
+## 10.1 Interpretation of Performance Results
 
-RQ1 の主性能結果は変更しない。固定 b512 の block GPU_Opt は、評価した第三者実装の tuned PathMerge に対し、email-EuAll で 3.17 倍、roadNet-PA で 1.31 倍、roadNet-TX で 1.51 倍、roadNet-CA で 1.45 倍高速であった。修正版 325557 はこの主性能比較に含まれない。
+Chapter 6 では、固定 b512 の block-based GPU_Opt が、評価した 4 グラフすべてで tuned third-party PathMerge より短い median 実行時間を示した。ただし、speedup の大きさはグラフ間で一様ではない。中心性能値と統計量は Table 6.1 および Figure 6.1～6.2 に集約されており、本章では再掲しない。この差は評価条件下の観測であり、単一の最適化要因だけで説明できるとは限らない。
 
-RQ2 は性能差の内部要因を、RQ1 とは別のグラフ集合で評価した。修正版 325557 の主効果は H=1.4767、W=1.1012、A=1.5563、合成 4 グラフ集約は H=1.679、W=1.066、A=1.391 である。後者は、graph によって測定 job と checkpoint が異なる mixed-checkpoint 集約である（内訳は 5.11 節および Appendix A）。Hybrid BFS と Dual-Stream Execution の正の効果、Warp-Cooperative Accumulation の graph dependence は評価条件内の観測であり、roadNet の RQ1 speedup をこのアブレーションだけで因果分解しない。
+Chapter 7 の factorial ablation では、Hybrid BFS と Dual-Stream Execution に正の main effect が観測され、Warp-Cooperative Accumulation はグラフにより効果の方向と大きさが異なった。一方、ablation の対象グラフ集合は RQ1 の主性能比較と一致せず、合成 4 グラフ集約も mixed-checkpoint である。したがって、H/W/A の main effect を加算または乗算して Chapter 6 の end-to-end speedup を因果分解しない。
 
-RQ3 は同じ計算基盤の memory-management variants を比較した。修正版 325557 の targeted boundary では Pure b4096、UM b10240、Chunked b16384 が成功し、Pure b8192 は CUDA device-memory OOM、UM b12288 は cgroup host-memory OOM kill であった。各条件 1 試行であり、runtime を方式間性能の formal ranking に用いない。
+roadNet-PA/TX の forced comparison では block カーネルが shared カーネルより短い実行時間を示し、現行の block-based source assignment を選ぶ設計根拠となった。ただし、この比較は 2 グラフに限定される。Figure 7.3 の phase breakdown と単一 trace のカーネル構成比も、測定した構成の時間配分を示す観測であり、最適化別の寄与率ではない。
 
-RQ4 は 2 tier である。Tier A は小規模 3 グラフの独立 Sequential CPU 参照比較が `SUPPORTED`、Tier B は修正版 325557 の 10 cross-implementation 比較が `SUPPORTED_WITH_LIMITATIONS` である。全 13 比較は mixed tolerance 内で PASS したが、すべて `ByteIdentical=No` である。
+## 10.2 Graph Characteristics and Observed Behavior
 
-## 10.2 Performance and Graph Characteristics
+Table 5.3 が示すように、email-EuAll と roadNet 系グラフでは平均次数、次数分布、BFS depth、グラフ規模が異なる。email-EuAll はハブを含み探索が比較的浅い一方、roadNet は低次数で探索が深い。この構造差と Chapter 6 の speedup 差は整合するが、評価グラフ数が少なく、graph characteristics と性能差の因果関係を推定する解析は行っていない。
 
-email-EuAll と roadNet の speedup 差は、グラフ構造の違いと整合する。email-EuAll はハブを含み BFS depth が浅い一方、roadNet は低次数で探索が深い。email-EuAll では Dual-Stream Execution の main effect が 1.720 と大きく、initialization と kernel execution の overlap が end-to-end time に寄与した可能性がある。一方、roadNet で H/W/A factorial ablation は実施していないため、roadNet の speedup 差の原因を断定しない。
+email-EuAll では Dual-Stream Execution の大きな正の main effect が観測され、初期化と kernel execution の overlap が実行時間に影響した可能性がある。ただし、roadNet 系では H/W/A factorial ablation を実施していないため、この解釈を roadNet の speedup へ適用しない。同様に、Warp-Cooperative Accumulation のグラフ別差は隣接走査量や lane utilization と関係する可能性があるものの、専用 hardware counter による検証はなく、平均次数だけから効果を予測する一般則は導かない。
 
-Warp-Cooperative Accumulation は email-EuAll で 0.970、56438 で 0.992、benchmark_7000 で 1.175、修正版 325557 で 1.1012 であった。隣接走査量や lane utilization が効果に影響する可能性はあるが、専用 hardware counter による因果検証はない。したがって、平均次数や次数分布だけから W の効果を予測する一般則は提示しない。
+グラフ規模は静的な CSR と BC 出力の大きさだけでなく、1 source 当たりの状態量を通じて batch-dependent working set にも影響する。ただし、本研究の容量評価は修正版 325557 の 1 グラフに限られるため、頂点数や辺数だけから他グラフの実行可能境界を外挿しない。
 
-## 10.3 The Capacity Problem Is Batch-Dependent State
+## 10.3 Performance–Capacity–Numerical Trade-Off
 
-修正版 325557 の input graph file は 45,348,105 bytes、CSR topology は 27,031,448 bytes、BC output vector は 2,604,456 bytes である。これらは HBM3 容量を超えない。容量問題を作るのは、1 source あたり 10,418,856 bytes の state（$M_{\mathrm{source}}$）を同時 source 数だけ複製する code-derived working set である。
+Chapter 8 の容量評価が示す中心的な区別は、static graph storage と batch-dependent source-local state の違いである。修正版 325557 では input graph file と CSR topology 自体は HBM3 容量を超えず、同時に保持する source-local state が working set を支配する。この関係は 8.1.2 項の working-set 式で定義したとおりであり、本章では再掲しない。
 
-$$
-M_{\mathrm{work}}=NS_{\mathrm{eff}}\times \mathrm{EffectiveBatch}\times M_{\mathrm{source}}.
-$$
+GPU_Opt、GPU_Opt_Pure、GPU_Opt_Pure_Chunked は、独立した 3 つの提案ではなく、この working set を異なる方法で管理する共通 framework の memory-management variants である。GPU_Opt は Unified Memory による managed placement を利用し、GPU_Opt_Pure は device memory に明示的に配置する。GPU_Opt_Pure_Chunked は source sub-batching により同時 resident な state を制限する。batch と sub-batch が分割するのは source 集合であり、graph partitioning や source sampling ではないため、いずれも全 source を処理する exact BC の実行単位を保つ。
 
-この関係は設計上重要である。入力 graph file を小さくしても batch-dependent state が支配的なら容量問題は残る。逆に、source grouping と同時 resident 数を制御すれば、graph topology を partition した近似計算に変えずに容量を調整できる。batch/sub-batch は全 source を反復処理する exact execution unit であり、graph partition や source sampling ではない。
+Chapter 8 の targeted boundary は、Unified Memory が Pure より大きい batch を扱い、Chunked が tested upper bound をさらに拡張したことを示す一方、方式間の性能順位は定めない。各境界条件は 1 試行で、batch、allocation path、sub-batch 数も異なるためである。Unified Memory は有限の host memory と resource limit に依存し、Chunked も未測定条件で OOM を回避する保証を持たない。
 
-## 10.4 Unified Memory and Chunked Execution
+数値面では、Chapter 9 の Tier A が小規模グラフで independent ground truth との full-vector consistency を評価し、Tier B が修正版 325557 で batch と memory path をまたぐ cross-implementation consistency を評価した。混合許容内の PASS は byte-identical を意味せず、PathMerge も independent ground truth ではない。したがって、性能または容量を変える実行経路の選択は、実行可能性だけでなく、証拠 tier と数値判定の意味を併記して評価する必要がある。
 
-UM の利点は managed allocation により device memory を超え得る working set を扱えることである。修正版 325557 の UM b10240 は code-derived estimate 106.69 GB が run-start free HBM 約 101.4 GB を上回る条件で成功した。しかし b12288 は cgroup host-memory OOM kill であり、UM は有限の host memory、cgroup、runtime resource に依存する。UM の目的を「96 GB を超える graph file の格納」と表現しない。
+## 10.4 Implications for GH200
 
-Chunked は source batch を `SUB_BATCH=6596` の sub-batch に分け、b16384 に対する同時 resident estimate を 68.72 GB に制限した。`SUB_BATCH=6596` は HBM budget だけでなく `INT_MAX/n` の index-safety upper bound により決まり、修正版 325557 では後者が binding constraint であった。Chunked の利点は最高速度ではなく explicit resident-working-set control と tested capacity extension である。未試行条件で OOM を回避する保証はない。
+評価した GH200 構成では、Hopper GPU の HBM3 と Grace CPU 側 memory を接続する coherent memory architecture により、同じ計算基盤で device-only、Unified Memory、source sub-batching の経路を比較できた。観測された境界は、graph file size だけでなく source-local state の同時 resident 量を設計変数として扱う必要性を示す。
 
-UM と Chunked の選択は単純な優劣ではない。UM は managed placement の簡潔さを持つが host-memory pressure を受ける。Chunked は resident amount を制御できるが sub-batch loop と launch control を要する。本研究は measured RSS、physical HBM residency、full-run migration bytes を取得していないため、両者の物理配置量や migration total を定量比較しない。
+Unified Memory は allocation と placement の管理を簡潔にする一方、host-memory pressure、resource limit、migration の影響を受ける。source sub-batching は resident working set を明示的に制御できる一方、sub-batch loop と追加 launch を必要とする。本研究は full-run process RSS、physical HBM residency、total host residency、full-run migration bytes を取得していないため、両経路の物理配置量や migration cost の原因を定量比較しない。
 
-## 10.5 Correctness, Numerical Consistency, and Provenance
+Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream Execution、block-based source assignment の観測も GH200 上の評価に限られる。stream concurrency、memory capacity、interconnect、runtime policy が異なる GPU で同じ性能関係や容量境界が得られるとは推論しない。
 
-Tier A の独立参照 PASS は、小規模 3 グラフにおける GPU_Opt の full-vector numerical validity を支持する。Tier B の 10 PASS は、修正版 325557 で UM/Pure/Chunked/PathMerge の異なる batch・memory path が混合許容内で整合したことを示す。ただし、Tier B は独立 reference ではなく、PathMerge も ground truth ではない。
+## 10.5 Threats to Validity
 
-全 13 比較が `ByteIdentical=No` であることは、floating-point accumulation order の違いを許容する判定設計と整合する。ここから特定の差の原因を断定しない。混合許容内 PASS と bitwise identity を区別することが、性能・容量の変更を評価する際の construct validity に必要である。
+**Internal validity.** RQ2 の合成 4 グラフ集約は mixed-checkpoint であり、same-checkpoint four-graph remeasurement ではない。RQ3 の targeted boundary は各条件 1 試行であり、RQ2、RQ3、RQ4 は別々の測定系列から得た。OOM については Pure の CUDA device-memory OOM と Unified Memory の cgroup host-memory OOM kill を区別し、失敗を 0 秒の runtime として扱わない。
 
-修正版 325557 は決定的に再構成されたが、元 seed・上流の完全な原本が未確認である。したがって Tier B の結論には provenance limitation が残る。旧 malformed 入力上の `CORE_FAIL` は current conclusion から除外する一方、failure archive と当該 canonical job を historical invalid-input evidence として保存する（job ID は Appendix A）。この履歴は、入力 validation と再検証手続きの重要性を示す。
+**External validity.** RQ1 は 4 グラフ、RQ2 は合成 4 グラフと email-EuAll、RQ3 と RQ4 Tier B は修正版 325557、Tier A は小規模 3 グラフに限定される。評価装置も GH200 1 台である。この範囲から未測定グラフ、他 GPU、異なる host-memory limit へ結果を一般化しない。修正版 325557 は RQ1 の主性能比較には含まれない。
 
-## 10.6 Threats to Validity
+**Construct validity.** working-set values は配列寸法から求めた code-derived allocation estimate であり、measured RSS、physical residency、migration bytes ではない。正確性の PASS は既定の mixed absolute-relative tolerance 内の numerical consistency を示し、bitwise identity を示さない。観測された実行時間、main effect、phase 構成比、feasibility を同一の性能指標として扱わない。
 
-### 10.6.1 Internal Validity
+**Baseline and data validity.** PathMerge は評価対象の第三者実装であり、原著論文著者の公式実装でも ground truth でもない。結果を PathMerge 一般へ拡張しない。修正版 325557 は決定的な内部再構成データであるが、元 seed と上流原本が未確認である。また、修復は範囲外頂点 ID と CSR 要素数の不一致を是正したもので、self-loop 87,442 本と多重度 2 の duplicate ordered pairs 866,924 組を保持する。これは保存された adjacency representation の観測事実であり、性能差の原因とは断定しない。旧 malformed input の `CORE_FAIL` は historical invalid-input evidence として保存し、current conclusion には用いない。
 
-RQ2 の合成 4 集約は mixed-checkpoint であり、same-checkpoint four-graph remeasurement ではない。修正版 325557 の RQ3/RQ4 と RQ2 も別々の job で測定している。manifest、checkpoint、job ID は 5.11 節および Appendix A に明示し、異なる実験群を同一 run として扱わない。
+## 10.6 Limitations and Future Work
 
-OOM class は保存 evidence に従う。Pure b8192 の CUDA error と UM b12288 の cgroup host-memory OOM kill を区別する。failure を 0 秒の runtime として扱わない。
+現時点の主要な制約は、headline 4 グラフに対する independent full-vector reference がないこと、現行 block-based 実装による統一的な 7 実装比較がないこと、PathMerge 比較が単一の第三者実装に限られることにある。容量評価では 1 グラフ・各条件 1 試行であり、full-duration の RSS、HBM residency、host residency、migration measurement もない。要因分析には mixed-checkpoint 集約が残り、修正版 325557 には上流原本と生成 seed の provenance 制約がある。
 
-### 10.6.2 External Validity
-
-RQ1 は 4 グラフ、RQ2 は synthetic 4 + email、RQ3/Tier B は修正版 325557 の 1 グラフ、Tier A は小規模 3 グラフに限定される。評価 GPU は GH200 1 台である。1 graph、1 trial の targeted boundary を他 graph、他 GPU、異なる host-memory limit へ一般化しない。
-
-### 10.6.3 Construct Validity
-
-RQ3 の working-set values は code-derived allocation estimates であり measured memory usage ではない。process RSS、physical residency、migration bytes が未取得である。RQ4 の PASS は mixed tolerance 内の数値整合性で、bitwise identity ではない。
-
-### 10.6.4 Baseline and Data Validity
-
-PathMerge は第三者実装の external comparator であり原著者公式実装でも ground truth でもない。修正版 graph は内部再構成データで元 seed・上流原本未確認である。旧 malformed result を current evidence に混入させない。
-
-修正版 325557 の修復は範囲外頂点 ID と CSR 要素数不一致の是正であり、self-loop 87,442 本と多重度 2 の有向ペア 866,924 組は保持している（5.3 節）。RQ2、RQ3、および RQ4 Tier B の結果は、この保存された adjacency representation に対する結果であり、Tier B は同一入力上の実装間整合であって simple-graph semantics に対する独立 ground truth ではない。この構造が実装間の性能差の原因であるとは主張しない。修正版 325557 は RQ1 の主性能比較には用いていないため、RQ1 の speedup 値はこの構造の影響を受けない。
-
-## 10.7 Future Work
-
-今後の課題は、headline graph の独立 full-vector reference、追加 graph と他 GPU での boundary validation、複数 trial の容量評価、full-run RSS/HBM residency/migration measurement、同一 checkpoint での synthetic-4 ablation remeasurement、上流原本または生成 seed による修正版 graph provenance の強化である。これらは現行結果の制約を緩和するための課題であり、本論文の current claims を事後に拡張しない。
+これらに対応するには、まず headline graph と大規模条件に対する独立 full-vector reference を整備し、公式または別系統の独立 PathMerge 実装と現行 block-based 実装を同じ条件で比較する必要がある。次に、same-checkpoint synthetic-4 ablation、追加グラフ、複数 trial の容量境界、他 GPU での再評価により観測範囲を広げる必要がある。さらに、full-run memory telemetry を取得し、修正版 graph の上流原本または生成 seed を確認することで、現在は分離している性能、容量、数値挙動、provenance の制約を個別に検証できる。

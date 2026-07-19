@@ -16,11 +16,13 @@ Ablation の対象は、提案実行基盤の 3 つの工夫である。Hybrid B
 | W (Warp-Cooperative Accumulation) | Thread-per-vertex accumulation kernel | Warp-cooperative accumulation (warp-level shuffle reduction) | Backward (dependency accumulation) |
 | A (Dual-Stream Execution) | Single CUDA stream (NS=1), synchronous initialization | Two CUDA streams (NS=2), asynchronous initialization overlapped with computation (double buffering) | Batch initialization / kernel pipeline |
 
-> Source: `src/proposed/host_ablation.cu`, `include/proposed/brandes_kernels.cuh`, `result/ablation/{corrected_325557,synthetic_2354994,email_2354999}/`.
+<!-- Source note (internal): src/proposed/host_ablation.cu; include/proposed/brandes_kernels.cuh; result/ablation/{corrected_325557,synthetic_2354994,email_2354999}/. -->
 
-測定した構成は、$\mathrm{H}\{0,1\} \times \mathrm{W}\{0,1\} \times \mathrm{A}\{0,1\}$ の全 8 構成である。H0W0A0 が baseline、H1W1A1 が full 構成である。benchmark_7000_41459、benchmark_11023_62184、56438_300801 は PBS job 2354994、修正版 `325557_3216152_corrected_v1` は job 2406254 / checkpoint `45352a3` で各構成 n=5、email-EuAll は job 2354999 で各構成 n=3 である。3 系列（job 2354994、job 2354999、job 2406254）はいずれも、各 8 構成 invocation 先頭で global・untimed な H1W1A1 warmup を 1 回実行しており、これを formal trial に含めない（marker はそれぞれ 20、3、5 件、formal 行はそれぞれ 160、24、40 行である）。合成 4 集約は mixed-checkpoint であり、同一 checkpoint で 4 グラフを再測定したものではない。すべて固定 b512、主値は構成 median である。ablation 実行は BC vector comparison を記録していないため correctness level は `none` である。
+測定した構成は、$\mathrm{H}\{0,1\} \times \mathrm{W}\{0,1\} \times \mathrm{A}\{0,1\}$ の全 8 構成である。H0W0A0 が baseline、H1W1A1 が full 構成である。benchmark_7000_41459、benchmark_11023_62184、56438_300801、修正版 `325557_3216152_corrected_v1` は各構成 n=5、email-EuAll は各構成 n=3 である。各測定系列では、8 構成 invocation の先頭に global・untimed な H1W1A1 warmup を 1 回実行し、formal trial に含めない。合成 4 集約は mixed-checkpoint であり、同一 checkpoint で 4 グラフを再測定したものではない。すべて固定 b512、主値は構成 median である。ablation 実行は BC vector comparison を記録していないため correctness level は `none` である。測定系列、marker 数、formal 行数の provenance は Appendix A に示す。
 
-合成グラフ群と email-EuAll は分けて集計する。両者は次数分布と探索深さが対照的であり（5.3 節）、試行数も異なる（n=5 と n=3）ため、単一の集計に混合しない。合成 4 グラフは幾何平均で統合し、email-EuAll は単独で報告する。また、ablation は専用の測定シリーズであり、その絶対実行時間を Chapter 6 の主性能値と同一視しない。例えば email-EuAll の full 構成（H1W1A1）の median は本シリーズで 30.42 s であり、Table 6.1 の GPU_Opt の 30.81 s（別ジョブ 2357334 の測定）とは別の測定である。
+<!-- Source note (internal): jobs 2354994, 2354999, and 2406254; corrected-series checkpoint 45352a3; marker counts 20/3/5 and formal row counts 160/24/40. -->
+
+合成グラフ群と email-EuAll は分けて集計する。両者は次数分布と探索深さが対照的であり（5.3 節）、試行数も異なる（n=5 と n=3）ため、単一の集計に混合しない。合成 4 グラフは幾何平均で統合し、email-EuAll は単独で報告する。また、ablation は専用の測定シリーズであり、その絶対実行時間を Chapter 6 の主性能値と同一視しない。例えば email-EuAll の full 構成（H1W1A1）の median は本シリーズで 30.42 s であり、Table 6.1 の GPU_Opt の 30.81 s とは別の測定系列である。
 
 各因子の寄与は主効果（main effect）で評価する。因子 $F \in \{\mathrm{H}, \mathrm{W}, \mathrm{A}\}$ の main effect は、残る 2 因子 $(G_1, G_2)$ の全 4 水準組合せにわたる、$F$ 無効時と有効時の median 実行時間比の幾何平均である。集計スクリプト（`scripts/summarize_ablation.py`）の定義に従い、グラフ $g$ に対して次式で計算する。
 
@@ -34,26 +36,28 @@ $$
 \mathrm{ME}_{\mathrm{synth}}(F) = \left( \prod_{g \in \mathcal{G}_{\mathrm{synth}}} \mathrm{ME}_g(F) \right)^{1/4}
 $$
 
-である。本章の main effect 値は、丸め前の生データ TSV（`raw_data/ablation/`）から上式で再計算し、公式集計（`result/ablation/*/ablation_contributions.tsv`）と一致することを確認した上で、小数第 3 位へ丸めて表示する。
+である。本章の main effect 値は、丸め前の canonical trial data から上式で再計算し、公式集計と一致することを確認した。本文と Figure 7.1 は小数第 3 位、Table 7.2 は表示精度を揃えるため小数第 4 位まで示す。
+
+<!-- Source note (internal): raw_data/ablation/ and result/ablation/*/ablation_contributions.tsv. -->
 
 因子間の交互作用（interaction）については、本評価は正式な交互作用項の推定を行っていない。補助的な確認として、集計スクリプトは単独寄与（add-one：$T(\mathrm{H0W0A0})/T(F$ のみ有効$)$）と除外寄与（leave-one-out：$T(\mathrm{full}$ から $F$ のみ無効$)/T(\mathrm{H1W1A1})$）の相対差を交互作用の兆候として点検しており、全因子・全グラフでこの相対差は最大 9.2% と判定閾値 10% を下回った。ただしこれは限定的な点検であり、本章では 3 因子の効果が互いに独立であるとは断定しない。同じ理由から、main effect は加算可能な寄与配分ではなく、$\mathrm{ME}(\mathrm{H}) \cdot \mathrm{ME}(\mathrm{W}) \cdot \mathrm{ME}(\mathrm{A})$ が baseline から full までの改善率と一致することも保証されない。
 
 観測された main effect の要約を Table 7.2 に、グラフ別の内訳を Figure 7.1 に示す。全 8 構成の median 実行時間と全試行値は Appendix C に置く。試行間ばらつきは小さく、生データから再計算した各構成の標本標準偏差（ddof=1）は、email-EuAll では median の 0.33% 以下、合成グラフ群では最大 3.2%（最小規模グラフ benchmark_7000_41459 の H0W0A1 構成、median 0.0442 s に対して 0.0014 s）であった。実行時間が秒オーダー以上の構成では、標本標準偏差は median の 1% 未満であった。
 
-**Table 7.2: Observed main effects of the three ablation factors. Values are recomputed from the canonical raw TSVs and rounded to three decimals.**
+**Table 7.2: Observed main effects of the three ablation factors, rounded to four decimal places.**
 
 | Dataset Group | H Main Effect | W Main Effect | A Main Effect | Trials per Configuration | Aggregation |
 |---|--:|--:|--:|--:|---|
-| Synthetic (4 graphs, mixed-checkpoint geometric mean) | 1.679 | 1.066 | 1.391 | 5 | Median per configuration; factorial main effect; geometric mean across 4 graphs |
-| 325557_3216152_corrected_v1 | 1.4767 | 1.1012 | 1.5563 | 5 | Corrected re-measurement, job 2406254 / checkpoint 45352a3 |
-| email-EuAll | 1.429 | 0.970 | 1.720 | 3 | Median per configuration; factorial main effect |
+| Synthetic (4 graphs, mixed-checkpoint geometric mean) | 1.6787 | 1.0661 | 1.3914 | 5 | Median per configuration; factorial main effect; geometric mean across 4 graphs |
+| 325557_3216152_corrected_v1 | 1.4767 | 1.1012 | 1.5563 | 5 | Corrected re-measurement |
+| email-EuAll | 1.4286 | 0.9695 | 1.7199 | 3 | Median per configuration; factorial main effect |
 
 <!-- canonical artifact: T3_ablation_summary (internal ID: T3) -->
-> Source: `result/tables/thesis/T3_ablation_summary.tsv`; the synthetic-4 aggregate combines the unchanged three-graph job 2354994 data with corrected 325557 job 2406254 data. It is a mixed-checkpoint aggregate, not a same-checkpoint four-graph remeasurement.
+<!-- Source note (internal): result/tables/thesis/T3_ablation_summary.tsv. The synthetic-4 aggregate combines unchanged three-graph job 2354994 data with corrected-325557 job 2406254 data; it is not a same-checkpoint four-graph remeasurement. -->
 
 ![Figure 7.1: Ablation main effects](../../../../result/figures/thesis/ablation_contributions.png)
 
-**Figure 7.1: Per-factor main-effect speedups of the H/W/A factorial ablation. The synthetic-4 aggregate is mixed-checkpoint (three graphs: job 2354994; corrected 325557: job 2406254, checkpoint 45352a3). Bars use configuration medians (synthetic: n=5; email-EuAll: n=3; fixed b512).**
+**Figure 7.1: Per-factor main-effect speedups of the H/W/A factorial ablation. The synthetic-4 aggregate is mixed-checkpoint rather than a same-checkpoint four-graph remeasurement. Bars use configuration medians (synthetic: n=5; email-EuAll: n=3; fixed b512).**
 
 <!-- canonical artifact: ablation_contributions.{png,pdf,svg} (internal ID: F4); see result/figures/thesis/FIGURE_MANIFEST.tsv. The figure number is provided by the thesis caption; the exported figure does not embed an internal artifact ID. -->
 
@@ -61,7 +65,7 @@ $$
 
 Hybrid BFS（H）の main effect は、合成 4 グラフでそれぞれ 1.536、1.782、1.965、修正版 325557 の 1.4767 であり、mixed-checkpoint 幾何平均は 1.679 であった。email-EuAll では 1.429 であった。評価した 5 グラフで H の main effect は 1 を上回ったが、未測定グラフへ一般化しない。
 
-phase 帰属を保持する不変の job 2354994 / 2354999 では、H の有効化が 56438_300801 と email-EuAll の BFS 累積時間を短縮した。修正版 325557 の formal artifact は wall median を保持し、H0W0A0 176.35 s から H1W0A0 116.33 s への短縮を示すが、per-phase timer は保持しない。したがって旧 malformed 325557 の phase 値を修正版の因果証拠として用いない。
+phase 帰属を保持する合成グラフと email-EuAll の測定系列では、H の有効化が 56438_300801 と email-EuAll の BFS 累積時間を短縮した。修正版 325557 の formal artifact は wall median を保持し、H0W0A0 176.35 s から H1W0A0 116.33 s への短縮を示すが、per-phase timer は保持しない。したがって旧 malformed 325557 の phase 値を修正版の因果証拠として用いない。
 
 以上の値は、評価した 4 合成グラフと email-EuAll における観測である。「合成グラフ一般」に対する効果を意味するものではなく、H/W/A の factorial ablation を実施していない roadNet-PA/TX/CA を含む未測定グラフへ一般化しない。
 
@@ -81,7 +85,7 @@ A=1 の phase log を保持する評価条件では、gap（wall time から BFS
 
 ## 7.5 Shared and Block Kernels
 
-本節では、BFS カーネルの shared-frontier 方式（shared）と 1 block = 1 source 方式（block）の直接比較を示す。5.8 節のとおり、この比較は環境変数 `BC_FORCE_BFS_KERNEL=shared|block` により各カーネルを強制実行した forced 比較であり、自動選択則の評価ではない。対象は roadNet-PA と roadNet-TX の 2 グラフ、設定はバッチ 512（SUB_BATCH=512、num_subs=1、in-capacity）、各カーネル n=3、warmup なし、集計は median（標本標準偏差併記）、SourceSnapshotID `phase_def_block_20260710`（PBS job 2354329、2354330）である。結果を Table 7.3 と Figure 7.2 に示す。
+本節では、BFS カーネルの shared-frontier 方式（shared）と 1 block = 1 source 方式（block）の直接比較を示す。5.8 節のとおり、この比較は環境変数 `BC_FORCE_BFS_KERNEL=shared|block` により各カーネルを強制実行した forced 比較であり、自動選択則の評価ではない。対象は roadNet-PA と roadNet-TX の 2 グラフ、設定はバッチ 512（SUB_BATCH=512、num_subs=1、in-capacity）、各カーネル n=3、warmup なし、集計は median（標本標準偏差併記）、SourceSnapshotID `phase_def_block_20260710` である。結果を Table 7.3 と Figure 7.2 に示す。
 
 **Table 7.3: Forced shared/block BFS kernel comparison on roadNet-PA and roadNet-TX. Speedup = slower kernel median / faster kernel median. Max BC Match compares the maximum-BC index and value between the two kernels.**
 
@@ -91,7 +95,7 @@ A=1 の phase log を保持する評価条件では、gap（wall time から BFS
 | roadNet-TX | 3 | 1639.16 | 3 | 984.59 | Block | 1.66 | Yes (index and value) |
 
 <!-- canonical artifact: kernel_selection_contributions.tsv (internal table ID: T-KSEL) -->
-> Source: `raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/job_2354329_20260710/kernel_selection_results.tsv` and `raw_data/tuning/kernel_selection/roadNet-TX/gpu_opt_forced/job_2354330_20260710/kernel_selection_results.tsv`; medians and sample SDs cross-checked against `result/tuning/kernel_selection/roadNet-PA/kernel_selection_contributions.tsv` and `result/tuning/kernel_selection/roadNet-TX/kernel_selection_contributions.tsv` (unrounded medians: PA 1063.712326 / 701.573311 s, speedup 1.516; TX 1639.164633 / 984.587390 s, speedup 1.665).
+<!-- Source note (internal): raw_data/tuning/kernel_selection/roadNet-PA/gpu_opt_forced/job_2354329_20260710/kernel_selection_results.tsv and raw_data/tuning/kernel_selection/roadNet-TX/gpu_opt_forced/job_2354330_20260710/kernel_selection_results.tsv; medians and sample standard deviations cross-checked against the corresponding result/tuning/kernel_selection tables. -->
 
 ![Figure 7.2: Forced shared vs block kernel comparison](../../../../result/figures/thesis/shared_vs_block_kernel.png)
 
@@ -107,7 +111,7 @@ A=1 の phase log を保持する評価条件では、gap（wall time から BFS
 
 ## 7.6 Phase Breakdown
 
-本節では、観測された実行時間のフェーズ内訳を記述する。2 種の資料を用いる。第 1 は、Chapter 6 の主性能測定（GPU_Opt、固定 b512、job 2357334）と同一実行の `phase_timing.log` から得た、headline 4 グラフの成分内訳である（Figure 7.3）。第 2 は、単一の nsys トレースによる GPU カーネル時間の構成比である。いずれも観測された時間配分の記述であり、フェーズ構成比を H/W/A の main effect の寄与率と同一視せず、性能差の因果の証拠としても扱わない。
+本節では、観測された実行時間のフェーズ内訳を記述する。2 種の資料を用いる。第 1 は、Chapter 6 の主性能測定（GPU_Opt、固定 b512）と同一実行の phase timing 記録から得た、headline 4 グラフの成分内訳である（Figure 7.3）。第 2 は、単一の nsys トレースによる GPU カーネル時間の構成比である。いずれも観測された時間配分の記述であり、フェーズ構成比を H/W/A の main effect の寄与率と同一視せず、性能差の因果の証拠としても扱わない。
 
 Figure 7.3 の成分は、runner が計測する BFS wall と Backward wall、および Other である。Other は各試行の全体実行時間から BFS と Backward を引いた残差として定義され、初期化・CSR ロード・結果回収・ホスト側オーバヘッドを含む。GPU_Opt（Unified Memory 版）は host-to-device / device-to-host 転送や初期化を個別計測しないため、この内訳は計測成分に基づく分解であって、転送量まで含めた完全な内訳ではない。集計は成分ごとの試行 median（email-EuAll n=5、roadNet 各 n=3）である。
 
@@ -119,13 +123,13 @@ Figure 7.3 の成分は、runner が計測する BFS wall と Backward wall、�
 
 観測された median 成分は次のとおりである。email-EuAll では BFS 9.12 s、Backward 20.07 s、Other 1.60 s であり、Backward が最大成分（成分和の約 65%）であった。roadNet-PA では BFS 348.91 s、Backward 290.61 s、Other 62.60 s、roadNet-TX では BFS 355.43 s、Backward 477.56 s、Other 145.58 s、roadNet-CA では BFS 816.37 s、Backward 950.28 s、Other 362.46 s であり、road 系 3 グラフでは BFS と Backward が同程度のオーダー（成分和の約 36～50%）を占め、Other は約 9～17% であった。これらの構成比は、測定した b512 実行の記述であり、他のバッチ設定や他実装の内訳を代表しない。
 
-カーネル単位の補助資料として、nsys による単一トレース（PBS job 2359175、トレース 1 回）の CUDA GPU カーネル時間集計では、Backward カーネル（`brandes_back_kernel_opt`）が 63.9%、BFS カーネル（`brandes_bfs_kernel_opt`）が 36.1% を占めた。この `ablation_H1W1A0` トレースの本測定は ablation バイナリの H1W1A0 構成であり、対象グラフは 56438_300801 である。ただし、同一 process 冒頭の untimed H1W1A1 warmup もtrace scopeに含むため、この構成比は本測定 H1W1A0 だけを分離した値ではなく、warmupを含む単一トレース全体の値である。また、GPU カーネル実行時間のみの比率であってホスト時間・転送時間を含まない。したがって、この値を全実験のフェーズ構成へ一般化しない。同ジョブには A 因子比較用の `ablation_H1W1A1` 別トレースも保存されているが、本章の定量値には用いない。
+カーネル単位の補助資料として、nsys による単一トレースの CUDA GPU カーネル時間集計では、Backward カーネル（`brandes_back_kernel_opt`）が 63.9%、BFS カーネル（`brandes_bfs_kernel_opt`）が 36.1% を占めた。この `ablation_H1W1A0` トレースの本測定は ablation バイナリの H1W1A0 構成であり、対象グラフは 56438_300801 である。ただし、同一 process 冒頭の untimed H1W1A1 warmup も trace scope に含むため、この構成比は本測定 H1W1A0 だけを分離した値ではなく、warmup を含む単一トレース全体の値である。また、GPU カーネル実行時間のみの比率であってホスト時間・転送時間を含まない。したがって、この値を全実験のフェーズ構成へ一般化しない。同一測定系列には A 因子比較用の `ablation_H1W1A1` 別トレースも保存されているが、本章の定量値には用いない。
 
-> Source: components from `raw_data/main_performance/proposed_variants/*/_run/job_2357334_20260711/phase_timing.log` (four existing graph-specific logs; medians recomputed; component sums agree with the Table 6.1 medians); kernel-time shares from `raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.stats.txt` (CUDA GPU Kernel Summary; single trace including the untimed warmup run in the same process), target graph per `raw_data/profiling/job_2359175_20260711/pbs_stdout.log` and `raw_data/profiling/job_2359175_20260711/ablation_H1W1A0.console.log`.
+<!-- Source note (internal): phase components from raw_data/main_performance/proposed_variants/*/_run/job_2357334_20260711/phase_timing.log; kernel-time shares and target attribution from raw_data/profiling/job_2359175_20260711/. -->
 
 ## 7.7 Answer to RQ2
 
-以上より、RQ2 は `SUPPORTED_WITH_LIMITATIONS` と回答する。修正版 325557 の主効果は H=1.4767、W=1.1012、A=1.5563、合成 4 グラフの mixed-checkpoint 集約は H=1.679、W=1.066、A=1.391 であった。Hybrid BFS と Dual-Stream Execution が主要な正の効果を示し、Warp-Cooperative Accumulation は graph-dependent であった。合成 4 集約は他 3 グラフが job 2354994、修正版 325557 が job 2406254 / checkpoint `45352a3` であり、same-checkpoint remeasurement ではない。roadNet-PA/TX の forced 比較では block カーネルが shared より 1.52 倍・1.66 倍高速だったが、H/W/A の因果を roadNet へ一般化しない。
+以上より、RQ2 は `SUPPORTED_WITH_LIMITATIONS` と回答する。修正版 325557 の主効果は H=1.4767、W=1.1012、A=1.5563、合成 4 グラフの mixed-checkpoint 集約は H=1.679、W=1.066、A=1.391 であった。Hybrid BFS と Dual-Stream Execution が主要な正の効果を示し、Warp-Cooperative Accumulation は graph-dependent であった。合成 4 集約は修正版 325557 だけを別系列で再測定したもので、same-checkpoint remeasurement ではない。roadNet-PA/TX の forced 比較では block カーネルが shared より 1.52 倍・1.66 倍高速だったが、H/W/A の因果を roadNet へ一般化しない。
 
 <!-- English version (plan.md 8.8): "Hybrid BFS and dual-stream execution provided the main observed improvements, whereas warp-cooperative accumulation was graph-dependent." -->
 

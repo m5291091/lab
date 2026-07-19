@@ -167,7 +167,7 @@ $$
 
 各 source の $\delta_s$ が得られた後、block 内の thread は頂点集合を stride 走査し、$v\neq s$ の寄与を global $CB[v]$ へ `atomicAdd` する。複数 source の block および 2 streams が同じ $CB[v]$ を更新し得るため、global accumulation には atomic operation が必要である。無向グラフでは寄与 $\delta_s(v)/2$ を加算する。
 
-Warp-Cooperative Accumulation は常に有利であると仮定しない。現行基盤は thread と warp の双方を実装し、通常経路では平均次数により選択する。また、ablation 用実装はこの選択を compile-time に固定し、Hybrid BFS、warp cooperation、Dual-Stream Execution の組合せを同じ基盤上で比較できる。観測された寄与と graph dependence は Chapter 7 で扱う。
+Warp-Cooperative Accumulation は常に有利であると仮定しない。現行基盤は thread と warp の双方を実装し、通常経路では平均次数により選択する。また、ablation 用実装はこの選択を compile-time に固定し、Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream Execution の組合せを同じ基盤上で比較できる。観測された寄与と graph dependence は Chapter 7 で扱う。
 
 ## 4.6 Dual-Stream Execution
 

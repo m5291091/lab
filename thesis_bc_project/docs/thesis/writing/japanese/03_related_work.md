@@ -96,7 +96,7 @@ Shirahata らの研究も、MapReduce-based large-scale graph processing に対�
 
 Table 3.1 は、関連研究と本研究の比較軸をまとめる。不明な項目は論文 title や abstract から推測せず、`Not reported` または `Not independently verified` とした。Evaluation Scope は各研究で報告された範囲または本論文での利用範囲を示し、異なる hardware 間の性能順位を表すものではない。
 
-**Table 3.1 Comparison with Related Work**
+**Table 3.1: Comparison with Related Work.**
 
 | Work | Target | Platform | Exact BC | Parallelism | BFS Strategy | Memory Strategy | Evaluation Scope | Role in This Thesis |
 |---|---|---|---|---|---|---|---|---|
@@ -108,7 +108,7 @@ Table 3.1 は、関連研究と本研究の比較軸をまとめる。不明な�
 | Evaluated third-party PathMerge snapshot [@pathmergeRepo] | Vertex BC | GH200 | Yes in evaluated configuration | Batched sources | Not independently verified against Galliot | Device-resident per-source working state | Saved snapshot on four graphs and GH200; paper fidelity and exact commit identity not independently verified | Upstream license not verified; external comparator; not verified as an original-authors implementation; not ground truth; no algorithm-level generalization |
 | RAPIDS cuGraph [@rapidsCugraph; @rapidsCugraphBcDocs] | Vertex BC | CUDA GPU | Exact or sampled | Not reported | Not reported | Library-managed GPU memory | Small legacy thesis subset | Supplementary library baseline |
 | Subway (2020) [@nodehisabet2020subway] | General graph processing | CPU and NVIDIA GPU | N/A | Vertex-centric processing | Application-dependent | Active-subgraph generation and transfer | Six graph applications | Out-of-GPU-memory contrast |
-| This work | Vertex BC | GH200 | Yes | Batched sources; one block per source; warp cooperation | Source-local hybrid top-down and bottom-up BFS | Unified Memory; pure device memory; source sub-batching | Performance, ablation, memory scalability, and full-vector validation | Unified exact BC execution framework |
+| This work | Vertex BC | GH200 | Yes | Batched sources; one block per source; Warp-Cooperative Accumulation | Source-local hybrid top-down and bottom-up BFS | Unified Memory; pure device memory; source sub-batching | Performance, ablation, memory scalability, and full-vector validation | Unified exact BC execution framework |
 
 Table 3.1 の本研究行は、結果値ではなく design と evaluation scope を示す。性能比較は、本研究で保存・評価した第三者実装 snapshot、4 グラフ、および GH200 に限定する。component ablation はその測定対象に、memory scalability は修正済み入力に、full-vector validation は保存された比較範囲にそれぞれ限定される。cuGraph、Sequential、OpenMP を含む補助比較は小規模 legacy data に限られ、現行 block implementation の全グラフ統一比較ではない。
 

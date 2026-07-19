@@ -1,6 +1,8 @@
 # Chapter 8 Memory Scalability
 
-本章では RQ3 に回答する。評価対象は修正版 `325557_3216152_corrected_v1`（$n=325{,}557$、$m=3{,}216{,}152$、SHA256 `8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22`）である。正式結果は PBS job 2404743、checkpoint `45352a3` の targeted boundary validation に基づき、各条件 1 試行である。これは sweep や方式間の性能比較ではなく、試験した境界条件での feasibility 評価である。
+本章では RQ3 に回答する。評価対象は修正版 `325557_3216152_corrected_v1`（$n=325{,}557$、$m=3{,}216{,}152$）である。正式結果は targeted boundary validation に基づき、各条件 1 試行である。これは sweep や方式間の性能比較ではなく、試験した境界条件での feasibility 評価である。実行識別子と入力 SHA256 は Appendix A の provenance に示す。
+
+<!-- Source note (internal): corrected graph SHA256 8373244f209a3ee489fe72a7b237a5639d142e3a10ac451a2c81b09194eeaa22; PBS job 2404743; checkpoint 45352a3. -->
 
 ## 8.1 Capacity Terms and Evaluation Scope
 
@@ -17,7 +19,7 @@
 | BC output vector | $n\times8$ | 2,604,456 | 2.60 MB | 2.48 MiB |
 | Per-source state $M_{\mathrm{source}}$ | $32n+4D_{est}+8$, $D_{est}=256$ | 10,418,856 | 10.42 MB | 9.94 MiB |
 
-> Source: `result/datasets/graph_catalog.tsv`, `raw_data/corrected_325557/job_2404743/implementation_manifest.tsv`, and `src/proposed/host_pure.cu:141-157`.
+<!-- Source note (internal): result/datasets/graph_catalog.tsv; raw_data/corrected_325557/job_2404743/implementation_manifest.tsv; src/proposed/host_pure.cu:141-157. -->
 
 入力ファイル、CSR topology、BC output vector はいずれも公称 96 GB の HBM3 を超えない。容量問題を作るのは、source ごとの距離、最短経路数、依存度、frontier、stack などの状態配列を複数 source について同時保持することによる batch-dependent working set である。
 
@@ -53,7 +55,7 @@ UM の目的は大きな入力グラフを分割して格納することでは�
 
 ## 8.3 Corrected Targeted Boundary Validation
 
-Table 8.3 と Figure 8.1 に job 2404743 の 5 条件を示す。failure は 0 秒ではなく独立した status として表す。
+Table 8.3 と Figure 8.1 に targeted boundary validation の 5 条件を示す。failure は 0 秒ではなく独立した status として表す。
 
 **Table 8.3: Targeted memory-feasibility boundary on the corrected 325557 graph. Each condition was run once.**
 
@@ -65,7 +67,7 @@ Table 8.3 と Figure 8.1 に job 2404743 の 5 条件を示す。failure は 0 �
 | GPU_Opt | 12288 | 128,026,902,528 bytes (128.03 GB) | Failure | Cgroup host-memory OOM kill, exit 137 | N/A |
 | GPU_Opt_Pure_Chunked | 16384 | 68,722,774,176 bytes (68.72 GB) resident estimate | Success | None | 66.60 |
 
-> Source: `result/tables/thesis/T4_memory_scalability.tsv`, `result/memory_scalability/corrected_325557/feasibility_boundary.tsv`, and `raw_data/corrected_325557/job_2404743/{implementation_manifest,feasibility_results,oom_evidence}.tsv`.
+<!-- Source note (internal): result/tables/thesis/T4_memory_scalability.tsv; result/memory_scalability/corrected_325557/feasibility_boundary.tsv; raw_data/corrected_325557/job_2404743/{implementation_manifest,feasibility_results,oom_evidence}.tsv. -->
 
 ![Figure 8.1: Corrected 325557 targeted memory-feasibility boundary](../../../../result/figures/thesis/memory_scalability_325557.png)
 
@@ -109,14 +111,16 @@ Table 8.3 の runtime は feasibility に付随する single-run wall-clock time
 - Total host residency
 - Full-run migration bytes
 
-25 秒の部分 trace は別条件の補助資料であり、job 2404743 の full-run migration total ではない。
+25 秒の部分 trace は別条件の補助資料であり、formal boundary validation の full-run migration total ではない。
 
 ## 8.6 Historical Malformed-Input Results
 
-旧 `325557_3216152` 上の legacy sweep、job 2368587 の `CORE_FAIL`、および `OOM_OR_FAIL` 表記は削除せず historical invalid-input evidence として archive に保持する。旧入力は malformed であり、current RQ3 の boundary は修正版 job 2404743 で置き換える。historical result と current formal result の failure class、checkpoint、resource condition を混合しない。
+旧 `325557_3216152` 上の legacy sweep、`CORE_FAIL`、および `OOM_OR_FAIL` 表記は削除せず historical invalid-input evidence として archive に保持する。旧入力は malformed であり、current RQ3 の boundary は修正版入力の formal validation で置き換える。historical result と current formal result の failure class、checkpoint、resource condition を混合しない。
+
+<!-- Source note (internal): historical canonical job 2368587; current corrected-input job 2404743. -->
 
 ## 8.7 Answer to RQ3
 
-RQ3 は `SUPPORTED_WITH_LIMITATIONS` と回答する。修正版 325557 の targeted boundary validation では、Pure は b4096 で成功し b8192 で CUDA device-memory OOM、UM は b10240 で成功し b12288 で cgroup host-memory OOM kill、Chunked は `SUB_BATCH=6596`・`num_subs=3` により試験上限 b16384 で成功した。UM は managed allocation により Pure より大きい batch を扱い、Chunked は同時 resident working set を制限して試験範囲をさらに拡張した。
+RQ3 は `SUPPORTED_WITH_LIMITATIONS` と回答する。修正版 325557 の targeted boundary validation では、Pure は b4096 で成功し b8192 で CUDA device-memory OOM、UM は b10240 で成功し b12288 で cgroup host-memory OOM kill、Chunked は `SUB_BATCH=6596`・`num_subs=3` により tested upper bound の b16384 で成功した。UM は managed allocation により Pure より大きい batch を扱い、Chunked は同時 resident working set を制限して試験範囲をさらに拡張した。
 
 この結論は修正版 325557、GH200、各条件 1 試行に限定される。各条件の実行時間は記録値であり、方式間の正式な性能比較には用いない。したがって Chunked の価値を最高性能としては主張しない。UM も無制限ではなく、Chunked が未測定条件で OOM を回避する保証もない。主な設計上の含意は、容量問題が約 45.35 MB の input graph file ではなく `batch × per-source state` から生じ、source grouping と resident-state management が容量拡張の制御点になることである。
