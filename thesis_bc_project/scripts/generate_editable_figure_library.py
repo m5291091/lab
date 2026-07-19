@@ -20,6 +20,7 @@ import sys
 import zipfile
 from collections import defaultdict
 from pathlib import Path
+from xml.etree import ElementTree as ET
 
 from openpyxl import Workbook
 from openpyxl.styles import Alignment, Font, PatternFill
@@ -356,7 +357,7 @@ def text_width_in(text: str, size_pt: float, bold: bool) -> float:
 
 def text_block_in(text: str, size_pt: float, bold: bool) -> tuple[float, float]:
     """Return the (width, height) in inches that ``text`` needs unwrapped."""
-    lines = text.split("\n")
+    lines = re.split(r"\r\n?|\n|\v", text)
     width = max((text_width_in(line, size_pt, bold) for line in lines), default=0.0)
     return width + TEXT_INSET_IN, len(lines) * size_pt * LINE_HEIGHT / 72.0 + 0.06
 
@@ -371,12 +372,19 @@ def set_text(shape, text: str, size=16, color="neutral", bold=False, align=PP_AL
     p = tf.paragraphs[0]
     p.alignment = align
     p.space_after = Pt(0)
-    run = p.add_run()
-    run.text = text
-    run.font.name = FONT
-    run.font.size = Pt(size)
-    run.font.bold = bold
-    run.font.color.rgb = rgb(C[color])
+    # ``python-pptx`` preserves LF assigned directly to ``run.text`` as a raw
+    # newline inside ``a:t``.  PowerPoint's interoperable soft-line-break form
+    # is a sibling ``a:br`` element, so author each visible line as its own run
+    # and insert the break explicitly.  All runs retain identical formatting.
+    for index, line_text in enumerate(text.split("\n")):
+        if index:
+            p.add_line_break()
+        run = p.add_run()
+        run.text = line_text
+        run.font.name = FONT
+        run.font.size = Pt(size)
+        run.font.bold = bold
+        run.font.color.rgb = rgb(C[color])
     return shape
 
 
@@ -935,9 +943,9 @@ def write_workbook(all_data):
 
 
 FIGURES = [
-    ("F01", 1, "Thesis Overview", "Connect the problem, framework, and evaluation evidence", "1", "Overview / motivation", "docs/thesis/03_chapter_outline.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Figure 1.1 candidate"),
+    ("F01", 1, "Thesis Overview", "Connect the problem, framework, and evaluation evidence", "1", "Overview / motivation", "docs/thesis/03_chapter_outline.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Integrated as Figure 1.1 (Section 1.3)"),
     ("F02", 2, "Brandes Algorithm Flow", "Explain the per-source Brandes stages", "2", "Algorithm background", "docs/thesis/writing/japanese/02_background.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Loop is explicit"),
-    ("F03", 3, "GH200 Memory Hierarchy", "Separate compute, memory placement, and working-set concepts", "3/4/8", "Architecture and memory", "docs/thesis/04_method_design.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Avoids input-file-size capacity claim"),
+    ("F03", 3, "GH200 Memory Hierarchy", "Separate compute, memory placement, and working-set concepts", "2", "Architecture and memory", "docs/thesis/04_method_design.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Integrated as Figure 2.2 (Section 2.5); referenced again from Chapters 4 and 8"),
     ("F04", 4, "Overall GPU Execution Framework", "Show the central batched dual-stream GPU pipeline", "4", "Method overview", "docs/thesis/04_method_design.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Common framework"),
     ("F05", 5, "Batch-to-Source Mapping", "Clarify source batching and one-block-per-source mapping", "4", "Batch semantics", "docs/thesis/04_method_design.md;result/main_performance/proposed_variants/SOURCE.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "NS_eff=2 in capacity"),
     ("F06", 6, "Hybrid BFS State Transition", "Explain direction switching inside GPU BFS", "4", "Hybrid BFS", "docs/thesis/04_method_design.md", "Native shapes; connectors; text", "Editable shape diagram", "Ready", "Not CPU--GPU hybrid"),
@@ -953,19 +961,90 @@ FIGURES = [
 ]
 
 
+# --------------------------------------------------------------------------- #
+# Figure ID crosswalk.
+#
+# The editable library IDs F01--F15 and the canonical result figure IDs F1--F7
+# (result/figures/thesis/FIGURE_MANIFEST.tsv) are SEPARATE namespaces: F01 is not
+# F1. Neither set is renamed; this table records how they relate.
+#
+#   ThesisFigureNumber      the number the reader sees in the thesis body
+#   CanonicalResultFigureID the result-figure ID this slide re-draws, when one
+#                           exists; `not_applicable` for the conceptual figures,
+#                           which have no measured-data counterpart
+#   ExportedAssets          publication assets derived from this slide
+#
+# Conceptual figures F01--F08 are exported by scripts/export_conceptual_figures.py
+# into docs/thesis/figures/exported/. Chart slides F09--F15 are editable
+# presentation copies; the artifacts published in the thesis body are the
+# canonical result figures generated by scripts/generate_thesis_artifacts.py.
+# Every assignment below was checked against the slide's own visible text, the
+# receiving chapter section, and result/figures/thesis/FIGURE_MANIFEST.tsv.
+# --------------------------------------------------------------------------- #
+EXPORT_DIR = "docs/thesis/figures/exported"
+RESULT_FIG_DIR = "result/figures/thesis"
+
+CROSSWALK = {
+    # FigureID: (ThesisFigureNumber, CanonicalResultFigureID, ExportedAssets)
+    "F01": ("1.1", "not_applicable", f"{EXPORT_DIR}/figure_1_1_thesis_overview.{{svg,pdf,png}}"),
+    "F02": ("2.1", "not_applicable", f"{EXPORT_DIR}/figure_2_1_brandes_algorithm.{{svg,pdf,png}}"),
+    "F03": ("2.2", "not_applicable", f"{EXPORT_DIR}/figure_2_2_gh200_memory_hierarchy.{{svg,pdf,png}}"),
+    "F04": ("4.1", "not_applicable", f"{EXPORT_DIR}/figure_4_1_gpu_execution_framework.{{svg,pdf,png}}"),
+    "F05": ("4.2", "not_applicable", f"{EXPORT_DIR}/figure_4_2_batch_source_mapping.{{svg,pdf,png}}"),
+    "F06": ("4.3", "not_applicable", f"{EXPORT_DIR}/figure_4_3_hybrid_bfs.{{svg,pdf,png}}"),
+    "F07": ("4.4", "not_applicable", f"{EXPORT_DIR}/figure_4_4_dual_stream_timeline.{{svg,pdf,png}}"),
+    "F08": ("4.5", "not_applicable", f"{EXPORT_DIR}/figure_4_5_memory_management_variants.{{svg,pdf,png}}"),
+    "F09": ("6.1", "F1", f"{RESULT_FIG_DIR}/main_runtime_comparison.{{pdf,png,svg}}"),
+    "F10": ("6.2", "F2", f"{RESULT_FIG_DIR}/main_speedup_over_tuned_pathmerge.{{pdf,png,svg}}"),
+    "F11": ("6.3", "F3", f"{RESULT_FIG_DIR}/pathmerge_batch_sweep.{{pdf,png,svg}}"),
+    "F12": ("7.1", "F4", f"{RESULT_FIG_DIR}/ablation_contributions.{{pdf,png,svg}}"),
+    "F13": ("8.1", "F5", f"{RESULT_FIG_DIR}/memory_scalability_325557.{{pdf,png,svg}}"),
+    "F14": ("7.2", "F6", f"{RESULT_FIG_DIR}/shared_vs_block_kernel.{{pdf,png,svg}}"),
+    "F15": ("7.3", "F7", f"{RESULT_FIG_DIR}/phase_breakdown.{{pdf,png,svg}}"),
+}
+
+
 def write_manifest():
-    header = ["FigureID", "SlideNumber", "Title", "Purpose", "ThesisChapter", "PresentationUse", "CanonicalData", "Generator", "EditableObjectType", "ExportFormats", "Status", "Notes"]
+    header = ["LibraryFigureID", "Namespace", "SlideNumber", "ThesisFigureNumber",
+              "CanonicalResultFigureID", "Title", "Purpose", "ThesisChapter",
+              "PresentationUse", "CanonicalData", "EditableSource", "Generator",
+              "EditableObjectType", "ExportedAssets", "ExportFormats", "Status", "Notes"]
     with MANIFEST_PATH.open("w", newline="", encoding="utf-8") as f:
         w = csv.writer(f, delimiter="\t", lineterminator="\n"); w.writerow(header)
         for fid, sn, title, purpose, chapter, use, canonical, obj_desc, editable, status, notes in FIGURES:
-            w.writerow([fid, sn, title, purpose, chapter, use, canonical, "scripts/generate_editable_figure_library.py", editable, "PPTX", status, notes])
+            thesis_no, result_id, assets = CROSSWALK[fid]
+            formats = "PPTX;SVG;PDF;PNG" if result_id == "not_applicable" else "PPTX"
+            w.writerow([fid, "editable_library", sn, thesis_no, result_id, title,
+                        purpose, chapter, use, canonical,
+                        "docs/thesis/figures/editable/thesis_figure_library.pptx",
+                        "scripts/generate_editable_figure_library.py", editable,
+                        assets, formats, status, notes])
 
 
 def write_readme():
-    rows = "\n".join(f"| {sn} | {fid} | {title} | Chapter {chapter} |" for fid, sn, title, _, chapter, *_ in FIGURES)
+    rows = "\n".join(
+        f"| {sn} | {fid} | {title} | Figure {CROSSWALK[fid][0]} | "
+        f"{CROSSWALK[fid][1]} |" for fid, sn, title, *_ in FIGURES)
     README_PATH.write_text(f"""# Editable Thesis and Presentation Figure Library
 
 このディレクトリは、修士論文と発表資料で再利用する **1 slide = 1 figure** の編集用ライブラリである。caption と slide title は図へ焼き込まず、論文・story deck 側で管理する。既存の正式 F1--F7 は置換しない。
+
+## Figure ID namespace（重要）
+
+本ライブラリの ID **`F01`--`F15`** と、`result/figures/thesis/` の canonical result
+figure ID **`F1`--`F7`** は **別の namespace** である。
+
+> **`F01` は `F1` ではない。** 桁数が異なるだけの別体系であり、対応関係は
+> `FIGURE_MANIFEST.tsv` の `CanonicalResultFigureID` 列だけが定義する。
+
+- `Namespace` 列は本ライブラリの全行で `editable_library` である。
+- `ThesisFigureNumber` 列が、読者が本文で見る番号（Figure 1.1 など）である。
+  library ID は本文に出さない。
+- conceptual 図 (`F01`--`F08`) には対応する result figure が無いため
+  `CanonicalResultFigureID` は `not_applicable` とする。
+- chart 図 (`F09`--`F15`) は canonical result figure の編集用複製であり、
+  論文本体へ掲載するのは `scripts/generate_thesis_artifacts.py` が生成する
+  canonical result figure の方である。
 
 ## Files
 
@@ -992,7 +1071,7 @@ PPTXとXLSXはzip entry timestampと `docProps/core.xml` の日時を固定値�
 generatorは出力後に次を自己検証し、違反があれば停止する。
 
 - 方向付きconnectorのarrowheadは終点側 (`a:tailEnd`)。無方向は `line()`、双方向は `bi_arrow()` を使い分ける。GH200のhost/HBM間migrationは双方向で描く。
-- 全labelは `\n` で明示的に改行済みで、各行がbox内幅へ収まる (Arial互換advance widthで検査)。PowerPoint側の再折返しによる単語途中改行は発生しない。
+- 全labelはgenerator入力の `\n` を標準DrawingMLの `<a:br/>` へ変換し、各行がbox内幅へ収まる (Arial互換advance widthで検査)。`<a:t>` 内のliteral LFやPowerPoint側の再折返しには依存しない。
 - chartの `c:axId` / `c:crossAx` は正のunsigned integerで、chart内の参照が一致し、chart間で衝突しない。
 - slide外objectなし、raster画像なし、12 pt未満の表示文字なし、non-ASCII表示文字なし。
 
@@ -1008,8 +1087,11 @@ boxを縮めたりfont sizeを上げたりすると上記の改行不変条件�
 
 ## Slide map
 
-| Slide | Figure | Figure library title | Thesis use |
-|---:|---|---|---|
+`Figure` 列が本文の番号、`Result ID` 列が canonical result figure との対応である
+（`not_applicable` は対応する result figure が存在しない conceptual 図）。
+
+| Slide | Library ID | Figure library title | Figure | Result ID |
+|---:|---|---|---|---|
 {rows}
 
 ## Canonical data policy
@@ -1020,7 +1102,29 @@ boxを縮めたりfont sizeを上げたりすると上記の改行不変条件�
 
 ## Export
 
-PowerPointでは対象slideの全objectを選択し、右クリック **Save as Picture** からSVG/PNGを保存できる。PDFは **File > Export > Create PDF/XPS** を使う。LibreOfficeでは `soffice --headless --convert-to pdf thesis_figure_library.pptx` を使用できるが、font/connector/chartの差を目視確認すること。本Gate環境にはPowerPoint/LibreOffice rendererがないため、不完全な自動SVG/PDF/PNG exportは生成していない。
+conceptual 図 (`F01`--`F08`) の組版用 asset は、本PPTXを唯一の編集正本として
+`scripts/export_conceptual_figures.py` が機械的に生成する。exporterはPPTX package
+を直接読み、slideのshape・connector・text runをSVGへ描き起こすため、ライブラリと
+export assetが食い違うことはない。
+
+```bash
+cd thesis_bc_project
+PYTHONPATH=/tmp/gate_v0_editable_deps39 python3 scripts/export_conceptual_figures.py
+```
+
+出力は `../exported/` に `figure_<章>_<番号>_<slug>.{{svg,pdf,png}}` として置かれ、
+SVG/PDFはvector（PDFはfont subset埋込み）、PNGは300 dpiのreview用である。詳細と
+tool版数は `../exported/README.md` を参照。
+
+chart 図 (`F09`--`F15`) はexport対象ではない。論文本体へ掲載するのは
+`scripts/generate_thesis_artifacts.py` が生成する canonical result figure
+(`result/figures/thesis/`) である。
+
+PowerPointから手動で書き出す場合は、対象slideの全objectを選択して右クリック
+**Save as Picture** (SVG/PNG)、PDFは **File > Export > Create PDF/XPS** を使う。
+LibreOfficeでは `soffice --headless --convert-to pdf thesis_figure_library.pptx`
+が使えるが、font/connector/chartの差を目視確認すること。手動書き出しは正式assetの
+生成手段ではなく、確認用途に限る。
 """, encoding="utf-8")
 
 
@@ -1130,6 +1234,35 @@ def check_arrowheads() -> dict[str, int]:
     return counts
 
 
+def check_drawingml_line_breaks() -> dict[str, int]:
+    """Require standard DrawingML breaks instead of literal LF in ``a:t``."""
+    namespace = {"a": "http://schemas.openxmlformats.org/drawingml/2006/main"}
+    literal_lf = []
+    breaks = 0
+    paragraph_boundaries = 0
+    with zipfile.ZipFile(PPTX_PATH) as zf:
+        slide_names = sorted(
+            (n for n in zf.namelist()
+             if re.fullmatch(r"ppt/slides/slide\d+\.xml", n)),
+            key=lambda n: int(re.search(r"slide(\d+)", n).group(1)),
+        )
+        for name in slide_names:
+            root = ET.fromstring(zf.read(name))
+            for text in root.findall(".//a:t", namespace):
+                if text.text and "\n" in text.text:
+                    literal_lf.append((name, text.text))
+            breaks += len(root.findall(".//a:br", namespace))
+            for body in root.findall(".//a:p/..", namespace):
+                paragraphs = body.findall("a:p", namespace)
+                paragraph_boundaries += max(0, len(paragraphs) - 1)
+    assert not literal_lf, f"literal LF found inside a:t: {literal_lf}"
+    return {
+        "literal_lf_in_a_t": len(literal_lf),
+        "drawingml_breaks": breaks,
+        "paragraph_boundaries": paragraph_boundaries,
+    }
+
+
 def check_axis_ids() -> tuple[list, dict]:
     """Confirm no chart part carries a negative or dangling axis reference."""
     negatives, per_chart = [], {}
@@ -1181,6 +1314,7 @@ def validate_outputs() -> dict:
     negative_axis_ids, axis_ids = check_axis_ids()
     assert not negative_axis_ids, negative_axis_ids
     connectors = check_arrowheads()
+    line_breaks = check_drawingml_line_breaks()
     assert total_pictures == 0
     assert total_charts == 6
     with zipfile.ZipFile(PPTX_PATH) as zf:
@@ -1198,7 +1332,7 @@ def validate_outputs() -> dict:
     with MANIFEST_PATH.open(encoding="utf-8") as f:
         manifest_count = sum(1 for _ in csv.DictReader(f, delimiter="\t"))
     assert manifest_count == 15
-    return {"slides": len(prs.slides), "objects": total_shapes, "text_objects": total_text, "charts": total_charts, "pictures": total_pictures, "raster_only_slides": 0, "shape_diagrams": 9, "worksheets": wb.sheetnames, "manifest": manifest_count, "largest_asset": largest_name, "largest_asset_bytes": largest_size, "largest_embedded_asset": largest_embedded_name, "largest_embedded_asset_bytes": largest_embedded_size, "slide_stats": slide_stats, "text_overflow": len(overflow_errors), "negative_axis_ids": len(negative_axis_ids), "axis_ids": axis_ids, "connectors": connectors}
+    return {"slides": len(prs.slides), "objects": total_shapes, "text_objects": total_text, "charts": total_charts, "pictures": total_pictures, "raster_only_slides": 0, "shape_diagrams": 9, "worksheets": wb.sheetnames, "manifest": manifest_count, "largest_asset": largest_name, "largest_asset_bytes": largest_size, "largest_embedded_asset": largest_embedded_name, "largest_embedded_asset_bytes": largest_embedded_size, "slide_stats": slide_stats, "text_overflow": len(overflow_errors), "negative_axis_ids": len(negative_axis_ids), "axis_ids": axis_ids, "connectors": connectors, "line_breaks": line_breaks}
 
 
 def main():
@@ -1211,6 +1345,7 @@ def main():
     for key in ("slides", "objects", "text_objects", "charts", "pictures", "raster_only_slides", "shape_diagrams", "manifest", "text_overflow", "negative_axis_ids", "largest_asset", "largest_asset_bytes", "largest_embedded_asset", "largest_embedded_asset_bytes"):
         print(f"{key}\t{stats[key]}")
     print("connectors\t" + " ".join(f"{k}={v}" for k, v in stats["connectors"].items()))
+    print("line_breaks\t" + " ".join(f"{k}={v}" for k, v in stats["line_breaks"].items()))
     print("worksheets\t" + ",".join(stats["worksheets"]))
     for name, ids in stats["axis_ids"].items():
         print(f"axis_ids\t{name}\t{ids[0]},{ids[1]}")

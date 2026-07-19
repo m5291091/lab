@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="13.050in" height="6.521in" viewBox="19.800 15.450 939.600 469.500" version="1.1">
+<title>Batch-to-Source Mapping</title>
+<desc>Conceptual figure for thesis Figure 4.2 (section 4.2); exported from the editable PowerPoint library slide 5.</desc>
+<rect x="19.800" y="15.450" width="939.600" height="469.500" fill="#ffffff"/>
+<rect x="28.800" y="25.200" width="158.400" height="36.000" fill="none"/>
+<text x="108.000" y="50.130" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Source vertices</text>
+<ellipse cx="49.680" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="49.680" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">0</text>
+<ellipse cx="94.320" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="94.320" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">1</text>
+<ellipse cx="138.960" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="138.960" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">2</text>
+<ellipse cx="183.600" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="183.600" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">3</text>
+<ellipse cx="228.240" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="228.240" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">4</text>
+<ellipse cx="272.880" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="272.880" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">5</text>
+<ellipse cx="317.520" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="317.520" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">6</text>
+<ellipse cx="362.160" cy="89.280" rx="17.280" ry="17.280" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="362.160" y="94.131" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">7</text>
+<line x1="32.400" y1="126.000" x2="379.440" y2="126.000" stroke="#343a40" stroke-width="1.500" stroke-linecap="butt"/>
+<rect x="54.000" y="131.040" width="306.000" height="39.600" fill="none"/>
+<text x="207.000" y="156.384" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Requested batch: source grouping</text>
+<rect x="410.400" y="51.840" width="144.000" height="97.200" fill="#ddf3ec" rx="16.200" stroke="#009e73" stroke-width="1.500"/>
+<text x="482.400" y="95.270" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Effective</text>
+<text x="482.400" y="119.470" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Batch</text>
+<line x1="379.440" y1="90.000" x2="403.800" y2="90.000" stroke="#009e73" stroke-width="2.200" stroke-linecap="butt"/>
+<polygon points="410.400,90.000 403.800,93.300 403.800,86.700" fill="#009e73"/>
+<rect x="594.000" y="25.200" width="126.000" height="61.200" fill="#ddeff8" rx="10.200" stroke="#0072b2" stroke-width="1.500"/>
+<text x="657.000" y="62.037" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Stream 0</text>
+<rect x="594.000" y="111.600" width="126.000" height="61.200" fill="#ddeff8" rx="10.200" stroke="#0072b2" stroke-width="1.500"/>
+<text x="657.000" y="148.437" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Stream 1</text>
+<line x1="554.400" y1="99.360" x2="589.946" y2="60.583" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="594.000,56.160 592.157,62.610 587.734,58.556" fill="#0072b2"/>
+<line x1="554.400" y1="99.360" x2="589.946" y2="138.137" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="594.000,142.560 587.734,140.164 592.157,136.110" fill="#0072b2"/>
+<rect x="748.800" y="56.160" width="165.600" height="68.400" fill="none"/>
+<text x="831.600" y="97.983" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">NS_eff = 2</text>
+<rect x="32.400" y="226.800" width="97.200" height="43.200" fill="none"/>
+<text x="81.000" y="254.637" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">Stream 0</text>
+<rect x="144.000" y="223.200" width="90.000" height="54.000" fill="#ddeff8" rx="9.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="189.000" y="255.744" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Block 0</text>
+<rect x="144.000" y="291.600" width="90.000" height="46.800" fill="#f4f6f8" rx="7.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="189.000" y="319.851" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">State</text>
+<line x1="188.640" y1="277.200" x2="188.640" y2="287.400" stroke="#343a40" stroke-width="1.400" stroke-linecap="butt"/>
+<polygon points="188.640,291.600 186.540,287.400 190.740,287.400" fill="#343a40"/>
+<rect x="255.600" y="223.200" width="90.000" height="54.000" fill="#ddeff8" rx="9.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="300.600" y="255.744" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Block 1</text>
+<rect x="255.600" y="291.600" width="90.000" height="46.800" fill="#f4f6f8" rx="7.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="300.600" y="319.851" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">State</text>
+<line x1="300.240" y1="277.200" x2="300.240" y2="287.400" stroke="#343a40" stroke-width="1.400" stroke-linecap="butt"/>
+<polygon points="300.240,291.600 298.140,287.400 302.340,287.400" fill="#343a40"/>
+<rect x="367.200" y="223.200" width="90.000" height="54.000" fill="#ddeff8" rx="9.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="412.200" y="255.744" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Block 2</text>
+<rect x="367.200" y="291.600" width="90.000" height="46.800" fill="#f4f6f8" rx="7.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="412.200" y="319.851" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">State</text>
+<line x1="411.840" y1="277.200" x2="411.840" y2="287.400" stroke="#343a40" stroke-width="1.400" stroke-linecap="butt"/>
+<polygon points="411.840,291.600 409.740,287.400 413.940,287.400" fill="#343a40"/>
+<rect x="32.400" y="363.600" width="97.200" height="43.200" fill="none"/>
+<text x="81.000" y="391.437" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">Stream 1</text>
+<rect x="144.000" y="360.000" width="90.000" height="54.000" fill="#ddeff8" rx="9.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="189.000" y="392.544" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Block 0</text>
+<rect x="144.000" y="428.400" width="90.000" height="46.800" fill="#f4f6f8" rx="7.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="189.000" y="456.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">State</text>
+<line x1="188.640" y1="414.000" x2="188.640" y2="424.200" stroke="#343a40" stroke-width="1.400" stroke-linecap="butt"/>
+<polygon points="188.640,428.400 186.540,424.200 190.740,424.200" fill="#343a40"/>
+<rect x="255.600" y="360.000" width="90.000" height="54.000" fill="#ddeff8" rx="9.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="300.600" y="392.544" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Block 1</text>
+<rect x="255.600" y="428.400" width="90.000" height="46.800" fill="#f4f6f8" rx="7.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="300.600" y="456.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">State</text>
+<line x1="300.240" y1="414.000" x2="300.240" y2="424.200" stroke="#343a40" stroke-width="1.400" stroke-linecap="butt"/>
+<polygon points="300.240,428.400 298.140,424.200 302.340,424.200" fill="#343a40"/>
+<rect x="367.200" y="360.000" width="90.000" height="54.000" fill="#ddeff8" rx="9.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="412.200" y="392.544" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Block 2</text>
+<rect x="367.200" y="428.400" width="90.000" height="46.800" fill="#f4f6f8" rx="7.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="412.200" y="456.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">State</text>
+<line x1="411.840" y1="414.000" x2="411.840" y2="424.200" stroke="#343a40" stroke-width="1.400" stroke-linecap="butt"/>
+<polygon points="411.840,428.400 409.740,424.200 413.940,424.200" fill="#343a40"/>
+<rect x="543.600" y="291.600" width="176.400" height="111.600" fill="#f4f6f8" rx="18.600" stroke="#343a40" stroke-width="1.500"/>
+<text x="631.800" y="342.747" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Shared full graph</text>
+<text x="631.800" y="364.527" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">(static CSR)</text>
+<line x1="464.400" y1="250.560" x2="539.775" y2="317.027" stroke="#343a40" stroke-width="1.700" stroke-linecap="butt" stroke-dasharray="6.800,5.100"/>
+<polygon points="543.600,320.400 538.088,318.939 541.461,315.114" fill="#343a40"/>
+<line x1="464.400" y1="387.360" x2="538.567" y2="375.224" stroke="#343a40" stroke-width="1.700" stroke-linecap="butt" stroke-dasharray="6.800,5.100"/>
+<polygon points="543.600,374.400 538.979,377.740 538.155,372.707" fill="#343a40"/>
+<rect x="525.600" y="410.400" width="212.400" height="43.200" fill="none"/>
+<text x="631.800" y="428.381" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Both streams read</text>
+<text x="631.800" y="445.321" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">the same CSR</text>
+<rect x="734.400" y="298.800" width="216.000" height="97.200" fill="none"/>
+<text x="842.400" y="333.584" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#c23b22" xml:space="preserve">Batching groups sources;</text>
+<text x="842.400" y="352.944" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#c23b22" xml:space="preserve">it does not partition</text>
+<text x="842.400" y="372.304" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#c23b22" xml:space="preserve">the graph.</text>
+</svg>

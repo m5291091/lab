@@ -161,6 +161,14 @@ $$
 
 Algorithm 2.1 は標準 Brandes アルゴリズムを説明するための擬似コードである。本研究の GPU 実装では、predecessor lists をそのまま materialize せず、distance と CSR adjacency から次 level の関係を判定する。また、複数 source の状態を同時に保持する。これらは Chapter 4 の実装設計であり、本節の標準アルゴリズムおよびその source-by-source space complexity と区別する。
 
+Figure 2.1 は、1 つの source に対する処理段階と、それを全 source について繰り返す構造を示す。source の初期化、BFS traversal、distance と path count の確定、level を逆順に辿る dependency accumulation、BC への加算という順序であり、次の source へ移って同じ段階を繰り返す。本図は標準アルゴリズムの構成を示すものであり、GPU 実装における段階の並列化や source 間の同時実行は含まない。
+
+![Figure 2.1: Per-source stages of the Brandes algorithm and the loop over all source vertices](../../figures/exported/figure_2_1_brandes_algorithm.png)
+
+**Figure 2.1: Per-source stages of the Brandes algorithm and the loop over all source vertices.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 2 (library ID F02; a separate namespace from canonical result figure F2). Typesetting assets: docs/thesis/figures/exported/figure_2_1_brandes_algorithm.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
+
 ## 2.3 Parallelism in BC Computation
 
 Brandes 型 BC には、粒度と同期条件の異なる複数の parallelism が存在する。GPU BC の先行研究でも、source 単位の coarse-grained parallelism と、頂点・edge に処理を分ける fine-grained parallelism が区別されている [@sariyuce2013; @mclaughlin2014]。
@@ -223,6 +231,14 @@ $$
 
 したがって、本研究における UM の採用理由は、on-disk graph file の容量ではない。対象となるのは、多数 source の state を同時に用意することで増加する working set である。UM の役割は、その有限な working set に managed placement、migration、prefetch の選択肢を与えることである。その有効性と cost は workload と resource configuration に依存するため、実測なしに一般化できない。具体的な allocation policy は Chapter 4、実験環境と容量評価方法は Chapter 5、観測された境界は Chapter 8 で扱う。
 
+Figure 2.2 は、本節で述べた構成要素の関係を示す。Grace CPU 側の host memory と Hopper GPU 側の HBM3 は別個の有限な物理領域であり、NVLink-C2C が両者を接続する。managed allocation は、その上で page placement と migration の対象となる領域を提供する。図中では、graph / static data、BC output、source-local state、batch-dependent working set を区別しており、容量の議論の対象が input graph file size ではなく working set であることを示す。図は物理配置の概念関係を示すものであり、特定の実行における residency や migration 量の実測を表さない。
+
+![Figure 2.2: GH200 memory hierarchy and the managed-allocation placement of static graph storage and batch-dependent working set](../../figures/exported/figure_2_2_gh200_memory_hierarchy.png)
+
+**Figure 2.2: GH200 memory hierarchy: Grace CPU host memory and Hopper GPU HBM3 connected by NVLink-C2C, with managed allocation governing page placement and migration.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 3 (library ID F03; a separate namespace from canonical result figure F3). Typesetting assets: docs/thesis/figures/exported/figure_2_2_gh200_memory_hierarchy.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
+
 ## 2.6 Challenges Addressed in This Thesis
 
 第 1 の課題は、exact all-sources BC が各頂点を source とする BFS を反復する点である。1 source の処理が線形時間でも、全 source の一般的な time complexity は $O(|V|(|V|+|E|))$ となる。$|E|=\Omega(|V|)$ の条件下では $O(|V||E|)$ と簡略化できる。source 間の独立性を利用できる一方、各 source は独自の shortest-path state と Backward phase を必要とする。
@@ -247,5 +263,5 @@ Source notes (not reader-facing):
 - Sections 2.3--2.4 were cross-checked against writing/japanese/04_proposed_gpu_execution_framework.md, docs/thesis/04_method_design.md, include/proposed/brandes_kernels.cuh, and the CUDA primary-source audit entries S17--S20.
 - Section 2.5 product claims follow references.bib:nvidiaGh200Product and nvidiaGraceHopperInDepth, audited in SOURCE_AUDIT.tsv:S15--S16. Run-environment distinctions follow result/environment/environment.md and result/tables/thesis/T6_experimental_environment.tsv.
 - The working-set distinction follows writing/japanese/04_proposed_gpu_execution_framework.md, writing/japanese/05_experimental_methodology.md, result/datasets/graph_catalog.tsv, and the current corrected-input records summarized in Chapters 8--11. Historical malformed-input conclusions are not used.
-- Candidate captions, with no image assets created for this draft: "Figure 2.1: Brandes Algorithm Overview.", "Figure 2.2: GPU Execution Hierarchy.", and "Figure 2.3: GH200 Memory Architecture."
+- Figures 2.1 and 2.2 are exported from the editable figure library (slides 2 and 3; library IDs F02 and F03) by scripts/export_conceptual_figures.py. The library ID namespace F01--F15 is distinct from the canonical result figure namespace F1--F7. Chapter 2 has exactly two figures; no further background figure is planned.
 -->

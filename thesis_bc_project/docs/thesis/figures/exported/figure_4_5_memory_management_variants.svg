@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="11.960in" height="6.610in" viewBox="29.850 22.650 861.150 475.950" version="1.1">
+<title>Memory Management Variants</title>
+<desc>Conceptual figure for thesis Figure 4.5 (section 4.7); exported from the editable PowerPoint library slide 8.</desc>
+<rect x="29.850" y="22.650" width="861.150" height="475.950" fill="#ffffff"/>
+<rect x="90.000" y="32.400" width="781.200" height="72.000" fill="#ddeff8" rx="12.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="480.600" y="76.023" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Common GPU Execution Framework</text>
+<line x1="216.000" y1="104.400" x2="216.000" y2="152.400" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="216.000,158.400 213.000,152.400 219.000,152.400" fill="#0072b2"/>
+<line x1="480.240" y1="104.400" x2="480.240" y2="152.400" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="480.240,158.400 477.240,152.400 483.240,152.400" fill="#0072b2"/>
+<line x1="745.200" y1="104.400" x2="745.200" y2="152.400" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="745.200,158.400 742.200,152.400 748.200,152.400" fill="#0072b2"/>
+<rect x="39.600" y="158.400" width="248.400" height="234.000" fill="#ddf3ec" rx="39.001" stroke="#009e73" stroke-width="1.500"/>
+<rect x="50.400" y="176.400" width="226.800" height="39.600" fill="none"/>
+<text x="163.800" y="202.437" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">GPU_Opt</text>
+<rect x="54.000" y="230.400" width="219.600" height="46.800" fill="none"/>
+<text x="163.800" y="260.384" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="19.000" text-anchor="middle" font-weight="bold" fill="#009e73" xml:space="preserve">Unified Memory</text>
+<rect x="54.000" y="291.600" width="219.600" height="79.200" fill="none"/>
+<text x="163.800" y="327.323" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Managed allocation</text>
+<text x="163.800" y="345.473" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Host/HBM placement</text>
+<rect x="303.840" y="158.400" width="248.400" height="234.000" fill="#fceccb" rx="39.001" stroke="#e69f00" stroke-width="1.500"/>
+<rect x="314.640" y="176.400" width="226.800" height="39.600" fill="none"/>
+<text x="428.040" y="202.437" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">GPU_Opt_Pure</text>
+<rect x="318.240" y="230.400" width="219.600" height="46.800" fill="none"/>
+<text x="428.040" y="260.384" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="19.000" text-anchor="middle" font-weight="bold" fill="#e69f00" xml:space="preserve">Device-Only Memory</text>
+<rect x="318.240" y="291.600" width="219.600" height="79.200" fill="none"/>
+<text x="428.040" y="318.248" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Device allocation</text>
+<text x="428.040" y="336.397" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Capacity-bound</text>
+<text x="428.040" y="354.548" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">working set</text>
+<rect x="568.800" y="158.400" width="248.400" height="234.000" fill="#e1f2e8" rx="39.001" stroke="#2e8b57" stroke-width="1.500"/>
+<rect x="579.600" y="176.400" width="226.800" height="39.600" fill="none"/>
+<text x="693.000" y="201.744" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">GPU_Opt_Pure_Chunked</text>
+<rect x="583.200" y="230.400" width="219.600" height="46.800" fill="none"/>
+<text x="693.000" y="260.384" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="19.000" text-anchor="middle" font-weight="bold" fill="#2e8b57" xml:space="preserve">Source Sub-Batching</text>
+<rect x="583.200" y="291.600" width="219.600" height="79.200" fill="none"/>
+<text x="693.000" y="318.248" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Limits resident</text>
+<text x="693.000" y="336.397" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">source state</text>
+<text x="693.000" y="354.548" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="15.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Full graph reused</text>
+<rect x="75.600" y="432.000" width="806.400" height="57.600" fill="none"/>
+<text x="478.800" y="456.147" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Memory-management variants of one framework -- not three independent proposals.</text>
+<text x="478.800" y="477.927" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Chunked partitions the source set, not the input graph.</text>
+</svg>

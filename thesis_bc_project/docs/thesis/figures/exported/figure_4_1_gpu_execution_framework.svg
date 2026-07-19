@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="11.471in" height="6.440in" viewBox="15.450 42.090 825.900 463.710" version="1.1">
+<title>Overall GPU Execution Framework</title>
+<desc>Conceptual figure for thesis Figure 4.1 (section 4.1); exported from the editable PowerPoint library slide 4.</desc>
+<rect x="15.450" y="42.090" width="825.900" height="463.710" fill="#ffffff"/>
+<rect x="25.200" y="190.800" width="111.600" height="82.800" fill="#f4f6f8" rx="13.800" stroke="#343a40" stroke-width="1.500"/>
+<text x="81.000" y="227.547" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Source</text>
+<text x="81.000" y="249.327" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Batch</text>
+<rect x="169.200" y="64.800" width="144.000" height="79.200" fill="#ddeff8" rx="13.200" stroke="#0072b2" stroke-width="1.500"/>
+<text x="241.200" y="111.330" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Stream 0</text>
+<rect x="169.200" y="320.400" width="144.000" height="79.200" fill="#ddeff8" rx="13.200" stroke="#0072b2" stroke-width="1.500"/>
+<text x="241.200" y="366.930" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Stream 1</text>
+<line x1="136.800" y1="232.560" x2="167.729" y2="110.217" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="169.200,104.400 170.638,110.952 164.821,109.482" fill="#0072b2"/>
+<line x1="136.800" y1="232.560" x2="167.722" y2="354.185" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="169.200,360.000 164.814,354.924 170.629,353.446" fill="#0072b2"/>
+<rect x="349.200" y="51.840" width="144.000" height="104.400" fill="#f4f6f8" rx="17.400" stroke="#0072b2" stroke-width="1.500"/>
+<text x="421.200" y="99.387" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">One Block</text>
+<text x="421.200" y="121.167" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">per Source</text>
+<line x1="313.200" y1="104.400" x2="343.200" y2="104.400" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="349.200,104.400 343.200,107.400 343.200,101.400" fill="#0072b2"/>
+<rect x="525.600" y="51.840" width="126.000" height="104.400" fill="#ddf3ec" rx="17.400" stroke="#009e73" stroke-width="1.500"/>
+<text x="588.600" y="99.387" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Hybrid</text>
+<text x="588.600" y="121.167" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">BFS</text>
+<line x1="493.200" y1="104.400" x2="519.600" y2="104.400" stroke="#009e73" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="525.600,104.400 519.600,107.400 519.600,101.400" fill="#009e73"/>
+<rect x="684.000" y="51.840" width="147.600" height="104.400" fill="#eee4f6" rx="17.400" stroke="#7b2cbf" stroke-width="1.500"/>
+<text x="757.800" y="99.645" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="17.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Dependency</text>
+<text x="757.800" y="120.215" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="17.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Accumulation</text>
+<line x1="651.600" y1="104.400" x2="678.000" y2="104.400" stroke="#7b2cbf" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="684.000,104.400 678.000,107.400 678.000,101.400" fill="#7b2cbf"/>
+<rect x="349.200" y="307.440" width="144.000" height="104.400" fill="#f4f6f8" rx="17.400" stroke="#0072b2" stroke-width="1.500"/>
+<text x="421.200" y="354.987" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">One Block</text>
+<text x="421.200" y="376.767" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">per Source</text>
+<line x1="313.200" y1="360.000" x2="343.200" y2="360.000" stroke="#0072b2" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="349.200,360.000 343.200,363.000 343.200,357.000" fill="#0072b2"/>
+<rect x="525.600" y="307.440" width="126.000" height="104.400" fill="#ddf3ec" rx="17.400" stroke="#009e73" stroke-width="1.500"/>
+<text x="588.600" y="354.987" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Hybrid</text>
+<text x="588.600" y="376.767" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">BFS</text>
+<line x1="493.200" y1="360.000" x2="519.600" y2="360.000" stroke="#009e73" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="525.600,360.000 519.600,363.000 519.600,357.000" fill="#009e73"/>
+<rect x="684.000" y="307.440" width="147.600" height="104.400" fill="#eee4f6" rx="17.400" stroke="#7b2cbf" stroke-width="1.500"/>
+<text x="757.800" y="355.245" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="17.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Dependency</text>
+<text x="757.800" y="375.815" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="17.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Accumulation</text>
+<line x1="651.600" y1="360.000" x2="678.000" y2="360.000" stroke="#7b2cbf" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="684.000,360.000 678.000,363.000 678.000,357.000" fill="#7b2cbf"/>
+<rect x="367.200" y="190.800" width="237.600" height="82.800" fill="#fceccb" rx="13.800" stroke="#e69f00" stroke-width="1.500"/>
+<text x="486.000" y="227.030" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Global BC</text>
+<text x="486.000" y="251.230" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Accumulation</text>
+<line x1="756.000" y1="156.240" x2="610.604" y2="194.320" stroke="#e69f00" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="604.800,195.840 609.844,191.418 611.364,197.222" fill="#e69f00"/>
+<line x1="756.000" y1="307.440" x2="610.611" y2="270.054" stroke="#e69f00" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="604.800,268.560 611.358,267.149 609.864,272.960" fill="#e69f00"/>
+<rect x="154.800" y="457.200" width="651.600" height="39.600" fill="none"/>
+<text x="480.600" y="481.851" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Two streams share the execution framework while retaining independent source-local buffers.</text>
+</svg>

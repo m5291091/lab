@@ -20,28 +20,15 @@
 
 各 source $s$ の計算は、状態初期化、Forward BFS、Backward dependency accumulation、global BC accumulation の順に進む。Forward BFS は距離 $d_s(v)$ と最短経路数 $\sigma_s(v)$ を求め、到達頂点を BFS level 順に stack $S_s$ へ記録する。Backward phase は $S_s$ を深い level から逆順にたどり、依存度 $\delta_s(v)$ を計算する。最後に $s$ 自身を除く各頂点の寄与を $CB$ へ加算する。無向グラフでは source-target の対称な重複を補正するため、加算時に寄与を 2 で除する。
 
-Figure 4.1 は、共通計算フローと memory-management layer の関係を示す作成予定の概念図案である。図の上段が全 variant に共通する処理、下段が差し替え可能なメモリ管理方式である。
+Figure 4.1 は、共通計算フローの構成を示す。source batch を 2 つの stream へ振り分け、各 stream 内で one-block-per-source の割当、Hybrid BFS、dependency accumulation の順に処理し、両 stream の結果を共通の global BC accumulation へ集約する。2 つの stream は同じ実行基盤を共有しつつ、独立した source-local buffer を保持する。差し替え可能なメモリ管理方式は 4.7 節および Figure 4.5 で扱う。
 
-```mermaid
-flowchart LR
-    A[Input Graph] --> B[CSR Static Storage]
-    B --> C[Source Batch Scheduler]
-    C --> D[Dual Stream Buffers]
-    D --> E[Asynchronous Initialization]
-    E --> F[Block-per-Source Hybrid BFS]
-    F --> G[Thread or Warp Dependency Accumulation]
-    G --> H[Atomic BC Accumulation]
-    H --> I[BC Vector]
+![Figure 4.1: Overall GPU execution framework](../../figures/exported/figure_4_1_gpu_execution_framework.png)
 
-    M[Memory-Management Layer] --> D
-    M --> M1[GPU_Opt: Unified Memory]
-    M --> M2[GPU_Opt_Pure: Device Memory]
-    M --> M3[GPU_Opt_Pure_Chunked: Source Sub-Batches]
-```
+**Figure 4.1: Overall GPU execution framework.**
 
-**Figure 4.1: Overall Framework.**
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 4 (library ID F04). Typesetting assets: docs/thesis/figures/exported/figure_4_1_gpu_execution_framework.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
 
-本章で明示する Figure 4.1 から Figure 4.5 は作成予定の5つの図案であり、図内文字と caption 案はすべて英語とする。本段階では概念図案だけを示し、画像ファイルは生成しない。
+本章の Figure 4.1 から Figure 4.5 は、編集正本である figure library から書き出した概念図であり、図内文字と caption はすべて英語である。いずれも設計構成を示すものであり、実測性能値は含まない。
 
 この構造で重要なのは、メモリ方式が source の意味や Brandes の計算順序を変更しないことである。batch と sub-batch は source 集合の grouping であり、graph partition ではない。outer loop は $V$ の全 source を処理し、sub-batch を用いる場合も `num_subs` 回の反復によって要求 batch 内の全 source を処理する。したがって、source sampling や近似計算は導入しない。
 
@@ -117,17 +104,13 @@ Output: Betweenness-centrality vector CB
 
 現行方式の既定は常に block kernel である。旧実装には `avg_deg < 5`、すなわち平均次数が 5 未満のとき shared-frontier kernel を選ぶ自動規則が存在したが、現在は使用していない。再現実験用の forced shared/block 切替は残されているものの、通常実行の選択則には含めない。したがって、本章でいう block-per-source は現行の既定計算経路を指す。この旧規則は BFS kernel の選択に関するものであり、4.5 節で述べる Backward phase の `avg_deg < 8` に基づく thread/warp 切替とは別である。
 
-Figure 4.2 は、stream ごとの source batch から block kernel の CUDA block への対応を示す作成予定の概念図案である。
+Figure 4.2 は、source 集合から effective batch への grouping と、各 stream 内で 1 source を 1 CUDA block へ対応させる割当を示す。図の下段は、各 block が固有の source-local state を持ちながら、両 stream が同一の static CSR を共有して読むことを示す。batch は source を分割するのであって graph を分割しないという区別を明示している。
 
-```mermaid
-flowchart LR
-    A[Source Set] --> B[Batch per Stream: 512 Sources]
-    B --> C[Source Offset q]
-    C --> D[CUDA Block q]
-    D --> E[Source s_start + q]
-```
+![Figure 4.2: Batch-to-source mapping and one-block-per-source assignment](../../figures/exported/figure_4_2_batch_source_mapping.png)
 
-**Figure 4.2: Batch-to-Source Mapping.**
+**Figure 4.2: Batch-to-source mapping: sources are grouped into an effective batch per stream, each source is assigned to one CUDA block, and both streams read the same static CSR.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 5 (library ID F05). Typesetting assets: docs/thesis/figures/exported/figure_4_2_batch_source_mapping.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
 
 ## 4.4 Hybrid BFS
 
@@ -153,28 +136,13 @@ $$
 
 各 level の終了時には、次 frontier を `S` へ追記し、累積終端位置を `S_ends` に記録する。`S` は到達頂点の BFS 順、`S_ends` は level の境界を表す。この記録により、Backward phase は predecessor list を別途 materialize せず、距離と adjacency list を用いて深い level から dependency を計算できる。推定した最大 depth を超えた場合は overflow flag を設定し、誤った状態のまま処理を継続しない。
 
-Figure 4.3 は、Forward phase から Backward phase までの state transition を示す作成予定の処理フロー案である。
+Figure 4.3 は、Forward BFS 内部の traversal direction の切替を示す。frontier を介して top-down と bottom-up の 2 状態を往復し、切替条件は上式の $m_f > m_u/\alpha$、復帰条件は $|Q| < n/\beta$ である。図中の $\alpha=14$、$\beta=24$ は現行実装の設定値である。両状態はいずれも GPU 上の traversal mode であり、CPU--GPU 間の hybrid 実行ではない。Backward phase の計算 path 選択は 4.5 節で述べる。
 
-```mermaid
-flowchart TD
-    A[Initialize Source State] --> B[Current Frontier]
-    B --> C{Traversal Direction}
-    C -->|Top-Down| D[Expand Frontier Edges]
-    C -->|Bottom-Up| E[Scan Unvisited Vertices]
-    D --> F[Build Next Frontier]
-    E --> F
-    F --> G[Record Stack and Level Boundary]
-    G --> H{Frontier Empty?}
-    H -->|No| B
-    H -->|Yes| I[Reverse Level Order]
-    I --> J{Dependency Path}
-    J -->|Low Average Degree| K[Thread-per-Vertex]
-    J -->|Otherwise| L[Warp-Cooperative Reduction]
-    K --> M[Atomic BC Accumulation]
-    L --> M
-```
+![Figure 4.3: Hybrid BFS direction switching between top-down and bottom-up traversal](../../figures/exported/figure_4_3_hybrid_bfs.png)
 
-**Figure 4.3: Hybrid BFS State Transition.**
+**Figure 4.3: Hybrid BFS state transition: direction switching between top-down and bottom-up traversal through the frontier, with the alpha and beta switching conditions.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 6 (library ID F06). Typesetting assets: docs/thesis/figures/exported/figure_4_3_hybrid_bfs.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
 
 ## 4.5 Dependency Accumulation
 
@@ -209,39 +177,25 @@ in-capacity の通常実行では、`NS=2` の CUDA streams と 2 組の source-
 
 buffer を再利用する前には、その stream の直前 Backward event だけを待つ。例えば stream 0 の buffer を次に使う時点で stream 0 の完了を確認するが、stream 1 を同時に全体同期しない。この局所的な同期境界により、buffer の競合を防ぎながら stream 間の overlap を維持する。
 
-Figure 4.4 は、2-stream pipeline の作成予定の timeline 案である。横方向は時間を表し、同じ列で上下に重なる区間は並行実行の候補である。
+Figure 4.4 は、2-stream pipeline の概念 timeline である。横方向は時間を表し、各 stream は初期化、BFS、dependency、同期、buffer 再利用の順に進む。2 つの stream の区間をずらして配置することで、片方の計算と他方の初期化が重なる区間が生じる。図中の Overlap 区間はその重畳の候補範囲を示す概念的な表現であり、特定の実行で計測した重畳時間ではない。
 
-```text
-Time      T0              T1              T2              T3
-Stream 0  Init Batch 0    Compute Batch 0                  Init Batch 2
-Stream 1                  Init Batch 1    Compute Batch 1
-Buffer 0  Prepare         In Use                          Reuse After Event
-Buffer 1                  Prepare         In Use
-```
+![Figure 4.4: Dual-stream timeline with staggered execution and buffer reuse](../../figures/exported/figure_4_4_dual_stream_timeline.png)
 
-**Figure 4.4: Dual-Stream Timeline.**
+**Figure 4.4: Dual-stream timeline: staggered per-stream execution and the synchronization point that protects buffer reuse. The timeline is conceptual and is not a measured trace.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 7 (library ID F07). Typesetting assets: docs/thesis/figures/exported/figure_4_4_dual_stream_timeline.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
 
 2-stream は固定されたあらゆる条件で必ず使用されるわけではない。batch-dependent working set が HBM budget を超えると判定された UM および Chunked の経路では、同時 resident 量を抑えるため `NS_eff=1` とする。したがって、設計上の requested stream count `NS=2` と、当該実行で実際に用いる `NS_eff` を区別する。主要性能条件は in-capacity であり、1 stream 当たり batch 512、2 streams、`NS_eff=2` である。
 
 ## 4.7 Memory Management Variants
 
-3 variants は共通の source scheduling と GPU kernels を共有し、主に CSR、source-local state、$CB$ の allocation と placement を変更する。Figure 4.5 は、その関係を示す作成予定の概念図案である。
+3 variants は共通の source scheduling と GPU kernels を共有し、主に CSR、source-local state、$CB$ の allocation と placement を変更する。Figure 4.5 は、その関係を示す。共通の実行基盤の下に GPU_Opt（Unified Memory）、GPU_Opt_Pure（device-only memory）、GPU_Opt_Pure_Chunked（source sub-batching）の 3 方式が並ぶ構成であり、3 つの独立した提案ではなく 1 つの基盤のメモリ管理 variant である。Chunked が分割するのは source 集合であって input graph ではない。
 
-```mermaid
-flowchart TB
-    A[Common BC Compute Pipeline] --> B{Memory-Management Variant}
-    B --> C[GPU_Opt]
-    B --> D[GPU_Opt_Pure]
-    B --> E[GPU_Opt_Pure_Chunked]
-    C --> C1[Managed Full-Batch State]
-    C1 --> C2[Prefetch and Eviction for Oversubscription]
-    D --> D1[Device Full-Batch State]
-    D1 --> D2[Bounded by Device Allocation Capacity]
-    E --> E1[Device Sub-Batch State]
-    E1 --> E2[Bounded Resident Working Set]
-```
+![Figure 4.5: Memory-management variants of one common execution framework](../../figures/exported/figure_4_5_memory_management_variants.png)
 
-**Figure 4.5: Memory Management Variants.**
+**Figure 4.5: Memory-management variants of one common execution framework: Unified Memory, device-only memory, and source sub-batching.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 8 (library ID F08). Typesetting assets: docs/thesis/figures/exported/figure_4_5_memory_management_variants.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
 
 ### 4.7.1 GPU_Opt
 

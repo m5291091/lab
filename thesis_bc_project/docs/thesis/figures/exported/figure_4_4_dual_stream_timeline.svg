@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12.592in" height="6.700in" viewBox="9.000 23.400 906.600 482.400" version="1.1">
+<title>Dual-Stream Timeline</title>
+<desc>Conceptual figure for thesis Figure 4.4 (section 4.6); exported from the editable PowerPoint library slide 7.</desc>
+<rect x="9.000" y="23.400" width="906.600" height="482.400" fill="#ffffff"/>
+<rect x="111.600" y="32.400" width="712.800" height="36.000" fill="none"/>
+<text x="468.000" y="57.330" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Time</text>
+<line x1="111.600" y1="77.760" x2="897.600" y2="77.760" stroke="#343a40" stroke-width="2.000" stroke-linecap="butt"/>
+<polygon points="903.600,77.760 897.600,80.760 897.600,74.760" fill="#343a40"/>
+<rect x="18.000" y="144.000" width="86.400" height="39.600" fill="none"/>
+<text x="61.200" y="170.037" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">Stream 0</text>
+<line x1="111.600" y1="164.160" x2="896.400" y2="164.160" stroke="#343a40" stroke-width="1.000" stroke-linecap="butt"/>
+<rect x="18.000" y="327.600" width="86.400" height="39.600" fill="none"/>
+<text x="61.200" y="353.637" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">Stream 1</text>
+<line x1="111.600" y1="347.760" x2="896.400" y2="347.760" stroke="#343a40" stroke-width="1.000" stroke-linecap="butt"/>
+<rect x="118.800" y="126.000" width="104.400" height="75.600" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="171.000" y="168.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Initialization</text>
+<rect x="230.400" y="126.000" width="187.200" height="75.600" fill="#ddeff8" stroke="#0072b2" stroke-width="1.500"/>
+<text x="324.000" y="168.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">BFS</text>
+<rect x="424.800" y="126.000" width="158.400" height="75.600" fill="#eee4f6" stroke="#7b2cbf" stroke-width="1.500"/>
+<text x="504.000" y="168.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Dependency</text>
+<rect x="590.400" y="126.000" width="64.800" height="75.600" fill="#f7deda" stroke="#c23b22" stroke-width="1.500"/>
+<text x="622.800" y="168.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Sync</text>
+<rect x="662.400" y="126.000" width="111.600" height="75.600" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="718.200" y="168.651" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Buffer Reuse</text>
+<rect x="169.200" y="309.600" width="104.400" height="75.600" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="221.400" y="352.251" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Initialization</text>
+<rect x="280.800" y="309.600" width="187.200" height="75.600" fill="#ddeff8" stroke="#0072b2" stroke-width="1.500"/>
+<text x="374.400" y="352.251" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">BFS</text>
+<rect x="475.200" y="309.600" width="158.400" height="75.600" fill="#eee4f6" stroke="#7b2cbf" stroke-width="1.500"/>
+<text x="554.400" y="352.251" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Dependency</text>
+<rect x="640.800" y="309.600" width="64.800" height="75.600" fill="#f7deda" stroke="#c23b22" stroke-width="1.500"/>
+<text x="673.200" y="352.251" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Sync</text>
+<rect x="712.800" y="309.600" width="111.600" height="75.600" fill="#f4f6f8" stroke="#343a40" stroke-width="1.500"/>
+<text x="768.600" y="352.251" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Buffer Reuse</text>
+<rect x="280.800" y="234.000" width="302.400" height="39.600" fill="#e1f2e8" stroke="#2e8b57" stroke-width="1.500"/>
+<text x="432.000" y="259.344" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Overlap</text>
+<line x1="280.800" y1="223.200" x2="280.800" y2="273.600" stroke="#2e8b57" stroke-width="1.500" stroke-linecap="butt" stroke-dasharray="6.000,4.500"/>
+<line x1="583.200" y1="223.200" x2="583.200" y2="273.600" stroke="#2e8b57" stroke-width="1.500" stroke-linecap="butt" stroke-dasharray="6.000,4.500"/>
+<rect x="151.200" y="457.200" width="698.400" height="39.600" fill="none"/>
+<text x="500.400" y="481.851" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Synchronization protects buffer reuse while staggered work overlaps across streams.</text>
+</svg>

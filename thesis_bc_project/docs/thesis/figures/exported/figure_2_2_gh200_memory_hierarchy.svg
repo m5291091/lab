@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12.721in" height="6.710in" viewBox="22.650 29.850 915.900 483.150" version="1.1">
+<title>GH200 Memory Hierarchy</title>
+<desc>Conceptual figure for thesis Figure 2.2 (section 2.5); exported from the editable PowerPoint library slide 3.</desc>
+<rect x="22.650" y="29.850" width="915.900" height="483.150" fill="#ffffff"/>
+<rect x="32.400" y="39.600" width="291.600" height="349.200" fill="#f4f6f8" rx="48.601" stroke="#7f8c8d" stroke-width="1.500"/>
+<rect x="54.000" y="54.000" width="248.400" height="39.600" fill="none"/>
+<text x="178.200" y="81.423" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Grace CPU</text>
+<rect x="61.200" y="111.600" width="234.000" height="183.600" fill="#ffffff" rx="30.601" stroke="#7f8c8d" stroke-width="1.500"/>
+<text x="178.200" y="210.330" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Host Memory</text>
+<rect x="637.200" y="39.600" width="291.600" height="349.200" fill="#ddeff8" rx="48.601" stroke="#0072b2" stroke-width="1.500"/>
+<rect x="658.800" y="54.000" width="248.400" height="39.600" fill="none"/>
+<text x="783.000" y="81.423" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">Hopper GPU</text>
+<rect x="666.000" y="111.600" width="234.000" height="183.600" fill="#ffffff" rx="30.601" stroke="#0072b2" stroke-width="1.500"/>
+<text x="783.000" y="210.330" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">HBM3</text>
+<line x1="324.000" y1="169.200" x2="637.200" y2="169.200" stroke="#0072b2" stroke-width="6.000" stroke-linecap="butt"/>
+<rect x="378.000" y="111.600" width="205.200" height="39.600" fill="none"/>
+<text x="480.600" y="138.330" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">NVLink-C2C</text>
+<rect x="367.200" y="198.000" width="223.200" height="97.200" fill="#ddf3ec" rx="16.200" stroke="#009e73" stroke-width="1.500"/>
+<text x="478.800" y="241.947" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Unified Memory</text>
+<text x="478.800" y="263.727" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="18.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Managed Allocation</text>
+<line x1="360.300" y1="246.240" x2="302.100" y2="246.240" stroke="#009e73" stroke-width="2.300" stroke-linecap="butt"/>
+<polygon points="295.200,246.240 302.100,242.790 302.100,249.690" fill="#009e73"/>
+<polygon points="367.200,246.240 360.300,249.690 360.300,242.790" fill="#009e73"/>
+<line x1="597.300" y1="246.240" x2="659.100" y2="246.240" stroke="#009e73" stroke-width="2.300" stroke-linecap="butt"/>
+<polygon points="666.000,246.240 659.100,249.690 659.100,242.790" fill="#009e73"/>
+<polygon points="590.400,246.240 597.300,242.790 597.300,249.690" fill="#009e73"/>
+<rect x="334.800" y="302.400" width="288.000" height="36.000" fill="none"/>
+<text x="478.800" y="325.251" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Page placement and data migration</text>
+<rect x="46.800" y="421.200" width="176.400" height="25.920" fill="#f4f6f8" rx="4.320" stroke="#343a40" stroke-width="1.500"/>
+<text x="135.000" y="439.011" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Graph / static data</text>
+<rect x="234.000" y="421.200" width="154.800" height="25.920" fill="#eee4f6" rx="4.320" stroke="#7b2cbf" stroke-width="1.500"/>
+<text x="311.400" y="439.011" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">BC output</text>
+<rect x="399.600" y="421.200" width="176.400" height="25.920" fill="#ddeff8" rx="4.320" stroke="#0072b2" stroke-width="1.500"/>
+<text x="487.800" y="439.011" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Source-local state</text>
+<rect x="586.800" y="421.200" width="234.000" height="25.920" fill="#fceccb" rx="4.320" stroke="#e69f00" stroke-width="1.500"/>
+<text x="703.800" y="439.011" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">Batch-dependent working set</text>
+<rect x="86.400" y="464.400" width="792.000" height="39.600" fill="none"/>
+<text x="482.400" y="489.051" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Managed memory addresses working-set placement; the input graph file size is not the capacity claim.</text>
+</svg>

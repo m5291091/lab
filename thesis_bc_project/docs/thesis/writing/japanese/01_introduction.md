@@ -62,22 +62,15 @@ Hybrid BFS、Warp-Cooperative Accumulation、Dual-Stream ExecutionおよびBlock
 
 この問いには Chapter 9: Correctness and Numerical Behavior で回答する。
 
-Figure 1.1 は、研究対象、共通 GPU 実行基盤、および四つの評価軸の関係を示す概念図案である。本稿では独立した画像 asset を作成せず、図の論理構成だけを示す。
+Figure 1.1 は、研究対象、共通 GPU 実行基盤、および四つの評価軸の関係を示す概念図である。Problem から共通 GPU 実行基盤へ至る流れと、その基盤から Performance Evaluation、Ablation Analysis、Memory Scalability、Correctness Validation の四つの評価軸が分岐し、それぞれが RQ1〜RQ4 の evidence へ収束する構成を示す。各評価軸の結果は Chapter 6〜9 で個別に述べる。
 
-```mermaid
-flowchart LR
-    A[Exact All-Sources BC] --> B[Batch-Based GPU Execution Framework]
-    B --> C1[RQ1: Performance]
-    B --> C2[RQ2: Optimization Contributions]
-    B --> C3[RQ3: Memory Scalability]
-    B --> C4[RQ4: Correctness and Numerical Behavior]
-    C1 --> D1[Chapter 6]
-    C2 --> D2[Chapter 7]
-    C3 --> D3[Chapter 8]
-    C4 --> D4[Chapter 9]
-```
+![Figure 1.1: Overview of the research questions, proposed GPU execution framework, and evaluation dimensions](../../figures/exported/figure_1_1_thesis_overview.png)
 
 **Figure 1.1: Overview of the research questions, proposed GPU execution framework, and evaluation dimensions.**
+
+<!-- editable source: docs/thesis/figures/editable/thesis_figure_library.pptx slide 1 (library ID F01; a separate namespace from canonical result figure F1). Typesetting assets: docs/thesis/figures/exported/figure_1_1_thesis_overview.{svg,pdf}; regenerate with scripts/export_conceptual_figures.py. -->
+
+
 
 ## 1.4 Contributions
 
@@ -133,5 +126,5 @@ Source notes (internal, not reader-facing):
 - RQ3 graph-file/working-set distinction and feasibility scope: result/tables/thesis/T4_memory_scalability.tsv, raw_data/corrected_325557/job_2404743/implementation_manifest.tsv, and writing/japanese/08_memory_scalability.md.
 - RQ4 tiering and non-byte identity: result/tables/thesis/T5_correctness_summary.tsv and writing/japanese/09_correctness_and_numerical_behavior.md.
 - Current corrected conclusion follows result/CLAIMS.md, "Gate W7.4". The older malformed-input CORE_FAIL is retained only as historical evidence.
-- Figure 1.1 is a concept-only Mermaid draft; no independent image asset was created.
+- Figure 1.1 is exported from the editable figure library (slide 1, library ID F01) by scripts/export_conceptual_figures.py; the library ID namespace F01--F15 is distinct from the canonical result figure namespace F1--F7.
 -->

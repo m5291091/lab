@@ -55,7 +55,7 @@ $$
 
 **Figure 7.1: Per-factor main-effect speedups of the H/W/A factorial ablation. The synthetic-4 aggregate is mixed-checkpoint (three graphs: job 2354994; corrected 325557: job 2406254, checkpoint 45352a3). Bars use configuration medians (synthetic: n=5; email-EuAll: n=3; fixed b512).**
 
-<!-- canonical artifact: ablation_contributions.{png,pdf,svg} (internal ID: F4); see result/figures/thesis/FIGURE_MANIFEST.tsv. The in-figure title contains the internal ID; figures are not modified in this gate. -->
+<!-- canonical artifact: ablation_contributions.{png,pdf,svg} (internal ID: F4); see result/figures/thesis/FIGURE_MANIFEST.tsv. The figure number is provided by the thesis caption; the exported figure does not embed an internal artifact ID. -->
 
 ## 7.2 Effect of Hybrid BFS
 
@@ -97,7 +97,7 @@ A=1 の phase log を保持する評価条件では、gap（wall time から BFS
 
 **Figure 7.2: Median runtime of the forced shared and forced block BFS kernels on roadNet-PA and roadNet-TX (n=3 per kernel per graph, fixed b512). Error bars show the sample standard deviation.**
 
-<!-- canonical artifact: shared_vs_block_kernel.{png,pdf,svg} (internal ID: F6); the in-figure title contains the internal ID; figures are not modified in this gate. -->
+<!-- canonical artifact: shared_vs_block_kernel.{png,pdf,svg} (internal ID: F6). The figure number is provided by the thesis caption; the exported figure does not embed an internal artifact ID. -->
 
 観測結果は次のとおりである。roadNet-PA では shared の median 1063.71 s に対し block は 701.57 s であり、block が 1.52 倍高速であった。roadNet-TX では shared の 1639.16 s に対し block は 984.59 s であり、block が 1.66 倍高速であった。speedup は遅い側 median を速い側 median で割った比である。標本標準偏差は shared 側で 0.060 s（PA）・0.284 s（TX）、block 側で 3.574 s（PA）・7.260 s（TX）であり、block 側のばらつきが相対的に大きいものの、いずれも両カーネルの median 差（PA 約 362 s、TX 約 655 s）に対して十分小さい。
 
@@ -115,7 +115,7 @@ Figure 7.3 の成分は、runner が計測する BFS wall と Backward wall、�
 
 **Figure 7.3: Median phase components (BFS, Backward, Other) of GPU_Opt (fixed b512) on the four headline graphs. Other is the per-trial residual: total time minus BFS minus Backward (initialization, CSR load, copy-out, and host overhead). Components are medians over trials (email-EuAll n=5; roadNet-PA/TX/CA n=3).**
 
-<!-- canonical artifact: phase_breakdown.{png,pdf,svg} (internal ID: F7); the in-figure title contains the internal ID; figures are not modified in this gate. -->
+<!-- canonical artifact: phase_breakdown.{png,pdf,svg} (internal ID: F7). The figure number is provided by the thesis caption; the exported figure does not embed an internal artifact ID. -->
 
 観測された median 成分は次のとおりである。email-EuAll では BFS 9.12 s、Backward 20.07 s、Other 1.60 s であり、Backward が最大成分（成分和の約 65%）であった。roadNet-PA では BFS 348.91 s、Backward 290.61 s、Other 62.60 s、roadNet-TX では BFS 355.43 s、Backward 477.56 s、Other 145.58 s、roadNet-CA では BFS 816.37 s、Backward 950.28 s、Other 362.46 s であり、road 系 3 グラフでは BFS と Backward が同程度のオーダー（成分和の約 36～50%）を占め、Other は約 9～17% であった。これらの構成比は、測定した b512 実行の記述であり、他のバッチ設定や他実装の内訳を代表しない。
 

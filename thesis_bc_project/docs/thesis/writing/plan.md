@@ -1181,28 +1181,35 @@ Introductionの4つの貢献と対応させる。
 
 # 10. Figure and Table Placement
 
-| Artifact | Chapter |
-|---|---|
-| Brandes Algorithm Flow | Chapter 2 |
-| GH200 Memory Hierarchy | Chapter 2 |
-| Overall Framework | Chapter 4 |
-| Batch-to-Source Mapping | Chapter 4 |
-| Hybrid BFS State Transition | Chapter 4 |
-| Dual-Stream Timeline | Chapter 4 |
-| Memory Management Variants | Chapter 4 |
-| T1 Graph Metadata | Chapter 5 |
-| T6 Experimental Environment | Chapter 5 |
-| F1 Main Runtime Comparison | Chapter 6 |
-| F2 Main Speedup | Chapter 6 |
-| F3 PathMerge Batch Sweep | Chapter 6 |
-| T2 Main Performance | Chapter 6 |
-| F4 Ablation Contributions | Chapter 7 |
-| F6 Shared vs Block Kernel | Chapter 7 |
-| F7 Phase Breakdown | Chapter 7 |
-| T3 Ablation Summary | Chapter 7 |
-| F5 Memory Scalability | Chapter 8 |
-| T4 Memory Scalability | Chapter 8 |
-| T5 Correctness Summary | Chapter 9 |
+概念図 (Figure 1.1〜4.5) は編集正本 `docs/thesis/figures/editable/thesis_figure_library.pptx`
+から `scripts/export_conceptual_figures.py` が書き出した
+`docs/thesis/figures/exported/` の asset を使う。library ID `F01`〜`F15` は
+canonical result figure の `F1`〜`F7` とは別 namespace であり、本文では
+`ThesisFigureNumber` だけを参照する。
+
+| Artifact | Figure | Chapter |
+|---|---|---|
+| Thesis Overview | Figure 1.1 | Chapter 1 |
+| Brandes Algorithm Flow | Figure 2.1 | Chapter 2 |
+| GH200 Memory Hierarchy | Figure 2.2 | Chapter 2 |
+| Overall Framework | Figure 4.1 | Chapter 4 |
+| Batch-to-Source Mapping | Figure 4.2 | Chapter 4 |
+| Hybrid BFS State Transition | Figure 4.3 | Chapter 4 |
+| Dual-Stream Timeline | Figure 4.4 | Chapter 4 |
+| Memory Management Variants | Figure 4.5 | Chapter 4 |
+| T1 Graph Metadata | Table 5.3 | Chapter 5 |
+| T6 Experimental Environment | Table 5.2 | Chapter 5 |
+| F1 Main Runtime Comparison | Figure 6.1 | Chapter 6 |
+| F2 Main Speedup | Figure 6.2 | Chapter 6 |
+| F3 PathMerge Batch Sweep | Figure 6.3 | Chapter 6 |
+| T2 Main Performance | Table 6.1 | Chapter 6 |
+| F4 Ablation Contributions | Figure 7.1 | Chapter 7 |
+| F6 Shared vs Block Kernel | Figure 7.2 | Chapter 7 |
+| F7 Phase Breakdown | Figure 7.3 | Chapter 7 |
+| T3 Ablation Summary | Table 7.2 | Chapter 7 |
+| F5 Memory Scalability | Figure 8.1 | Chapter 8 |
+| T4 Memory Scalability | Table 8.3 | Chapter 8 |
+| T5 Correctness Summary | Table 9.4 | Chapter 9 |
 
 同じ数値を図と表と本文で不必要に3回繰り返さない。本文では重要な傾向と代表値を説明し、全数値は表または付録へ置く。
 

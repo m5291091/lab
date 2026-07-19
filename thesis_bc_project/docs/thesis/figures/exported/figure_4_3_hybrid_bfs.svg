@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="12.471in" height="5.750in" viewBox="33.450 109.800 897.900 414.000" version="1.1">
+<title>Hybrid BFS State Transition</title>
+<desc>Conceptual figure for thesis Figure 4.3 (section 4.4); exported from the editable PowerPoint library slide 6.</desc>
+<rect x="33.450" y="109.800" width="897.900" height="414.000" fill="#ffffff"/>
+<rect x="43.200" y="180.000" width="176.400" height="108.000" fill="#ddeff8" rx="18.000" stroke="#0072b2" stroke-width="1.500"/>
+<text x="131.400" y="241.623" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Top-Down BFS</text>
+<rect x="392.400" y="180.000" width="169.200" height="108.000" fill="#f4f6f8" rx="18.000" stroke="#343a40" stroke-width="1.500"/>
+<text x="477.000" y="241.623" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Frontier</text>
+<rect x="745.200" y="180.000" width="176.400" height="108.000" fill="#ddf3ec" rx="18.000" stroke="#009e73" stroke-width="1.500"/>
+<text x="833.400" y="241.623" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="22.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">Bottom-Up BFS</text>
+<line x1="219.600" y1="205.200" x2="384.900" y2="205.200" stroke="#0072b2" stroke-width="2.500" stroke-linecap="butt"/>
+<polygon points="392.400,205.200 384.900,208.950 384.900,201.450" fill="#0072b2"/>
+<line x1="561.600" y1="205.200" x2="737.700" y2="205.200" stroke="#009e73" stroke-width="2.500" stroke-linecap="butt"/>
+<polygon points="745.200,205.200 737.700,208.950 737.700,201.450" fill="#009e73"/>
+<line x1="745.200" y1="262.800" x2="569.100" y2="262.800" stroke="#009e73" stroke-width="2.500" stroke-linecap="butt"/>
+<polygon points="561.600,262.800 569.100,259.050 569.100,266.550" fill="#009e73"/>
+<line x1="392.400" y1="262.800" x2="227.100" y2="262.800" stroke="#0072b2" stroke-width="2.500" stroke-linecap="butt"/>
+<polygon points="219.600,262.800 227.100,259.050 227.100,266.550" fill="#0072b2"/>
+<rect x="226.800" y="118.800" width="154.800" height="50.400" fill="none"/>
+<text x="304.200" y="139.864" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">Switch when</text>
+<text x="304.200" y="159.224" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#0072b2" xml:space="preserve">m_f &gt; m_u / alpha</text>
+<rect x="576.000" y="306.000" width="154.800" height="50.400" fill="none"/>
+<text x="653.400" y="327.064" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#009e73" xml:space="preserve">Return when</text>
+<text x="653.400" y="346.424" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="16.000" text-anchor="middle" font-weight="bold" fill="#009e73" xml:space="preserve">|Q| &lt; n / beta</text>
+<rect x="306.000" y="385.200" width="349.200" height="79.200" fill="#f4f6f8" rx="13.200" stroke="#343a40" stroke-width="1.500"/>
+<text x="480.600" y="431.730" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="20.000" text-anchor="middle" font-weight="bold" fill="#343a40" xml:space="preserve">alpha = 14     beta = 24</text>
+<rect x="54.000" y="392.400" width="194.400" height="25.920" fill="#ddeff8" rx="4.320" stroke="#0072b2" stroke-width="1.500"/>
+<text x="151.200" y="410.211" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">m_f: frontier edge work</text>
+<rect x="709.200" y="392.400" width="194.400" height="25.920" fill="#ddf3ec" rx="4.320" stroke="#009e73" stroke-width="1.500"/>
+<text x="806.400" y="410.211" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" fill="#343a40" xml:space="preserve">m_u: unvisited edge work</text>
+<rect x="190.800" y="482.400" width="576.000" height="32.400" fill="none"/>
+<text x="478.800" y="503.451" font-family="Arial, 'Nimbus Sans', Helvetica, 'Liberation Sans', sans-serif" font-size="14.000" text-anchor="middle" font-weight="bold" fill="#c23b22" xml:space="preserve">Both states are GPU traversal modes; this is not CPU--GPU hybrid execution.</text>
+</svg>
