@@ -523,7 +523,7 @@ Synthetic-4 aggregate の構成要素を Table C.18 に示す。Corrected 325557
 
 独立再計算は標準ライブラリだけを用い、canonical raw TSV を毎回新たに読み込んで、完全性、構成別 median/mean/$s_T$/min/max/median GTEPS、graph 別 main effect、および current Synthetic-4 aggregate を計算した。同一処理を 2 回実行した出力は byte-identical で、両方の SHA256 は `e77716fb31b76228824d9bfe04a9ef3fe35c6cf31a181ca04ff416d88cf384a5` であった。
 
-実験時 `summarize_ablation.py` についても Synthetic と email をそれぞれ 2 回再生成した。各回の `ablation_summary.md` と `ablation_contributions.tsv` は相互に byte-identical で、repository の正式成果物とも byte-identical であった。Corrected は独立計算した構成別統計を正式 `ablation_per_config_stats.tsv` と丸め精度内で照合し、main effect と aggregate は正式 contribution/aggregate TSV の小数第 4 位と一致した。
+保存された実験時 `summarize_ablation.py` は母集団標準偏差 (population SD) を用いており、正式要約を byte-identical には再現しない。現在の derivation スクリプト (`scripts/summarize_ablation.py`) を用いて Synthetic と email をそれぞれ 2 回再生成した結果、各回の `ablation_summary.md` と `ablation_contributions.tsv` は相互に byte-identical であり、repository の正式成果物は現在の derivation スクリプトによって再現される。正式要約の数値規約は標本標準偏差 (sample SD, ddof=1) である。すべての生 trial データと付録 C の正式な数値は変更されていない。この不一致は generator の来歴と標準偏差の規約に関するものであり、実験結果には影響しない。保存された証拠を超えて、正式要約の歴史的な作成者を推論するべきではない。Corrected は独立計算した構成別統計を正式 `ablation_per_config_stats.tsv` と丸め精度内で照合し、main effect と aggregate は正式 contribution/aggregate TSV の小数第 4 位と一致した。
 
 canonical source の役割を Table C.19 に整理する。raw trial 値は raw TSV、実装条件は各系列の実験時コード、正式な丸め済み main effect は contribution/aggregate TSV を正本とした。
 
@@ -565,7 +565,7 @@ canonical source の役割を Table C.19 に整理する。raw trial 値は raw 
 | Per-graph main effects | Formal value at 4 d.p. | Match | Pass |
 | Current Synthetic-4 aggregate | H=1.6787; W=1.0661; A=1.3914 | Match | Pass |
 | Independent recalculation repeatability | Byte-identical | SHA256 identical | Pass |
-| Formal generator repeatability | Byte-identical | Synthetic and email outputs identical | Pass |
+| Derivation script repeatability | Byte-identical | Synthetic and email outputs identical | Pass |
 | Chapter 7 value alignment | Exact at displayed precision | Match | Pass |
 | Mixed-checkpoint disclosure | Required | C.1, C.8, C.9.1 | Pass |
 | Historical malformed-input separation | Required | C.4.4, C.7.4, C.9.2 | Pass |
